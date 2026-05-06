@@ -204,11 +204,15 @@ def page(browser, frontend_server, request):
     p.on("pageerror", lambda e: print(f"PAGEERROR: {e}"))
     yield p
     if getattr(request.node, "rep_call", None) is not None and request.node.rep_call.failed:
-        Path("failures").mkdir(exist_ok=True)
+        # Chemin ancre sur ce fichier, jamais relatif au cwd : lancer pytest
+        # depuis la racine du depot (comme le fait la CI) ne doit pas
+        # eparpiller des captures d'echec en dehors de frontend/tests/.
+        failures_dir = Path(__file__).parent / "failures"
+        failures_dir.mkdir(exist_ok=True)
         safe_name = request.node.name.replace("/", "_")
-        p.screenshot(path=f"failures/{safe_name}.png")
-        Path(f"failures/{safe_name}.html").write_text(p.content(), encoding="utf-8")
-        print(f"Echec : capture dans failures/{safe_name}.png")
+        p.screenshot(path=str(failures_dir / f"{safe_name}.png"))
+        (failures_dir / f"{safe_name}.html").write_text(p.content(), encoding="utf-8")
+        print(f"Echec : capture dans {failures_dir / safe_name}.png")
     ctx.close()
 
 
