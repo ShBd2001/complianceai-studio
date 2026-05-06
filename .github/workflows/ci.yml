@@ -41,6 +41,9 @@ jobs:
       DATABASE_URL: postgresql+psycopg://compliance:compliance@localhost:5432/complianceai_test
       # Uniquement valable pour ce run CI ephemere, jamais une vraie base.
       JWT_SECRET: ci-only-secret-never-used-outside-github-actions-runners
+      # Sans ça, httpx (base_url http://testserver, pas "localhost") laisse
+      # tomber silencieusement le cookie Secure lors de la rotation refresh.
+      COOKIE_SECURE: "false"
     defaults:
       run:
         working-directory: backend
@@ -50,6 +53,8 @@ jobs:
         with: { python-version: '3.12' }
       - name: Installer les dépendances
         run: pip install -r requirements.txt
+      - name: Installer Chromium (génération PDF sous test)
+        run: playwright install --with-deps chromium
       - name: Suite de tests backend
         # tests/conftest.py migre la base _test et force LLM_ENABLED=false —
         # aucun quota Groq consomme, aucun reseau externe requis.
@@ -79,7 +84,9 @@ jobs:
         run: |
           pip install -r backend/requirements.txt
           pip install -r frontend/tests/requirements.txt
-      - name: Suite bout-en-bout (Chrome preinstalle sur le runner, aucun telechargement)
+      - name: Installer Chromium (le backend l'utilise pour générer les PDF)
+        run: playwright install --with-deps chromium
+      - name: Suite bout-en-bout (Chrome du système pour le navigateur piloté, Chromium ci-dessus pour la génération PDF côté backend)
         # Demarre le vrai backend et le vrai serveur statique du frontend en
         # sous-processus (voir frontend/tests/conftest.py) : pas de mock DOM.
         run: pytest -q frontend/tests
@@ -93,14 +100,18 @@ jobs:
     runs-on: ubuntu-latest
     # Consomme du quota Groq : réservé à la branche principale.
     if: github.ref == 'refs/heads/main'
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
       - run: pip install groq
+      - name: Avertir si GROQ_API_KEY est absent
+        if: env.GROQ_API_KEY == ''
+        run: echo "::warning::GROQ_API_KEY n'est pas configuré (Settings > Secrets and variables > Actions) — validation non-régression ignorée."
       - name: Validation avec seuils bloquants
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        if: env.GROQ_API_KEY != ''
         run: |
           python -m validation.run_validation \
             --corpus ./corpus \
@@ -108,7 +119,7 @@ jobs:
             --repetitions 3 \
             --ci
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && env.GROQ_API_KEY != ''
         with:
           name: rapport-validation
           path: rapport_validation.json
