@@ -1,0 +1,17 @@
+# Sans ce fichier, `COPY . .` dans le Dockerfile embarque tout ce qui se
+# trouve dans backend/ au moment du build — y compris un .env local avec de
+# vraies cles (GROQ_API_KEY, JWT_SECRET), le contenu de storage/ (pieces
+# deposees en dev), et les caches de test. Aucun de ces elements ne doit
+# jamais atterrir dans une image.
+
+.env
+.git
+.gitignore
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+storage/
+.ms-playwright/
