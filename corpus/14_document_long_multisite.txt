@@ -1,0 +1,217 @@
+POLITIQUE GENERALE DE PROTECTION DES DONNEES A CARACTERE PERSONNEL
+RESEAU HOTELIER MERIDIEN ATLANTIQUE — 14 etablissements — 780 salaries
+Document de reference — Version 6.1 — Approuve le 27 janvier 2026
+
+TITRE I — DISPOSITIONS GENERALES
+
+Article 1 — Objet du document
+La presente politique decrit l'organisation mise en place par le reseau hotelier
+Meridien Atlantique pour assurer la protection des donnees a caractere personnel
+des clients, des salaries, des candidats et des partenaires. Elle s'applique a
+l'ensemble des quatorze etablissements du reseau et a la societe de tete.
+
+Article 2 — Responsable de traitement
+Meridien Atlantique Gestion SAS, 55 quai des Chartrons, 33000 Bordeaux, SIREN
+512 447 903, agit en qualite de responsable de traitement pour l'ensemble des
+traitements decrits. Les etablissements ne disposent pas d'autonomie decisionnelle
+sur les finalites et les moyens des traitements.
+
+Article 3 — Delegue a la protection des donnees
+Un delegue a la protection des donnees a ete designe le 2 mai 2022 en la personne
+de Madame Helene Vaugrenard, directrice juridique du reseau. Cette designation a
+ete notifiee a la CNIL. Elle est joignable a dpo@meridien-atlantique.fr et a
+l'adresse du siege. La directrice juridique n'exerce aucune fonction operationnelle
+sur les traitements dont elle controle la conformite et rend compte directement au
+president.
+
+TITRE II — TRAITEMENTS MIS EN OEUVRE
+
+Article 4 — Recensement
+Le registre des activites de traitement est tenu par la DPO dans un outil dedie
+accessible aux directeurs d'etablissement en consultation. Il recense vingt-trois
+traitements, parmi lesquels : reservation et sejour, fichier client et
+personnalisation, programme de fidelite, facturation, videoprotection des halls et
+parkings, controle d'acces du personnel, recrutement, gestion du personnel, paie,
+medecine du travail, formation, gestion des reclamations, enquetes de satisfaction,
+prospection commerciale, gestion des groupes et seminaires, registre de police des
+etrangers, gestion des objets trouves, coffres-forts, restauration et allergies
+alimentaires, gestion des prestataires, comptabilite fournisseurs, contentieux et
+archivage. Chaque fiche comporte la finalite, la base juridique, les categories de
+personnes concernees, les categories de donnees, les destinataires internes et
+externes, les eventuels transferts, la duree de conservation et une description des
+mesures de securite. Le registre est revu chaque semestre ; derniere revision le
+27 janvier 2026.
+
+Article 5 — Finalites et bases juridiques
+La reservation, le sejour et la facturation reposent sur l'execution du contrat
+d'hebergement. Le registre de police des etrangers et la conservation des factures
+reposent sur des obligations legales. Le programme de fidelite repose sur le
+consentement de l'adherent, recueilli lors de son inscription par une case a cocher
+non precochee et horodate. La prospection commerciale aupres des clients existants
+repose sur l'interet legitime, une mise en balance ayant ete formalisee en mars 2024
+retenant que les sollicitations portent sur des services analogues a ceux deja
+fournis et qu'un droit d'opposition est offert a chaque envoi. La videoprotection
+repose sur l'interet legitime a la securite des personnes et des biens, une mise en
+balance ayant ete formalisee etablissant que les cameras couvrent les halls, les
+abords et les parkings a l'exclusion des chambres, des couloirs d'etage, des
+espaces de repos du personnel et des sanitaires.
+
+Article 6 — Donnees relatives a la sante et allergies alimentaires
+La restauration collecte, sur declaration spontanee du client et pour la seule duree
+du sejour, les allergies et intolerances alimentaires signalees. Ces informations,
+qui constituent des donnees de sante, sont traitees sur la base du consentement
+explicite du client, recueilli par une mention specifique du formulaire de
+reservation precisant l'objet et le caractere facultatif de la declaration. Elles
+sont accessibles au seul chef de cuisine et au maitre d'hotel de l'etablissement
+concerne, ne sont pas conservees au fichier client et sont supprimees a la fin du
+sejour. Le service du personnel traite par ailleurs les arrets de travail et les
+avis d'aptitude de la medecine du travail, aux fins de l'execution des obligations
+et de l'exercice des droits propres a l'employeur en matiere de droit du travail et
+de securite sociale ; ces documents sont conserves dans un espace chiffre distinct
+du dossier du personnel, accessible aux seules gestionnaires paie habilitees, et
+chaque consultation est journalisee.
+
+TITRE III — DROITS DES PERSONNES
+
+Article 7 — Information
+Les clients sont informes par une notice accessible depuis le moteur de reservation,
+depuis chaque page du site et affichee a la reception de chaque etablissement. Elle
+mentionne l'identite et l'adresse du responsable de traitement, les coordonnees de
+la DPO, les finalites et la base juridique de chacune, les categories de
+destinataires, les durees de conservation, l'existence et l'encadrement des
+transferts hors Union europeenne, les droits d'acces, de rectification,
+d'effacement, de limitation, d'opposition et de portabilite, le droit de retirer son
+consentement et le droit d'introduire une reclamation aupres de la CNIL. Les
+salaries recoivent une notice equivalente annexee au reglement interieur, remise a
+l'embauche et actualisee a chaque evolution. Les candidats sont informes par une
+mention figurant sur l'espace de candidature.
+
+Article 8 — Modalites d'exercice des droits
+Les demandes sont adressees a dpo@meridien-atlantique.fr, par courrier au siege, ou
+remises a la reception de tout etablissement qui les transmet a la DPO sous
+quarante-huit heures. La reponse intervient dans un delai d'un mois a compter de la
+reception, prorogeable de deux mois en cas de complexite, la personne etant informee
+de la prorogation et de ses motifs dans le mois. L'exercice des droits est gratuit.
+L'identite du demandeur est verifiee par la production d'une piece d'identite en cas
+de doute raisonnable. La procedure interne, formalisee dans une instruction de 2023,
+prevoit que la DPO enregistre la demande, la qualifie sous cinq jours ouvres,
+sollicite les etablissements et les services concernes pour l'extraction ou la
+suppression, controle la completude de la reponse et la transmet au demandeur sous
+sa signature. Un registre des demandes recense chaque saisine, sa nature, sa date de
+reception et sa date de reponse ; cent-douze demandes ont ete traitees en 2025.
+
+Article 9 — Capacite operationnelle
+L'extraction des donnees d'une personne est realisee au moyen de la fonction d'export
+du systeme de gestion hoteliere, complétée par une recherche dans les outils de
+fidelite, de reclamation et de paie selon les cas ; le resultat est remis au format
+PDF et, pour les donnees fournies par la personne, au format CSV reutilisable. La
+suppression est operee dans le systeme de gestion, dans l'outil de fidelite et dans
+l'outil de prospection, puis dans les sauvegardes lors du cycle de rotation mensuel,
+ce delai maximal etant indique au demandeur. Les donnees devant etre conservees au
+titre d'une obligation legale sont isolees et rendues inaccessibles aux usages
+commerciaux. L'opposition a la prospection est enregistree dans une liste de
+suppression, verifiee automatiquement avant chaque campagne et lors de toute
+importation de contacts. La limitation du traitement est mise en oeuvre par un
+marqueur bloquant tout usage autre que la conservation.
+
+TITRE IV — SECURITE ET SOUS-TRAITANCE
+
+Article 10 — Mesures de securite
+Les comptes sont nominatifs, aucun compte generique n'etant autorise. Les
+habilitations sont attribuees par profil selon le principe du moindre privilege et
+revues chaque trimestre par la DPO et le RSSI. L'authentification a deux facteurs
+est imposee pour tout acces distant et pour les profils administrateurs. Les postes,
+les serveurs et les sauvegardes sont chiffres ; les echanges sont realises en TLS 1.3
+et les mots de passe stockes sous forme hachee et salee. Les sauvegardes sont
+quotidiennes, repliquees sur deux sites, et un test de restauration complet est
+realise chaque trimestre, le dernier le 14 janvier 2026. Les acces aux applications
+contenant des donnees personnelles, les extractions et les consultations de dossiers
+sont journalises, les journaux etant conserves six mois et revus mensuellement. Un
+test d'intrusion externe est commande chaque annee ; le dernier, realise en novembre
+2025, a donne lieu a un plan de remediation clos en janvier 2026.
+
+Article 11 — Sous-traitance
+Le reseau recourt a dix-sept sous-traitants, notamment l'editeur du systeme de
+gestion hoteliere, l'hebergeur, le prestataire du programme de fidelite, la centrale
+de reservation, le prestataire de nettoyage, la societe de gardiennage, l'editeur de
+la solution de paie et le prestataire d'enquetes de satisfaction. Un contrat de
+sous-traitance a ete conclu avec chacun, comportant l'objet, la duree et la finalite
+du traitement, la nature des operations, les categories de donnees et de personnes,
+l'obligation de n'agir que sur instruction documentee, l'engagement de
+confidentialite du personnel, les mesures de securite, l'obligation d'assistance, la
+notification des violations sous vingt-quatre heures, l'autorisation ecrite
+prealable pour tout sous-traitant ulterieur et la restitution puis la destruction
+des donnees au terme de la prestation. La liste des sous-traitants et de leurs
+sous-traitants ulterieurs autorises est tenue a jour par la DPO et revue chaque
+semestre.
+
+Article 12 — Transferts hors Union europeenne
+La centrale de reservation utilise une plateforme de distribution dont certains
+services techniques sont operes depuis Singapour, et notre prestataire d'enquetes de
+satisfaction heberge ses donnees aux Etats-Unis. Ces deux transferts sont encadres
+par les clauses contractuelles types adoptees par la Commission europeenne le
+4 juin 2021, signees en janvier 2023 pour le premier et en avril 2023 pour le
+second. Une analyse d'impact du transfert a ete conduite pour chacun ; celle
+relative au prestataire americain a conclu a la necessite de mesures
+supplementaires, mises en oeuvre sous la forme d'une pseudonymisation des
+identifiants clients et d'une limitation des donnees transmises aux seuls
+identifiant de sejour et reponses au questionnaire, a l'exclusion du nom et de
+l'adresse. Aucun autre transfert n'est realise.
+
+TITRE V — GOUVERNANCE
+
+Article 13 — Protection dès la conception et par defaut
+Tout projet impliquant des donnees personnelles fait l'objet d'une fiche d'analyse
+prealable soumise a la DPO avant tout developpement ou souscription, examinant la
+necessite des donnees envisagees, la duree de conservation, les acces ouverts et les
+risques identifies. Les parametres par defaut des outils retiennent la duree de
+conservation la plus courte compatible avec la finalite, la visibilite restreinte a
+l'etablissement concerne et l'absence de partage inter-etablissements, toute
+extension necessitant une validation explicite de la DPO.
+
+Article 14 — Analyses d'impact
+Trois traitements ont fait l'objet d'une analyse d'impact relative a la protection
+des donnees : la videoprotection des halls et parkings, realisee en juin 2023 et
+revisee en 2025 ; le programme de fidelite avec personnalisation des offres, realise
+en septembre 2023 ; et le controle d'acces du personnel par badge, realise en
+mars 2024. Chacune comporte une description systematique du traitement et de ses
+finalites, l'evaluation de sa necessite et de sa proportionnalite, l'analyse des
+risques pour les droits et libertes des personnes concernees et les mesures
+envisagees pour y faire face. L'avis de la DPO a ete recueilli et annexe dans les
+trois cas.
+
+Article 15 — Violations de donnees
+Une procedure de gestion des violations de donnees a caractere personnel, diffusee
+en septembre 2022 et revisee en 2025, s'applique a l'ensemble du reseau. Tout
+collaborateur constatant un evenement susceptible de constituer une violation le
+signale sans delai au directeur de son etablissement et a la DPO. La DPO qualifie
+l'evenement sous vingt-quatre heures avec le RSSI. Lorsque la violation est
+susceptible d'engendrer un risque pour les droits et libertes des personnes
+physiques, elle procede a la notification a la CNIL dans un delai maximal de
+72 heures apres en avoir pris connaissance, au moyen du teleservice dedie, et
+complète la notification par phases lorsque toutes les informations ne sont pas
+disponibles. Lorsque la violation est susceptible d'engendrer un risque eleve pour
+les droits et libertes des personnes concernees, celles-ci en sont informees dans
+les meilleurs delais par courrier electronique individuel, ou par communication
+publique lorsque l'information individuelle exigerait des efforts disproportionnes.
+Un registre des violations, tenu par la DPO, documente chaque evenement, y compris
+ceux n'ayant pas donne lieu a notification, avec ses circonstances, ses effets et
+les mesures correctives adoptees. Quatre evenements y ont ete consignes depuis 2023.
+
+Article 16 — Durees de conservation
+Fiche client et historique de sejour : trois ans apres le dernier sejour. Programme
+de fidelite : jusqu'au retrait du consentement, et au plus tard trois ans apres la
+derniere activite. Factures et pieces comptables : dix ans. Registre de police des
+etrangers : six mois. Images de videoprotection : quinze jours. Journaux du controle
+d'acces : trois mois. Dossier du personnel : cinq ans apres le depart. Bulletins de
+paie : cinquante ans. Candidatures non retenues : deux ans apres le dernier contact.
+Allergies alimentaires : duree du sejour. Arrets de travail : duree de l'absence
+augmentee de trois ans. Journaux techniques : six mois.
+
+Article 17 — Minimisation et exactitude
+Les formulaires de reservation et de candidature ont ete revus en 2024, conduisant a
+supprimer cinq champs juges non necessaires, dont la profession du client et la
+situation familiale du candidat. Seules sont collectees les donnees necessaires a la
+finalite poursuivie. Les clients peuvent corriger leurs coordonnees depuis leur
+espace ou a la reception, et une campagne d'actualisation est adressee annuellement
+aux membres du programme de fidelite.

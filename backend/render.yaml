@@ -1,0 +1,41 @@
+# Deploiement Render (offre gratuite).
+# Attention : le service se met en veille apres 15 min d'inactivite.
+# Le cron ci-dessous le maintient eveille avant une demonstration.
+services:
+  - type: web
+    name: complianceai-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    plan: free
+    envVars:
+      - key: ENV
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: complianceai-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: '["https://complianceai-web.onrender.com"]'
+      - key: GROQ_API_KEY
+        sync: false
+
+  - type: cron
+    name: keep-awake
+    runtime: docker
+    schedule: "*/10 * * * *"
+    dockerfilePath: ./Dockerfile
+    dockerCommand: curl -fsS https://complianceai-api.onrender.com/health
+    plan: free
+
+databases:
+  - name: complianceai-db
+    plan: free
+    postgresMajorVersion: "16"

@@ -1,0 +1,128 @@
+DOCUMENT DE CONFORMITE — DISPOSITIF DE VIDEOPROTECTION ET CONTROLE D'ACCES
+CENTRE COMMERCIAL LES TERRASSES DU NORD — Societe de gestion — 95 salaries
+
+PRESENTATION DU DISPOSITIF
+La societe de gestion du centre commercial Les Terrasses du Nord exploite un
+dispositif de videoprotection couvrant l'ensemble des galeries marchandes, des
+parkings et des acces de service, soit 187 cameras. Le centre accueille en moyenne
+28 000 visiteurs par jour. Les images sont visionnees en temps reel depuis un poste
+de securite arme en permanence par un agent, et enregistrees.
+Le dispositif comporte depuis 2025 un module d'analyse automatique des images
+detectant les stationnements prolonges, les mouvements de foule et les intrusions
+en zone de service en dehors des horaires. Les alertes generees sont affichees au
+poste de securite ou l'agent decide de la suite a donner.
+Le controle d'acces aux zones de service repose sur des badges nominatifs
+enregistrant chaque passage.
+
+FINALITES
+Le dispositif poursuit la securite des personnes et des biens, la prevention des
+atteintes aux personnes et aux marchandises, la gestion des flux et la securisation
+des zones techniques.
+
+BASE JURIDIQUE
+Le traitement repose sur l'interet legitime de la societe de gestion et des
+enseignes a assurer la securite des personnes et des biens dans un lieu recevant du
+public. Une mise en balance a ete formalisee en janvier 2025 concluant que
+l'installation ne couvre aucun espace de repos du personnel ni aucun sanitaire, que
+les cameras des galeries sont orientees vers les circulations et non vers les postes
+de travail des enseignes, et que la finalite de securite justifie le dispositif dans
+un lieu de cette frequentation.
+
+DUREES DE CONSERVATION
+Les images sont conservees quinze jours puis effacees automatiquement. Les
+enregistrements extraits dans le cadre d'une procedure sont conserves jusqu'a son
+terme. Les journaux du controle d'acces sont conserves trois mois.
+
+INFORMATION DES PERSONNES
+Des panneaux d'information sont apposes a chaque entree du centre et des parkings.
+Ils indiquent l'existence du dispositif, l'identite et l'adresse de la societe de
+gestion, les coordonnees du delegue a la protection des donnees, la finalite de
+securite, la base juridique de l'interet legitime, la duree de conservation de
+quinze jours, l'existence du droit d'acces aux images et des droits de rectification,
+d'effacement, de limitation et d'opposition, ainsi que le droit d'introduire une
+reclamation aupres de la CNIL. Une note remise aux salaries des enseignes et au
+personnel technique reprend ces elements et precise le fonctionnement du controle
+d'acces par badge.
+
+DELEGUE A LA PROTECTION DES DONNEES
+Compte tenu de la surveillance systematique a grande echelle d'une zone accessible
+au public qui constitue notre activite de base en matiere de securite, nous avons
+designe un delegue a la protection des donnees. Monsieur Etienne Barreau, consultant
+externe, exerce cette fonction depuis avril 2023. Sa designation a ete communiquee a
+la CNIL. Il est joignable a dpo@terrasses-du-nord.fr. Son contrat de prestation
+prevoit son acces direct a la direction et l'absence de toute mission operationnelle
+au sein du centre.
+
+REGISTRE
+Le registre des activites de traitement est tenu par le DPO dans un fichier partage
+avec la direction. Il recense six traitements : videoprotection, controle d'acces,
+gestion du personnel, paie, gestion des prestataires et fichier des commercants
+locataires. Chaque fiche mentionne la finalite, la base juridique, les categories de
+personnes et de donnees, les destinataires, la duree de conservation et les mesures
+de securite. Derniere revision : 9 janvier 2026.
+
+SOUS-TRAITANCE
+L'installation et la maintenance du dispositif sont confiees a une societe
+specialisee, qui peut acceder aux images a distance dans le cadre des interventions.
+Le gardiennage est assure par une entreprise de securite privee dont les agents
+exploitent le poste de securite. Un contrat de sous-traitance a ete signe avec
+chacune : il precise l'objet, la duree et la finalite du traitement, impose de
+n'agir que sur instruction documentee, engage la confidentialite des personnels,
+decrit les mesures de securite, subordonne la sous-traitance ulterieure a notre
+autorisation ecrite prealable et prevoit la restitution et la suppression des
+donnees en fin de contrat. La liste des sous-traitants est tenue par le DPO. Les
+deux societes sont etablies en France et aucun acces n'a lieu depuis un pays tiers.
+
+EXERCICE DES DROITS
+Toute demande d'acces aux images ou d'exercice des droits est adressee au DPO a
+dpo@terrasses-du-nord.fr ou par courrier a l'accueil du centre. La reponse
+intervient dans un delai d'un mois a compter de la reception. La demarche est
+gratuite. L'identite du demandeur est verifiee par piece d'identite, la demande
+devant preciser la date, l'heure et le lieu approximatifs pour permettre la
+recherche. La procedure prevoit que le DPO enregistre la demande, sollicite le
+responsable du poste de securite pour l'extraction, controle le floutage des tiers
+figurant sur les images et organise le visionnage ou la remise d'un extrait. Un
+registre recense les demandes recues et leur date de traitement ; onze demandes ont
+ete traitees en 2025. La suppression d'un extrait conserve hors procedure est
+effectuee sur demande, y compris sur le support de sauvegarde. Une opposition est
+examinee au regard de la situation particuliere invoquee.
+
+SECURITE
+L'acces au poste de securite est restreint aux agents en fonction, identifies
+nominativement. Les comptes du logiciel de videoprotection sont individuels et les
+habilitations revues chaque semestre. Les flux et les enregistrements sont chiffres.
+Toute consultation, extraction ou exportation d'images est journalisee avec
+l'identifiant de l'agent, l'horodatage et le motif ; les journaux sont conserves six
+mois et revus mensuellement par le DPO. Les serveurs d'enregistrement sont dans un
+local ferme a cle. Une sauvegarde des configurations est realisee quotidiennement et
+testee chaque trimestre. Un audit de securite du dispositif a ete conduit en
+septembre 2025.
+
+PROTECTION DES DONNEES DES LA CONCEPTION
+L'implantation de chaque camera a fait l'objet d'un examen prealable de son champ de
+vision, conduisant a exclure les espaces de repos, les sanitaires et les vitrines
+des officines de sante. Les masquages dynamiques sont actives par defaut sur les
+zones privatives adjacentes. Les acces au logiciel sont par defaut limites a la
+consultation en temps reel, l'extraction necessitant une habilitation distincte.
+
+VIOLATIONS
+Une procedure ecrite decrit la conduite a tenir en cas de violation, notamment un
+acces non autorise aux enregistrements ou une perte de support. Tout evenement est
+signale au DPO et a la direction, qualifie sous vingt-quatre heures, et notifie a la
+CNIL dans un delai maximal de 72 heures apres prise de connaissance lorsqu'un risque
+pour les droits et libertes est caracterise. Lorsque le risque est eleve pour les
+personnes concernees, celles-ci sont informees dans les meilleurs delais, par
+affichage dans le centre et sur son site lorsque l'information individuelle est
+impossible. Un registre des violations documente chaque evenement, notifie ou non.
+
+ANALYSE D'IMPACT
+Le dispositif de videoprotection et son module d'analyse automatique ont fait
+l'objet d'une analyse d'impact relative a la protection des donnees, realisee en
+fevrier 2025 et revisee en janvier 2026. Elle comporte une description systematique
+du traitement et de ses finalites, l'evaluation de la necessite et de la
+proportionnalite du dispositif au regard de la frequentation et de la sinistralite
+constatee, l'analyse des risques pour les droits et libertes des visiteurs et des
+salaries, et les mesures envisagees pour y repondre, dont la limitation du champ des
+cameras, la duree de conservation reduite a quinze jours, la tracabilite des
+extractions et l'absence de reconnaissance faciale ou d'identification biometrique.
+L'avis du DPO a ete recueilli et annexe au document.

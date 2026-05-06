@@ -1,0 +1,55 @@
+POLITIQUE DE CONFIDENTIALITE
+Atelier Bertrand Menuiserie SARL - Mars 2026
+
+QUI SOMMES-NOUS
+
+Atelier Bertrand Menuiserie SARL, 22 zone artisanale des Peupliers,
+35000 Rennes. RCS Rennes 521 004 338. Douze salaries.
+Contact : donnees@bertrand-menuiserie.fr
+
+DONNEES COLLECTEES
+
+Nous collectons le nom, l'adresse, le telephone et l'adresse electronique de
+nos clients particuliers et professionnels, ainsi que les elements necessaires
+a l'etablissement des devis et factures. Nous conservons egalement l'historique
+des interventions realisees.
+
+POURQUOI
+
+Ces donnees servent a etablir les devis, executer les chantiers, facturer et
+assurer le suivi apres-vente. Elles reposent sur l'execution du contrat conclu
+avec vous et, pour la facturation, sur nos obligations comptables.
+
+SECURITE
+
+L'acces a notre logiciel de gestion est protege par mot de passe individuel et
+double authentification. Les donnees sont hebergees en France chez OVHcloud et
+chiffrees au repos. Une sauvegarde chiffree est realisee chaque nuit et une
+restauration de test est effectuee chaque trimestre. Les postes de travail sont
+chiffres et mis a jour automatiquement. Seuls le gerant et l'assistante de
+gestion accedent aux donnees clients.
+
+COMBIEN DE TEMPS
+
+Les donnees clients sont conservees pendant la duree de la relation commerciale
+puis archivees trois ans. Les factures sont conservees dix ans conformement au
+Code de commerce.
+
+NOS PRESTATAIRES
+
+Nous faisons appel a OVHcloud pour l'hebergement et a EBP pour notre logiciel
+de gestion. Un contrat encadrant le traitement des donnees a ete signe avec
+chacun d'eux.
+
+VOS DROITS
+
+Vous pouvez demander l'acces a vos donnees, leur rectification ou leur
+suppression en nous ecrivant a donnees@bertrand-menuiserie.fr. Vous pouvez
+egalement vous opposer a leur traitement ou en demander la limitation.
+Nous nous engageons a repondre rapidement a toute demande.
+Vous pouvez saisir la CNIL en cas de difficulte.
+
+COOKIES
+
+Notre site n'utilise que des cookies techniques necessaires a son
+fonctionnement. Aucun outil de mesure d'audience n'est installe.

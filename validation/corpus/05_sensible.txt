@@ -1,0 +1,54 @@
+POLITIQUE DE PROTECTION DES DONNEES
+Centre Medical des Trois Fontaines - Janvier 2026
+
+IDENTIFICATION
+
+Centre Medical des Trois Fontaines, societe d'exercice liberal,
+18 boulevard Gambetta, 06000 Nice. Quarante-deux praticiens et personnels.
+Contact : secretariat@cm3f.fr
+
+DONNEES TRAITEES
+
+Nous traitons les donnees d'identification des patients (nom, date de
+naissance, numero de securite sociale, coordonnees), ainsi que l'ensemble des
+donnees de sante recueillies dans le cadre des consultations : antecedents,
+diagnostics, prescriptions, resultats d'examens, comptes rendus operatoires.
+
+Nous conservons egalement les donnees de nos salaries dans le cadre de la
+gestion du personnel.
+
+FINALITES
+
+Prise en charge medicale des patients, tenue du dossier medical, facturation
+des actes et teletransmission aux organismes d'assurance maladie.
+
+HEBERGEMENT
+
+Les dossiers medicaux sont heberges chez un prestataire certifie hebergeur de
+donnees de sante. Une partie de nos outils de bureautique et de messagerie
+repose sur des services dont les serveurs peuvent se situer en dehors de
+l'Union europeenne.
+
+SECURITE
+
+Les acces au dossier medical sont nominatifs et tracés. Les postes sont
+verrouilles automatiquement. Les echanges avec les laboratoires sont chiffres.
+Les sauvegardes sont quotidiennes.
+
+PRISE DE RENDEZ-VOUS EN LIGNE
+
+Notre plateforme de prise de rendez-vous propose un pre-questionnaire qui
+oriente automatiquement le patient vers la specialite adaptee et attribue un
+niveau de priorite en fonction des symptomes declares.
+
+DUREES DE CONSERVATION
+
+Les dossiers medicaux sont conserves vingt ans a compter de la derniere
+consultation, conformement a la reglementation applicable aux etablissements
+de sante.
+
+DROITS DES PATIENTS
+
+Vous pouvez acceder a votre dossier medical sur demande ecrite accompagnee
+d'une piece d'identite, conformement au Code de la sante publique.
+Pour toute autre demande, adressez-vous au secretariat.

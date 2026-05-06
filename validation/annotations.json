@@ -1,0 +1,117 @@
+{
+  "_lecture": {
+    "verdicts": {
+      "conforme": "L'exigence est traitee de maniere satisfaisante.",
+      "manquement": "L'obligation s'applique et n'est pas satisfaite.",
+      "hors_perimetre": "L'obligation ne concerne pas cette organisation.",
+      "tolere": "Les deux lectures se defendent : le verdict n'est pas compte comme une erreur."
+    },
+    "note": "Seuls les articles discriminants sont annotes. Les autres ne sont pas evalues, pour ne pas transformer un desaccord d'appreciation en erreur mesuree.",
+    "auteur": "Annotations etablies par lecture du RGPD et des lignes directrices du CEPD. Elles engagent une interpretation argumentee, pas une decision de justice."
+  },
+
+  "01_conforme.txt": {
+    "profil": "Grande PME structuree : DPO designe, registre tenu, procedures documentees.",
+    "score_attendu": [85, 100],
+    "articles": {
+      "7": {"verdict": "conforme", "motif": "Consentement recueilli par case non precochee, horodate, retrait aussi simple que l'octroi."},
+      "12": {"verdict": "conforme", "motif": "Delai d'un mois annonce, prolongation de deux mois motivee."},
+      "13": {"verdict": "conforme", "motif": "Toutes les mentions de l'article 13 sont presentes, y compris les coordonnees du DPO."},
+      "14": {"verdict": "conforme", "motif": "Information dans le mois suivant l'obtention aupres d'annuaires professionnels."},
+      "19": {"verdict": "conforme", "motif": "Notification aux destinataires explicitement prevue."},
+      "20": {"verdict": "conforme", "motif": "Formats CSV et JSON, transmission directe a un autre responsable."},
+      "25": {"verdict": "conforme", "motif": "Analyse prealable par le DPO, minimisation et parametres par defaut restrictifs."},
+      "28": {"verdict": "conforme", "motif": "Clauses de l'article 28 enumerees, sous-traitance ulterieure soumise a autorisation."},
+      "30": {"verdict": "conforme", "motif": "Registre de 34 traitements, mis a jour trimestriellement, tenu a disposition de la CNIL."},
+      "32": {"verdict": "conforme", "motif": "Chiffrement, pseudonymisation, continuite, test de restauration mensuel, test d'intrusion annuel."},
+      "33": {"verdict": "conforme", "motif": "Procedure documentee, delai de 72 heures, registre interne des violations."},
+      "34": {"verdict": "conforme", "motif": "Information individuelle des personnes en cas de risque eleve."},
+      "35": {"verdict": "conforme", "motif": "Trois analyses d'impact realisees en 2025, avis du DPO recueilli."},
+      "37": {"verdict": "conforme", "motif": "DPO designe et notifie a la CNIL le 8 mars 2019."},
+      "38": {"verdict": "conforme", "motif": "Rattachement a la direction generale, budget propre, absence d'instructions."},
+      "39": {"verdict": "conforme", "motif": "Les cinq missions de l'article 39 sont enumerees."},
+      "44": {"verdict": "hors_perimetre", "motif": "Sous-traitants exclusivement francais, aucun transfert hors Union."}
+    }
+  },
+
+  "02_defaillant.txt": {
+    "profil": "Micro-entreprise, mentions legales tenant lieu de politique. Manquements massifs.",
+    "score_attendu": [0, 30],
+    "articles": {
+      "7": {"verdict": "manquement", "motif": "Consentement presume de la commande et de la poursuite de navigation : ni libre, ni specifique, ni univoque."},
+      "12": {"verdict": "manquement", "motif": "Aucune modalite d'exercice des droits, aucun delai."},
+      "13": {"verdict": "manquement", "motif": "Ni base legale, ni duree, ni destinataires, ni droits, ni mention de la CNIL."},
+      "15": {"verdict": "manquement", "motif": "Le droit d'acces n'est pas mentionne."},
+      "17": {"verdict": "manquement", "motif": "Le droit a l'effacement n'est pas mentionne."},
+      "20": {"verdict": "manquement", "motif": "Le droit a la portabilite n'est pas mentionne."},
+      "21": {"verdict": "manquement", "motif": "Aucun droit d'opposition alors que les donnees sont cedees a des partenaires."},
+      "28": {"verdict": "manquement", "motif": "Un prestataire technique est mentionne, sans aucun encadrement contractuel."},
+      "30": {"verdict": "manquement", "motif": "Aucun registre. L'exemption de l'article 30.5 ne joue pas : le traitement de prospection est regulier."},
+      "32": {"verdict": "manquement", "motif": "Aucune mesure de securite decrite."},
+      "33": {"verdict": "manquement", "motif": "Aucune procedure de notification de violation."},
+      "44": {"verdict": "manquement", "motif": "Hebergement aux Etats-Unis annonce, sans mention d'une garantie appropriee."},
+      "5": {"verdict": "manquement", "motif": "Duree de conservation indeterminee : « conservees dans notre systeme »."}
+    }
+  },
+
+  "03_intermediaire.txt": {
+    "profil": "PME artisanale solide sur la securite, lacunaire sur la formalisation.",
+    "score_attendu": [55, 80],
+    "articles": {
+      "12": {"verdict": "manquement", "motif": "« Repondre rapidement » ne satisfait pas le delai d'un mois de l'article 12.3."},
+      "13": {"verdict": "tolere", "motif": "Finalites, bases legales et durees sont presentes ; destinataires et droit de reclamation sont partiels."},
+      "20": {"verdict": "manquement", "motif": "Le droit a la portabilite n'est pas mentionne, alors que le traitement repose sur le contrat."},
+      "28": {"verdict": "conforme", "motif": "Contrat de traitement signe avec chaque prestataire, tous deux etablis en France."},
+      "30": {"verdict": "manquement", "motif": "Aucun registre mentionne."},
+      "32": {"verdict": "conforme", "motif": "Double authentification, chiffrement au repos et sur les postes, restauration testee trimestriellement, habilitations restreintes."},
+      "33": {"verdict": "manquement", "motif": "Aucune procedure de notification de violation."},
+      "35": {"verdict": "hors_perimetre", "motif": "Douze salaries, aucun traitement a risque eleve au sens de l'article 35.3."},
+      "37": {"verdict": "hors_perimetre", "motif": "Ni autorite publique, ni suivi a grande echelle, ni donnees sensibles : aucune des conditions de l'article 37.1."},
+      "38": {"verdict": "hors_perimetre", "motif": "Depend de l'article 37."},
+      "39": {"verdict": "hors_perimetre", "motif": "Depend de l'article 37."},
+      "44": {"verdict": "hors_perimetre", "motif": "Hebergement en France, aucun transfert hors Union."},
+      "9": {"verdict": "hors_perimetre", "motif": "Aucune donnee sensible : coordonnees et historique d'interventions de menuiserie."}
+    }
+  },
+
+  "04_hors_perimetre.txt": {
+    "profil": "Artisan a deux personnes, traitements minimaux mais correctement couverts.",
+    "score_attendu": [70, 100],
+    "articles": {
+      "12": {"verdict": "conforme", "motif": "Delai d'un mois annonce, voie de reclamation indiquee."},
+      "15": {"verdict": "conforme", "motif": "Droit de consultation prevu."},
+      "19": {"verdict": "conforme", "motif": "Repercussion des corrections aupres du comptable."},
+      "20": {"verdict": "conforme", "motif": "« Copie exploitable » couvre l'exigence de portabilite pour ce niveau de structure."},
+      "30": {"verdict": "conforme", "motif": "Registre simplifie tenu selon le modele CNIL pour les petites structures."},
+      "32": {"verdict": "tolere", "motif": "Poste chiffre, mot de passe, sauvegarde hebdomadaire hors site. Proportionne, mais la frequence hebdomadaire est discutable."},
+      "33": {"verdict": "conforme", "motif": "Delai de 72 heures et information des personnes en cas de risque eleve."},
+      "35": {"verdict": "hors_perimetre", "motif": "Aucun traitement a risque eleve."},
+      "37": {"verdict": "hors_perimetre", "motif": "Deux personnes, aucune condition de l'article 37.1 remplie."},
+      "38": {"verdict": "hors_perimetre", "motif": "Depend de l'article 37."},
+      "39": {"verdict": "hors_perimetre", "motif": "Depend de l'article 37."},
+      "44": {"verdict": "hors_perimetre", "motif": "Aucun hebergement en ligne, aucun transfert."},
+      "22": {"verdict": "hors_perimetre", "motif": "Aucune decision automatisee."},
+      "9": {"verdict": "hors_perimetre", "motif": "Aucune donnee sensible."},
+      "28": {"verdict": "hors_perimetre", "motif": "Aucun prestataire n'accede aux donnees."}
+    }
+  },
+
+  "05_sensible.txt": {
+    "profil": "Cabinet medical : donnees de sante, decision automatisee, transferts hors Union. Le piege du corpus.",
+    "score_attendu": [40, 70],
+    "articles": {
+      "9": {"verdict": "conforme", "motif": "Donnees de sante traitees aux fins de medecine preventive : l'article 9.2.h s'applique. Le traitement est licite."},
+      "22": {"verdict": "manquement", "motif": "Le pre-questionnaire attribue automatiquement un niveau de priorite medicale. Aucune intervention humaine ni droit de contestation n'est prevu."},
+      "35": {"verdict": "manquement", "motif": "Traitement de donnees sensibles a grande echelle : analyse d'impact obligatoire au titre de l'article 35.3.b. Aucune n'est mentionnee."},
+      "37": {"verdict": "manquement", "motif": "Traitement a grande echelle de donnees de sante : designation d'un DPO obligatoire au titre de l'article 37.1.c. Aucun n'est designe."},
+      "44": {"verdict": "manquement", "motif": "Serveurs de bureautique hors Union reconnus, sans aucune garantie appropriee."},
+      "30": {"verdict": "manquement", "motif": "Aucun registre, alors que l'exemption de l'article 30.5 est exclue pour les donnees de sante."},
+      "32": {"verdict": "tolere", "motif": "Tracabilite et chiffrement des echanges presents, mais aucune mention de chiffrement au repos pour des donnees de sante."},
+      "33": {"verdict": "manquement", "motif": "Aucune procedure de notification de violation."},
+      "13": {"verdict": "manquement", "motif": "Ni base legale, ni destinataires, ni droit de reclamation aupres de la CNIL."},
+      "15": {"verdict": "tolere", "motif": "L'acces au dossier medical est prevu par le Code de la sante publique, mais l'article 15 du RGPD est plus large."},
+      "20": {"verdict": "manquement", "motif": "Le droit a la portabilite n'est pas mentionne."},
+      "12": {"verdict": "manquement", "motif": "Aucun delai de reponse annonce."}
+    }
+  }
+}

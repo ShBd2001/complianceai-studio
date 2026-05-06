@@ -1,0 +1,101 @@
+NOTE INTERNE — PROTECTION DES DONNEES
+ATELIER DE RELIURE BERTRAND — Entreprise individuelle, deux personnes
+
+PRESENTATION
+L'atelier de reliure Bertrand est une entreprise individuelle installee a Dijon,
+composee du dirigeant et d'une apprentie. Nous realisons des travaux de reliure
+et de restauration de livres anciens pour des particuliers, des bibliotheques
+municipales et quelques libraires. Notre activite de base est un travail manuel
+d'artisanat ; nous n'exercons aucune activite de suivi regulier et systematique
+de personnes, et nous ne traitons a grande echelle ni donnees sensibles ni
+donnees relatives a des condamnations penales.
+
+DONNEES QUE NOUS TRAITONS
+Nous tenons un fichier clients comportant, pour chaque commande, le nom du
+client, son adresse postale, son numero de telephone, son adresse electronique
+et la description de l'ouvrage confie. Nous conservons egalement les factures
+emises. Aucune autre donnee n'est collectee : nous ne demandons ni date de
+naissance, ni profession, ni aucune information non necessaire a la realisation
+et a la facturation du travail. Nous ne pratiquons aucune prospection et
+n'envoyons aucune newsletter.
+
+POURQUOI NOUS LES TRAITONS
+Ces donnees sont necessaires a l'execution du contrat de prestation conclu avec
+le client : identifier l'ouvrage, joindre le client pendant le travail, livrer et
+facturer. La conservation des factures repond a notre obligation legale en
+matiere comptable et fiscale.
+
+REGISTRE DES TRAITEMENTS
+Nous tenons un registre des activites de traitement sous la forme d'un document
+imprime range dans le classeur administratif de l'atelier. Il recense deux
+traitements : la gestion des commandes clients et la facturation. Pour chacun, le
+registre indique la finalite, les categories de personnes concernees, les
+categories de donnees collectees, l'absence de destinataire externe autre que le
+cabinet comptable, la duree de conservation et les mesures de securite en place.
+Il a ete etabli en avril 2024 et revu le 6 janvier 2026.
+
+COMBIEN DE TEMPS
+Les coordonnees des clients sont conservees trois ans apres la derniere commande.
+Les factures sont conservees dix ans conformement au code de commerce.
+
+A QUI ELLES SONT COMMUNIQUEES
+Aucune donnee n'est communiquee a un tiers, a l'exception de notre cabinet
+comptable, etabli a Dijon, auquel les factures sont transmises. Un avenant a la
+lettre de mission signe en mai 2024 encadre ce traitement : il precise l'objet, la
+duree et la finalite, prevoit que le cabinet n'agit que sur nos instructions
+documentees, impose la confidentialite a son personnel, decrit les mesures de
+securite, subordonne tout recours a un sous-traitant ulterieur a notre
+autorisation ecrite prealable et prevoit la restitution puis la destruction des
+donnees en fin de mission. Aucune donnee n'est transferee en dehors de l'Union
+europeenne ; l'ordinateur de l'atelier et la messagerie sont heberges en France.
+
+INFORMATION DES CLIENTS
+Une mention figure au verso du bon de commande remis a chaque client. Elle
+indique que l'atelier de reliure Bertrand, 14 rue Vannerie a Dijon, est
+responsable du traitement, que les donnees servent a executer la commande et a
+facturer, que la base juridique est le contrat et l'obligation legale comptable,
+que le cabinet comptable en est le seul destinataire, que les coordonnees sont
+conservees trois ans et les factures dix ans, que le client dispose d'un droit
+d'acces, de rectification, d'effacement, de limitation, d'opposition et de
+portabilite, et qu'il peut introduire une reclamation aupres de la CNIL.
+
+VOS DROITS, COMMENT LES EXERCER
+Pour exercer vos droits, adressez votre demande a l'atelier, 14 rue Vannerie,
+21000 Dijon, ou par courriel a contact@reliure-bertrand.fr. Nous repondons dans
+un delai d'un mois a compter de la reception. La demarche est gratuite. Nous
+verifions votre identite par la production d'une piece justificative en cas de
+doute. En pratique, le dirigeant recoit la demande, consulte le fichier clients
+et le classeur de factures, et redige la reponse. Nous pouvons extraire et vous
+transmettre l'integralite des informations vous concernant par export du fichier
+clients au format tableur, et supprimer votre fiche du fichier actif ainsi que de
+la copie de sauvegarde lors de la sauvegarde suivante. Une opposition a tout
+nouveau contact est enregistree par une mention dans la fiche client, verifiee
+avant chaque prise de contact. Un cahier tenu a l'atelier note les demandes
+recues et la date de reponse.
+
+SECURITE
+L'ordinateur de l'atelier est protege par un mot de passe individuel pour le
+dirigeant et pour l'apprentie, chacun disposant de son propre compte. Le disque
+est chiffre. Une sauvegarde est realisee chaque semaine sur un disque externe
+conserve dans le coffre de l'atelier, et nous verifions deux fois par an que la
+restauration fonctionne en ouvrant les fichiers sauvegardes. Le systeme
+enregistre les ouvertures de session, consultables dans l'historique.
+
+PROTECTION DES DONNEES DES LA CONCEPTION
+Lors du changement de logiciel de facturation en 2025, nous avons verifie avant
+de le retenir qu'il ne demandait aucune donnee superflue et qu'il permettait de
+supprimer une fiche client. Les parametres ont ete regles pour que la fiche
+client ne soit visible que par les deux comptes de l'atelier, sans partage.
+
+EN CAS D'INCIDENT
+Nous avons ecrit une procedure d'une page, affichee pres du poste, decrivant la
+conduite a tenir en cas de violation de donnees, par exemple une perte du disque
+de sauvegarde ou un acces frauduleux a la messagerie. Le dirigeant evalue le
+risque et, si les droits et libertes des personnes sont susceptibles d'etre
+concernes, effectue une notification a la CNIL dans les 72 heures suivant la
+prise de connaissance de l'incident, via le teleservice de notification. Si le
+risque est eleve pour les personnes concernees, celles-ci sont prevenues par
+telephone ou courriel dans les meilleurs delais. Chaque incident, meme non
+notifie, est consigne dans un registre des violations tenu dans le classeur
+administratif, avec ses effets et les mesures prises. Aucun incident n'y figure
+a ce jour.

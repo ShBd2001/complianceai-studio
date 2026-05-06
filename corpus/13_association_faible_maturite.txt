@@ -1,0 +1,40 @@
+PROTECTION DES DONNEES — ASSOCIATION LES JARDINS PARTAGES DE BELLEVILLE
+
+QUI SOMMES-NOUS
+Association loi 1901 declaree en prefecture de Paris, gerant quatre jardins
+partages dans le 20e arrondissement. Nous comptons 240 adherents et trois salaries
+a temps partiel.
+
+CE QUE NOUS ENREGISTRONS
+Nous tenons un fichier des adherents comprenant nom, prenom, adresse, telephone,
+courriel, date d'adhesion et jardin attribue. Nous conservons aussi les certificats
+medicaux de non contre-indication remis par les adherents participant aux chantiers
+collectifs, ainsi que les attestations de quotient familial servant a calculer la
+cotisation reduite.
+
+POURQUOI
+Ces informations nous permettent de gerer les adhesions, d'attribuer les parcelles,
+d'organiser les chantiers et d'appeler les cotisations.
+
+NOTRE LETTRE D'INFORMATION
+Tous les adherents recoivent notre lettre d'information mensuelle ainsi que les
+appels a mobilisation. Nous ecrivons egalement aux personnes ayant signe nos
+petitions de quartier et a celles rencontrees lors de la fete des jardins.
+
+QUI Y A ACCES
+Le fichier est tenu dans un tableur partage accessible aux membres du bureau et aux
+trois salaries. La comptabilite est confiee a un expert-comptable. Notre site et
+notre messagerie associative sont heberges par un prestataire.
+
+SECURITE
+Le tableur est stocke sur l'espace en ligne de l'association, accessible par un
+identifiant et un mot de passe communs partages entre les membres du bureau. Nous
+faisons attention a ne pas diffuser ce mot de passe en dehors du bureau.
+
+VOS DROITS
+Vous pouvez nous demander la suppression de vos informations en nous ecrivant a
+contact@jardinsdebelleville.org.
+
+DUREE
+Nous gardons les fiches des adherents afin de garder la memoire de la vie de
+l'association.

@@ -1,0 +1,62 @@
+{
+  "version": "2.0",
+  "note": "Vérité terrain posée manuellement, article par article. Toute modification doit être justifiée en commentaire de commit — c'est la référence contre laquelle le moteur est mesuré.",
+  "cas": [
+    {
+      "fichier": "03_intermediaire.txt",
+      "description": "PME artisanale de 34 salariés, solide sur la sécurité, lacunaire sur la formalisation",
+      "score_attendu": [55, 75],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "12": "manquement",
+        "13": "manquement",
+        "15-22": "manquement",
+        "28": "manquement",
+        "30": "manquement",
+        "32": "conforme",
+        "33": "manquement",
+        "34": "manquement",
+        "37": "hors_perimetre",
+        "44-49": "hors_perimetre"
+      },
+      "jamais_exclure": ["30", "33", "12", "28"],
+      "commentaires": {
+        "12": "Les droits sont listés mais aucun canal, délai ni procédure interne n'est indiqué. Lister n'est pas outiller.",
+        "30": "Aucune mention d'un registre. La maturité en sécurité ne le présume pas. Dispense 30(5) inapplicable : 34 salariés mais traitements RH et clients non occasionnels.",
+        "32": "Contrôle d'accès, chiffrement, sauvegardes testées, journalisation : les quatre éléments bloquants sont couverts.",
+        "33": "Aucune procédure de notification, aucun délai de 72h, aucune mention de la CNIL comme destinataire. La solidité en sécurité est hors sujet.",
+        "37": "34 salariés, pas de traitement à grande échelle de données sensibles ni de suivi systématique : désignation facultative.",
+        "44-49": "Tous les destinataires sont établis en France."
+      }
+    },
+    {
+      "fichier": "05_sensible.txt",
+      "description": "Cabinet médical : données de santé licites, mais transferts hors UE non encadrés",
+      "score_attendu": [40, 65],
+      "verdicts_attendus": {
+        "5": "manquement",
+        "6": "manquement",
+        "9": "conforme",
+        "12": "manquement",
+        "13": "manquement",
+        "22": "hors_perimetre",
+        "28": "manquement",
+        "30": "manquement",
+        "32": "conforme",
+        "33": "manquement",
+        "35": "manquement",
+        "37": "manquement",
+        "44-49": "manquement"
+      },
+      "jamais_exclure": ["30", "33", "44-49", "35", "12"],
+      "commentaires": {
+        "9": "PIÈGE PRINCIPAL. Traitement licite au titre du 9(2)(h) : médecine préventive, diagnostic, prise en charge, par des professionnels soumis au secret. Le document l'établit explicitement. Un verdict de manquement ici est un faux positif grave.",
+        "22": "La proposition algorithmique est systématiquement revue par un praticien disposant d'une marge d'appréciation : la décision n'est pas fondée exclusivement sur un traitement automatisé.",
+        "35": "Traitement à grande échelle de données de santé : AIPD obligatoire, aucune trace dans le document.",
+        "37": "Traitement à grande échelle de données de santé : la désignation d un DPO est obligatoire, et le document n en mentionne aucun.",
+        "44-49": "Prestataire de prise de rendez-vous hébergé aux États-Unis et support depuis l'Inde, sans mention de clauses contractuelles types ni de décision d'adéquation."
+      }
+    }
+  ]
+}

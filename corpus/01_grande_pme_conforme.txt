@@ -1,0 +1,142 @@
+POLITIQUE DE PROTECTION DES DONNEES A CARACTERE PERSONNEL
+GROUPE VALMONT DISTRIBUTION SAS — Version 4.2 — Mise a jour le 12 mars 2026
+
+1. IDENTITE DU RESPONSABLE DE TRAITEMENT
+Valmont Distribution SAS, 42 avenue des Peupliers, 69100 Villeurbanne, SIREN
+483 921 774, represente par son directeur general. Le groupe emploie 610
+salaries repartis sur onze sites logistiques.
+
+2. DELEGUE A LA PROTECTION DES DONNEES
+Madame Claire Fontanel a ete designee deleguee a la protection des donnees le
+3 janvier 2023. Sa designation a ete notifiee a la CNIL sous le numero
+DPO-2023-0041. Elle est rattachee directement a la direction generale, ne recoit
+aucune instruction dans l'exercice de ses missions et ne cumule aucune fonction
+operationnelle susceptible de generer un conflit d'interets. Elle est joignable
+a dpo@valmont-distribution.fr et dispose d'un budget annuel dedie ainsi que de
+deux jours de formation continue par an.
+
+3. REGISTRE DES ACTIVITES DE TRAITEMENT
+Le registre des activites de traitement est tenu sous forme d'un fichier
+structure hebergé sur l'outil de gouvernance interne GovData, accessible a la
+DPO et aux referents metier. Il recense a ce jour dix-neuf traitements :
+gestion de la paie, recrutement, gestion des candidatures, badgeuse, videoprotection
+des quais, fichier clients, prospection commerciale, service apres-vente,
+gestion des reclamations, comptabilite fournisseurs, gestion des acces
+informatiques, annuaire interne, formation professionnelle, entretiens annuels,
+gestion des notes de frais, suivi medical du travail, gestion des instances
+representatives, litiges prud'homaux et archivage legal.
+Chaque fiche de traitement precise la finalite poursuivie, la base juridique,
+les categories de personnes concernees, les categories de donnees collectees,
+les destinataires internes et externes, la duree de conservation applicable et
+une description des mesures de securite techniques et organisationnelles.
+Le registre a fait l'objet d'une revision complete le 12 mars 2026. Une revue
+est programmee chaque semestre et a chaque creation de traitement.
+
+4. FINALITES ET BASES JURIDIQUES
+La gestion de la paie et le suivi medical du travail reposent sur l'obligation
+legale de l'employeur. La gestion des commandes clients et le service apres-vente
+reposent sur l'execution du contrat. La prospection commerciale aupres des
+prospects non clients repose sur le consentement, recueilli par case a cocher
+non precochee. La videoprotection des quais repose sur l'interet legitime du
+responsable de traitement ; une mise en balance a ete documentee le 8 fevrier 2025
+concluant que la finalite de securisation des marchandises ne portait pas une
+atteinte disproportionnee aux droits des salaries, les cameras ne couvrant aucun
+poste de travail permanent ni aucun local social.
+
+5. MINIMISATION ET EXACTITUDE
+Les formulaires de collecte ont fait l'objet d'une revue en 2025 ayant conduit a
+supprimer sept champs juges non necessaires, dont la date de naissance des
+contacts professionnels et la situation familiale des candidats. Les donnees
+strictement necessaires a chaque finalite sont seules collectees. Les clients
+peuvent mettre a jour leurs coordonnees depuis leur espace personnel, et une
+campagne annuelle d'actualisation est adressee aux contacts inactifs.
+
+6. DUREES DE CONSERVATION
+Bulletins de paie : cinquante ans. Candidatures non retenues : deux ans a compter
+du dernier contact, sauf opposition. Donnees clients : duree de la relation
+commerciale augmentee de cinq ans. Prospects : trois ans a compter du dernier
+contact. Images de videoprotection : trente jours. Journaux de connexion : six
+mois. Notes de frais : dix ans au titre des obligations comptables.
+
+7. INFORMATION DES PERSONNES
+Une notice d'information est remise a chaque salarie a l'embauche et annexee au
+reglement interieur. Elle mentionne l'identite du responsable de traitement, les
+coordonnees de la DPO, les finalites poursuivies et la base juridique de chacune,
+les destinataires, les durees de conservation, l'existence des droits d'acces, de
+rectification, d'effacement, de limitation, d'opposition et de portabilite, ainsi
+que le droit d'introduire une reclamation aupres de la CNIL. Aucune donnee n'est
+transferee en dehors de l'Union europeenne : l'ensemble des prestataires et des
+serveurs sont localises en France et en Allemagne.
+
+8. EXERCICE DES DROITS
+Toute demande d'exercice des droits peut etre adressee a dpo@valmont-distribution.fr
+ou par courrier au siege a l'attention de la DPO. Une reponse est apportee dans un
+delai d'un mois a compter de la reception de la demande, prorogeable de deux mois
+en cas de complexite, la personne concernee etant alors informee de la prorogation
+et de ses motifs dans le mois suivant la demande. L'exercice des droits est gratuit.
+L'identite du demandeur est verifiee par la production d'une piece d'identite
+lorsqu'un doute raisonnable existe. La procedure interne prevoit que la DPO recoit
+la demande, la qualifie sous cinq jours, sollicite le referent metier concerne pour
+l'extraction ou la suppression, controle la reponse et la transmet au demandeur.
+Un registre des demandes recense chaque saisine, sa date, sa nature et la date de
+reponse ; quarante-trois demandes ont ete traitees en 2025.
+L'extraction des donnees d'une personne est realisee via la fonction d'export au
+format CSV de chacun des applicatifs concernes. La suppression est effectuee dans
+les bases actives puis, sur demande expresse, dans les sauvegardes lors du cycle
+de rotation suivant, ce delai maximal de trois mois etant porte a la connaissance
+du demandeur. L'opposition a la prospection est prise en compte par inscription
+en liste de suppression, verifiee avant chaque campagne.
+
+9. SOUS-TRAITANCE
+Le groupe recourt a onze sous-traitants, dont l'editeur de son logiciel de paie,
+son hebergeur, son prestataire de maintenance informatique et son cabinet de
+recrutement. Chacun a signe un contrat de sous-traitance comportant les clauses
+exigees par l'article 28 : objet, duree et finalite du traitement, obligation de
+n'agir que sur instruction documentee du responsable de traitement, engagement de
+confidentialite du personnel, mesures de securite, conditions de recours a un
+sous-traitant ulterieur soumis a autorisation ecrite prealable, assistance du
+responsable de traitement, notification des violations sous vingt-quatre heures,
+et restitution puis destruction des donnees au terme de la prestation. La liste
+des sous-traitants est tenue a jour par la DPO et revisee semestriellement.
+
+10. SECURITE DES TRAITEMENTS
+Les comptes utilisateurs sont nominatifs et les habilitations attribuees selon le
+principe du moindre privilege, avec une revue trimestrielle des droits. L'authentification
+multifacteur est obligatoire pour tout acces distant. Les postes et les serveurs sont
+chiffres, les echanges realises en TLS 1.3, et les identifiants stockes sous forme
+hachee. Les sauvegardes sont quotidiennes, repliquees sur deux sites distincts, et
+un test de restauration complet est realise chaque trimestre. Les acces aux
+applications contenant des donnees personnelles sont journalises et les journaux
+conserves six mois. Un test d'intrusion externe est commande chaque annee ; le
+dernier date de novembre 2025 et son plan de remediation est clos.
+
+11. PROTECTION DES DONNEES DES LA CONCEPTION
+Toute nouvelle application ou evolution fonctionnelle fait l'objet d'une fiche
+d'analyse prealable soumise a la DPO avant developpement, examinant la necessite
+des donnees envisagees, la duree de conservation et les acces. Les parametres par
+defaut retiennent la duree la plus courte, la visibilite la plus restreinte et
+l'absence de partage, toute extension necessitant une action explicite.
+
+12. ANALYSE D'IMPACT
+Deux traitements ont fait l'objet d'une analyse d'impact relative a la protection
+des donnees : la videoprotection des quais, realisee en fevrier 2025, et le
+dispositif de badgeuse, realise en septembre 2024. Chaque analyse comporte une
+description systematique du traitement, l'evaluation de la necessite et de la
+proportionnalite, l'analyse des risques pour les droits et libertes des personnes
+et les mesures envisagees pour y faire face. L'avis de la DPO a ete recueilli et
+annexe dans les deux cas.
+
+13. VIOLATIONS DE DONNEES
+Une procedure ecrite de gestion des violations de donnees a caractere personnel a
+ete diffusee en janvier 2024. Elle prevoit que tout collaborateur signale sans
+delai au service informatique et a la DPO tout evenement suspect. La DPO qualifie
+la violation sous vingt-quatre heures et, lorsqu'un risque pour les droits et
+libertes est caracterise, procede a la notification a la CNIL dans un delai
+maximal de 72 heures apres en avoir pris connaissance, le directeur general etant
+informe. Lorsque la violation est susceptible d'engendrer un risque eleve pour les
+droits et libertes des personnes concernees, celles-ci en sont informees dans les
+meilleurs delais par courrier electronique individuel, ou par communication
+publique sur le site du groupe si le nombre de personnes rend l'information
+individuelle disproportionnee. Un registre des violations documente chaque
+evenement, y compris ceux n'ayant pas donne lieu a notification, avec ses effets
+et les mesures correctives prises. Deux evenements y ont ete consignes en 2025.

@@ -1,0 +1,43 @@
+POLITIQUE DE PROTECTION DES DONNEES — MENUISERIE DURAND SARL
+
+1. PRESENTATION
+La SARL Durand est une entreprise artisanale de menuiserie employant 34 salariés,
+implantée à Nantes. Nous traitons des données personnelles de nos clients
+particuliers et professionnels, ainsi que de nos salariés dans le cadre de la
+gestion des ressources humaines.
+
+2. FINALITES DES TRAITEMENTS
+Les données clients sont collectées aux fins de gestion des devis, de suivi des
+chantiers, de facturation et de recouvrement. Les données salariés sont traitées
+pour la gestion de la paie, des congés et du suivi médical réglementaire.
+
+3. BASE LEGALE
+Le traitement des données clients repose sur l'exécution du contrat de travaux.
+Le traitement des données salariés repose sur l'obligation légale de l'employeur
+et sur l'exécution du contrat de travail.
+
+4. SECURITE DES SYSTEMES D'INFORMATION
+Nous appliquons une politique de sécurité rigoureuse. Chaque salarié dispose d'un
+compte nominatif protégé par un mot de passe conforme aux recommandations de
+l'ANSSI, et l'authentification à double facteur est déployée sur tous les postes
+ayant accès au serveur de fichiers. Les données sont chiffrées au repos sur nos
+serveurs via BitLocker, et les échanges avec notre logiciel de devis se font
+exclusivement en TLS 1.3. Des sauvegardes quotidiennes sont réalisées sur un
+support externe conservé hors site, et un test de restauration complet est
+effectué chaque trimestre par notre prestataire informatique. La journalisation
+des accès au serveur de fichiers est activée et les logs sont conservés six mois.
+Un audit de sécurité a été mené en mars 2025 par un prestataire externe.
+
+5. DUREES DE CONSERVATION
+Les données clients sont conservées pendant la durée de la relation commerciale
+puis archivées cinq ans à compter de la fin du chantier au titre de la garantie
+décennale. Les bulletins de paie sont conservés cinquante ans.
+
+6. VOS DROITS
+Conformément à la réglementation, vous disposez d'un droit d'accès, de
+rectification, d'effacement, de limitation, d'opposition et de portabilité de vos
+données. Vous pouvez également introduire une réclamation auprès de la CNIL.
+
+7. DESTINATAIRES
+Les données peuvent être transmises à notre cabinet comptable, à notre assureur
+décennal et à notre prestataire informatique, tous établis en France.

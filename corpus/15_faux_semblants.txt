@@ -1,0 +1,60 @@
+POLITIQUE RGPD — TECHNOSPHERE DIGITAL SARL
+Agence de marketing digital — 22 salaries — Document mis a jour
+
+NOTRE DEMARCHE
+Technosphere Digital applique le RGPD. Le present document constitue notre registre
+des traitements et notre politique de confidentialite.
+
+REGISTRE DES TRAITEMENTS
+Nous listons ci-apres nos traitements : gestion des clients, campagnes publicitaires
+pour nos clients, gestion du personnel, prospection.
+
+NOS TRAITEMENTS EN DETAIL
+Gestion des clients : nous conservons les coordonnees de nos clients annonceurs et
+l'historique des prestations. Campagnes : pour le compte de nos clients, nous
+constituons et exploitons des audiences publicitaires a partir des donnees de
+navigation collectees sur leurs sites au moyen de traceurs que nous deployons, et
+nous rapprochons ces donnees avec des segments d'audience acquis aupres de
+plateformes publicitaires. Personnel : dossiers des 22 salaries. Prospection :
+fichier de contacts constitue par extraction automatisee de profils publics sur les
+reseaux sociaux professionnels.
+
+NOTRE REFERENT
+La conformite est suivie par notre cofondateur, egalement directeur commercial. Il
+est notre point de contact pour les questions de donnees personnelles et son adresse
+est contact@technosphere-digital.fr.
+
+SECURITE — NOTRE ENGAGEMENT
+La securite est une priorite absolue pour Technosphere Digital. Nous avons mis en
+place un dispositif complet : chaque collaborateur dispose d'un compte nominatif
+personnel, les habilitations sont attribuees selon la fonction exercee et revues
+chaque trimestre par la direction technique, pare-feu de nouvelle generation, antivirus centralise
+sur l'ensemble du parc, filtrage des courriels entrants, sensibilisation trimestrielle
+de nos equipes aux risques de hameconnage, chiffrement integral des postes de travail
+et des serveurs, authentification a deux facteurs sur tous les outils, sauvegardes
+quotidiennes repliquees hors site avec test de restauration mensuel, journalisation
+des acces conservee douze mois, cloisonnement reseau des environnements de production
+et de developpement, et audit de securite annuel realise par un prestataire
+independant, le dernier datant de novembre 2025. Nous appliquons rigoureusement les
+recommandations de l'ANSSI et notre politique de securite des systemes d'information
+est revue chaque annee.
+
+EN CAS DE PROBLEME
+Grace aux mesures decrites ci-dessus, le risque d'incident affectant les donnees
+personnelles est reduit au minimum. Notre dispositif de securite et notre veille
+permanente nous permettent de detecter et de bloquer les tentatives d'intrusion. Nous
+prenons tres au serieux la protection des donnees qui nous sont confiees.
+
+DUREES
+Les donnees sont conservees le temps necessaire aux finalites poursuivies.
+
+INFORMATION ET DROITS
+Conformement au RGPD, les personnes concernees disposent d'un droit d'acces, de
+rectification, d'effacement, de limitation, d'opposition et de portabilite de leurs
+donnees, ainsi que du droit d'introduire une reclamation aupres de la CNIL. Ces
+droits peuvent etre exerces conformement a la reglementation en vigueur.
+
+NOS OUTILS
+Nous utilisons une suite collaborative en ligne, une plateforme d'automatisation
+marketing et plusieurs regies publicitaires. Ces solutions nous permettent de
+delivrer nos prestations avec efficacite.

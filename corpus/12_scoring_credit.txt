@@ -1,0 +1,138 @@
+NOTICE DE TRAITEMENT — SOLUTION DE SCORING DE SOLVABILITE
+CREDIMMO FINANCEMENT SAS — Courtier en credit a la consommation — 130 salaries
+
+ACTIVITE
+Credimmo Financement est un courtier en credit a la consommation intervenant pour
+le compte de plusieurs etablissements preteurs. Nous instruisons environ 4 000
+demandes de financement par mois.
+
+DISPOSITIF DE DECISION
+Toute demande deposee sur notre plateforme fait l'objet d'un calcul automatique de
+score de solvabilite, a partir des revenus declares, des charges, de l'anciennete
+professionnelle, du taux d'endettement et de l'historique de paiement lorsqu'il est
+disponible. Les demandes dont le score est inferieur au seuil de 420 points sont
+rejetees automatiquement et le demandeur recoit une reponse negative immediate. Les
+demandes situees au-dessus du seuil sont transmises aux etablissements preteurs
+partenaires. Ce rejet automatique produit un effet juridique a l'egard du demandeur
+puisqu'il met fin a sa demande de financement sans examen par un conseiller.
+
+FONDEMENT DU DISPOSITIF
+Le recours a ce dispositif est necessaire a la conclusion du contrat de credit
+sollicite par le demandeur : il permet l'instruction immediate d'un volume de
+demandes qu'un examen individuel ne permettrait pas de traiter dans des delais
+acceptables, et il repond a l'obligation de verification de la solvabilite de
+l'emprunteur imposee au preteur par le code de la consommation.
+
+DROITS SPECIFIQUES ATTACHES A LA DECISION AUTOMATISEE
+Toute personne ayant fait l'objet d'un rejet automatique peut demander le reexamen
+de sa demande par un conseiller. La reponse de rejet comporte un lien et un numero
+de telephone dedies permettant de solliciter cette intervention humaine, ainsi que
+la possibilite d'exprimer son point de vue et de contester la decision. Le
+reexamen est realise par un conseiller habilite disposant du pouvoir de modifier la
+decision au vu des elements complementaires apportes ; 380 reexamens ont ete
+demandes en 2025, dont 96 ont conduit a infirmer le rejet initial.
+La reponse de rejet expose egalement la logique sous-jacente du dispositif : elle
+indique les criteres pris en compte, a savoir le taux d'endettement apres operation,
+le reste a vivre par unite de consommation, l'anciennete professionnelle et les
+incidents de paiement declares, precise le poids relatif de chacun de ces criteres
+et mentionne les consequences envisagees, a savoir le rejet de la demande sans
+transmission aux etablissements partenaires et l'absence d'inscription a un fichier
+d'incidents du seul fait de ce rejet.
+
+CATEGORIES DE DONNEES
+Etat civil, coordonnees, situation familiale, situation professionnelle, revenus et
+charges, releves de compte des trois derniers mois, encours de credits en cours.
+Aucune donnee relevant de categories particulieres au sens de l'article 9 n'est
+collectee ni traitee : nous ne demandons ni donnee de sante, ni origine, ni opinion,
+ni appartenance syndicale.
+
+DUREES DE CONSERVATION
+Demandes rejetees : trois mois. Demandes acceptees non concretisees : trois ans.
+Dossiers ayant donne lieu a un credit : duree du credit augmentee de cinq ans.
+Releves de compte : supprimes des l'instruction achevee. Journaux : six mois.
+
+MINIMISATION
+Le formulaire ne demande que les elements necessaires a l'appreciation de la
+solvabilite. Les releves de compte sont analyses de maniere automatisee pour en
+extraire les seuls agregats de revenus et de charges, et le document source est
+supprime a l'issue de l'instruction. Le demandeur peut rectifier ses declarations
+avant validation et signaler toute inexactitude apres depot.
+
+BASE JURIDIQUE DES AUTRES TRAITEMENTS
+Instruction des demandes et gestion des dossiers : execution du contrat ou mesures
+precontractuelles. Conservation des dossiers finances : obligation legale relative a
+la lutte contre le blanchiment. Prospection des clients existants : interet
+legitime, avec droit d'opposition rappele a chaque envoi.
+
+DELEGUE A LA PROTECTION DES DONNEES
+Compte tenu du suivi regulier et systematique de personnes a grande echelle qui
+constitue notre activite de base, un delegue a la protection des donnees a ete
+designe. Madame Sonia Rekik occupe cette fonction depuis 2022, a temps plein, sans
+autre fonction operationnelle. Sa designation a ete notifiee a la CNIL et ses
+coordonnees, dpo@credimmo.fr, figurent sur notre site et dans nos courriers.
+
+REGISTRE
+Le registre des activites de traitement est tenu par la DPO dans notre outil de
+gouvernance. Il recense quatorze traitements, chacun documente par sa finalite, sa
+base juridique, les categories de personnes et de donnees, les destinataires, la
+duree de conservation et les mesures de securite. Derniere mise a jour : 3 mars 2026.
+
+ANALYSE D'IMPACT
+Le dispositif de scoring a fait l'objet d'une analyse d'impact realisee en 2022 et
+revisee en octobre 2025 a l'occasion d'un changement de modele. Elle comprend la
+description systematique du traitement, l'evaluation de sa necessite et de sa
+proportionnalite, l'analyse des risques d'erreur, de biais et d'exclusion pour les
+demandeurs, et les mesures retenues : seuil calibre et documente, voie de reexamen
+humain, controle annuel des taux de rejet par categorie et interdiction d'utiliser
+des variables de localisation fine. L'avis de la DPO a ete recueilli.
+
+INFORMATION DES PERSONNES
+La notice figurant sur la plateforme avant depot indique notre identite et notre
+adresse, les coordonnees de la DPO, les finalites et la base juridique de chacune,
+l'existence d'une decision automatisee et ses consequences, les destinataires,
+notamment les etablissements preteurs partenaires nommement listes, les durees de
+conservation, les droits d'acces, de rectification, d'effacement, de limitation,
+d'opposition et de portabilite, le droit d'obtenir une intervention humaine, et le
+droit d'introduire une reclamation aupres de la CNIL. Aucun transfert hors Union
+europeenne n'est realise, l'ensemble de nos prestataires et serveurs etant situes en
+France et aux Pays-Bas.
+
+EXERCICE DES DROITS
+Les demandes sont adressees a dpo@credimmo.fr ou par courrier au siege. Reponse
+sous un mois a compter de la reception, gratuite, apres verification d'identite. La
+DPO enregistre la demande, sollicite le service d'instruction pour l'extraction ou
+la suppression, controle et transmet la reponse ; un registre des demandes recense
+chaque saisine et sa date de traitement. L'export du dossier est fourni au format
+PDF et les donnees structurees au format CSV. La suppression est operee en base
+active et dans les sauvegardes lors du cycle mensuel. L'opposition a la prospection
+est enregistree en liste de suppression verifiee avant chaque campagne.
+
+SOUS-TRAITANCE
+Nous recourons a un hebergeur, a un editeur de la plateforme d'instruction, a un
+prestataire d'analyse automatisee des releves de compte et a un routeur de
+courriels. Un contrat de sous-traitance conforme a l'article 28 a ete conclu avec
+chacun : objet, duree et finalite, instructions documentees, confidentialite,
+mesures de securite, autorisation prealable pour la sous-traitance ulterieure,
+assistance et suppression des donnees en fin de contrat. La liste est tenue a jour
+par la DPO. Tous sont etablis dans l'Union europeenne.
+
+SECURITE
+Comptes nominatifs, habilitations par profil revues trimestriellement,
+authentification a deux facteurs obligatoire. Donnees chiffrees au repos et en
+transit. Cloisonnement des environnements. Sauvegardes quotidiennes avec test de
+restauration trimestriel. Journalisation des consultations de dossiers et des
+modifications de parametres du modele de scoring, journaux conserves six mois et
+analyses mensuellement. Tests d'intrusion annuels, le dernier en decembre 2025.
+
+VIOLATIONS
+Procedure ecrite diffusee en 2022. Signalement immediat au RSSI et a la DPO,
+qualification sous vingt-quatre heures, notification a la CNIL dans les 72 heures
+suivant la prise de connaissance en cas de risque pour les droits et libertes.
+Information individuelle des personnes concernees dans les meilleurs delais en cas
+de risque eleve. Registre des violations documentant chaque evenement, notifie ou non.
+
+PROTECTION DES DONNEES DES LA CONCEPTION
+Toute evolution du modele de scoring ou de la plateforme est soumise a la DPO avant
+mise en production, avec examen des variables utilisees, de leur necessite et des
+risques de discrimination indirecte. Les acces sont par defaut restreints au service
+instructeur et l'export de masse est desactive par defaut.

@@ -1,0 +1,80 @@
+name: Validation
+
+on: [push, pull_request]
+
+jobs:
+  garde-fous:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      # Aucun appel API : tourne sur chaque commit, sans quota.
+      - name: Garde-fous de sûreté
+        run: python -m validation.test_garde_fous
+      - name: Chaîne complète (client factice)
+        run: |
+          python -m validation.run_validation \
+            --corpus corpus_demo \
+            --verite corpus_demo/verite_terrain.json \
+            --hors-ligne
+
+  backend-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: compliance
+          POSTGRES_PASSWORD: compliance
+          POSTGRES_DB: complianceai_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U compliance -d complianceai_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Base dediee au run : le suffixe _test evite tout risque de toucher
+      # une base de developpement si ces variables fuitaient ailleurs.
+      DATABASE_URL: postgresql+psycopg://compliance:compliance@localhost:5432/complianceai_test
+      # Uniquement valable pour ce run CI ephemere, jamais une vraie base.
+      JWT_SECRET: ci-only-secret-never-used-outside-github-actions-runners
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+      - name: Suite de tests backend
+        # tests/conftest.py migre la base _test et force LLM_ENABLED=false —
+        # aucun quota Groq consomme, aucun reseau externe requis.
+        run: pytest -q
+
+  non-regression:
+    runs-on: ubuntu-latest
+    # Consomme du quota Groq : réservé à la branche principale.
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install groq
+      - name: Validation avec seuils bloquants
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          python -m validation.run_validation \
+            --corpus ./corpus \
+            --verite ./verite_terrain.json \
+            --repetitions 3 \
+            --ci
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rapport-validation
+          path: rapport_validation.json
