@@ -272,7 +272,13 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 </div>
 
 <script>
-const API = location.port === '5173' ? 'http://localhost:8000' : location.origin;
+// location.origin ne convient que si frontend et API partagent un domaine
+// (ex. derriere un reverse proxy). Sur Render, ce sont deux services
+// distincts avec des domaines onrender.com differents — jamais le meme
+// origin. D'ou ces deux cas explicites, en plus du repli local par port.
+const API = location.port === '5173' ? 'http://localhost:8000'
+  : location.hostname === 'complianceai-web.onrender.com' ? 'https://complianceai-api-l51c.onrender.com'
+  : location.origin;
 const E = { jeton:null, moi:null, orgId:null, orgs:[] };
 
 async function appel(chemin, options = {}) {
