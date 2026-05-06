@@ -20,6 +20,17 @@
 # invisible et perdu au redemarrage. Ajouter SMTP_HOST/SMTP_USER/SMTP_PASSWORD
 # (via `sync: false`, saisis manuellement dans le tableau de bord Render)
 # avant toute utilisation reelle au-dela d'une demonstration.
+#
+# EMBEDDING_BACKEND=hashing : le plan free (512 Mo de RAM) ne suffit pas a
+# charger le modele fastembed en plus du reste du processus — verifie en
+# conditions reelles, le conteneur est tue par manque de memoire des le
+# premier audit et Render le redemarre en boucle. Le repli par hachage n'a
+# aucune qualite semantique (voir app/services/embeddings.py) : c'est un
+# compromis assume pour rester sur l'offre gratuite, pas la configuration
+# recommandee. Sur un plan avec plus de RAM, retirer cette ligne pour
+# revenir a la vraie recherche semantique — et rejouer l'ingestion des
+# referentiels ensuite, les deux cotes doivent utiliser le meme espace
+# vectoriel.
 services:
   - type: web
     name: complianceai-api
@@ -49,6 +60,8 @@ services:
       # localhost, invalides pour quiconque hors de la machine de dev.
       - key: FRONTEND_URL
         value: https://complianceai-web.onrender.com
+      - key: EMBEDDING_BACKEND
+        value: hashing
       - key: GROQ_API_KEY
         sync: false
 
