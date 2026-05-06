@@ -8,6 +8,9 @@
 # pour une mise en production reelle — la solution correcte serait un disque
 # persistant Render (plan payant) ou un stockage objet externe (S3-compatible).
 #
+# La base Postgres gratuite expire 30 jours apres sa creation (limite du
+# plan free Render) : a recreer / re-ingerer passe ce delai.
+#
 # SMTP non configure ci-dessous : les e-mails (verification, reinitialisation)
 # repliront silencieusement sur un fichier local ecrit dans le conteneur, donc
 # invisible et perdu au redemarrage. Ajouter SMTP_HOST/SMTP_USER/SMTP_PASSWORD
@@ -17,6 +20,7 @@ services:
   - type: web
     name: complianceai-api
     runtime: docker
+    rootDir: backend
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /health
@@ -49,14 +53,16 @@ services:
   - type: web
     name: complianceai-web
     runtime: static
-    staticPublishPath: ../frontend
+    staticPublishPath: frontend
     buildCommand: "true"
 
   - type: cron
     name: keep-awake
     runtime: docker
     schedule: "*/10 * * * *"
+    rootDir: backend
     dockerfilePath: ./Dockerfile
+    dockerContext: .
     dockerCommand: curl -fsS https://complianceai-api.onrender.com/health
     plan: free
 
