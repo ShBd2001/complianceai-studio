@@ -17,6 +17,9 @@ class FakeConnector:
 
     def fetch(self) -> IngestionResult:
         articles = [
+            ("Article 4", "Definitions",
+             "Aux fins du present reglement, on entend par donnees a caractere "
+             "personnel toute information se rapportant a une personne physique."),
             ("Article 5", "Principes relatifs au traitement",
              "Les donnees a caractere personnel doivent etre traitees de maniere "
              "licite, loyale et transparente."),

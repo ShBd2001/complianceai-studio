@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
+<!DOCTYPE html><html lang="fr"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ComplianceAI Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&amp;family=Inter:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <style>
 :root{
   --papier:#F5F6FB; --carte:#FFFFFF; --encre:#12142B; --encre-doux:#565A73;
@@ -160,15 +158,15 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 </head>
 <body>
 
-<div id="accueil">
+<div id="accueil" hidden="">
   <div class="portail">
     <div class="marque">ComplianceAI <em>Studio</em></div>
     <div class="marque-sous">Audit réglementaire — RGPD · NIS2 · CSRD</div>
 
-    <div id="p-connexion">
+    <div id="p-connexion" hidden="">
       <div class="grille" style="grid-template-columns:1fr">
-        <div><label for="c-mail">Adresse e-mail</label><input id="c-mail" type="email" autocomplete="email"></div>
-        <div><label for="c-mdp">Mot de passe</label><input id="c-mdp" type="password" autocomplete="current-password"></div>
+        <div><label for="c-mail">Adresse e-mail</label><input id="c-mail" type="email" autocomplete="email" style=""></div>
+        <div><label for="c-mdp">Mot de passe</label><input id="c-mdp" type="password" autocomplete="current-password" style=""></div>
       </div>
       <div class="rangee">
         <button onclick="seConnecter()">Se connecter</button>
@@ -177,12 +175,12 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
       </div>
     </div>
 
-    <div id="p-inscription" hidden>
+    <div id="p-inscription">
       <div class="grille" style="grid-template-columns:1fr">
-        <div><label for="i-nom">Nom complet</label><input id="i-nom" autocomplete="name"></div>
-        <div><label for="i-org">Nom de l'organisation</label><input id="i-org"></div>
-        <div><label for="i-mail">Adresse e-mail</label><input id="i-mail" type="email" autocomplete="email"></div>
-        <div><label for="i-mdp">Mot de passe</label><input id="i-mdp" type="password" autocomplete="new-password"></div>
+        <div><label for="i-nom">Nom complet</label><input id="i-nom" autocomplete="name" style=""></div>
+        <div><label for="i-org">Nom de l'organisation</label><input id="i-org" style=""></div>
+        <div><label for="i-mail">Adresse e-mail</label><input id="i-mail" type="email" autocomplete="email" style=""></div>
+        <div><label for="i-mdp">Mot de passe</label><input id="i-mdp" type="password" autocomplete="new-password" style=""></div>
       </div>
       <div class="rangee">
         <button onclick="sInscrire()">Créer le compte</button>
@@ -190,10 +188,10 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
       </div>
     </div>
 
-    <div id="p-oubli" hidden>
+    <div id="p-oubli" hidden="">
       <p class="chapeau" style="margin-top:0">Indiquez votre adresse : si un compte existe, un lien de réinitialisation est envoyé par e-mail.</p>
       <div class="grille" style="grid-template-columns:1fr">
-        <div><label for="o-mail">Adresse e-mail</label><input id="o-mail" type="email" autocomplete="email"></div>
+        <div><label for="o-mail">Adresse e-mail</label><input id="o-mail" type="email" autocomplete="email" style=""></div>
       </div>
       <div class="rangee">
         <button onclick="demanderReinit()">Envoyer le lien</button>
@@ -201,51 +199,128 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
       </div>
     </div>
 
-    <div id="p-reinit" hidden>
+    <div id="p-reinit" hidden="">
       <p class="chapeau" style="margin-top:0">Choisissez un nouveau mot de passe.</p>
       <div class="grille" style="grid-template-columns:1fr">
-        <div><label for="r-mdp">Nouveau mot de passe</label><input id="r-mdp" type="password" autocomplete="new-password"></div>
+        <div><label for="r-mdp">Nouveau mot de passe</label><input id="r-mdp" type="password" autocomplete="new-password" style=""></div>
       </div>
       <div class="rangee"><button onclick="confirmerReinit()">Changer le mot de passe</button></div>
     </div>
 
-    <div id="p-verification" hidden>
+    <div id="p-verification" hidden="">
       <div id="msg-verification" class="attente"><span class="pulsation"></span>Vérification de votre adresse</div>
       <div class="rangee" style="margin-top:14px"><button class="lien" onclick="montrerPanneau('p-connexion')">Aller à la connexion</button></div>
     </div>
 
-    <div id="msg-accueil"></div>
+    <div id="msg-accueil"><div class="attente"><span class="pulsation"></span>Création du compte</div></div>
   </div>
 </div>
 
-<div id="appli" hidden>
+<div id="appli">
   <nav class="rail">
     <div class="marque">ComplianceAI <em>Studio</em></div>
     <div class="marque-sous">Audit réglementaire</div>
 
     <div class="rail-groupe">Pilotage</div>
-    <a href="#/tableau" data-vue="tableau">Tableau de bord</a>
+    <a href="#/tableau" data-vue="tableau" class="">Tableau de bord</a>
     <a href="#/audits" data-vue="audits">Campagnes d'audit</a>
     <a href="#/remediation" data-vue="remediation">Plan de remédiation</a>
     <a href="#/correspondances" data-vue="correspondances">Correspondances</a>
-    <a href="#/referentiels" data-vue="referentiels">Référentiels</a>
+    <a href="#/referentiels" data-vue="referentiels" class="actif">Référentiels</a>
 
     <div class="rail-groupe">Organisation</div>
     <a href="#/equipe" data-vue="equipe">Équipe</a>
-    <a href="#/notifications" data-vue="notifications">Notifications <span class="badge-nav" id="badge-notifs" hidden></span></a>
+    <a href="#/notifications" data-vue="notifications">Notifications <span class="badge-nav" id="badge-notifs" hidden=""></span></a>
     <a href="#/journal" data-vue="journal">Journal d'activité</a>
 
     <div class="rail-groupe">Compte</div>
     <a href="#/compte" data-vue="compte">Mon compte</a>
 
     <div class="rail-pied">
-      <span class="qui" id="qui"></span>
-      <select id="ch-org-global" class="compact" onchange="changerOrganisation()"></select>
+      <span class="qui" id="qui">ref-50c41a95@exemple.fr</span>
+      <select id="ch-org-global" class="compact" onchange="changerOrganisation()"><option value="70840715-3a8a-4657-bf03-b0d267b1f33b">Acme SAS</option></select>
       <div style="margin-top:10px"><button class="lien" onclick="quitter()">Fermer la session</button></div>
     </div>
   </nav>
 
-  <main id="vue"></main>
+  <main id="vue"><div class="tete"><div><div class="eyebrow">Pilotage</div><h1>Référentiels</h1></div></div>
+    <p class="chapeau">Le texte source de chaque référentiel ingéré, tel qu'utilisé par le moteur d'audit.</p>
+    <div class="rangee">
+      <select class="compact" id="ref-code" onchange="chargerReferentielDetail()"><option value="rgpd">Reglement general sur la protection des donnees</option></select>
+      <label style="margin:0;font-size:13px;color:var(--encre-doux)">
+        <input type="checkbox" id="ref-auditable" onchange="chargerReferentielDetail()" style=""> Périmètre auditable uniquement
+      </label>
+    </div>
+    <div id="z-version" style="margin-top:16px">
+      <div class="carte" style="max-width:520px">
+        <span class="l">Version en vigueur</span>
+        <p style="margin:6px 0 0;font-size:14px">2016/679+20260814.9 · ingérée le 14/08/2026 13:05</p>
+        <p style="margin:4px 0 0;font-size:13px;color:var(--sourdine)">Evolution detectee : empreinte cc238b4aa578 -&gt; cc238b4aa578 le 2026-08-14.</p>
+      </div>
+      <details style="margin-top:10px">
+        <summary style="cursor:pointer;font-size:13px;color:var(--sourdine)">Historique (10 versions)</summary>
+        <table style="margin-top:8px"><thead><tr><th class="mono">Version</th><th>Ingérée le</th><th>Note</th></tr></thead>
+        <tbody><tr>
+          <td class="mono">2016/679+20260814.9 (courante)</td>
+          <td class="mono">14/08/2026 13:05</td>
+          <td>Evolution detectee : empreinte cc238b4aa578 -&gt; cc238b4aa578 le 2026-08-14.</td>
+        </tr><tr>
+          <td class="mono">2016/679+20260814.8</td>
+          <td class="mono">14/08/2026 12:30</td>
+          <td>Evolution detectee : empreinte cc238b4aa578 -&gt; cc238b4aa578 le 2026-08-14.</td>
+        </tr><tr>
+          <td class="mono">2016/679+20260814.7</td>
+          <td class="mono">14/08/2026 12:20</td>
+          <td>Evolution detectee : empreinte cc238b4aa578 -&gt; cc238b4aa578 le 2026-08-14.</td>
+        </tr><tr>
+          <td class="mono">2016/679+20260814.6</td>
+          <td class="mono">14/08/2026 12:19</td>
+          <td>Evolution detectee : empreinte cc238b4aa578 -&gt; cc238b4aa578 le 2026-08-14.</td>
+        </tr><tr>
+          <td class="mono">2016/679+20260814.5</td>
+          <td class="mono">14/08/2026 12:12</td>
+          <td>Evolution detectee : empreinte cc238b4aa578 -&gt; cc238b4aa578 le 2026-08-14.</td>
+        </tr><tr>
+          <td class="mono">2016/679+20260814.4</td>
+          <td class="mono">14/08/2026 12:09</td>
+          <td>Evolution detectee : empreinte cc238b4aa578 -&gt; cc238b4aa578 le 2026-08-14.</td>
+        </tr><tr>
+          <td class="mono">2016/679+20260814.3</td>
+          <td class="mono">14/08/2026 12:07</td>
+          <td>Evolution detectee : empreinte cc238b4aa578 -&gt; cc238b4aa578 le 2026-08-14.</td>
+        </tr><tr>
+          <td class="mono">2016/679+20260814.2</td>
+          <td class="mono">14/08/2026 12:05</td>
+          <td>Evolution detectee : empreinte cc238b4aa578 -&gt; cc238b4aa578 le 2026-08-14.</td>
+        </tr><tr>
+          <td class="mono">2016/679+20260814</td>
+          <td class="mono">14/08/2026 12:03</td>
+          <td>Evolution detectee : empreinte cc238b4aa578 -&gt; cc238b4aa578 le 2026-08-14.</td>
+        </tr><tr>
+          <td class="mono">2016/679</td>
+          <td class="mono">14/08/2026 12:00</td>
+          <td>—</td>
+        </tr></tbody></table>
+      </details></div>
+    <h2>Articles</h2>
+    <div id="z-req"><table><thead><tr><th class="mono">Référence</th><th>Intitulé</th><th>Périmètre</th></tr></thead>
+      <tbody><tr>
+        <td class="mono">Article 5</td>
+        <td>Principes relatifs au traitement</td>
+        <td><span class="etiq e-ok">Auditable</span></td>
+      </tr><tr>
+        <td class="mono">Article 30</td>
+        <td>Registre des activites de traitement</td>
+        <td><span class="etiq e-ok">Auditable</span></td>
+      </tr><tr>
+        <td class="mono">Article 32</td>
+        <td>Securite du traitement</td>
+        <td><span class="etiq e-ok">Auditable</span></td>
+      </tr><tr>
+        <td class="mono">Article 33</td>
+        <td>Notification des violations</td>
+        <td><span class="etiq e-ok">Auditable</span></td>
+      </tr></tbody></table></div></main>
 </div>
 
 <script>
@@ -1126,5 +1201,6 @@ async function vueJournal() {
   } catch (e) { poser('z', echoue(e)); }
 }
 </script>
-</body>
-</html>
+
+
+</body></html>

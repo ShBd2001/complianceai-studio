@@ -68,7 +68,11 @@ def export_my_data(
         ],
         "sessions": [
             {"cree_le": s.created_at.isoformat(), "expire_le": s.expires_at.isoformat(),
-             "ip": s.ip_address, "navigateur": s.user_agent,
+             # La colonne est de type INET : psycopg la desserialise en objet
+             # ipaddress.IPv4Address/IPv6Address, non serialisable tel quel
+             # (voir le meme correctif applique a ActivityLogOut).
+             "ip": str(s.ip_address) if s.ip_address is not None else None,
+             "navigateur": s.user_agent,
              "revoquee": s.revoked_at is not None}
             for s in sessions
         ],
