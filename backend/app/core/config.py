@@ -1,6 +1,7 @@
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
@@ -15,6 +16,23 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     DATABASE_URL: str
+
+    @field_validator("DATABASE_URL")
+    @classmethod
+    def _force_psycopg_driver(cls, v: str) -> str:
+        """Impose le driver psycopg (v3), quel que soit le schema fourni.
+
+        Les URL generees automatiquement par un hebergeur (ex. Render,
+        Heroku : `postgresql://...` ou `postgres://...`) ne precisent pas de
+        driver. SQLAlchemy retombe alors sur psycopg2, jamais installe ici
+        (le projet standardise sur psycopg v3) — l'echec (`ModuleNotFoundError`)
+        ne se voit qu'au moment de se connecter, en production.
+        """
+        if v.startswith("postgres://"):
+            v = "postgresql://" + v[len("postgres://"):]
+        if v.startswith("postgresql://"):
+            v = "postgresql+psycopg://" + v[len("postgresql://"):]
+        return v
 
     JWT_SECRET: str
     JWT_ALG: str = "HS256"
