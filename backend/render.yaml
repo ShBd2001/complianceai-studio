@@ -1,6 +1,18 @@
 # Deploiement Render (offre gratuite).
 # Attention : le service se met en veille apres 15 min d'inactivite.
 # Le cron ci-dessous le maintient eveille avant une demonstration.
+#
+# Stockage ephemere (plan free) : STORAGE_DIR (pieces versees, rapports,
+# repli local des e-mails) vit sur le disque du conteneur et disparait a
+# chaque redeploiement/redemarrage. Suffisant pour une demonstration, pas
+# pour une mise en production reelle — la solution correcte serait un disque
+# persistant Render (plan payant) ou un stockage objet externe (S3-compatible).
+#
+# SMTP non configure ci-dessous : les e-mails (verification, reinitialisation)
+# repliront silencieusement sur un fichier local ecrit dans le conteneur, donc
+# invisible et perdu au redemarrage. Ajouter SMTP_HOST/SMTP_USER/SMTP_PASSWORD
+# (via `sync: false`, saisis manuellement dans le tableau de bord Render)
+# avant toute utilisation reelle au-dela d'une demonstration.
 services:
   - type: web
     name: complianceai-api
@@ -24,8 +36,21 @@ services:
           property: connectionString
       - key: CORS_ORIGINS
         value: '["https://complianceai-web.onrender.com"]'
+      # Sert a construire les liens absolus dans les e-mails (verification,
+      # reinitialisation) : sans elle, ces liens pointeraient vers
+      # localhost, invalides pour quiconque hors de la machine de dev.
+      - key: FRONTEND_URL
+        value: https://complianceai-web.onrender.com
       - key: GROQ_API_KEY
         sync: false
+
+  # Site statique : sert frontend/index.html tel quel, sans etape de build
+  # (le frontend n'en a jamais eu besoin, voir frontend/README.md).
+  - type: web
+    name: complianceai-web
+    runtime: static
+    staticPublishPath: ../frontend
+    buildCommand: "true"
 
   - type: cron
     name: keep-awake

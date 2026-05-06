@@ -19,6 +19,7 @@ backend/.env
 *.db
 *.sqlite3
 backend/storage/
+frontend/tests/failures/
 
 # Artefacts de sortie
 rapport.html
