@@ -645,7 +645,10 @@ function tableRapports(rapports, auditId) {
       <td class="mono">v${r.version}</td>
       <td class="mono">${instant(r.created_at)}</td>
       <td class="mono">${h((r.sha256 || '').slice(0, 16))}</td>
-      <td><button class="petit discret" onclick="telecharger('${auditId}',${r.version})">Télécharger</button></td>
+      <td class="rangee" style="gap:6px">
+        <button class="petit discret" onclick="telecharger('${auditId}',${r.version})">HTML</button>
+        <button class="petit discret" onclick="telechargerPDF('${auditId}',${r.version},this)">PDF</button>
+      </td>
       </tr>`).join('')}</tbody></table>`;
 }
 
@@ -714,6 +717,24 @@ async function telecharger(auditId, version) {
     a.click();
     URL.revokeObjectURL(a.href);
   } catch (e) { poser('z-rapports', echoue(e)); }
+}
+
+async function telechargerPDF(auditId, version, bouton) {
+  const texteOriginal = bouton.textContent;
+  bouton.disabled = true;
+  bouton.textContent = '…';
+  try {
+    const r = await fetch(`${API}/api/v1/orgs/${E.orgId}/audits/${auditId}/reports/${version}/download.pdf`,
+      { headers: { Authorization: 'Bearer ' + E.jeton } });
+    if (!r.ok) throw new Error('Le PDF n’a pas pu être généré (erreur ' + r.status + ').');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(await r.blob());
+    a.download = `rapport-audit-v${version}.pdf`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } catch (e) { poser('z-rapports', echoue(e)); }
+  bouton.disabled = false;
+  bouton.textContent = texteOriginal;
 }
 
 /* ---------- Constats ---------- */

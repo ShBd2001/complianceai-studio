@@ -283,11 +283,42 @@ def test_full_audit_pipeline(client, org, framework_ready):
         f"/api/v1/orgs/{org_id}/audits/{audit_id}/reports/1/download", headers=headers
     )
     assert r.status_code == 200
-    assert "Rapport d'audit de conformite" in r.text
+    assert "Rapport d'audit de conformité" in r.text
 
     r = client.get(f"/api/v1/orgs/{org_id}/audits/history", headers=headers)
     assert r.status_code == 200
     assert len(r.json()) == 1
+
+
+def test_report_pdf_download_returns_valid_pdf_and_is_cached(client, org, framework_ready):
+    """Rendu par un vrai navigateur (services/pdf.py) : verifie les octets
+    magiques PDF et que le second appel sert le fichier mis en cache sur
+    disque (memes octets, pas une nouvelle generation)."""
+    org_id, headers = org
+    audit_id = client.post(
+        f"/api/v1/orgs/{org_id}/audits", headers=headers,
+        json={"title": "Audit PDF", "framework": "rgpd"},
+    ).json()["id"]
+    client.post(
+        f"/api/v1/orgs/{org_id}/audits/{audit_id}/documents", headers=headers,
+        files={"file": ("politique.txt", POLICY.encode("utf-8"), "text/plain")},
+    )
+    client.post(f"/api/v1/orgs/{org_id}/audits/{audit_id}/run", headers=headers)
+    client.post(f"/api/v1/orgs/{org_id}/audits/{audit_id}/reports", headers=headers)
+
+    r = client.get(
+        f"/api/v1/orgs/{org_id}/audits/{audit_id}/reports/1/download.pdf", headers=headers
+    )
+    assert r.status_code == 200, r.text
+    assert r.headers["content-type"] == "application/pdf"
+    assert r.content[:5] == b"%PDF-"
+    assert len(r.content) > 1000
+
+    r2 = client.get(
+        f"/api/v1/orgs/{org_id}/audits/{audit_id}/reports/1/download.pdf", headers=headers
+    )
+    assert r2.status_code == 200
+    assert r2.content == r.content  # servi depuis le cache disque
 
 
 def test_run_without_document_fails_cleanly(client, org, framework_ready):
@@ -384,7 +415,7 @@ def test_score_is_withheld_without_language_model(client, org, framework_ready):
     report = client.get(
         f"/api/v1/orgs/{org_id}/audits/{audit_id}/reports/1/download", headers=headers
     )
-    assert "Analyse degradee" in report.text
+    assert "Analyse dégradée" in report.text
 
 
 # --------------------------------------------------------------------------
@@ -544,7 +575,7 @@ def test_report_lists_out_of_scope_requirements(client, org, framework_ready, mo
     report = client.get(
         f"/api/v1/orgs/{org_id}/audits/{audit_id}/reports/1/download", headers=headers
     )
-    assert "Exigences hors perimetre" in report.text
+    assert "Exigences hors périmètre" in report.text
     # html.escape convertit l'apostrophe en &#x27; : on verifie un fragment
     # sans caractere echappe plutot que d'affaiblir l'echappement.
     assert "Situation absente de l" in report.text

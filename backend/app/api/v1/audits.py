@@ -37,8 +37,8 @@ from app.schemas.audit import (
     ScoreHistoryPoint,
 )
 from app.schemas.scheduling import ScheduleCreate, ScheduleOut
-from app.services import activity, audit_engine, reports
-from app.services.documents import ALLOWED_MIME, read_document, save_document
+from app.services import activity, audit_engine, pdf, reports
+from app.services.documents import ALLOWED_MIME, read_document, save_document, storage_root
 from app.services.scheduling import compute_next_run
 
 router = APIRouter(prefix="/orgs/{org_id}/audits", tags=["Audits"])
@@ -371,6 +371,44 @@ def download_report(
             # tout script eventuel issu du contenu client cite en preuve.
             "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'",
         },
+    )
+
+
+@router.get("/{audit_id}/reports/{version}/download.pdf")
+def download_report_pdf(
+    audit_id: uuid.UUID,
+    version: int,
+    ctx: OrgContext = Depends(get_org_context),
+    db: Session = Depends(get_db),
+) -> Response:
+    """Meme rapport que /download, mis en page pour l'impression.
+
+    Genere a la demande puis mis en cache sur disque a cote du HTML — la
+    conversion (rendu par un navigateur reel, voir services/pdf.py) prend
+    environ une seconde, inutile de la refaire a chaque telechargement du
+    meme rapport.
+    """
+    _get_audit(db, ctx, audit_id)
+    report = db.scalar(
+        select(Report).where(Report.audit_id == audit_id, Report.version == version)
+    )
+    if report is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Rapport introuvable.")
+
+    pdf_key = report.storage_key.rsplit(".", 1)[0] + ".pdf"
+    pdf_path = storage_root() / pdf_key
+    if pdf_path.exists():
+        content = pdf_path.read_bytes()
+    else:
+        html_content = read_document(report.storage_key).decode("utf-8")
+        content = pdf.html_to_pdf(html_content)
+        pdf_path.parent.mkdir(parents=True, exist_ok=True)
+        pdf_path.write_bytes(content)
+
+    return Response(
+        content=content,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="rapport-v{version}.pdf"'},
     )
 
 
