@@ -525,7 +525,10 @@ async function vueAudit(auditId) {
       <div class="tete">
         <div><div class="eyebrow">${h((audit.framework || '').toUpperCase())} · ${h(ETAT_AUDIT[audit.status] || audit.status)}</div>
           <h1>${h(audit.title)}</h1></div>
-        <button class="discret" onclick="location.hash='#/audits'">Toutes les campagnes</button>
+        <div class="rangee">
+          <button class="discret" onclick="location.hash='#/audits'">Toutes les campagnes</button>
+          <button class="discret" onclick="supprimerCampagne('${auditId}')">Supprimer</button>
+        </div>
       </div>
       ${audit.status === 'completed' ? verdictCarte(audit, constats) : ''}
 
@@ -663,6 +666,14 @@ async function verser(auditId, fichiers) {
     poser('indice', '');
     poser('msg-run', '');
   } catch (e) { poser('msg-run', echoue(e)); }
+}
+
+async function supprimerCampagne(auditId) {
+  if (!confirm("Supprimer définitivement cette campagne, ses pièces, ses constats et ses rapports ?")) return;
+  try {
+    await appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}`, { method:'DELETE' });
+    location.hash = '#/audits';
+  } catch (e) { poser('vue', echoue(e)); }
 }
 
 async function lancerAnalyse(auditId) {

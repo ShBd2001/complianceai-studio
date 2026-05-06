@@ -40,6 +40,23 @@ def test_dashboard_renders_empty_state(page, frontend_server, backend_server):
     expect(page.get_by_text("Aucune campagne pour l'instant.")).to_be_visible()
 
 
+def test_delete_campaign(page, frontend_server, backend_server):
+    email = f"del-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register(page, frontend_server, email)
+
+    page.click("a[data-vue=\"audits\"]")
+    page.wait_for_selector("#n-titre")
+    page.fill("#n-titre", "Campagne à supprimer")
+    page.click("button:has-text(\"Ouvrir la campagne\")")
+    page.wait_for_selector("button:has-text(\"Supprimer\")", timeout=15000)
+
+    page.once("dialog", lambda d: d.accept())
+    page.click("button:has-text(\"Supprimer\")")
+    page.wait_for_url("**/#/audits", timeout=10000)
+
+    expect(page.get_by_text("Aucune campagne pour l'instant.")).to_be_visible()
+
+
 def test_full_audit_pipeline_and_findings_filter(page, frontend_server, backend_server, tmp_path):
     email = f"audit-{uuid.uuid4().hex[:8]}@exemple.fr"
     _register(page, frontend_server, email)
