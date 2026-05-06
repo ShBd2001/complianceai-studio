@@ -1,6 +1,10 @@
 # Deploiement Render (offre gratuite).
-# Attention : le service se met en veille apres 15 min d'inactivite.
-# Le cron ci-dessous le maintient eveille avant une demonstration.
+# Attention : le service se met en veille apres 15 min d'inactivite ; la
+# premiere requete suivante prend ~1 min le temps du reveil. Un cron de
+# "keep-awake" reglerait ca, mais Render facture tout service cron au moins
+# 1 $/mois, meme le plus simple : incompatible avec une offre 100% gratuite,
+# donc volontairement absent d'ici. A ajouter a la main avant une
+# demonstration si l'attente au reveil pose probleme.
 #
 # Stockage ephemere (plan free) : STORAGE_DIR (pieces versees, rapports,
 # repli local des e-mails) vit sur le disque du conteneur et disparait a
@@ -55,16 +59,6 @@ services:
     runtime: static
     staticPublishPath: frontend
     buildCommand: "true"
-
-  - type: cron
-    name: keep-awake
-    runtime: docker
-    schedule: "*/10 * * * *"
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
-    dockerCommand: curl -fsS https://complianceai-api.onrender.com/health
-    plan: free
 
 databases:
   - name: complianceai-db
