@@ -26,10 +26,13 @@ class Framework(str, enum.Enum):
     NIS2 = "nis2"
     AI_ACT = "ai_act"
     DORA = "dora"
-    # Directive modificative : ses articles amendent la directive comptable
-    # 2013/34/UE au lieu de porter des obligations directement opposables, et
-    # les exigences concretes figurent dans les ESRS. Conservee pour la
-    # compatibilite des donnees existantes, mais non ingeree.
+    # Directive modificative : la plupart de ses articles amendent la
+    # directive comptable 2013/34/UE sans creer d'obligation directement
+    # opposable. Seuls les articles inseres (suffixes bis/ter/...) portent de
+    # vraies obligations de publication et sont marques auditables — voir
+    # app/ingestion/scoping.py::classify. La granularite ESRS elle-meme n'est
+    # pas ingeree : le perimetre couvert est l'obligation de publier, pas le
+    # contenu detaille du rapport de durabilite.
     CSRD = "csrd"
     NIST_CSF = "nist_csf"
     ANSSI = "anssi"

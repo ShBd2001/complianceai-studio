@@ -534,7 +534,7 @@ async function vueAudits() {
 }
 
 async function chargerReferentiels(id) {
-  let liste = [['rgpd','RGPD'],['nis2','NIS2'],['ai_act','AI Act'],['dora','DORA']];
+  let liste = [['rgpd','RGPD'],['nis2','NIS2'],['ai_act','AI Act'],['dora','DORA'],['csrd','CSRD']];
   try {
     const f = await appel('/api/v1/frameworks');
     if (Array.isArray(f) && f.length) liste = f.map(x => [x.code, x.name || x.code.toUpperCase()]);
