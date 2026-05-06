@@ -1,9 +1,15 @@
 # Installation pas à pas — ComplianceAI Studio v2
 
-Objectif : partir d'une machine vierge et arriver à l'API qui tourne, la base
-remplie, les 30 tests au vert et les référentiels ingérés.
+Objectif : partir d'une machine vierge et arriver à l'API et au frontend qui
+tournent, la base remplie, la suite de tests au vert (backend + bout-en-bout)
+et les référentiels ingérés.
 
 Compter 45 minutes la première fois.
+
+> Le frontend est une page unique en JavaScript natif (`frontend/index.html`,
+> aucune dépendance, aucune étape de build) — Node.js n'est nécessaire que
+> pour lancer un serveur statique local ou pour la suite de tests
+> bout-en-bout (Playwright), pas pour développer le frontend lui-même.
 
 ---
 
@@ -15,7 +21,7 @@ Compter 45 minutes la première fois.
 | Docker Desktop | dernière | oui | https://www.docker.com/products/docker-desktop/ |
 | Git | dernière | oui | https://git-scm.com/downloads |
 | VS Code | dernière | recommandé | https://code.visualstudio.com/ |
-| Node.js | 20 LTS | plus tard (frontend) | https://nodejs.org/ |
+| Node.js | 20 LTS | non requis pour le frontend, utile pour la suite E2E | https://nodejs.org/ |
 
 **Windows — coche « Add python.exe to PATH » pendant l'installation de Python.**
 C'est la case que tout le monde oublie, et elle fait échouer toutes les
@@ -59,6 +65,9 @@ complianceai-v2/
 ├── docs/
 │   ├── architecture.md
 │   └── normes-programmation.md
+├── frontend/
+│   ├── index.html        page unique, sans dependance ni etape de build
+│   └── tests/            suite bout-en-bout (Playwright)
 └── backend/
     ├── app/
     ├── alembic/
@@ -241,7 +250,9 @@ INFO:     Uvicorn running on http://127.0.0.1:8000
 INFO:     Application startup complete.
 ```
 
-Ouvre **http://localhost:8000/docs**. Tu dois voir Swagger avec 39 endpoints.
+Ouvre **http://localhost:8000/docs**. Tu dois voir Swagger avec une
+quarantaine de routes, groupées par domaine (Authentification, Organisations,
+Référentiels, Audits, Notifications, Données personnelles).
 
 Laisse ce terminal ouvert. Pour la suite, ouvre-en un second et réactive le
 venv (étape 2).
@@ -256,7 +267,7 @@ Dans le second terminal :
 pytest
 ```
 
-**Attendu : `30 passed`.**
+**Attendu : `125 passed`.**
 
 C'est ton vrai point de contrôle. Si tu as ça, le socle est bon.
 
@@ -266,8 +277,17 @@ Pour le détail :
 pytest -v
 ```
 
-Les tests tournent contre le vrai PostgreSQL, pas contre SQLite : les types
-`INET`, `JSONB` et `vector` ne s'y comportent pas de la même manière.
+Les tests tournent contre le vrai PostgreSQL (une base dédiée, suffixée
+`_test`, créée et migrée automatiquement), pas contre SQLite : les types
+`INET`, `JSONB` et `vector` ne s'y comportent pas de la même manière. Le
+modèle de langage est neutralisé pour toute la suite (`LLM_ENABLED=false`) :
+aucun test ne consomme de quota Groq ni ne dépend du réseau.
+
+Une suite bout-en-bout distincte pilote un vrai navigateur contre l'API et le
+frontend réels — voir `frontend/tests/` (`pip install -r
+frontend/tests/requirements.txt` puis `pytest frontend/tests` depuis la
+racine du dépôt ; ces tests démarrent et arrêtent eux-mêmes les serveurs
+nécessaires sur les ports 8000/5173, qui doivent donc être libres).
 
 ---
 
@@ -282,12 +302,14 @@ python -m app.ingestion.cli --dry-run
 Pour chaque texte, tu dois voir l'empreinte SHA-256, le nombre d'articles
 extraits et un aperçu des cinq premiers.
 
-Ordres de grandeur attendus : **RGPD environ 99 articles**, **NIS2 environ 46**,
-**CSRD environ 8**. Si un référentiel remonte 0 ou 3 articles, la structure HTML
-d'EUR-Lex a changé — envoie-moi la sortie, il faut ajuster les expressions
-régulières dans `app/ingestion/eurlex.py`.
+Ordres de grandeur attendus : **RGPD environ 400 articles**, **NIS2 environ
+180**, **DORA environ 65**, **AI Act environ 115**, **CSRD environ 50**. Si un
+référentiel remonte 0 ou une poignée d'articles, la structure HTML d'EUR-Lex a
+changé — envoie-moi la sortie, il faut ajuster les expressions régulières dans
+`app/ingestion/eurlex.py`.
 
-Quand la simulation est correcte :
+Quand la simulation est correcte, ingère les cinq référentiels (ou
+`--only rgpd nis2 dora ai_act csrd` pour être explicite) :
 
 ```bash
 python -m app.ingestion.cli
@@ -296,12 +318,14 @@ python -m app.ingestion.cli
 Premier lancement : fastembed télécharge le modèle `multilingual-e5-small`
 (environ 120 Mo), une seule fois.
 
-Sortie attendue :
+Sortie attendue (ordre de grandeur, pas les chiffres exacts) :
 
 ```
- + rgpd       created      99 exigences
- + nis2       created      46 exigences
- + csrd       created       8 exigences
+ + rgpd       created     416 exigences
+ + nis2       created     184 exigences
+ + dora       created      64 exigences
+ + ai_act     created     113 exigences
+ + csrd       created      52 exigences
 ```
 
 Relance la même commande : tout doit passer en `unchanged`. C'est la preuve que
@@ -340,19 +364,28 @@ Ensuite, dans l'ordre :
 | Endpoint | Attendu |
 |---|---|
 | `GET /api/v1/auth/me` | 200, profil et rôle owner |
-| `GET /api/v1/frameworks` | 200, les trois référentiels |
+| `GET /api/v1/frameworks` | 200, les cinq référentiels |
 | `GET /api/v1/frameworks/rgpd/requirements` | 200, les articles du RGPD |
 | `POST /api/v1/orgs/{org_id}/audits` | 201 — `{"title": "Audit RGPD 2026", "framework": "rgpd"}` |
 | `POST .../audits/{audit_id}/documents` | 201 — déposer un `.txt` ou `.pdf` |
 | `POST .../audits/{audit_id}/run` | 200, statut `completed` et un score |
 | `GET .../audits/{audit_id}/findings` | 200, les non-conformités |
-| `POST .../audits/{audit_id}/reports` | 201, version 1 |
+| `POST .../audits/{audit_id}/reports` | 201, version 1 (un rapport est aussi produit automatiquement à la fin de l'analyse) |
 | `GET .../reports/1/download` | le rapport HTML |
+| `GET .../reports/1/download.pdf` | le même rapport en PDF, rendu par Chromium (voir `app/services/pdf.py`) |
 | `GET /api/v1/orgs/{org_id}/activity` | 200, toutes tes actions journalisées |
+| `GET /api/v1/orgs/{org_id}/notifications` | 200, le fil de notifications de l'organisation |
 | `GET /api/v1/privacy/export` | 200, export RGPD |
 
-Le lien de vérification d'e-mail s'affiche dans le terminal d'uvicorn, préfixé
-`[DEV]` : il n'y a pas d'envoi de mail en développement.
+Sans `SMTP_HOST` configuré dans `.env` (le cas par défaut en local), les
+e-mails (vérification de compte, réinitialisation de mot de passe) ne sont
+pas perdus : ils sont écrits dans `backend/storage/emails/`, lisibles
+directement — voir `app/services/email.py`. Le lien de vérification s'y
+trouve, prêt à ouvrir dans le navigateur (`http://localhost:5173/?verify_email=...`).
+
+Pour tester le parcours complet dans l'interface plutôt que dans Swagger :
+lance le frontend dans un troisième terminal (`cd frontend && python -m
+http.server 5173`) puis ouvre http://localhost:5173.
 
 ---
 
@@ -425,8 +458,25 @@ python -m app.ingestion.cli
 
 ---
 
-## Prochaine étape
+## État du projet
 
-Une fois `30 passed` et l'ingestion réussie, il reste le frontend React :
-contexte d'authentification, rafraîchissement silencieux du jeton, sélecteur
-d'organisation, écrans d'audit et visualisation du score.
+Une fois `125 passed` et l'ingestion réussie, l'application est complète et
+fonctionnelle de bout en bout — le frontend n'est plus « à venir », il existe
+(`frontend/index.html`, JavaScript natif, sans framework) et couvre
+l'ensemble du parcours : authentification (avec vraie vérification d'e-mail
+et réinitialisation de mot de passe), campagnes d'audit, constats filtrables,
+rapports HTML/PDF, plan de remédiation, équipe et rôles, journal d'activité,
+notifications, correspondances entre référentiels, campagnes planifiées et
+veille réglementaire, gestion de compte (RGPD : export et suppression).
+
+Ce qui reste explicitement non couvert, honnêtement :
+
+- Aucun envoi SMTP réel n'a été testé (pas d'identifiants disponibles) — le
+  repli fichier local fonctionne, un vrai fournisseur SMTP ne l'a jamais été.
+- Jamais déployé en conditions réelles sur Render (`backend/render.yaml`
+  existe mais n'a pas été vérifié en dehors du poste de développement).
+- Le planificateur de campagnes récurrentes (`SCHEDULER_ENABLED`) tourne en
+  boucle asyncio dans un seul processus — pas conçu pour plusieurs workers.
+
+La CI (`.github/workflows/ci.yml`) exécute la suite backend et la suite
+bout-en-bout à chaque push une fois le dépôt sur GitHub.
