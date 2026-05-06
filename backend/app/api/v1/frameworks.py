@@ -84,40 +84,60 @@ def list_crosswalks(
     cotes sont filtres sur la version *courante* de leur referentiel — une
     correspondance dont un cote a ete supersede par une reingestion
     n'apparait plus ici tant que le seed n'a pas ete rejoue.
+
+    Une paire est stockee dans un seul sens (source -> cible), choisi a la
+    redaction du seed sans rapport avec ce que l'utilisateur consultera en
+    premier. Un referentiel qui n'est jamais "source" dans SEED (ex. DORA,
+    AI Act) resterait donc toujours vide sans chercher aussi comme cible.
+    Le sens renvoye est ensuite normalise : "source" designe toujours le
+    referentiel consulte (`code`), "cible" l'autre — jamais le sens brut de
+    stockage — pour que la carte affichee corresponde a ce que le titre de
+    la page annonce, quel que soit le sens dans lequel la paire a ete saisie.
     """
     framework = db.scalar(select(Framework).where(Framework.code == code))
     if framework is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Referentiel inconnu.")
 
-    source_req, source_ver = aliased(Requirement), aliased(FrameworkVersion)
-    target_req, target_ver = aliased(Requirement), aliased(FrameworkVersion)
-    target_fw = aliased(Framework)
+    a_req, a_ver = aliased(Requirement), aliased(FrameworkVersion)
+    b_req, b_ver = aliased(Requirement), aliased(FrameworkVersion)
+    b_fw = aliased(Framework)
 
-    rows = db.execute(
-        select(Crosswalk, source_req, target_req, target_fw.code)
-        .join(source_req, Crosswalk.source_requirement_id == source_req.id)
-        .join(source_ver, source_req.version_id == source_ver.id)
-        .join(target_req, Crosswalk.target_requirement_id == target_req.id)
-        .join(target_ver, target_req.version_id == target_ver.id)
-        .join(target_fw, target_ver.framework_id == target_fw.id)
-        .where(
-            source_ver.framework_id == framework.id,
-            source_ver.is_current.is_(True),
-            target_ver.is_current.is_(True),
-        )
-    ).all()
+    def _query(anchor_col, a_join_col, other_col, b_join_col):
+        return db.execute(
+            select(Crosswalk, a_req, b_req, b_fw.code)
+            .join(a_req, a_join_col == a_req.id)
+            .join(a_ver, a_req.version_id == a_ver.id)
+            .join(b_req, b_join_col == b_req.id)
+            .join(b_ver, b_req.version_id == b_ver.id)
+            .join(b_fw, b_ver.framework_id == b_fw.id)
+            .where(
+                a_ver.framework_id == framework.id,
+                a_ver.is_current.is_(True),
+                b_ver.is_current.is_(True),
+            )
+        ).all()
+
+    # Anchor = framework consulte, cote source de la table.
+    rows = _query(a_ver, Crosswalk.source_requirement_id, b_ver, Crosswalk.target_requirement_id)
+    seen = {crosswalk.id for crosswalk, *_ in rows}
+    # Anchor = framework consulte, mais cote cible en base : sens inverse au
+    # stockage, deja normalise ici (a_req = ce que l'utilisateur consulte).
+    rows += [
+        row for row in _query(a_ver, Crosswalk.target_requirement_id, b_ver, Crosswalk.source_requirement_id)
+        if row[0].id not in seen
+    ]
 
     return [
         CrosswalkOut(
             id=crosswalk.id,
             source_framework=FrameworkCode(code),
-            source_reference=source.reference,
-            source_title=source.title,
-            target_framework=FrameworkCode(target_code),
-            target_reference=target.reference,
-            target_title=target.title,
+            source_reference=anchor_req.reference,
+            source_title=anchor_req.title,
+            target_framework=FrameworkCode(other_code),
+            target_reference=other_req.reference,
+            target_title=other_req.title,
             coverage=crosswalk.coverage,
             rationale=crosswalk.rationale,
         )
-        for crosswalk, source, target, target_code in rows
+        for crosswalk, anchor_req, other_req, other_code in rows
     ]
