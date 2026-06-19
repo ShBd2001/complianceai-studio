@@ -32,4 +32,10 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s \
     CMD curl -fsS http://localhost:8000/health || exit 1
 
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# --proxy-headers/--forwarded-allow-ips='*' : sans ca, request.client.host
+# vaut l'adresse interne du proxy Render pour CHAQUE requete, quel que soit
+# le visiteur reel. Consequence concrete constatee : le limiteur de debit
+# anti-brute-force (slowapi, cle = adresse IP) partage alors un seul compteur
+# entre tous les visiteurs du site au lieu d'un par personne — quelques
+# tentatives de n'importe qui suffisent a bloquer tout le monde.
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*'"]
