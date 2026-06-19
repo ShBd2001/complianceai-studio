@@ -103,6 +103,10 @@ td.mono,th.mono{font-family:var(--mono);font-size:12.5px}
 label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--sourdine);margin-bottom:6px}
 input,select{width:100%;padding:10px 12px;border:1px solid var(--regle);border-radius:var(--rayon-sm);background:var(--carte);font-family:var(--sans);font-size:14.5px;color:var(--encre);transition:border-color .15s ease,box-shadow .15s ease}
 select.compact{width:auto;padding:6px 10px;font-size:13px;font-family:var(--mono)}
+.champ-mdp{position:relative}
+.champ-mdp input{padding-right:74px}
+.champ-mdp .oeil{position:absolute;right:6px;top:50%;transform:translateY(-1px);background:none;box-shadow:none;color:var(--sourdine);font-size:12.5px;font-weight:600;padding:4px 8px;border:none}
+.champ-mdp .oeil:hover{color:var(--primaire);transform:translateY(-1px)}
 input:focus,select:focus{outline:none;border-color:var(--primaire);box-shadow:0 0 0 3px var(--primaire-clair)}
 button{font-family:var(--sans);font-size:14px;font-weight:600;padding:10px 20px;border-radius:var(--rayon-sm);cursor:pointer;border:1px solid transparent;background:var(--grad-marque);color:#fff;box-shadow:0 2px 10px -2px rgba(76,63,224,.5);transition:transform .12s ease,box-shadow .12s ease,opacity .12s ease}
 button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 16px -3px rgba(76,63,224,.55)}
@@ -186,7 +190,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <div id="p-connexion">
       <div class="grille" style="grid-template-columns:1fr">
         <div><label for="c-mail">Adresse e-mail</label><input id="c-mail" type="email" autocomplete="email"></div>
-        <div><label for="c-mdp">Mot de passe</label><input id="c-mdp" type="password" autocomplete="current-password"></div>
+        <div><label for="c-mdp">Mot de passe</label><div class="champ-mdp"><input id="c-mdp" type="password" autocomplete="current-password"><button type="button" class="oeil" onclick="togglerMdp('c-mdp', this)">Afficher</button></div></div>
       </div>
       <div class="rangee">
         <button onclick="seConnecter()">Se connecter</button>
@@ -200,7 +204,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
         <div><label for="i-nom">Nom complet</label><input id="i-nom" autocomplete="name"></div>
         <div><label for="i-org">Nom de l'organisation</label><input id="i-org"></div>
         <div><label for="i-mail">Adresse e-mail</label><input id="i-mail" type="email" autocomplete="email"></div>
-        <div><label for="i-mdp">Mot de passe</label><input id="i-mdp" type="password" autocomplete="new-password"></div>
+        <div><label for="i-mdp">Mot de passe</label><div class="champ-mdp"><input id="i-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil" onclick="togglerMdp('i-mdp', this)">Afficher</button></div></div>
       </div>
       <div class="rangee">
         <button onclick="sInscrire()">Créer le compte</button>
@@ -222,7 +226,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <div id="p-reinit" hidden>
       <p class="chapeau" style="margin-top:0">Choisissez un nouveau mot de passe.</p>
       <div class="grille" style="grid-template-columns:1fr">
-        <div><label for="r-mdp">Nouveau mot de passe</label><input id="r-mdp" type="password" autocomplete="new-password"></div>
+        <div><label for="r-mdp">Nouveau mot de passe</label><div class="champ-mdp"><input id="r-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil" onclick="togglerMdp('r-mdp', this)">Afficher</button></div></div>
       </div>
       <div class="rangee"><button onclick="confirmerReinit()">Changer le mot de passe</button></div>
     </div>
@@ -304,6 +308,12 @@ async function appel(chemin, options = {}) {
 const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = id => document.getElementById(id);
 const poser = (id, c) => { const n = $(id); if (n) n.innerHTML = c; };
+function togglerMdp(id, bouton) {
+  const champ = $(id);
+  const visible = champ.type === 'text';
+  champ.type = visible ? 'password' : 'text';
+  bouton.textContent = visible ? 'Afficher' : 'Masquer';
+}
 const jour = d => d ? new Date(d).toLocaleDateString('fr-FR', {day:'2-digit',month:'short',year:'numeric'}) : '—';
 const instant = d => d ? new Date(d).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
 const attente = t => `<div class="attente"><span class="pulsation"></span>${h(t)}</div>`;
@@ -1026,8 +1036,8 @@ async function vueCompte() {
 
     <h2>Sécurité</h2>
     <div class="grille">
-      <div><label for="cp-actuel">Mot de passe actuel</label><input id="cp-actuel" type="password" autocomplete="current-password"></div>
-      <div><label for="cp-nouveau">Nouveau mot de passe</label><input id="cp-nouveau" type="password" autocomplete="new-password"></div>
+      <div><label for="cp-actuel">Mot de passe actuel</label><div class="champ-mdp"><input id="cp-actuel" type="password" autocomplete="current-password"><button type="button" class="oeil" onclick="togglerMdp('cp-actuel', this)">Afficher</button></div></div>
+      <div><label for="cp-nouveau">Nouveau mot de passe</label><div class="champ-mdp"><input id="cp-nouveau" type="password" autocomplete="new-password"><button type="button" class="oeil" onclick="togglerMdp('cp-nouveau', this)">Afficher</button></div></div>
     </div>
     <div class="rangee">
       <button id="btn-changer-mdp" onclick="changerMotDePasse()">Changer le mot de passe</button>
