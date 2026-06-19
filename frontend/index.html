@@ -190,7 +190,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <div id="p-connexion">
       <div class="grille" style="grid-template-columns:1fr">
         <div><label for="c-mail">Adresse e-mail</label><input id="c-mail" type="email" autocomplete="email"></div>
-        <div><label for="c-mdp">Mot de passe</label><div class="champ-mdp"><input id="c-mdp" type="password" autocomplete="current-password"><button type="button" class="oeil" onclick="togglerMdp('c-mdp', this)">Afficher</button></div></div>
+        <div><label for="c-mdp">Mot de passe</label><div class="champ-mdp"><input id="c-mdp" type="password" autocomplete="current-password"><button type="button" class="oeil lien" onclick="togglerMdp('c-mdp', this)">Afficher</button></div></div>
       </div>
       <div class="rangee">
         <button onclick="seConnecter()">Se connecter</button>
@@ -204,7 +204,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
         <div><label for="i-nom">Nom complet</label><input id="i-nom" autocomplete="name"></div>
         <div><label for="i-org">Nom de l'organisation</label><input id="i-org"></div>
         <div><label for="i-mail">Adresse e-mail</label><input id="i-mail" type="email" autocomplete="email"></div>
-        <div><label for="i-mdp">Mot de passe</label><div class="champ-mdp"><input id="i-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil" onclick="togglerMdp('i-mdp', this)">Afficher</button></div></div>
+        <div><label for="i-mdp">Mot de passe</label><div class="champ-mdp"><input id="i-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('i-mdp', this)">Afficher</button></div></div>
       </div>
       <div class="rangee">
         <button onclick="sInscrire()">Créer le compte</button>
@@ -226,7 +226,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <div id="p-reinit" hidden>
       <p class="chapeau" style="margin-top:0">Choisissez un nouveau mot de passe.</p>
       <div class="grille" style="grid-template-columns:1fr">
-        <div><label for="r-mdp">Nouveau mot de passe</label><div class="champ-mdp"><input id="r-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil" onclick="togglerMdp('r-mdp', this)">Afficher</button></div></div>
+        <div><label for="r-mdp">Nouveau mot de passe</label><div class="champ-mdp"><input id="r-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('r-mdp', this)">Afficher</button></div></div>
       </div>
       <div class="rangee"><button onclick="confirmerReinit()">Changer le mot de passe</button></div>
     </div>
@@ -1036,8 +1036,8 @@ async function vueCompte() {
 
     <h2>Sécurité</h2>
     <div class="grille">
-      <div><label for="cp-actuel">Mot de passe actuel</label><div class="champ-mdp"><input id="cp-actuel" type="password" autocomplete="current-password"><button type="button" class="oeil" onclick="togglerMdp('cp-actuel', this)">Afficher</button></div></div>
-      <div><label for="cp-nouveau">Nouveau mot de passe</label><div class="champ-mdp"><input id="cp-nouveau" type="password" autocomplete="new-password"><button type="button" class="oeil" onclick="togglerMdp('cp-nouveau', this)">Afficher</button></div></div>
+      <div><label for="cp-actuel">Mot de passe actuel</label><div class="champ-mdp"><input id="cp-actuel" type="password" autocomplete="current-password"><button type="button" class="oeil lien" onclick="togglerMdp('cp-actuel', this)">Afficher</button></div></div>
+      <div><label for="cp-nouveau">Nouveau mot de passe</label><div class="champ-mdp"><input id="cp-nouveau" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('cp-nouveau', this)">Afficher</button></div></div>
     </div>
     <div class="rangee">
       <button id="btn-changer-mdp" onclick="changerMotDePasse()">Changer le mot de passe</button>
