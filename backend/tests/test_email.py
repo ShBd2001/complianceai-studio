@@ -90,6 +90,53 @@ def test_send_email_via_smtp_calls_smtplib(monkeypatch, tmp_path):
     assert not (tmp_path / "emails").exists()
 
 
+def test_send_email_via_brevo_calls_the_http_api(monkeypatch, tmp_path):
+    """Brevo (API HTTP) est prioritaire sur le SMTP : sur le plan gratuit de
+    Render, les ports SMTP sortants sont bloques, jamais le HTTPS."""
+    monkeypatch.setattr(settings, "STORAGE_DIR", str(tmp_path))
+    monkeypatch.setattr(settings, "BREVO_API_KEY", "cle-test")
+    monkeypatch.setattr(settings, "EMAIL_FROM", "envoi@exemple.fr")
+    monkeypatch.setattr(settings, "SMTP_HOST", "smtp.exemple.fr")  # ignore : Brevo prioritaire
+
+    calls = {}
+
+    class FakeResponse:
+        def raise_for_status(self):
+            pass
+
+    def fake_post(url, *, headers, json, timeout):
+        calls["url"], calls["headers"], calls["json"] = url, headers, json
+        return FakeResponse()
+
+    monkeypatch.setattr(email_service.httpx, "post", fake_post)
+
+    email_service.send_email(to="dest@exemple.fr", subject="Sujet", body="Corps.")
+
+    assert calls["url"] == email_service.BREVO_API_URL
+    assert calls["headers"]["api-key"] == "cle-test"
+    assert calls["json"]["sender"]["email"] == "envoi@exemple.fr"
+    assert calls["json"]["to"] == [{"email": "dest@exemple.fr"}]
+    assert calls["json"]["subject"] == "Sujet"
+    # Aucun repli fichier quand l'envoi reussit, SMTP jamais sollicite.
+    assert not (tmp_path / "emails").exists()
+
+
+def test_send_email_via_brevo_falls_back_to_local_file_on_failure(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "STORAGE_DIR", str(tmp_path))
+    monkeypatch.setattr(settings, "BREVO_API_KEY", "cle-test")
+    monkeypatch.setattr(settings, "EMAIL_FROM", "envoi@exemple.fr")
+
+    def fake_post(*a, **k):
+        raise RuntimeError("Brevo indisponible")
+
+    monkeypatch.setattr(email_service.httpx, "post", fake_post)
+
+    email_service.send_email(to="dest@exemple.fr", subject="Sujet", body="Corps.")
+
+    fichiers = list((tmp_path / "emails").glob("*.txt"))
+    assert len(fichiers) == 1
+
+
 def test_send_email_strips_header_injection_from_subject(monkeypatch, tmp_path):
     """Un sujet peut provenir d'un titre de campagne choisi par l'utilisateur
     (via une notification) : un retour a la ligne ne doit jamais pouvoir

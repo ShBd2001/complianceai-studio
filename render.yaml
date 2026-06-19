@@ -15,9 +15,11 @@
 # La base Postgres gratuite expire 30 jours apres sa creation (limite du
 # plan free Render) : a recreer / re-ingerer passe ce delai.
 #
-# SMTP via Gmail (mot de passe d'application, pas le mot de passe du compte).
-# SMTP_PASSWORD reste `sync: false` : jamais dans le depot, saisi a la main
-# dans le tableau de bord Render.
+# E-mail transactionnel via Brevo (API HTTP), pas SMTP : constate en
+# conditions reelles, Render bloque les ports sortants 25/465/587 sur son
+# plan gratuit, quels que soient les identifiants — seul du trafic HTTPS
+# (443) sort. BREVO_API_KEY reste `sync: false` : jamais dans le depot,
+# saisi a la main dans le tableau de bord Render.
 #
 # EMBEDDING_BACKEND=hashing : le plan free (512 Mo de RAM) ne suffit pas a
 # charger le modele fastembed en plus du reste du processus — verifie en
@@ -60,13 +62,9 @@ services:
         value: https://complianceai-web.onrender.com
       - key: EMBEDDING_BACKEND
         value: hashing
-      - key: SMTP_HOST
-        value: smtp.gmail.com
-      - key: SMTP_PORT
-        value: "587"
-      - key: SMTP_USER
+      - key: EMAIL_FROM
         value: sasarah482@gmail.com
-      - key: SMTP_PASSWORD
+      - key: BREVO_API_KEY
         sync: false
       - key: GROQ_API_KEY
         sync: false

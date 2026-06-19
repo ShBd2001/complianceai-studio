@@ -1,14 +1,24 @@
 """Envoi d'e-mails transactionnels (verification, reinitialisation).
 
-Sans SMTP configure (SMTP_HOST vide — le defaut), rien ne se perd : le
-message est ecrit dans STORAGE_DIR/emails/ sous forme de fichier texte
-horodate, lien complet en clair. Des que SMTP_HOST est renseigne, l'envoi
-devient reel via smtplib (bibliotheque standard, aucune nouvelle dependance).
+Trois voies possibles, dans cet ordre : Brevo (API HTTP), SMTP, fichier local.
+Sans rien de configure, rien ne se perd : le message est ecrit dans
+STORAGE_DIR/emails/ sous forme de fichier texte horodate, lien complet en
+clair.
 
-Un echec d'envoi SMTP ne doit jamais faire echouer la requete HTTP appelante
+Le SMTP seul ne suffit pas en production : les plans gratuits des
+hebergeurs (Render y compris) bloquent couramment les ports sortants
+25/465/587 pour lutter contre le spam. Des identifiants SMTP corrects
+peuvent donc fonctionner en local et echouer silencieusement une fois
+deploye, sans rapport avec leur validite — constate en conditions reelles.
+Brevo (ou tout fournisseur a API HTTP) contourne ca : le trafic part en
+HTTPS (443), jamais bloque. BREVO_API_KEY est donc prioritaire si present ;
+SMTP reste utile en local ou chez un hebergeur qui n'a pas cette
+restriction.
+
+Un echec d'envoi ne doit jamais faire echouer la requete HTTP appelante
 (l'utilisateur a deja recu la reponse attendue — 201 sur /register, reponse
 generique anti-enumeration sur /password-reset) : il degrade silencieusement
-vers le meme repli fichier, journalise pour diagnostic.
+vers le repli fichier, journalise pour diagnostic.
 """
 
 from __future__ import annotations
@@ -19,9 +29,13 @@ from datetime import datetime, timezone
 from email.message import EmailMessage
 from pathlib import Path
 
+import httpx
+
 from app.core.config import settings
 
 logger = logging.getLogger("complianceai.email")
+
+BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
 
 
 def _dropbox_path(to: str) -> Path:
@@ -49,13 +63,41 @@ def _sans_injection(valeur: str) -> str:
     return " ".join(valeur.splitlines()).strip()
 
 
+def _send_via_brevo(to: str, subject: str, body: str) -> None:
+    sender_email = settings.EMAIL_FROM or settings.SMTP_USER
+    if not sender_email:
+        raise RuntimeError("BREVO_API_KEY defini sans EMAIL_FROM (ni SMTP_USER en repli).")
+    r = httpx.post(
+        BREVO_API_URL,
+        headers={"api-key": settings.BREVO_API_KEY, "Content-Type": "application/json"},
+        json={
+            "sender": {"email": sender_email, "name": settings.EMAIL_FROM_NAME},
+            "to": [{"email": to}],
+            "subject": subject,
+            "textContent": body,
+        },
+        timeout=10,
+    )
+    r.raise_for_status()
+
+
 def send_email(*, to: str, subject: str, body: str) -> None:
     to = _sans_injection(to)
     subject = _sans_injection(subject)
 
+    if settings.BREVO_API_KEY:
+        try:
+            _send_via_brevo(to, subject, body)
+            logger.info("E-mail envoye a %s via Brevo (%s).", to, subject)
+            return
+        except Exception:
+            logger.exception("Echec de l'envoi via Brevo a %s, repli sur le fichier local.", to)
+            _write_local(to, subject, body, note="Brevo en echec, voir les logs applicatifs")
+            return
+
     if not settings.SMTP_HOST:
         path = _write_local(to, subject, body)
-        logger.info("SMTP non configure : e-mail ecrit dans %s", path)
+        logger.info("Aucun envoi configure : e-mail ecrit dans %s", path)
         return
 
     message = EmailMessage()

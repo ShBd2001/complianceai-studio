@@ -52,6 +52,18 @@ class Settings(BaseSettings):
     FRONTEND_URL: str = "http://localhost:5173"
 
     # --- E-mail transactionnel ---
+    # Ordre de priorite : Brevo (API HTTP) > SMTP > fichier local.
+    #
+    # Les plans gratuits des hebergeurs (Render compris) bloquent couramment
+    # les ports SMTP sortants (25/465/587) pour lutter contre le spam — le
+    # SMTP peut donc fonctionner en local et echouer silencieusement en
+    # production, sans rapport avec les identifiants. Brevo (ou tout
+    # fournisseur a API HTTP) contourne ca : le trafic passe en HTTPS,
+    # jamais bloque.
+    BREVO_API_KEY: str | None = None
+    EMAIL_FROM: str | None = None
+    EMAIL_FROM_NAME: str = "ComplianceAI Studio"
+
     # SMTP_HOST vide (defaut) : aucun envoi reseau, le message est ecrit dans
     # STORAGE_DIR/emails/ pour rester testable sans fournisseur configure.
     SMTP_HOST: str | None = None
