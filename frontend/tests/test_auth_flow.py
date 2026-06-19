@@ -98,7 +98,7 @@ def test_password_reset_full_round_trip(page, frontend_server, backend_server):
     page.goto(f"{frontend_server}/?reset_password={token}", wait_until="networkidle")
     page.wait_for_selector("#p-reinit:not([hidden])")
     page.fill("#r-mdp", new_pwd)
-    page.click("#p-reinit button")
+    page.click("#p-reinit button:not(.lien)")
     expect(page.locator(".succes")).to_be_visible()
 
     page.fill("#c-mail", email)
