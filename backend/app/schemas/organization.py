@@ -25,6 +25,11 @@ class OrganizationOut(BaseModel):
     sector: str | None
     headcount: int | None
     created_at: datetime
+    # Role de l'appelant et effectif total : le frontend en a besoin pour
+    # savoir s'il doit proposer "Supprimer" (owner seul) ou "Quitter"
+    # (tout le reste) sans requete supplementaire par organisation.
+    my_role: OrgRole
+    member_count: int
 
 
 class MemberInvite(BaseModel):

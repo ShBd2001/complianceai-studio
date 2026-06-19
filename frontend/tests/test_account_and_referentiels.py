@@ -108,6 +108,26 @@ def test_logout_actually_revokes_the_server_session(page, frontend_server, backe
     assert resp.status == 401
 
 
+def test_delete_organization_then_delete_account(page, frontend_server, backend_server):
+    """Le point precis remonte en retour utilisateur : la suppression de
+    compte echouait ("vous etes owner d'une organisation") sans qu'aucun
+    bouton n'existe nulle part pour supprimer cette organisation."""
+    email = f"delcompte-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register(page, frontend_server, backend_server, email)
+
+    page.click("a[data-vue=\"compte\"]")
+    page.wait_for_selector("#z-orgs table", timeout=15000)
+
+    page.once("dialog", lambda d: d.accept())
+    page.click("#z-orgs button:has-text(\"Supprimer\")")
+    expect(page.locator("#msg-org .succes")).to_be_visible()
+    expect(page.get_by_text("Aucune organisation.")).to_be_visible()
+
+    page.once("dialog", lambda d: d.accept())
+    page.click("button:has-text(\"Supprimer mon compte\")")
+    page.wait_for_selector("#accueil:not([hidden])", timeout=15000)
+
+
 def test_about_page_has_content_and_contact_link(page, frontend_server, backend_server):
     email = f"apropos-{uuid.uuid4().hex[:8]}@exemple.fr"
     _register(page, frontend_server, backend_server, email)

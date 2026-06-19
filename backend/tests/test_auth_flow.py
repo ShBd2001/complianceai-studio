@@ -207,6 +207,76 @@ def test_last_owner_cannot_be_removed(client):
     assert r.status_code == 409
 
 
+def test_delete_organization_removes_it_and_everything_under_it(client):
+    """C'est aussi l'issue de secours de la suppression de compte (art. 17) :
+    un owner solitaire ne peut supprimer son compte qu'apres avoir supprime
+    son organisation (voir privacy.py::delete_my_account)."""
+    email = _email()
+    data = _register(client, email, "Kappa SAS")
+    org_id = data["memberships"][0]["organization_id"]
+    token = _login(client, email)
+    h = _auth(token)
+
+    assert client.delete(f"/api/v1/orgs/{org_id}", headers=h).status_code == 204
+    assert client.get(f"/api/v1/orgs/{org_id}", headers=h).status_code == 404
+    assert client.delete("/api/v1/privacy/me", headers=h).status_code == 204
+
+
+def test_delete_organization_refused_while_other_members_remain(client):
+    owner_email, other_email = _email(), _email()
+    owner = _register(client, owner_email, "Lambda SAS")
+    org_id = owner["memberships"][0]["organization_id"]
+    _register(client, other_email)
+    owner_token = _login(client, owner_email)
+    other_token = _login(client, other_email)
+
+    r = client.post(
+        f"/api/v1/orgs/{org_id}/members",
+        json={"email": other_email, "role": "viewer"},
+        headers=_auth(owner_token),
+    )
+    assert r.status_code == 201
+
+    assert client.delete(f"/api/v1/orgs/{org_id}", headers=_auth(owner_token)).status_code == 409
+
+    # Le membre restant part de son propre chef : la suppression devient
+    # alors possible, sans jamais avoir coupe l'acces de qui que ce soit
+    # sans le prevenir.
+    other_id = client.get("/api/v1/auth/me", headers=_auth(other_token)).json()["id"]
+    assert client.delete(
+        f"/api/v1/orgs/{org_id}/members/{other_id}", headers=_auth(owner_token)
+    ).status_code == 204
+    assert client.delete(f"/api/v1/orgs/{org_id}", headers=_auth(owner_token)).status_code == 204
+
+
+def test_delete_organization_requires_owner_role(client):
+    owner_email, viewer_email = _email(), _email()
+    owner = _register(client, owner_email, "Sigma2 SAS")
+    org_id = owner["memberships"][0]["organization_id"]
+    _register(client, viewer_email)
+    owner_token = _login(client, owner_email)
+    viewer_token = _login(client, viewer_email)
+
+    client.post(
+        f"/api/v1/orgs/{org_id}/members",
+        json={"email": viewer_email, "role": "viewer"},
+        headers=_auth(owner_token),
+    )
+    assert client.delete(f"/api/v1/orgs/{org_id}", headers=_auth(viewer_token)).status_code == 403
+
+
+def test_list_organizations_reports_role_and_member_count(client):
+    email = _email()
+    data = _register(client, email, "Mu SAS")
+    org_id = data["memberships"][0]["organization_id"]
+    token = _login(client, email)
+    r = client.get("/api/v1/orgs", headers=_auth(token))
+    assert r.status_code == 200
+    org = next(o for o in r.json() if o["id"] == org_id)
+    assert org["my_role"] == "owner"
+    assert org["member_count"] == 1
+
+
 def test_activity_log_records_login(client):
     email = _email()
     data = _register(client, email, "Sigma SAS")

@@ -6,7 +6,7 @@ import uuid
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.api.deps import OrgContext, get_current_user, get_org_context, require_role
@@ -36,15 +36,30 @@ def _slugify(value: str) -> str:
 def list_my_organizations(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
-) -> list[Organization]:
-    return list(
-        db.scalars(
-            select(Organization)
-            .join(Membership, Membership.organization_id == Organization.id)
-            .where(Membership.user_id == user.id)
-            .order_by(Organization.name)
-        )
+) -> list[OrganizationOut]:
+    rows = db.execute(
+        select(Organization, Membership.role)
+        .join(Membership, Membership.organization_id == Organization.id)
+        .where(Membership.user_id == user.id)
+        .order_by(Organization.name)
+    ).all()
+    if not rows:
+        return []
+    counts = dict(
+        db.execute(
+            select(Membership.organization_id, func.count(Membership.id))
+            .where(Membership.organization_id.in_([org.id for org, _ in rows]))
+            .group_by(Membership.organization_id)
+        ).all()
     )
+    return [
+        OrganizationOut(
+            id=org.id, name=org.name, slug=org.slug, siren=org.siren,
+            sector=org.sector, headcount=org.headcount, created_at=org.created_at,
+            my_role=role, member_count=counts.get(org.id, 1),
+        )
+        for org, role in rows
+    ]
 
 
 @router.post("", response_model=OrganizationOut, status_code=status.HTTP_201_CREATED)
@@ -53,7 +68,7 @@ def create_organization(
     request: Request,
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
-) -> Organization:
+) -> OrganizationOut:
     slug = _slugify(payload.name)
     if db.scalar(select(Organization.id).where(Organization.slug == slug)) is not None:
         slug = f"{slug}-{uuid.uuid4().hex[:6]}"
@@ -74,12 +89,67 @@ def create_organization(
         payload={"name": org.name},
     )
     db.flush()
-    return org
+    return OrganizationOut(
+        id=org.id, name=org.name, slug=org.slug, siren=org.siren,
+        sector=org.sector, headcount=org.headcount, created_at=org.created_at,
+        my_role=OrgRole.OWNER, member_count=1,
+    )
 
 
 @router.get("/{org_id}", response_model=OrganizationOut)
-def get_organization(ctx: OrgContext = Depends(get_org_context)) -> Organization:
-    return ctx.organization
+def get_organization(
+    ctx: OrgContext = Depends(get_org_context),
+    db: Session = Depends(get_db),
+) -> OrganizationOut:
+    count = db.scalar(
+        select(func.count(Membership.id)).where(Membership.organization_id == ctx.org_id)
+    )
+    org = ctx.organization
+    return OrganizationOut(
+        id=org.id, name=org.name, slug=org.slug, siren=org.siren,
+        sector=org.sector, headcount=org.headcount, created_at=org.created_at,
+        my_role=ctx.role, member_count=count,
+    )
+
+
+@router.delete("/{org_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)
+def delete_organization(
+    request: Request,
+    ctx: OrgContext = Depends(require_role(OrgRole.OWNER)),
+    db: Session = Depends(get_db),
+) -> None:
+    """Supprime l'organisation et tout ce qui lui appartient (campagnes,
+    pieces, rapports, planifications...) — irreversible, jamais de retour
+    arriere possible.
+
+    C'est aussi l'issue de secours d'une suppression de compte (art. 17,
+    voir privacy.py::delete_my_account) : un owner ne peut pas supprimer son
+    compte tant qu'il possede une organisation, et jusqu'ici rien ne
+    permettait de la supprimer non plus — impasse pour tout le monde.
+
+    Reserve au cas ou l'organisation n'a plus qu'un seul membre : la
+    supprimer couperait sinon l'acces d'autres personnes sans les prevenir.
+    Elles doivent d'abord etre retirees (page Equipe).
+    """
+    autre_membre = db.scalar(
+        select(Membership.id).where(
+            Membership.organization_id == ctx.org_id, Membership.user_id != ctx.user.id
+        )
+    )
+    if autre_membre is not None:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "D'autres personnes ont encore acces a cette organisation. "
+            "Retirez-les d'abord (page Equipe) avant de la supprimer.",
+        )
+
+    activity.log(
+        db, action="org.deleted", actor_id=ctx.user.id, organization_id=ctx.org_id,
+        entity_type="organization", entity_id=ctx.org_id, request=request,
+        payload={"name": ctx.organization.name},
+    )
+    db.flush()
+    db.delete(ctx.organization)
 
 
 @router.get("/{org_id}/members", response_model=list[MemberOut])

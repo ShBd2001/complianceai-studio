@@ -1077,11 +1077,51 @@ async function vueCompte() {
 }
 
 function chargerMesOrganisations() {
-  poser('z-orgs', E.orgs.length ? `<table><thead><tr><th>Organisation</th><th></th></tr></thead>
+  poser('z-orgs', E.orgs.length ? `<table><thead><tr><th>Organisation</th><th>Rôle</th><th></th><th></th></tr></thead>
     <tbody>${E.orgs.map(o => `<tr>
       <td>${h(o.name)}</td>
+      <td>${h(ROLE[o.my_role] || o.my_role)} ${o.member_count > 1 ? `· ${o.member_count} membres` : '· vous seul(e)'}</td>
       <td>${o.id === E.orgId ? '<span class="etiq e-ok">Active</span>' : ''}</td>
+      <td>${o.my_role === 'owner' && o.member_count === 1
+        ? `<button class="discret" style="border-color:var(--sceau);color:var(--sceau)" onclick="supprimerOrganisation('${o.id}')">Supprimer</button>`
+        : `<button class="discret" onclick="quitterOrganisation('${o.id}')">Quitter</button>`}</td>
     </tr>`).join('')}</tbody></table>` : `<p class="vide">Aucune organisation.</p>`);
+}
+
+async function rafraichirOrganisations(orgIdRetiree) {
+  E.orgs = await appel('/api/v1/orgs');
+  if (E.orgId === orgIdRetiree) {
+    E.orgId = E.orgs[0]?.id || null;
+  }
+  $('ch-org-global').innerHTML = E.orgs.map(o => `<option value="${o.id}">${h(o.name)}</option>`).join('');
+  if (E.orgId) $('ch-org-global').value = E.orgId;
+  chargerMesOrganisations();
+}
+
+async function supprimerOrganisation(orgId) {
+  const org = E.orgs.find(o => o.id === orgId);
+  if (!confirm(`Supprimer définitivement « ${org?.name || 'cette organisation'} » et tout ce qu'elle contient (campagnes, pièces, rapports) ? Cette action est irréversible.`)) return;
+  poser('msg-org', attente('Suppression'));
+  try {
+    await appel(`/api/v1/orgs/${orgId}`, { method:'DELETE' });
+    await rafraichirOrganisations(orgId);
+    poser('msg-org', E.orgId
+      ? `<div class="succes">Organisation supprimée.</div>`
+      : `<div class="succes">Organisation supprimée. Créez-en une nouvelle pour continuer, ou <button class="lien" onclick="quitter()">fermez la session</button>.</div>`);
+    if (E.orgId) router();
+  } catch (e) { poser('msg-org', echoue(e)); }
+}
+
+async function quitterOrganisation(orgId) {
+  const org = E.orgs.find(o => o.id === orgId);
+  if (!confirm(`Quitter « ${org?.name || 'cette organisation'} » ? Vous perdrez l'accès à ses campagnes et devrez être réinvité(e) pour y revenir.`)) return;
+  poser('msg-org', attente('Sortie'));
+  try {
+    await appel(`/api/v1/orgs/${orgId}/members/${E.moi.id}`, { method:'DELETE' });
+    await rafraichirOrganisations(orgId);
+    poser('msg-org', `<div class="succes">Vous avez quitté l'organisation.</div>`);
+    if (E.orgId) router();
+  } catch (e) { poser('msg-org', echoue(e)); }
 }
 
 async function creerOrganisation() {
