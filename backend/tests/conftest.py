@@ -89,3 +89,30 @@ if _source:
     os.environ["DATABASE_URL"] = _target
     _ensure_database(_target)
     _migrate()
+
+
+def verify_email(client, email: str) -> None:
+    """Suit le vrai lien de verification (repli fichier local, voir
+    app/services/email.py) : la connexion est refusee tant qu'il n'a pas ete
+    ouvert (voir app/api/v1/auth.py::login). A appeler juste apres un
+    /auth/register reussi, avant toute tentative de connexion dans les tests."""
+    import re
+    import time
+
+    from app.core.config import settings
+
+    emails_dir = pathlib.Path(settings.STORAGE_DIR) / "emails"
+    deadline = time.monotonic() + 5
+    fichiers: list[pathlib.Path] = []
+    while time.monotonic() < deadline:
+        if emails_dir.exists():
+            fichiers = sorted(p for p in emails_dir.glob("*.txt") if email in p.name)
+            if fichiers:
+                break
+        time.sleep(0.05)
+    assert fichiers, f"aucun e-mail de verification trouve pour {email} dans {emails_dir}"
+    contenu = fichiers[-1].read_text(encoding="utf-8")
+    match = re.search(r"verify_email=([^\s&]+)", contenu)
+    assert match, f"lien de verification absent : {contenu!r}"
+    r = client.post(f"/api/v1/auth/verify-email?token={match.group(1)}")
+    assert r.status_code == 204, r.text

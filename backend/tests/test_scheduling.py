@@ -21,6 +21,7 @@ from app.models.enums import Pillar, RequirementKind, ScheduleCadence
 from app.models.notification import Notification
 from app.models.scheduling import AuditSchedule
 from app.services.scheduling import compute_next_run, run_due_schedules, run_schedule
+from conftest import verify_email
 
 PWD = "Compliance!2026x"
 
@@ -78,6 +79,7 @@ def org(client: TestClient):
     })
     assert r.status_code == 201, r.text
     org_id = r.json()["memberships"][0]["organization_id"]
+    verify_email(client, email)
     token = client.post(
         "/api/v1/auth/login", json={"email": email, "password": PWD}
     ).json()["access_token"]
@@ -187,6 +189,7 @@ def test_schedule_of_another_org_is_invisible(client, org, framework_ready):
         "email": email_b, "password": PWD, "full_name": "Autre Personne",
         "organization_name": "Beta SARL", "accept_terms": True,
     })
+    verify_email(client, email_b)
     token_b = client.post(
         "/api/v1/auth/login", json={"email": email_b, "password": PWD}
     ).json()["access_token"]

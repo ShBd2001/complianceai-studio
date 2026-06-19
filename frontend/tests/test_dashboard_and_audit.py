@@ -9,6 +9,8 @@ import uuid
 
 from playwright.sync_api import expect
 
+from conftest import extract_link_token, latest_email_for
+
 PWD = "Compliance!2026x"
 
 POLICY = (
@@ -20,7 +22,7 @@ POLICY = (
 )
 
 
-def _register(page, frontend_server: str, email: str) -> None:
+def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.goto(frontend_server, wait_until="networkidle")
     page.click("button.lien:has-text(\"Créer un compte\")")
     page.wait_for_selector("#p-inscription:not([hidden])")
@@ -29,12 +31,23 @@ def _register(page, frontend_server: str, email: str) -> None:
     page.fill("#i-mail", email)
     page.fill("#i-mdp", PWD)
     page.click("#p-inscription button:not(.lien)")
+    page.wait_for_selector("#p-connexion:not([hidden])")
+
+    contenu = latest_email_for(backend_server["storage_dir"], email)
+    token = extract_link_token(contenu, "verify_email")
+    page.goto(f"{frontend_server}/?verify_email={token}", wait_until="networkidle")
+    page.wait_for_selector("#p-verification:not([hidden])")
+
+    page.goto(frontend_server, wait_until="networkidle")
+    page.fill("#c-mail", email)
+    page.fill("#c-mdp", PWD)
+    page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
 
 
 def test_dashboard_renders_empty_state(page, frontend_server, backend_server):
     email = f"dash-{uuid.uuid4().hex[:8]}@exemple.fr"
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
 
     expect(page.locator("h1")).to_have_text("Tableau de bord")
     expect(page.get_by_text("Aucune campagne pour l'instant.")).to_be_visible()
@@ -42,7 +55,7 @@ def test_dashboard_renders_empty_state(page, frontend_server, backend_server):
 
 def test_delete_campaign(page, frontend_server, backend_server):
     email = f"del-{uuid.uuid4().hex[:8]}@exemple.fr"
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
 
     page.click("a[data-vue=\"audits\"]")
     page.wait_for_selector("#n-titre")
@@ -59,7 +72,7 @@ def test_delete_campaign(page, frontend_server, backend_server):
 
 def test_full_audit_pipeline_and_findings_filter(page, frontend_server, backend_server, tmp_path):
     email = f"audit-{uuid.uuid4().hex[:8]}@exemple.fr"
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
 
     page.click("a[data-vue=\"audits\"]")
     page.wait_for_selector("#n-titre")
@@ -97,7 +110,7 @@ def test_report_ready_immediately_after_analysis(page, frontend_server, backend_
     vue a cote du score — pas une etape manuelle separee a decouvrir plus
     bas sur la page (voir le retour utilisateur qui a motive ce test)."""
     email = f"pdf-{uuid.uuid4().hex[:8]}@exemple.fr"
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
 
     page.click("a[data-vue=\"audits\"]")
     page.wait_for_selector("#n-titre")

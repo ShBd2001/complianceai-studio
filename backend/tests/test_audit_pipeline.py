@@ -17,6 +17,7 @@ from app.ingestion.runner import ingest
 from app.main import app
 from app.models.enums import Pillar, RequirementKind
 from app.models.framework import Framework, FrameworkVersion, Requirement
+from conftest import verify_email
 
 PWD = "Compliance!2026x"
 
@@ -119,6 +120,7 @@ def org(client):
     })
     assert r.status_code == 201, r.text
     org_id = r.json()["memberships"][0]["organization_id"]
+    verify_email(client, email)
     token = client.post("/api/v1/auth/login",
                         json={"email": email, "password": PWD}).json()["access_token"]
     return org_id, {"Authorization": f"Bearer {token}"}
@@ -367,6 +369,7 @@ def test_audit_of_another_org_is_invisible(client, org, framework_ready):
         "email": email_b, "password": PWD, "full_name": "Autre Personne",
         "organization_name": "Beta SARL", "accept_terms": True,
     })
+    verify_email(client, email_b)
     token_b = client.post("/api/v1/auth/login",
                           json={"email": email_b, "password": PWD}).json()["access_token"]
 

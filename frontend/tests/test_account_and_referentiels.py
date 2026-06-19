@@ -10,10 +10,12 @@ import uuid
 
 from playwright.sync_api import expect
 
+from conftest import extract_link_token, latest_email_for
+
 PWD = "Compliance!2026x"
 
 
-def _register(page, frontend_server: str, email: str) -> None:
+def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.goto(frontend_server, wait_until="networkidle")
     page.click("button.lien:has-text(\"Créer un compte\")")
     page.wait_for_selector("#p-inscription:not([hidden])")
@@ -22,12 +24,23 @@ def _register(page, frontend_server: str, email: str) -> None:
     page.fill("#i-mail", email)
     page.fill("#i-mdp", PWD)
     page.click("#p-inscription button:not(.lien)")
+    page.wait_for_selector("#p-connexion:not([hidden])")
+
+    contenu = latest_email_for(backend_server["storage_dir"], email)
+    token = extract_link_token(contenu, "verify_email")
+    page.goto(f"{frontend_server}/?verify_email={token}", wait_until="networkidle")
+    page.wait_for_selector("#p-verification:not([hidden])")
+
+    page.goto(frontend_server, wait_until="networkidle")
+    page.fill("#c-mail", email)
+    page.fill("#c-mdp", PWD)
+    page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
 
 
 def test_referentiels_page_lists_articles_and_current_version(page, frontend_server, backend_server):
     email = f"ref-{uuid.uuid4().hex[:8]}@exemple.fr"
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
 
     page.click("a[data-vue=\"referentiels\"]")
     page.wait_for_selector("#z-req table", timeout=15000)
@@ -46,7 +59,7 @@ def test_referentiels_page_lists_articles_and_current_version(page, frontend_ser
 
 def test_create_organization_from_account_page(page, frontend_server, backend_server):
     email = f"acc-{uuid.uuid4().hex[:8]}@exemple.fr"
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
 
     page.click("a[data-vue=\"compte\"]")
     page.wait_for_selector("#z-orgs table", timeout=15000)
@@ -61,7 +74,7 @@ def test_create_organization_from_account_page(page, frontend_server, backend_se
 def test_change_password_from_account_page(page, frontend_server, backend_server):
     email = f"pwd-{uuid.uuid4().hex[:8]}@exemple.fr"
     new_pwd = "AutreMotDePasse!2026x"
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
 
     page.click("a[data-vue=\"compte\"]")
     page.wait_for_selector("#z-orgs table", timeout=15000)
@@ -83,7 +96,7 @@ def test_logout_actually_revokes_the_server_session(page, frontend_server, backe
     session » se contentait de recharger la page, sans jamais revoquer le
     jeton de rafraichissement cote serveur."""
     email = f"logout-{uuid.uuid4().hex[:8]}@exemple.fr"
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
 
     page.click("button.lien:has-text(\"Fermer la session\")")
     page.wait_for_selector("#accueil:not([hidden])")
@@ -97,7 +110,7 @@ def test_logout_actually_revokes_the_server_session(page, frontend_server, backe
 
 def test_about_page_has_content_and_contact_link(page, frontend_server, backend_server):
     email = f"apropos-{uuid.uuid4().hex[:8]}@exemple.fr"
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
 
     page.click("a[data-vue=\"apropos\"]")
     page.wait_for_selector("a[href^='mailto:']", timeout=10000)

@@ -224,6 +224,10 @@ def test_password_reset_full_round_trip(client, monkeypatch):
         "email": email, "password": PWD, "full_name": "Sarah Test",
         "organization_name": "Acme SAS", "accept_terms": True,
     })
+    # La connexion est refusee tant que l'adresse n'est pas verifiee (voir
+    # auth.py::login) : suivre le vrai lien avant de tester le reste.
+    verify_token = _extract_token(sent[0]["body"], "verify_email")
+    assert client.post(f"/api/v1/auth/verify-email?token={verify_token}").status_code == 204
     sent.clear()  # ignorer l'e-mail de verification envoye a l'inscription
 
     r = client.post("/api/v1/auth/password-reset", json={"email": email})

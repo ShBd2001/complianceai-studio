@@ -12,10 +12,12 @@ from pathlib import Path
 
 from playwright.sync_api import expect
 
+from conftest import extract_link_token, latest_email_for
+
 PWD = "Compliance!2026x"
 
 
-def _register(page, frontend_server: str, email: str) -> str:
+def _register(page, frontend_server: str, backend_server, email: str) -> str:
     page.goto(frontend_server, wait_until="networkidle")
     page.click("button.lien:has-text(\"Créer un compte\")")
     page.wait_for_selector("#p-inscription:not([hidden])")
@@ -24,6 +26,17 @@ def _register(page, frontend_server: str, email: str) -> str:
     page.fill("#i-mail", email)
     page.fill("#i-mdp", PWD)
     page.click("#p-inscription button:not(.lien)")
+    page.wait_for_selector("#p-connexion:not([hidden])")
+
+    contenu = latest_email_for(backend_server["storage_dir"], email)
+    token = extract_link_token(contenu, "verify_email")
+    page.goto(f"{frontend_server}/?verify_email={token}", wait_until="networkidle")
+    page.wait_for_selector("#p-verification:not([hidden])")
+
+    page.goto(frontend_server, wait_until="networkidle")
+    page.fill("#c-mail", email)
+    page.fill("#c-mdp", PWD)
+    page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
     return page.locator("#ch-org-global option").first.get_attribute("value")
 
@@ -54,7 +67,7 @@ with SessionLocal() as db:
 
 def test_notification_appears_with_badge(page, frontend_server, backend_server, env_e2e):
     email = f"notif-{uuid.uuid4().hex[:8]}@exemple.fr"
-    org_id = _register(page, frontend_server, email)
+    org_id = _register(page, frontend_server, backend_server, email)
 
     _create_notification(env_e2e, backend_server, org_id, "Alerte E2E")
 

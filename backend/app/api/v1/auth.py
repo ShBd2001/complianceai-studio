@@ -239,6 +239,16 @@ def login(
     if not user.is_active or user.deleted_at is not None:
         raise generic
 
+    # Verifiee apres le mot de passe : la personne vient de prouver qu'elle
+    # le connait, ce message ne fuite donc rien a un tiers qui ne l'aurait
+    # pas devine.
+    if user.email_verified_at is None:
+        raise HTTPException(
+            status.HTTP_403_FORBIDDEN,
+            "Adresse e-mail non verifiee. Consultez le lien envoye a "
+            f"{user.email} (pensez aux indesirables) avant de vous connecter.",
+        )
+
     # Re-hachage transparent si les parametres Argon2 ont evolue.
     if password_needs_rehash(user.password_hash):
         user.password_hash = hash_password(payload.password)

@@ -19,6 +19,7 @@ from app.ingestion.runner import ingest
 from app.main import app
 from app.models.enums import Pillar, RequirementKind
 from app.models.framework import Crosswalk, FrameworkVersion, Requirement
+from conftest import verify_email
 
 PWD = "Compliance!2026x"
 
@@ -72,6 +73,7 @@ def org(client: TestClient):
     })
     assert r.status_code == 201, r.text
     org_id = r.json()["memberships"][0]["organization_id"]
+    verify_email(client, email)
     token = client.post(
         "/api/v1/auth/login", json={"email": email, "password": PWD}
     ).json()["access_token"]

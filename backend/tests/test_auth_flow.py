@@ -10,6 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
+from conftest import verify_email
 
 PWD = "Compliance!2026x"
 
@@ -35,6 +36,7 @@ def _register(client: TestClient, email: str, org: str = "Acme SAS") -> dict:
         },
     )
     assert r.status_code == 201, r.text
+    verify_email(client, email)
     return r.json()
 
 

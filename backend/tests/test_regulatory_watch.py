@@ -18,6 +18,7 @@ from app.ingestion.runner import IngestionReport, ingest
 from app.main import app
 from app.models.enums import Pillar, RequirementKind
 from app.models.framework import Framework
+from conftest import verify_email
 from app.models.notification import Notification
 from app.services import scheduler as scheduler_service
 
@@ -67,6 +68,7 @@ def org(client: TestClient):
     })
     assert r.status_code == 201, r.text
     org_id = r.json()["memberships"][0]["organization_id"]
+    verify_email(client, email)
     token = client.post(
         "/api/v1/auth/login", json={"email": email, "password": PWD}
     ).json()["access_token"]

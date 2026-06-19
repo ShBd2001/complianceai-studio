@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 from app.db.session import SessionLocal
 from app.main import app
 from app.services.notifications import notify
+from conftest import verify_email
 
 PWD = "Compliance!2026x"
 
@@ -26,6 +27,7 @@ def org(client: TestClient):
     })
     assert r.status_code == 201, r.text
     org_id = r.json()["memberships"][0]["organization_id"]
+    verify_email(client, email)
     token = client.post(
         "/api/v1/auth/login", json={"email": email, "password": PWD}
     ).json()["access_token"]
@@ -163,6 +165,7 @@ def test_notifications_of_another_org_are_invisible(client, org):
         "email": email_b, "password": PWD, "full_name": "Autre Personne",
         "organization_name": "Beta SARL", "accept_terms": True,
     })
+    verify_email(client, email_b)
     token_b = client.post(
         "/api/v1/auth/login", json={"email": email_b, "password": PWD}
     ).json()["access_token"]

@@ -18,6 +18,7 @@ ports. Arreter les serveurs manuels avant de lancer cette suite.
 from __future__ import annotations
 
 import os
+import re
 import socket
 import subprocess
 import sys
@@ -27,6 +28,29 @@ from urllib.parse import urlsplit, urlunsplit
 
 import pytest
 from playwright.sync_api import sync_playwright
+
+
+def latest_email_for(storage_dir: Path, address: str) -> str:
+    """Lit le dernier e-mail ecrit pour cette adresse (repli fichier local,
+    voir backend/app/services/email.py) — c'est le seul moyen d'obtenir un
+    lien de verification/reinitialisation reel sans SMTP configure."""
+    emails_dir = storage_dir / "emails"
+    deadline = time.monotonic() + 5
+    fichiers: list[Path] = []
+    while time.monotonic() < deadline:
+        if emails_dir.exists():
+            fichiers = sorted(p for p in emails_dir.glob("*.txt") if address in p.name)
+            if fichiers:
+                break
+        time.sleep(0.1)
+    assert fichiers, f"aucun e-mail trouve pour {address} dans {emails_dir}"
+    return fichiers[-1].read_text(encoding="utf-8")
+
+
+def extract_link_token(contenu: str, param: str) -> str:
+    match = re.search(rf"{param}=([^\s&]+)", contenu)
+    assert match, f"lien absent du contenu : {contenu!r}"
+    return match.group(1)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BACKEND_ROOT = REPO_ROOT / "backend"

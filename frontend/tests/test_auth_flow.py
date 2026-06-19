@@ -5,12 +5,11 @@ connexion, mot de passe oublie de bout en bout.
 
 from __future__ import annotations
 
-import re
-import time
 import uuid
-from pathlib import Path
 
 from playwright.sync_api import expect
+
+from conftest import extract_link_token, latest_email_for
 
 PWD = "Compliance!2026x"
 
@@ -19,27 +18,7 @@ def _email(prefix: str) -> str:
     return f"{prefix}-{uuid.uuid4().hex[:10]}@exemple.fr"
 
 
-def _latest_email_for(storage_dir: Path, address: str) -> str:
-    emails_dir = storage_dir / "emails"
-    deadline = time.monotonic() + 5
-    fichiers: list[Path] = []
-    while time.monotonic() < deadline:
-        if emails_dir.exists():
-            fichiers = sorted(p for p in emails_dir.glob("*.txt") if address in p.name)
-            if fichiers:
-                break
-        time.sleep(0.1)
-    assert fichiers, f"aucun e-mail trouve pour {address} dans {emails_dir}"
-    return fichiers[-1].read_text(encoding="utf-8")
-
-
-def _extract_link_token(contenu: str, param: str) -> str:
-    match = re.search(rf"{param}=([^\s&]+)", contenu)
-    assert match, f"lien absent du contenu : {contenu!r}"
-    return match.group(1)
-
-
-def _register(page, frontend_server: str, email: str, org: str = "Acme SAS") -> None:
+def _register(page, frontend_server: str, backend_server, email: str, org: str = "Acme SAS") -> None:
     page.goto(frontend_server, wait_until="networkidle")
     page.click("button.lien:has-text(\"Créer un compte\")")
     page.wait_for_selector("#p-inscription:not([hidden])")
@@ -48,26 +27,61 @@ def _register(page, frontend_server: str, email: str, org: str = "Acme SAS") -> 
     page.fill("#i-mail", email)
     page.fill("#i-mdp", PWD)
     page.click("#p-inscription button:not(.lien)")
+    page.wait_for_selector("#p-connexion:not([hidden])")
+
+    contenu = latest_email_for(backend_server["storage_dir"], email)
+    token = extract_link_token(contenu, "verify_email")
+    page.goto(f"{frontend_server}/?verify_email={token}", wait_until="networkidle")
+    page.wait_for_selector("#p-verification:not([hidden])")
+
+    page.goto(frontend_server, wait_until="networkidle")
+    page.fill("#c-mail", email)
+    page.fill("#c-mdp", PWD)
+    page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
 
 
 def test_register_then_verify_email_via_real_link(page, frontend_server, backend_server):
+    """Le point precis impose par cette fonctionnalite : le compte existe des
+    l'inscription, mais la connexion doit rester bloquee tant que le lien
+    reellement envoye (repli fichier local) n'a pas ete ouvert."""
     email = _email("verif")
-    _register(page, frontend_server, email)
-    expect(page.locator("#qui")).to_have_text(email)
+    page.goto(frontend_server, wait_until="networkidle")
+    page.click("button.lien:has-text(\"Créer un compte\")")
+    page.wait_for_selector("#p-inscription:not([hidden])")
+    page.fill("#i-nom", "Sarah Test")
+    page.fill("#i-org", "Acme SAS")
+    page.fill("#i-mail", email)
+    page.fill("#i-mdp", PWD)
+    page.click("#p-inscription button:not(.lien)")
+    page.wait_for_selector("#p-connexion:not([hidden])")
+    expect(page.locator("#msg-accueil")).to_contain_text("vérification")
 
-    contenu = _latest_email_for(backend_server["storage_dir"], email)
+    # Bloque tant que le lien n'a pas ete suivi.
+    page.fill("#c-mail", email)
+    page.fill("#c-mdp", PWD)
+    page.click("#p-connexion button:not(.lien)")
+    expect(page.locator(".alerte")).to_contain_text("non verifiee")
+    expect(page.locator("#appli")).to_be_hidden()
+
+    contenu = latest_email_for(backend_server["storage_dir"], email)
     assert "Vérifiez votre adresse" in contenu
-    token = _extract_link_token(contenu, "verify_email")
+    token = extract_link_token(contenu, "verify_email")
 
     page.goto(f"{frontend_server}/?verify_email={token}", wait_until="networkidle")
     page.wait_for_selector("#p-verification:not([hidden])")
     expect(page.locator("#msg-verification")).to_contain_text("vérifiée")
 
+    page.goto(frontend_server, wait_until="networkidle")
+    page.fill("#c-mail", email)
+    page.fill("#c-mdp", PWD)
+    page.click("#p-connexion button:not(.lien)")
+    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+
 
 def test_login_wrong_password_shows_error(page, frontend_server, backend_server):
     email = _email("login")
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
     page.click("button.lien:has-text(\"Fermer la session\")")
     page.wait_for_selector("#accueil:not([hidden])")
 
@@ -81,7 +95,7 @@ def test_login_wrong_password_shows_error(page, frontend_server, backend_server)
 def test_password_reset_full_round_trip(page, frontend_server, backend_server):
     email = _email("reset")
     new_pwd = "NouveauMdp!2026x"
-    _register(page, frontend_server, email)
+    _register(page, frontend_server, backend_server, email)
     page.click("button.lien:has-text(\"Fermer la session\")")
     page.wait_for_selector("#accueil:not([hidden])")
 
@@ -91,9 +105,9 @@ def test_password_reset_full_round_trip(page, frontend_server, backend_server):
     page.click("#p-oubli button:not(.lien)")
     expect(page.locator(".succes")).to_be_visible()
 
-    contenu = _latest_email_for(backend_server["storage_dir"], email)
+    contenu = latest_email_for(backend_server["storage_dir"], email)
     assert "Réinitialisation" in contenu
-    token = _extract_link_token(contenu, "reset_password")
+    token = extract_link_token(contenu, "reset_password")
 
     page.goto(f"{frontend_server}/?reset_password={token}", wait_until="networkidle")
     page.wait_for_selector("#p-reinit:not([hidden])")
