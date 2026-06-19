@@ -215,6 +215,51 @@ def test_verify_email_rejects_reused_token(client, monkeypatch):
     assert client.post(f"/api/v1/auth/verify-email?token={token}").status_code == 400
 
 
+def test_login_blocked_until_verified(client, monkeypatch):
+    monkeypatch.setattr(email_service, "send_email", lambda **kwargs: None)
+
+    email = _email()
+    client.post("/api/v1/auth/register", json={
+        "email": email, "password": PWD, "full_name": "Sarah Test",
+        "organization_name": "Acme SAS", "accept_terms": True,
+    })
+    r = client.post("/api/v1/auth/login", json={"email": email, "password": PWD})
+    assert r.status_code == 403
+    assert "non verifiee" in r.json()["detail"].lower()
+
+
+def test_resend_verification_sends_new_link_only_for_unverified_accounts(client, monkeypatch):
+    sent = []
+    monkeypatch.setattr(email_service, "send_email", lambda **kwargs: sent.append(kwargs))
+
+    email = _email()
+    client.post("/api/v1/auth/register", json={
+        "email": email, "password": PWD, "full_name": "Sarah Test",
+        "organization_name": "Acme SAS", "accept_terms": True,
+    })
+    original_token = _extract_token(sent[0]["body"], "verify_email")
+    sent.clear()
+
+    # Compte non verifie : un nouveau lien reellement exploitable est envoye.
+    r = client.post("/api/v1/auth/resend-verification", json={"email": email})
+    assert r.status_code == 202
+    assert len(sent) == 1
+    new_token = _extract_token(sent[0]["body"], "verify_email")
+    assert new_token != original_token
+    assert client.post(f"/api/v1/auth/verify-email?token={new_token}").status_code == 204
+    sent.clear()
+
+    # Compte deja verifie : reponse identique, mais rien n'est envoye.
+    r = client.post("/api/v1/auth/resend-verification", json={"email": email})
+    assert r.status_code == 202
+    assert sent == []
+
+    # Adresse inconnue : meme reponse, aucune fuite d'information.
+    r = client.post("/api/v1/auth/resend-verification", json={"email": _email()})
+    assert r.status_code == 202
+    assert sent == []
+
+
 def test_password_reset_full_round_trip(client, monkeypatch):
     sent = []
     monkeypatch.setattr(email_service, "send_email", lambda **kwargs: sent.append(kwargs))

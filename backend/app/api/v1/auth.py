@@ -17,6 +17,7 @@ from app.core.rate_limit import (
     LOGIN_LIMIT,
     PASSWORD_RESET_LIMIT,
     REGISTER_LIMIT,
+    RESEND_VERIFICATION_LIMIT,
     limiter,
 )
 from app.core.security import (
@@ -392,6 +393,48 @@ def verify_email(
     user.email_verified_at = now
     activity.log(db, action="user.email_verified", actor_id=user.id, request=request)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post("/resend-verification", status_code=status.HTTP_202_ACCEPTED)
+@limiter.limit(RESEND_VERIFICATION_LIMIT)
+def resend_verification(
+    payload: PasswordResetRequest,
+    request: Request,
+    db: Session = Depends(get_db),
+) -> dict[str, str]:
+    """Reponse toujours identique : pas d'enumeration de comptes.
+
+    Sans ceci, un compte cree avant que le SMTP ne soit configure — ou dont
+    le premier lien est simplement passe inaperçu — reste bloque a la
+    connexion sans aucun recours (voir login() : la connexion exige un
+    e-mail verifie).
+    """
+    user = db.scalar(select(User).where(User.email == payload.email.lower().strip()))
+    if user and user.is_active and user.deleted_at is None and user.email_verified_at is None:
+        raw = generate_opaque_token()
+        db.add(
+            OneTimeToken(
+                user_id=user.id,
+                token_hash=hash_token(raw),
+                purpose="email_verify",
+                expires_at=datetime.now(timezone.utc) + timedelta(hours=24),
+            )
+        )
+        activity.log(
+            db, action="auth.verification_resent", actor_id=user.id, request=request
+        )
+        email_service.send_email(
+            to=user.email,
+            subject="Vérifiez votre adresse e-mail — ComplianceAI Studio",
+            body=(
+                f"Bonjour {user.full_name},\n\n"
+                "Confirmez votre adresse e-mail en ouvrant ce lien :\n\n"
+                f"{settings.FRONTEND_URL}/?verify_email={raw}\n\n"
+                "Ce lien expire dans 24 heures. Si vous n'etes pas a l'origine "
+                "de cette demande, ignorez ce message.\n"
+            ),
+        )
+    return {"detail": "Si un compte non verifie existe pour cette adresse, un nouveau lien vient d'etre envoye."}
 
 
 # --------------------------------------------------------------------------

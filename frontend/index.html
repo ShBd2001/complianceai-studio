@@ -390,6 +390,21 @@ async function seConnecter() {
     const t = await appel('/api/v1/auth/login', { method:'POST', body: JSON.stringify({ email, password }) });
     E.jeton = t.access_token;
     await demarrer();
+  } catch (e) {
+    poser('msg-accueil', echoue(e) + (
+      /non v.rifi.e/i.test(e.message || '')
+        ? `<div class="rangee" style="margin-top:8px"><button class="lien" onclick="renvoyerVerification()">Renvoyer le lien de vérification</button></div>`
+        : ''
+    ));
+  }
+}
+
+async function renvoyerVerification() {
+  const email = $('c-mail').value.trim();
+  poser('msg-accueil', attente('Envoi'));
+  try {
+    await appel('/api/v1/auth/resend-verification', { method:'POST', body: JSON.stringify({ email }) });
+    poser('msg-accueil', `<div class="succes">Si ce compte existe et n'est pas encore vérifié, un nouveau lien vient d'être envoyé à ${h(email)}.</div>`);
   } catch (e) { poser('msg-accueil', echoue(e)); }
 }
 

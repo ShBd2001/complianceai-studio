@@ -16,3 +16,4 @@ limiter = Limiter(
 LOGIN_LIMIT = "10/minute"
 REGISTER_LIMIT = "5/hour"
 PASSWORD_RESET_LIMIT = "5/hour"
+RESEND_VERIFICATION_LIMIT = "5/hour"
