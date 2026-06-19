@@ -15,11 +15,9 @@
 # La base Postgres gratuite expire 30 jours apres sa creation (limite du
 # plan free Render) : a recreer / re-ingerer passe ce delai.
 #
-# SMTP non configure ci-dessous : les e-mails (verification, reinitialisation)
-# repliront silencieusement sur un fichier local ecrit dans le conteneur, donc
-# invisible et perdu au redemarrage. Ajouter SMTP_HOST/SMTP_USER/SMTP_PASSWORD
-# (via `sync: false`, saisis manuellement dans le tableau de bord Render)
-# avant toute utilisation reelle au-dela d'une demonstration.
+# SMTP via Gmail (mot de passe d'application, pas le mot de passe du compte).
+# SMTP_PASSWORD reste `sync: false` : jamais dans le depot, saisi a la main
+# dans le tableau de bord Render.
 #
 # EMBEDDING_BACKEND=hashing : le plan free (512 Mo de RAM) ne suffit pas a
 # charger le modele fastembed en plus du reste du processus — verifie en
@@ -62,6 +60,14 @@ services:
         value: https://complianceai-web.onrender.com
       - key: EMBEDDING_BACKEND
         value: hashing
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        value: sasarah482@gmail.com
+      - key: SMTP_PASSWORD
+        sync: false
       - key: GROQ_API_KEY
         sync: false
 
