@@ -134,7 +134,12 @@ async def validation_handler(request: Request, exc: RequestValidationError) -> J
         content={
             "detail": "Donnees invalides.",
             "errors": [
-                {"champ": ".".join(str(p) for p in e["loc"][1:]), "message": e["msg"]}
+                {
+                    "champ": ".".join(str(p) for p in e["loc"][1:]),
+                    # Pydantic prefixe les ValueError des validateurs custom
+                    # par "Value error, " : jamais utile a afficher tel quel.
+                    "message": e["msg"].removeprefix("Value error, "),
+                }
                 for e in exc.errors()
             ],
         },

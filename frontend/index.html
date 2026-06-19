@@ -101,6 +101,7 @@ td.mono,th.mono{font-family:var(--mono);font-size:12.5px}
 .e-ok{color:var(--valide);background:var(--valide-t)}
 
 label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--sourdine);margin-bottom:6px}
+.aide-mdp{font-size:12px;color:var(--sourdine);margin:5px 2px 0}
 input,select{width:100%;padding:10px 12px;border:1px solid var(--regle);border-radius:var(--rayon-sm);background:var(--carte);font-family:var(--sans);font-size:14.5px;color:var(--encre);transition:border-color .15s ease,box-shadow .15s ease}
 select.compact{width:auto;padding:6px 10px;font-size:13px;font-family:var(--mono)}
 .champ-mdp{position:relative}
@@ -204,7 +205,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
         <div><label for="i-nom">Nom complet</label><input id="i-nom" autocomplete="name"></div>
         <div><label for="i-org">Nom de l'organisation</label><input id="i-org"></div>
         <div><label for="i-mail">Adresse e-mail</label><input id="i-mail" type="email" autocomplete="email"></div>
-        <div><label for="i-mdp">Mot de passe</label><div class="champ-mdp"><input id="i-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('i-mdp', this)">Afficher</button></div></div>
+        <div><label for="i-mdp">Mot de passe</label><div class="champ-mdp"><input id="i-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('i-mdp', this)">Afficher</button></div><p class="aide-mdp">12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.</p></div>
       </div>
       <div class="rangee">
         <button onclick="sInscrire()">Créer le compte</button>
@@ -226,7 +227,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <div id="p-reinit" hidden>
       <p class="chapeau" style="margin-top:0">Choisissez un nouveau mot de passe.</p>
       <div class="grille" style="grid-template-columns:1fr">
-        <div><label for="r-mdp">Nouveau mot de passe</label><div class="champ-mdp"><input id="r-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('r-mdp', this)">Afficher</button></div></div>
+        <div><label for="r-mdp">Nouveau mot de passe</label><div class="champ-mdp"><input id="r-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('r-mdp', this)">Afficher</button></div><p class="aide-mdp">12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.</p></div>
       </div>
       <div class="rangee"><button onclick="confirmerReinit()">Changer le mot de passe</button></div>
     </div>
@@ -298,7 +299,11 @@ async function appel(chemin, options = {}) {
   try { corps = brut ? JSON.parse(brut) : null; } catch {}
   if (!r.ok) {
     let d = corps?.detail ?? brut ?? ('Erreur ' + r.status);
-    if (Array.isArray(d)) d = d.map(x => x.msg || JSON.stringify(x)).join(' · ');
+    if (Array.isArray(corps?.errors) && corps.errors.length) {
+      // Reponse enrichie du gestionnaire de validation (main.py) : le champ
+      // "detail" seul ("Donnees invalides.") ne dit jamais pourquoi.
+      d = corps.errors.map(e => e.message || JSON.stringify(e)).join(' · ');
+    } else if (Array.isArray(d)) d = d.map(x => x.msg || JSON.stringify(x)).join(' · ');
     else if (typeof d === 'object') d = JSON.stringify(d);
     throw new Error(d);
   }
@@ -1053,7 +1058,7 @@ async function vueCompte() {
     <h2>Sécurité</h2>
     <div class="grille">
       <div><label for="cp-actuel">Mot de passe actuel</label><div class="champ-mdp"><input id="cp-actuel" type="password" autocomplete="current-password"><button type="button" class="oeil lien" onclick="togglerMdp('cp-actuel', this)">Afficher</button></div></div>
-      <div><label for="cp-nouveau">Nouveau mot de passe</label><div class="champ-mdp"><input id="cp-nouveau" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('cp-nouveau', this)">Afficher</button></div></div>
+      <div><label for="cp-nouveau">Nouveau mot de passe</label><div class="champ-mdp"><input id="cp-nouveau" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('cp-nouveau', this)">Afficher</button></div><p class="aide-mdp">12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.</p></div>
     </div>
     <div class="rangee">
       <button id="btn-changer-mdp" onclick="changerMotDePasse()">Changer le mot de passe</button>
