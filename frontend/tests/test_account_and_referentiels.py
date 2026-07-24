@@ -135,6 +135,6 @@ def test_about_page_has_content_and_contact_link(page, frontend_server, backend_
     page.click("a[data-vue=\"apropos\"]")
     page.wait_for_selector("a[href^='mailto:']", timeout=10000)
 
-    expect(page.get_by_text("Ce que fait l'outil")).to_be_visible()
+    expect(page.get_by_text("manquement par défaut")).to_be_visible()
     expect(page.get_by_text("Ce que ce n'est pas")).to_be_visible()
     assert page.locator("a[href^='mailto:']").get_attribute("href").startswith("mailto:")
