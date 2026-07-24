@@ -6,7 +6,7 @@
 <title>ComplianceAI Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --papier:#F5F6FB; --carte:#FFFFFF; --encre:#12142B; --encre-doux:#565A73;
@@ -19,7 +19,7 @@
   --ombre:0 1px 2px rgba(18,20,43,.04),0 6px 20px -4px rgba(18,20,43,.10);
   --ombre-lg:0 12px 36px -8px rgba(18,20,43,.18),0 2px 8px rgba(18,20,43,.06);
   --rayon:12px; --rayon-sm:8px; --rayon-pill:999px;
-  --serif:'Sora','Inter',system-ui,sans-serif; --sans:'Inter',system-ui,sans-serif;
+  --serif:'Fraunces',ui-serif,Georgia,serif; --sans:'Inter',system-ui,sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,monospace;
 }
 *{box-sizing:border-box}
@@ -59,7 +59,7 @@ nav.rail{
 .rail-ouvrir:hover{transform:scale(1.06)}
 #appli.rail-fermee .rail-ouvrir{opacity:1;pointer-events:auto}
 .marque{font-family:var(--serif);font-size:19px;font-weight:700;letter-spacing:-.01em;color:#F4F5FC}
-.marque em{font-style:normal;font-weight:600;background:linear-gradient(135deg,#9C9BFF,#6D6BF5);-webkit-background-clip:text;background-clip:text;color:transparent}
+.marque em{font-style:italic;font-weight:500;background:linear-gradient(135deg,#9C9BFF,#6D6BF5);-webkit-background-clip:text;background-clip:text;color:transparent}
 .marque-sous{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#8286AD;padding:0 22px 26px}
 .rail-groupe{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#6A6E93;padding:18px 22px 8px}
 .rail a{display:flex;align-items:center;gap:10px;margin:1px 12px;padding:9px 12px;color:#C3C5DE;text-decoration:none;font-size:14px;font-weight:500;border-radius:var(--rayon-sm);transition:background .15s ease,color .15s ease,transform .15s ease}
@@ -91,7 +91,7 @@ h2{font-family:var(--serif);font-size:18px;font-weight:700;margin:36px 0 14px;le
 .cartes .carte:nth-child(3){animation-delay:.12s}.cartes .carte:nth-child(4){animation-delay:.17s}
 @keyframes carte-entree{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.carte{animation:none}}
-.carte .n{font-family:var(--serif);font-size:30px;font-weight:800;line-height:1.1;display:block;letter-spacing:-.02em}
+.carte .n{font-family:var(--serif);font-size:30px;font-weight:800;line-height:1.1;display:block;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .carte .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--sourdine);margin-top:6px;display:block}
 .carte .d{font-size:12.5px;color:var(--sourdine);margin-top:7px}
 
@@ -138,13 +138,44 @@ button.petit{padding:6px 13px;font-size:13px}
 .depot p{margin:0;color:var(--encre-doux);font-size:14px}
 
 .verdict{border:1px solid var(--regle);background:linear-gradient(160deg,var(--carte) 55%,var(--primaire-clair) 130%);border-radius:var(--rayon);padding:26px 28px;margin-bottom:22px;box-shadow:var(--ombre)}
-.verdict .chiffre{font-family:var(--serif);font-size:54px;font-weight:800;line-height:1;letter-spacing:-.03em;background:var(--grad-marque);-webkit-background-clip:text;background-clip:text;color:transparent}
+.verdict .chiffre{font-family:var(--serif);font-size:54px;font-weight:800;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums;background:var(--grad-marque);-webkit-background-clip:text;background-clip:text;color:transparent}
 .verdict .unite{font-size:20px;color:var(--sourdine);font-family:var(--sans);-webkit-text-fill-color:var(--sourdine)}
 .jauge{height:8px;background:var(--regle-fine);margin:18px 0 0;border-radius:var(--rayon-pill);overflow:hidden}
 .jauge span{display:block;height:100%;background:var(--grad-marque);border-radius:var(--rayon-pill);transition:width .4s ease}
 .retenu{border-left:3px solid var(--ambre);padding-left:16px}
 .retenu .titre{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ambre);font-weight:600}
 .retenu p{margin:7px 0 0;max-width:62ch;color:var(--encre-doux);font-size:14px}
+
+/* ---------- Reveal au defilement ---------- */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .55s cubic-bezier(.2,.7,.3,1),transform .55s cubic-bezier(.2,.7,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* ---------- Etapes interactives (A propos) ---------- */
+.etapes-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.etape-btn{display:flex;align-items:center;gap:9px;background:var(--carte);color:var(--encre-doux);border:1px solid var(--regle);padding:9px 15px 9px 10px;border-radius:var(--rayon-pill);font-size:13px;font-weight:600;box-shadow:none;transition:border-color .15s ease,color .15s ease,background .15s ease,transform .15s ease}
+.etape-btn:hover{transform:translateY(-1px);border-color:var(--primaire)}
+.etape-btn .etape-num{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--sourdine);background:var(--regle-fine);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;transition:background .15s ease,color .15s ease}
+.etape-btn.actif{background:var(--grad-marque);color:#fff;border-color:transparent;box-shadow:0 4px 14px -3px rgba(76,63,224,.5)}
+.etape-btn.actif .etape-num{background:rgba(255,255,255,.22);color:#fff}
+.etape-detail{background:var(--carte);border:1px solid var(--regle);border-left:3px solid var(--primaire);border-radius:var(--rayon);padding:18px 20px;box-shadow:var(--ombre-sm);animation:carte-entree .35s cubic-bezier(.2,.7,.3,1)}
+.etape-detail p{margin:0;max-width:66ch;color:var(--encre-doux);font-size:14px;line-height:1.6}
+
+/* ---------- Cartes referentiels (A propos) ---------- */
+.ref-carte{position:relative;overflow:hidden;cursor:default}
+.ref-carte::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc,var(--primaire));transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
+.ref-carte:hover::before{transform:scaleX(1)}
+.ref-carte:hover{border-color:color-mix(in srgb,var(--acc,var(--primaire)) 45%,var(--regle))}
+
+/* ---------- Carte de contact ---------- */
+.contact-carte{display:flex;align-items:center;gap:16px;background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:18px 22px;box-shadow:var(--ombre-sm);text-decoration:none;color:var(--encre);max-width:520px;transition:box-shadow .18s ease,transform .18s ease,border-color .18s ease}
+.contact-carte:hover{box-shadow:var(--ombre-lg);transform:translateY(-2px);border-color:var(--primaire)}
+.contact-carte>svg:first-child{width:22px;height:22px;flex:none;color:var(--primaire);background:var(--primaire-clair);border-radius:var(--rayon-sm);padding:9px;box-sizing:content-box}
+.contact-carte div{flex:1;min-width:0}
+.contact-carte b{display:block;font-size:14.5px;font-weight:600}
+.contact-carte span{display:block;font-family:var(--mono);font-size:12.5px;color:var(--primaire);margin-top:3px}
+.contact-carte .fleche{width:16px;height:16px;flex:none;color:var(--sourdine);transition:transform .18s ease}
+.contact-carte:hover .fleche{transform:translateX(4px);color:var(--primaire)}
 
 .courbe{background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:22px;box-shadow:var(--ombre-sm)}
 .courbe svg{width:100%;height:180px;display:block;overflow:visible}
@@ -203,8 +234,8 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .av-entete .marque-sous{padding:0;color:#9CA0C4}
 
 .av-corps{position:relative;z-index:1;margin:auto 0;padding:40px 0}
-.av-titre{font-family:var(--serif);font-size:34px;font-weight:800;line-height:1.18;letter-spacing:-.02em;margin:0 0 14px;max-width:15ch;text-wrap:balance}
-.av-titre em{font-style:normal;background:linear-gradient(135deg,#9C9BFF,#7FE0C9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.av-titre{font-family:var(--serif);font-size:38px;font-weight:900;line-height:1.14;letter-spacing:-.025em;margin:0 0 14px;max-width:14ch;text-wrap:balance}
+.av-titre em{font-style:italic;font-weight:500;background:linear-gradient(135deg,#9C9BFF,#7FE0C9);-webkit-background-clip:text;background-clip:text;color:transparent}
 .av-texte{font-size:14.5px;color:#B7BAD9;max-width:40ch;line-height:1.6;margin:0 0 30px}
 
 /* Carte de "scan" : evoque le principe reel du moteur (RAG, preuve citee). */
@@ -224,14 +255,20 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .av-verdict svg{width:14px;height:14px;flex:none}
 
 .av-badges{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
-.av-badges span{font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:5px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:#C3C5DE;background:rgba(255,255,255,.03);animation:av-flotte 5s ease-in-out infinite}
-.av-badges span:nth-child(2){animation-delay:.4s}.av-badges span:nth-child(3){animation-delay:.8s}
-.av-badges span:nth-child(4){animation-delay:1.2s}.av-badges span:nth-child(5){animation-delay:1.6s}
+.av-badges span{font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:5px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:#C3C5DE;background:rgba(255,255,255,.03);animation:av-flotte 5s ease-in-out infinite,av-monte .5s cubic-bezier(.2,.7,.3,1) backwards}
+.av-badges span:nth-child(1){animation-delay:0s,.05s}.av-badges span:nth-child(2){animation-delay:.4s,.1s}
+.av-badges span:nth-child(3){animation-delay:.8s,.15s}.av-badges span:nth-child(4){animation-delay:1.2s,.2s}
+.av-badges span:nth-child(5){animation-delay:1.6s,.25s}
 @keyframes av-flotte{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes av-monte{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.av-titre{animation:av-monte .6s cubic-bezier(.2,.7,.3,1) .15s backwards}
+.av-texte{animation:av-monte .6s cubic-bezier(.2,.7,.3,1) .3s backwards}
+.av-scan{animation:av-monte .6s cubic-bezier(.2,.7,.3,1) .42s backwards}
 
-.av-stats{position:relative;z-index:1;display:flex;gap:32px;padding-top:26px;border-top:1px solid rgba(255,255,255,.08)}
-.av-stats div b{display:block;font-family:var(--serif);font-size:22px;font-weight:800;color:#fff}
+.av-stats{position:relative;z-index:1;display:flex;gap:32px;padding-top:26px;border-top:1px solid rgba(255,255,255,.08);animation:av-monte .6s cubic-bezier(.2,.7,.3,1) .55s backwards}
+.av-stats div b{display:block;font-family:var(--serif);font-size:22px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums}
 .av-stats div span{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#8286AD}
+@media(prefers-reduced-motion:reduce){.av-badges span,.av-titre,.av-texte,.av-scan,.av-stats{animation:none}}
 @media(prefers-reduced-motion:reduce){.av-ligne::after,.av-badges span{animation:none}}
 
 /* ---------- Volet formulaire (droite) ---------- */
@@ -1275,31 +1312,32 @@ async function supprimerMonCompte() {
 }
 
 /* ---------- À propos ---------- */
+const ETAPES_MOTEUR = [
+  { t:"Découpage", d:"Le document est segmenté en passages d'environ 500 tokens avec 15 % de recouvrement, en respectant les frontières de sections plutôt qu'une coupe arbitraire." },
+  { t:"Applicabilité", d:"Passe dédiée pour les articles dérogeables (ex. article 9 du RGPD et ses dix dérogations, indexées comme passages distincts) — avant tout constat de manquement." },
+  { t:"Extraction", d:"Le modèle extrait des preuves depuis les passages retrouvés par recherche sémantique — un appel par article, jamais un appel global sur tout le référentiel." },
+  { t:"Vérification", d:"Le code — pas le modèle — vérifie mécaniquement que chaque citation existe réellement dans le texte source, avant de laisser rendre le verdict." },
+  { t:"Score", d:"Formule pondérée et explicable ligne par ligne, avec propagation des dépendances entre exigences et retenue du score si l'analyse n'a pas les garanties suffisantes." },
+];
+
 async function vueApropos() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Ressources</div><h1>À propos</h1></div></div>
-    <p class="chapeau">Comment fonctionne ComplianceAI Studio, et ce qu'il ne faut pas lui demander.</p>
+    <p class="chapeau reveal">Comment fonctionne ComplianceAI Studio, et ce qu'il ne faut pas lui demander.</p>
 
-    <h2>Ce que fait l'outil</h2>
-    <p style="color:var(--encre-doux);max-width:70ch">
+    <h2 class="reveal">Ce que fait l'outil</h2>
+    <p class="reveal" style="color:var(--encre-doux);max-width:70ch">
       ComplianceAI Studio confronte les documents que vous déposez au texte réel des
       référentiels réglementaires — RGPD, NIS2, DORA, AI Act, CSRD — et signale les
       points qui appellent votre attention. Chaque campagne produit un score, des
       constats classés par gravité avec leur preuve source, et un plan de remédiation.
     </p>
 
-    <h2>Comment ça marche</h2>
-    <p style="color:var(--encre-doux);max-width:70ch">
-      Chaque exigence du référentiel est confrontée aux passages pertinents de vos
-      documents par recherche sémantique, puis évaluée individuellement par un modèle
-      de langage qui doit citer une preuve précise pour conclure à la conformité.
-      Le principe est délibérément inverse de ce qu'on attend d'un outil complaisant :
-      <strong>une exigence est en manquement par défaut</strong>, elle n'est déclarée
-      conforme que sur preuve explicite. Un score n'est publié que si l'analyse dispose
-      des garanties suffisantes ; sinon, l'audit le dit clairement plutôt que d'afficher
-      un chiffre trompeur.
-    </p>
+    <h2 class="reveal">Comment ça marche</h2>
+    <p class="reveal chapeau" style="margin-bottom:18px">Le principe est délibérément inverse de ce qu'on attend d'un outil complaisant :
+      chaque exigence est en <strong>manquement par défaut</strong>, jamais déclarée conforme sans preuve. Cliquez une étape.</p>
+    <div class="reveal etapes" id="z-etapes"></div>
 
-    <div class="retenu" style="margin:18px 0">
+    <div class="retenu reveal" style="margin:26px 0">
       <div class="titre">Ce que ce n'est pas</div>
       <p>ComplianceAI Studio est un outil d'aide à l'auto-évaluation. Il analyse les
         documents que vous lui fournissez et signale les points qui appellent votre
@@ -1309,18 +1347,46 @@ async function vueApropos() {
         qualifié.</p>
     </div>
 
-    <h2>Référentiels couverts</h2>
-    <div class="cartes">
-      <div class="carte"><span class="n" style="font-size:19px">RGPD</span><span class="l">Règlement (UE) 2016/679</span><div class="d">Protection des données à caractère personnel</div></div>
-      <div class="carte"><span class="n" style="font-size:19px">NIS2</span><span class="l">Directive (UE) 2022/2555</span><div class="d">Cybersécurité des réseaux et systèmes d'information</div></div>
-      <div class="carte"><span class="n" style="font-size:19px">DORA</span><span class="l">Règlement (UE) 2022/2554</span><div class="d">Résilience opérationnelle numérique</div></div>
-      <div class="carte"><span class="n" style="font-size:19px">AI Act</span><span class="l">Règlement (UE) 2024/1689</span><div class="d">Gouvernance de l'intelligence artificielle</div></div>
-      <div class="carte"><span class="n" style="font-size:19px">CSRD</span><span class="l">Directive (UE) 2022/2464</span><div class="d">Durabilité et reporting extra-financier</div></div>
+    <h2 class="reveal">Référentiels couverts</h2>
+    <div class="cartes reveal">
+      <div class="carte ref-carte" style="--acc:var(--primaire)"><span class="n" style="font-size:19px">RGPD</span><span class="l">Règlement (UE) 2016/679</span><div class="d">Protection des données à caractère personnel</div></div>
+      <div class="carte ref-carte" style="--acc:var(--azur)"><span class="n" style="font-size:19px">NIS2</span><span class="l">Directive (UE) 2022/2555</span><div class="d">Cybersécurité des réseaux et systèmes d'information</div></div>
+      <div class="carte ref-carte" style="--acc:var(--ambre)"><span class="n" style="font-size:19px">DORA</span><span class="l">Règlement (UE) 2022/2554</span><div class="d">Résilience opérationnelle numérique</div></div>
+      <div class="carte ref-carte" style="--acc:var(--valide)"><span class="n" style="font-size:19px">AI Act</span><span class="l">Règlement (UE) 2024/1689</span><div class="d">Gouvernance de l'intelligence artificielle</div></div>
+      <div class="carte ref-carte" style="--acc:var(--sceau)"><span class="n" style="font-size:19px">CSRD</span><span class="l">Directive (UE) 2022/2464</span><div class="d">Durabilité et reporting extra-financier</div></div>
     </div>
 
-    <h2>Contact</h2>
-    <p class="chapeau">Une question, un problème, un retour ? Écrivez à
-      <a href="mailto:sarahbelmiloud2001@gmail.com">sarahbelmiloud2001@gmail.com</a>.</p>`);
+    <h2 class="reveal">Contact</h2>
+    <a class="reveal contact-carte" href="mailto:sarahbelmiloud2001@gmail.com">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+      <div><b>Une question, un problème, un retour ?</b><span>sarahbelmiloud2001@gmail.com</span></div>
+      <svg class="fleche" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>`);
+  initEtapes();
+  initReveal();
+}
+
+function initEtapes(actif = 0) {
+  poser('z-etapes', `
+    <div class="etapes-nav">${ETAPES_MOTEUR.map((e, i) => `
+      <button class="etape-btn${i === actif ? ' actif' : ''}" onclick="initEtapes(${i})">
+        <span class="etape-num">${String(i + 1).padStart(2, '0')}</span>${h(e.t)}
+      </button>`).join('')}</div>
+    <div class="etape-detail"><p>${h(ETAPES_MOTEUR[actif].d)}</p></div>`);
+}
+
+function initReveal() {
+  const els = document.querySelectorAll('#vue .reveal:not(.visible)');
+  if (!('IntersectionObserver' in window) || !els.length) {
+    els.forEach(el => el.classList.add('visible'));
+    return;
+  }
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => obs.observe(el));
 }
 
 /* ---------- Équipe ---------- */
