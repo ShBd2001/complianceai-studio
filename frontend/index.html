@@ -171,11 +171,8 @@ button.petit{padding:6px 13px;font-size:13px}
 /* ---------- Hero A propos : aperçu reel d'un constat ---------- */
 .ap-hero{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-bottom:8px}
 @media(max-width:900px){.ap-hero{grid-template-columns:1fr}}
-.ap-apercu-hote{position:relative;padding-top:26px}
-.ap-apercu-legende{position:absolute;top:0;left:2px;font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--sourdine);display:flex;align-items:center;gap:6px}
-.ap-apercu-legende::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--valide)}
-.ap-apercu{margin:0;transform:rotate(.6deg);box-shadow:var(--ombre-lg);transition:transform .3s ease,box-shadow .3s ease}
-.ap-apercu:hover{transform:rotate(0deg) translateY(-3px);box-shadow:0 20px 45px -12px rgba(18,20,43,.22)}
+.ap-apercu{margin:2px 0 0;box-shadow:var(--ombre);transition:box-shadow .25s ease,transform .25s ease}
+.ap-apercu:hover{transform:translateY(-3px);box-shadow:var(--ombre-lg)}
 
 /* ---------- Cartes referentiels (A propos) ---------- */
 .ref-carte{position:relative;overflow:hidden;cursor:pointer;padding-top:16px;user-select:none}
@@ -1396,8 +1393,7 @@ async function vueApropos() {
           constats classés par gravité avec leur preuve source, et un plan de remédiation.
         </p>
       </div>
-      <div class="reveal ap-apercu-hote">
-        <span class="ap-apercu-legende">Ce que produit une campagne, en vrai</span>
+      <div class="reveal">
         <article class="constat ap-apercu">
           <div class="dos d-critical">
             <span class="art">Article 32</span>
