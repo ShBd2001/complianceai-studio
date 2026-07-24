@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ComplianceAI Studio</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237A78F7'/%3E%3Cstop offset='1' stop-color='%234C3FE0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z' fill='url(%23g)'/%3E%3Cpath d='M10.5 16.2 14 19.8 21.5 12' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -90,6 +91,7 @@ h2.avec-icone .ic svg{width:16px;height:16px}
 .chapeau{color:var(--encre-doux);font-size:14px;margin:0 0 18px;max-width:62ch}
 
 .cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:16px;margin-bottom:16px}
+.cartes:has(.ref-carte){align-items:start}
 .carte{background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:18px 20px;box-shadow:var(--ombre-sm);transition:box-shadow .18s ease,transform .18s ease;animation:carte-entree .4s cubic-bezier(.2,.7,.3,1) backwards}
 .carte:hover{box-shadow:var(--ombre-lg);transform:translateY(-3px)}
 .cartes .carte:nth-child(1){animation-delay:.02s}.cartes .carte:nth-child(2){animation-delay:.07s}
@@ -166,11 +168,27 @@ button.petit{padding:6px 13px;font-size:13px}
 .etape-detail{background:var(--carte);border:1px solid var(--regle);border-left:3px solid var(--primaire);border-radius:var(--rayon);padding:18px 20px;box-shadow:var(--ombre-sm);animation:carte-entree .35s cubic-bezier(.2,.7,.3,1)}
 .etape-detail p{margin:0;max-width:66ch;color:var(--encre-doux);font-size:14px;line-height:1.6}
 
+/* ---------- Hero A propos : aperçu reel d'un constat ---------- */
+.ap-hero{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin-bottom:8px}
+@media(max-width:900px){.ap-hero{grid-template-columns:1fr}}
+.ap-apercu-hote{position:relative;padding-top:26px}
+.ap-apercu-legende{position:absolute;top:0;left:2px;font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--sourdine);display:flex;align-items:center;gap:6px}
+.ap-apercu-legende::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--valide)}
+.ap-apercu{margin:0;transform:rotate(.6deg);box-shadow:var(--ombre-lg);transition:transform .3s ease,box-shadow .3s ease}
+.ap-apercu:hover{transform:rotate(0deg) translateY(-3px);box-shadow:0 20px 45px -12px rgba(18,20,43,.22)}
+
 /* ---------- Cartes referentiels (A propos) ---------- */
-.ref-carte{position:relative;overflow:hidden;cursor:default;padding-top:16px}
+.ref-carte{position:relative;overflow:hidden;cursor:pointer;padding-top:16px;user-select:none}
 .ref-carte::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc,var(--primaire))}
 .ref-carte:hover{border-color:color-mix(in srgb,var(--acc,var(--primaire)) 45%,var(--regle));transform:translateY(-3px);box-shadow:var(--ombre)}
+.ref-tete{display:flex;align-items:center;justify-content:space-between}
 .ref-ic{width:26px;height:26px;padding:5px;border-radius:8px;background:var(--acc-t,var(--primaire-clair));color:var(--acc,var(--primaire));margin-bottom:10px;box-sizing:content-box}
+.ref-chevron{width:14px;height:14px;color:var(--sourdine);transition:transform .25s ease}
+.ref-carte.ouverte .ref-chevron{transform:rotate(180deg);color:var(--acc,var(--primaire))}
+.ref-detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.ref-detail p{overflow:hidden;margin:0;padding-top:0;font-size:12.5px;line-height:1.55;color:var(--encre-doux);border-top:0 solid var(--regle-fine)}
+.ref-carte.ouverte .ref-detail{grid-template-rows:1fr}
+.ref-carte.ouverte .ref-detail p{padding-top:11px;margin-top:9px;border-top-width:1px}
 
 /* ---------- Comparatif "outil complaisant" vs ComplianceAI ---------- */
 .comparatif{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 8px}
@@ -242,10 +260,12 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 
 /* ---------- Panneau de marque (gauche) ---------- */
 .accueil-visuel{
-  position:relative;overflow:hidden;height:100vh;padding:30px 48px 22px;
+  position:relative;overflow:hidden;height:100vh;padding:30px 64px 22px 48px;
   background:linear-gradient(165deg,#14162E 0%,#1B1E3D 55%,#232759 100%);
   display:flex;flex-direction:column;color:#F4F5FC;
+  clip-path:polygon(0 0,100% 0,93% 100%,0 100%);
 }
+@media(max-width:1180px){.accueil-visuel{clip-path:none;padding-right:48px}}
 .accueil-visuel::before,.accueil-visuel::after{content:"";position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none}
 .accueil-visuel::before{width:420px;height:420px;top:-140px;right:-120px;background:radial-gradient(circle,rgba(109,107,245,.35),transparent 70%)}
 .accueil-visuel::after{width:360px;height:360px;bottom:-160px;left:-100px;background:radial-gradient(circle,rgba(52,87,213,.28),transparent 70%)}
@@ -327,8 +347,8 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     </div>
     <div class="av-stats">
       <div><b>5</b><span>Référentiels</span></div>
-      <div><b>800+</b><span>Exigences</span></div>
-      <div><b>0</b><span>Conformité déclarée sans preuve</span></div>
+      <div><b>335</b><span>Exigences</span></div>
+      <div><b>100%</b><span>Vérifiées par citation</span></div>
     </div>
   </div>
 
@@ -1350,24 +1370,49 @@ const IC_ROUAGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const IC_LIVRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>';
 const IC_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>';
 const REFERENTIELS = [
-  { c:'RGPD', l:'Règlement (UE) 2016/679', d:'Protection des données à caractère personnel', acc:'primaire', ic:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>' },
-  { c:'NIS2', l:'Directive (UE) 2022/2555', d:"Cybersécurité des réseaux et systèmes d'information", acc:'azur', ic:'<rect x="2" y="4" width="20" height="6" rx="1"/><rect x="2" y="14" width="20" height="6" rx="1"/><path d="M6 7h.01M6 17h.01"/>' },
-  { c:'DORA', l:'Règlement (UE) 2022/2554', d:'Résilience opérationnelle numérique', acc:'ambre', ic:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/>' },
-  { c:'AI Act', l:'Règlement (UE) 2024/1689', d:"Gouvernance de l'intelligence artificielle", acc:'valide', ic:'<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2 2M17.1 17.1l2 2M4.9 19.1l2-2M17.1 6.9l2-2"/>' },
-  { c:'CSRD', l:'Directive (UE) 2022/2464', d:'Durabilité et reporting extra-financier', acc:'sceau', ic:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 9.5 17 13c0 4-3 7-7 7Z"/><path d="M11 20c0-6 3-9 6-11"/>' },
+  { c:'RGPD', l:'Règlement (UE) 2016/679', d:'Protection des données à caractère personnel', acc:'primaire', ic:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>',
+    detail:"99 exigences ingérées, dont 45 retenues comme auditables (articles 5 à 49 : principes, droits des personnes, sécurité, DPO, transferts hors UE) — les dispositions institutionnelles (autorités de contrôle, CEPD) sont écartées." },
+  { c:'NIS2', l:'Directive (UE) 2022/2555', d:"Cybersécurité des réseaux et systèmes d'information", acc:'azur', ic:'<rect x="2" y="4" width="20" height="6" rx="1"/><rect x="2" y="14" width="20" height="6" rx="1"/><path d="M6 7h.01M6 17h.01"/>',
+    detail:"46 exigences ingérées, dont 8 auditables : gouvernance, gestion des risques, notification d'incident — la gouvernance étatique du texte, hors sujet pour une entité auditée, est exclue." },
+  { c:'DORA', l:'Règlement (UE) 2022/2554', d:'Résilience opérationnelle numérique', acc:'ambre', ic:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/>',
+    detail:"64 exigences ingérées, dont 3 auditables, ciblées sur le secteur financier : gestion du risque TIC, tests de résilience, encadrement des prestataires critiques." },
+  { c:'AI Act', l:'Règlement (UE) 2024/1689', d:"Gouvernance de l'intelligence artificielle", acc:'valide', ic:'<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2 2M17.1 17.1l2 2M4.9 19.1l2-2M17.1 6.9l2-2"/>',
+    detail:"113 exigences ingérées, dont 2 auditables, centrées sur les systèmes à haut risque : gestion des risques, qualité des données, documentation technique." },
+  { c:'CSRD', l:'Directive (UE) 2022/2464', d:'Durabilité et reporting extra-financier', acc:'sceau', ic:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 9.5 17 13c0 4-3 7-7 7Z"/><path d="M11 20c0-6 3-9 6-11"/>',
+    detail:"13 exigences ingérées, dont 5 auditables. Directive modificative : seuls les articles insérés (bis/ter…) portent une obligation directement opposable, le reste amende la directive comptable sans créer d'obligation propre." },
 ];
 
 async function vueApropos() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Ressources</div><h1>À propos</h1></div></div>
     <p class="chapeau reveal">Comment fonctionne ComplianceAI Studio, et ce qu'il ne faut pas lui demander.</p>
 
-    <h2 class="reveal avec-icone"><span class="ic">${IC_OUTIL}</span>Ce que fait l'outil</h2>
-    <p class="reveal" style="color:var(--encre-doux);max-width:70ch">
-      ComplianceAI Studio confronte les documents que vous déposez au texte réel des
-      référentiels réglementaires — RGPD, NIS2, DORA, AI Act, CSRD — et signale les
-      points qui appellent votre attention. Chaque campagne produit un score, des
-      constats classés par gravité avec leur preuve source, et un plan de remédiation.
-    </p>
+    <div class="ap-hero">
+      <div class="reveal">
+        <h2 class="avec-icone" style="margin-top:0"><span class="ic">${IC_OUTIL}</span>Ce que fait l'outil</h2>
+        <p style="color:var(--encre-doux);max-width:52ch">
+          ComplianceAI Studio confronte les documents que vous déposez au texte réel des
+          référentiels réglementaires — RGPD, NIS2, DORA, AI Act, CSRD — et signale les
+          points qui appellent votre attention. Chaque campagne produit un score, des
+          constats classés par gravité avec leur preuve source, et un plan de remédiation.
+        </p>
+      </div>
+      <div class="reveal ap-apercu-hote">
+        <span class="ap-apercu-legende">Ce que produit une campagne, en vrai</span>
+        <article class="constat ap-apercu">
+          <div class="dos d-critical">
+            <span class="art">Article 32</span>
+            <span class="etiq e-critical">Critique</span>
+          </div>
+          <div class="corps">
+            <h3>Sécurité du traitement</h3>
+            <p>Aucune mesure de chiffrement des données au repos n'est documentée dans la politique fournie.</p>
+            <blockquote>« Les accès aux serveurs sont protégés par mot de passe. » — politique_securite.pdf, p. 4</blockquote>
+            <div class="remede"><strong>Action corrective</strong>Documenter le chiffrement au repos (AES-256 ou équivalent) et la gestion des clés associée.</div>
+            <div class="provenance"><span>llama-3.3-70b · confiance 92 %</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
 
     <div class="reveal comparatif">
       <div class="comp-carte comp-non">
@@ -1395,10 +1440,15 @@ async function vueApropos() {
     </div>
 
     <h2 class="reveal avec-icone"><span class="ic">${IC_LIVRE}</span>Référentiels couverts</h2>
+    <p class="reveal chapeau" style="margin-bottom:14px">Cliquez une carte pour voir le périmètre réellement ingéré.</p>
     <div class="cartes reveal">
-      ${REFERENTIELS.map(r => `<div class="carte ref-carte" style="--acc:var(--${r.acc});--acc-t:var(--${r.acc}-t)">
-        <svg class="ref-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${r.ic}</svg>
+      ${REFERENTIELS.map((r, i) => `<div class="carte ref-carte" id="ref-${i}" style="--acc:var(--${r.acc});--acc-t:var(--${r.acc}-t)" onclick="toggleRef(${i})">
+        <div class="ref-tete">
+          <svg class="ref-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${r.ic}</svg>
+          <svg class="ref-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
         <span class="n" style="font-size:19px">${h(r.c)}</span><span class="l">${h(r.l)}</span><div class="d">${h(r.d)}</div>
+        <div class="ref-detail"><p>${h(r.detail)}</p></div>
       </div>`).join('')}
     </div>
 
@@ -1433,6 +1483,10 @@ function initReveal() {
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
   els.forEach(el => obs.observe(el));
+}
+
+function toggleRef(i) {
+  $(`ref-${i}`).classList.toggle('ouverte');
 }
 
 /* ---------- Équipe ---------- */
