@@ -1,0 +1,4 @@
+# Dependances de la suite E2E frontend, en plus de backend/requirements.txt
+# (meme environnement virtuel : ces tests demarrent le vrai backend en
+# sous-processus et ont donc besoin de tout ce dont il depend).
+playwright>=1.48

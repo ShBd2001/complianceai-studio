@@ -90,6 +90,66 @@ def test_send_email_via_smtp_calls_smtplib(monkeypatch, tmp_path):
     assert not (tmp_path / "emails").exists()
 
 
+def test_send_email_strips_header_injection_from_subject(monkeypatch, tmp_path):
+    """Un sujet peut provenir d'un titre de campagne choisi par l'utilisateur
+    (via une notification) : un retour a la ligne ne doit jamais pouvoir
+    introduire une ligne d'en-tete supplementaire (Bcc, faux expediteur...)."""
+    monkeypatch.setattr(settings, "STORAGE_DIR", str(tmp_path))
+    monkeypatch.setattr(settings, "SMTP_HOST", None)
+
+    email_service.send_email(
+        to="dest@exemple.fr",
+        subject="Sujet légitime\r\nBcc: attaquant@exemple.fr",
+        body="Corps.",
+    )
+
+    fichiers = list((tmp_path / "emails").glob("*.txt"))
+    lignes = fichiers[0].read_text(encoding="utf-8").splitlines()
+    ligne_objet = next(l for l in lignes if l.startswith("Objet :"))
+    assert ligne_objet == "Objet : Sujet légitime Bcc: attaquant@exemple.fr"
+
+
+def test_send_email_via_smtp_strips_header_injection_from_subject(monkeypatch, tmp_path):
+    monkeypatch.setattr(settings, "STORAGE_DIR", str(tmp_path))
+    monkeypatch.setattr(settings, "SMTP_HOST", "smtp.exemple.fr")
+
+    captured = {}
+
+    class FakeSMTP:
+        def __init__(self, host, port, timeout=10):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def starttls(self):
+            pass
+
+        def login(self, user, password):
+            pass
+
+        def send_message(self, message):
+            captured["message"] = message
+
+    monkeypatch.setattr(email_service.smtplib, "SMTP", FakeSMTP)
+
+    email_service.send_email(
+        to="dest@exemple.fr",
+        subject="Sujet légitime\r\nBcc: attaquant@exemple.fr",
+        body="Corps.",
+    )
+
+    subject = str(captured["message"]["Subject"])
+    assert "\n" not in subject
+    assert "\r" not in subject
+    # Le contenu injecte reste visible mais neutralise sur une seule ligne :
+    # il ne peut plus etre interprete comme un en-tete Bcc distinct.
+    assert "Bcc: attaquant@exemple.fr" in subject
+
+
 def test_send_email_falls_back_to_file_on_smtp_failure(monkeypatch, tmp_path):
     monkeypatch.setattr(settings, "STORAGE_DIR", str(tmp_path))
     monkeypatch.setattr(settings, "SMTP_HOST", "smtp.exemple.fr")

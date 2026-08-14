@@ -55,6 +55,40 @@ jobs:
         # aucun quota Groq consomme, aucun reseau externe requis.
         run: pytest -q
 
+  frontend-e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: compliance
+          POSTGRES_PASSWORD: compliance
+          POSTGRES_DB: complianceai
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U compliance -d complianceai"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Installer les dépendances (backend + Playwright)
+        run: |
+          pip install -r backend/requirements.txt
+          pip install -r frontend/tests/requirements.txt
+      - name: Suite bout-en-bout (Chrome preinstalle sur le runner, aucun telechargement)
+        # Demarre le vrai backend et le vrai serveur statique du frontend en
+        # sous-processus (voir frontend/tests/conftest.py) : pas de mock DOM.
+        run: pytest -q frontend/tests
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: captures-e2e
+          path: frontend/tests/failures/
+
   non-regression:
     runs-on: ubuntu-latest
     # Consomme du quota Groq : réservé à la branche principale.

@@ -41,14 +41,25 @@ def _write_local(to: str, subject: str, body: str, *, note: str = "") -> Path:
     return path
 
 
+def _sans_injection(valeur: str) -> str:
+    """Neutralise une tentative d'injection d'en-tete (CRLF) : un sujet — qui
+    peut provenir d'un titre de campagne choisi par l'utilisateur, via une
+    notification — ne doit jamais pouvoir introduire une ligne d'en-tete
+    supplementaire (Bcc, faux expediteur...)."""
+    return " ".join(valeur.splitlines()).strip()
+
+
 def send_email(*, to: str, subject: str, body: str) -> None:
+    to = _sans_injection(to)
+    subject = _sans_injection(subject)
+
     if not settings.SMTP_HOST:
         path = _write_local(to, subject, body)
         logger.info("SMTP non configure : e-mail ecrit dans %s", path)
         return
 
     message = EmailMessage()
-    message["From"] = settings.SMTP_FROM or settings.SMTP_USER or "no-reply@localhost"
+    message["From"] = _sans_injection(settings.SMTP_FROM or settings.SMTP_USER or "no-reply@localhost")
     message["To"] = to
     message["Subject"] = subject
     message.set_content(body)
