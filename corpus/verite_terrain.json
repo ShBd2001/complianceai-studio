@@ -1,0 +1,608 @@
+{
+  "version": "3.0",
+  "note": "Verite terrain posee manuellement, article par article, en relisant chaque document. Toute modification doit etre justifiee. C'est la reference contre laquelle le moteur est mesure : une erreur ici invalide toutes les metriques. Le champ jamais_exclure liste les obligations reellement dues pour le document concerne ; les ecarter est suivi comme une faute distincte et bloquante.",
+  "cas": [
+    {
+      "fichier": "01_grande_pme_conforme.txt",
+      "description": "Groupe de 610 salaries, gouvernance mature et documentee. Reference haute du corpus.",
+      "score_attendu": [
+        88,
+        100
+      ],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "7": "conforme",
+        "12": "conforme",
+        "13": "conforme",
+        "15-22": "conforme",
+        "25": "conforme",
+        "28": "conforme",
+        "30": "conforme",
+        "32": "conforme",
+        "33": "conforme",
+        "34": "conforme",
+        "35": "conforme",
+        "37": "conforme",
+        "44-49": "hors_perimetre"
+      },
+      "jamais_exclure": [
+        "5",
+        "6",
+        "12",
+        "13",
+        "28",
+        "30",
+        "32",
+        "33",
+        "37"
+      ],
+      "commentaires": {
+        "9": "Aucune donnee sensible decrite : article absent du perimetre d'evaluation.",
+        "14": "Collecte directe uniquement : article non evalue.",
+        "22": "Aucune decision automatisee : article non evalue.",
+        "35": "Deux AIPD realisees et datees, contenu complet, avis DPO annexe.",
+        "37": "610 salaries, videoprotection : DPO designe, notifie CNIL, independance et moyens decrits.",
+        "44-49": "« Aucune donnee n'est transferee en dehors de l'Union europeenne » — exclusion prouvee positivement."
+      }
+    },
+    {
+      "fichier": "02_micro_entreprise_defaillante.txt",
+      "description": "Micro-entreprise, mentions legales tenant lieu de politique. Manquements massifs.",
+      "score_attendu": [
+        0,
+        22
+      ],
+      "verdicts_attendus": {
+        "5": "manquement",
+        "6": "manquement",
+        "7": "manquement",
+        "12": "manquement",
+        "13": "manquement",
+        "15-22": "manquement",
+        "25": "manquement",
+        "28": "manquement",
+        "30": "manquement",
+        "32": "manquement",
+        "33": "manquement",
+        "34": "manquement",
+        "37": "hors_perimetre"
+      },
+      "jamais_exclure": [
+        "5",
+        "6",
+        "12",
+        "13",
+        "28",
+        "30",
+        "32",
+        "33"
+      ],
+      "commentaires": {
+        "6": "Prospection par SMS sans mention d'un consentement : aucune base identifiee.",
+        "7": "Envoi de SMS promotionnels a des personnes rencontrees sur un marche, sans preuve de consentement.",
+        "28": "Hebergeur mentionne (« hebergement assure par un prestataire ») : article applicable, aucune clause decrite.",
+        "30": "Aucune mention d'un registre. Dispense 30(5) inapplicable : traitement clients non occasionnel.",
+        "32": "« Vos donnees sont traitees de maniere securisee » ne satisfait aucun element probant.",
+        "37": "Deux salaries, boulangerie : aucune activite de suivi systematique ni donnee sensible a grande echelle."
+      }
+    },
+    {
+      "fichier": "03_pme_artisanale.txt",
+      "description": "PME artisanale de 34 salaries, solide sur la securite, lacunaire sur la formalisation.",
+      "score_attendu": [
+        40,
+        62
+      ],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "12": "manquement",
+        "13": "manquement",
+        "15-22": "manquement",
+        "25": "manquement",
+        "28": "manquement",
+        "30": "manquement",
+        "32": "conforme",
+        "33": "manquement",
+        "34": "manquement",
+        "37": "hors_perimetre",
+        "44-49": "hors_perimetre"
+      },
+      "jamais_exclure": [
+        "12",
+        "28",
+        "30",
+        "33"
+      ],
+      "commentaires": {
+        "12": "Les droits sont listes mais aucun canal, delai ni procedure interne n'est indique.",
+        "30": "Aucune mention d'un registre ; la maturite en securite ne le presume pas.",
+        "32": "Controle d'acces, chiffrement, sauvegardes testees, journalisation : elements bloquants couverts.",
+        "33": "Aucune procedure de notification, aucun delai de 72h, aucune mention de la CNIL.",
+        "37": "34 salaries, menuiserie : pas de suivi systematique ni de donnees sensibles a grande echelle.",
+        "44-49": "« tous etablis en France » — exclusion prouvee positivement."
+      }
+    },
+    {
+      "fichier": "04_artisan_hors_perimetre.txt",
+      "description": "Artisan a deux personnes, traitements minimaux mais correctement couverts.",
+      "score_attendu": [
+        82,
+        100
+      ],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "12": "conforme",
+        "13": "conforme",
+        "15-22": "conforme",
+        "25": "conforme",
+        "28": "conforme",
+        "30": "conforme",
+        "32": "conforme",
+        "33": "conforme",
+        "34": "conforme",
+        "37": "hors_perimetre",
+        "44-49": "hors_perimetre"
+      },
+      "jamais_exclure": [
+        "5",
+        "6",
+        "12",
+        "13",
+        "28",
+        "30",
+        "32",
+        "33"
+      ],
+      "commentaires": {
+        "30": "Registre sur support papier nomme, deux traitements, mentions completes, revu en 2026. La dispense 30(5) n'a pas a etre retenue : le registre existe.",
+        "37": "« notre activite de base est un travail manuel d'artisanat ; nous n'exercons aucune activite de suivi regulier et systematique » — exclusion prouvee.",
+        "44-49": "« Aucune donnee n'est transferee en dehors de l'Union europeenne » — exclusion prouvee."
+      }
+    },
+    {
+      "fichier": "05_cabinet_medical.txt",
+      "description": "Cabinet medical : donnees de sante licites, transferts hors UE non encadres. Piege principal du corpus.",
+      "score_attendu": [
+        28,
+        48
+      ],
+      "verdicts_attendus": {
+        "5": "manquement",
+        "6": "manquement",
+        "9": "conforme",
+        "12": "manquement",
+        "13": "manquement",
+        "22": "hors_perimetre",
+        "25": "manquement",
+        "28": "manquement",
+        "30": "manquement",
+        "32": "conforme",
+        "33": "manquement",
+        "34": "manquement",
+        "35": "manquement",
+        "37": "manquement",
+        "44-49": "manquement"
+      },
+      "jamais_exclure": [
+        "9",
+        "12",
+        "28",
+        "30",
+        "33",
+        "35",
+        "37",
+        "44-49"
+      ],
+      "commentaires": {
+        "5": "Aucune duree de conservation n'est indiquee.",
+        "6": "Aucune base juridique n'est nommee pour les traitements decrits.",
+        "9": "PIEGE. Licite au titre du 9(2)(h) : medecine preventive, diagnostic, prise en charge, par des professionnels soumis au secret. Le document l'etablit explicitement, avec garanties renforcees (acces nominatifs traces, chiffrement).",
+        "22": "La proposition algorithmique est systematiquement revue par un praticien disposant d'une marge d'appreciation.",
+        "35": "Traitement a grande echelle de donnees de sante : AIPD obligatoire, aucune trace.",
+        "37": "Traitement a grande echelle de donnees de sante : DPO obligatoire, aucun designe.",
+        "44-49": "Serveurs aux Etats-Unis et acces support depuis l'Inde, sans CCT ni decision d'adequation."
+      }
+    },
+    {
+      "fichier": "06_rh_donnees_sensibles.txt",
+      "description": "RH de 340 salaries : donnees sensibles licites via 9(2)(b), mais preselection automatique sans reexamen humain.",
+      "score_attendu": [
+        60,
+        80
+      ],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "9": "conforme",
+        "12": "conforme",
+        "13": "conforme",
+        "15-22": "conforme",
+        "22": "manquement",
+        "25": "manquement",
+        "28": "conforme",
+        "30": "manquement",
+        "32": "conforme",
+        "33": "conforme",
+        "34": "conforme",
+        "35": "manquement",
+        "37": "hors_perimetre",
+        "44-49": "hors_perimetre"
+      },
+      "jamais_exclure": [
+        "9",
+        "22",
+        "30",
+        "32",
+        "33",
+        "35"
+      ],
+      "commentaires": {
+        "9": "Arrets de travail, RQTH, avis d'aptitude, cotisations syndicales : licites au titre du 9(2)(b) — droit du travail et securite sociale — avec garanties renforcees decrites (espace distinct chiffre, habilitations nominatives, journalisation).",
+        "22": "PIEGE. Les candidatures sous le seuil sont ecartees automatiquement « sans qu'un recruteur n'examine le dossier ». Aucun droit a intervention humaine, aucune information sur la logique. Article 22 pleinement applicable et en manquement.",
+        "30": "Aucun registre des activites de traitement n'est mentionne, malgre 340 salaries et des donnees sensibles.",
+        "35": "« Aucune analyse d'impact n'a ete realisee a ce jour » alors que la preselection automatisee de candidatures et le traitement de donnees de sante l'imposent.",
+        "37": "CORRECTION apres run. L'activite de base est la mecanique de precision, pas le traitement de donnees. Les donnees de sante relevent de la fonction support RH, qui n'est jamais une activite de base au sens de l'article 37. Le moteur avait raison, ma verite terrain etait fausse.",
+        "44-49": "« Tous sont etablis en France et aucune donnee n'est transferee hors de l'Union europeenne » — exclusion prouvee."
+      }
+    },
+    {
+      "fichier": "07_contradictoire.txt",
+      "description": "Cabinet de conseil affirmant une conformite exemplaire que chaque detail contredit.",
+      "score_attendu": [
+        5,
+        28
+      ],
+      "verdicts_attendus": {
+        "5": "manquement",
+        "6": "conforme",
+        "12": "manquement",
+        "13": "manquement",
+        "15-22": "manquement",
+        "25": "manquement",
+        "28": "manquement",
+        "30": "manquement",
+        "32": "manquement",
+        "33": "manquement",
+        "34": "manquement",
+        "37": "hors_perimetre",
+        "44-49": "manquement"
+      },
+      "jamais_exclure": [
+        "5",
+        "12",
+        "13",
+        "28",
+        "30",
+        "32",
+        "33",
+        "44-49"
+      ],
+      "commentaires": {
+        "5": "« sans limitation de duree » est un manquement caracterise au principe de limitation de conservation.",
+        "6": "CORRECTION apres run : l'interet legitime EST nomme comme base juridique, ce qui satisfait l'element bloquant. L'absence de mise en balance est un element non bloquant, remonte en recommandation. Conforme au sens de la grille, meme si un DPO releverait la faiblesse du fondement.",
+        "30": "PIEGE. Une cartographie de 2019 jamais revue depuis n'est pas un registre tenu a jour. L'affirmation « nous disposons d'une cartographie » ne doit pas valoir conformite.",
+        "32": "PIEGE. « Nous appliquons les meilleures pratiques du marche » sans aucune mesure concrete. L'espace collaboratif accessible a tout le cabinet contredit le moindre privilege.",
+        "37": "CORRECTION apres run. Le conseil en organisation n'implique ni suivi systematique a grande echelle ni traitement de donnees sensibles a grande echelle comme activite de base. Le conflit d'interets du DAF reste un probleme reel, mais il ne cree pas une obligation de designation la ou elle n'existe pas.",
+        "44-49": "Suite bureautique americaine et CRM californien, sans aucun outil de transfert mentionne."
+      }
+    },
+    {
+      "fichier": "08_conformite_partielle.txt",
+      "description": "Organisme de formation : registre existant mais incomplet, notification absente derriere une bonne securite.",
+      "score_attendu": [
+        55,
+        75
+      ],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "12": "conforme",
+        "13": "manquement",
+        "15-22": "conforme",
+        "25": "conforme",
+        "28": "conforme",
+        "30": "manquement",
+        "32": "conforme",
+        "33": "manquement",
+        "34": "manquement",
+        "37": "hors_perimetre",
+        "44-49": "hors_perimetre"
+      },
+      "jamais_exclure": [
+        "13",
+        "30",
+        "33"
+      ],
+      "commentaires": {
+        "13": "La notice ne mentionne pas la duree de conservation : element bloquant absent.",
+        "30": "PIEGE DU CREDIT PARTIEL. Le registre existe, recense sept traitements et indique finalites, personnes et donnees — mais ni durees, ni mesures de securite, ni mise a jour depuis 2022. Manquement, avec credit partiel attendu.",
+        "33": "PIEGE. Pare-feu, antivirus, filtrage et sensibilisation relevent de l'article 32, pas du 33. Aucune procedure de notification, aucun delai de 72h, aucune mention de la CNIL, aucun registre des violations.",
+        "37": "62 salaries, formation professionnelle : pas de suivi systematique a grande echelle ni de donnees sensibles.",
+        "44-49": "« Tous nos prestataires sont etablis en France » — exclusion prouvee."
+      }
+    },
+    {
+      "fichier": "09_ecommerce_transferts.txt",
+      "description": "E-commerce avec transferts hors UE reels mais correctement encadres. Teste l'absence de sanction d'un transfert licite.",
+      "score_attendu": [
+        85,
+        100
+      ],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "7": "conforme",
+        "12": "conforme",
+        "13": "conforme",
+        "15-22": "conforme",
+        "25": "conforme",
+        "28": "conforme",
+        "30": "conforme",
+        "32": "conforme",
+        "33": "conforme",
+        "34": "conforme",
+        "44-49": "conforme"
+      },
+      "jamais_exclure": [
+        "7",
+        "28",
+        "30",
+        "32",
+        "33",
+        "44-49"
+      ],
+      "commentaires": {
+        "44-49": "PIEGE INVERSE. Transferts vers le Canada (adequation), les Etats-Unis et le Maroc (CCT de juin 2021 datees), avec analyse d'impact du transfert et mesures supplementaires. Conformite, non manquement : le moteur ne doit pas sanctionner un transfert du seul fait de son existence.",
+        "7": "Consentement horodate, case non precochee, retrait aussi simple par lien de desinscription, absence de conditionnement.",
+        "37": "28 salaries, e-commerce alimentaire : pas d'obligation de DPO. Article laisse hors du perimetre attendu."
+      }
+    },
+    {
+      "fichier": "10_collecte_indirecte.txt",
+      "description": "Editeur B2B : donnees de prospection obtenues aupres de tiers. Teste la mise en perimetre de l'article 14.",
+      "score_attendu": [
+        85,
+        100
+      ],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "12": "conforme",
+        "14": "conforme",
+        "15-22": "conforme",
+        "25": "conforme",
+        "28": "conforme",
+        "30": "conforme",
+        "32": "conforme",
+        "33": "conforme",
+        "34": "conforme",
+        "44-49": "hors_perimetre"
+      },
+      "jamais_exclure": [
+        "6",
+        "14",
+        "28",
+        "30",
+        "32",
+        "33"
+      ],
+      "commentaires": {
+        "14": "PIEGE. Donnees issues d'un courtier, de sources publiques et de salons : collecte indirecte. Source indiquee, categories precisees, information au premier contact et dans le mois, mentions communes presentes. Article 14 applicable ET conforme.",
+        "6": "Interet legitime invoque AVEC mise en balance formalisee et datee : element non bloquant satisfait.",
+        "44-49": "« tous trois etablis dans l'Union europeenne » et « Aucune donnee n'est transferee hors de l'Union europeenne » — exclusion prouvee."
+      }
+    },
+    {
+      "fichier": "11_videosurveillance_aipd.txt",
+      "description": "Centre commercial, videoprotection a grande echelle : DPO et AIPD obligatoires et presents.",
+      "score_attendu": [
+        85,
+        100
+      ],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "12": "conforme",
+        "13": "conforme",
+        "15-22": "conforme",
+        "22": "hors_perimetre",
+        "25": "conforme",
+        "28": "conforme",
+        "30": "conforme",
+        "32": "conforme",
+        "33": "conforme",
+        "34": "conforme",
+        "35": "conforme",
+        "37": "conforme",
+        "44-49": "hors_perimetre"
+      },
+      "jamais_exclure": [
+        "12",
+        "13",
+        "28",
+        "30",
+        "32",
+        "33",
+        "35",
+        "37"
+      ],
+      "commentaires": {
+        "22": "Le module d'analyse genere des alertes affichees au poste de securite « ou l'agent decide de la suite a donner » : pas de decision fondee exclusivement sur un traitement automatise.",
+        "35": "Surveillance systematique a grande echelle d'une zone accessible au public : AIPD obligatoire, realisee, revisee, contenu complet, avis DPO annexe.",
+        "37": "Meme motif : DPO obligatoire, designe, notifie CNIL, independance contractuelle etablie.",
+        "44-49": "« Les deux societes sont etablies en France et aucun acces n'a lieu depuis un pays tiers » — exclusion prouvee."
+      }
+    },
+    {
+      "fichier": "12_scoring_credit.txt",
+      "description": "Courtier en credit : decision entierement automatisee, applicable ET conforme. Cas le plus exigeant du corpus.",
+      "score_attendu": [
+        88,
+        100
+      ],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "12": "conforme",
+        "13": "conforme",
+        "15-22": "conforme",
+        "22": "conforme",
+        "25": "conforme",
+        "28": "conforme",
+        "30": "conforme",
+        "32": "conforme",
+        "33": "conforme",
+        "34": "conforme",
+        "35": "conforme",
+        "37": "conforme",
+        "44-49": "hors_perimetre"
+      },
+      "jamais_exclure": [
+        "22",
+        "28",
+        "30",
+        "32",
+        "33",
+        "35",
+        "37"
+      ],
+      "commentaires": {
+        "22": "PIEGE. Rejet automatique avec effet juridique : article pleinement applicable. Mais fondement contractuel et legal etabli, intervention humaine offerte avec chiffres a l'appui, logique sous-jacente exposee (criteres, poids, consequences). CONFORME, pas manquement.",
+        "9": "« Aucune donnee relevant de categories particulieres au sens de l'article 9 n'est collectee ni traitee » : hors perimetre si evalue, ne doit pas etre compte manquement.",
+        "35": "Scoring a grande echelle avec effet juridique : AIPD obligatoire, realisee et revisee, risques de biais analyses.",
+        "44-49": "« Tous sont etablis dans l'Union europeenne » — exclusion prouvee."
+      }
+    },
+    {
+      "fichier": "13_association_faible_maturite.txt",
+      "description": "Association de quartier, faible maturite, donnees sensibles traitees sans fondement ni garanties.",
+      "score_attendu": [
+        0,
+        20
+      ],
+      "verdicts_attendus": {
+        "5": "manquement",
+        "6": "manquement",
+        "7": "manquement",
+        "9": "manquement",
+        "12": "manquement",
+        "13": "manquement",
+        "15-22": "manquement",
+        "25": "manquement",
+        "28": "manquement",
+        "30": "manquement",
+        "32": "manquement",
+        "33": "manquement",
+        "34": "manquement"
+      },
+      "jamais_exclure": [
+        "9",
+        "12",
+        "13",
+        "28",
+        "30",
+        "32",
+        "33"
+      ],
+      "commentaires": {
+        "9": "PIEGE INVERSE DU 05. Certificats medicaux conserves : donnees de sante. Aucun fondement du 9(2) invoque, aucune garantie renforcee — au contraire, mot de passe partage. La derogation 9(2)(d) organisme a but non lucratif ne couvre pas les donnees de sante des adherents, qui ne relevent pas d'une finalite politique, philosophique, religieuse ou syndicale.",
+        "5": "« afin de garder la memoire de la vie de l'association » n'est pas une duree de conservation.",
+        "7": "Ecrits adresses aux signataires de petitions et aux personnes rencontrees en fete de quartier, sans consentement.",
+        "32": "Identifiant et mot de passe COMMUNS partages entre les membres du bureau : contraire aux comptes nominatifs.",
+        "37": "240 adherents, association de jardins : pas d'obligation de DPO. Non evalue."
+      }
+    },
+    {
+      "fichier": "14_document_long_multisite.txt",
+      "description": "Reseau hotelier, 780 salaries, document long et structure. Eprouve le decoupage sur un texte etendu.",
+      "score_attendu": [
+        88,
+        100
+      ],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "6": "conforme",
+        "7": "conforme",
+        "9": "conforme",
+        "12": "conforme",
+        "13": "conforme",
+        "15-22": "conforme",
+        "25": "conforme",
+        "28": "conforme",
+        "30": "conforme",
+        "32": "conforme",
+        "33": "conforme",
+        "34": "conforme",
+        "35": "conforme",
+        "37": "conforme",
+        "44-49": "conforme"
+      },
+      "jamais_exclure": [
+        "9",
+        "12",
+        "13",
+        "28",
+        "30",
+        "32",
+        "33",
+        "35",
+        "37",
+        "44-49"
+      ],
+      "commentaires": {
+        "9": "Allergies alimentaires sur consentement explicite (9(2)(a)) et donnees de sante RH au titre du droit du travail (9(2)(b)), avec garanties renforcees decrites pour les deux.",
+        "44-49": "Transferts vers Singapour et les Etats-Unis encadres par CCT datees, avec analyse d'impact et mesures supplementaires.",
+        "note_chunking": "Document de 217 lignes : verifier qu'il produit un nombre eleve de passages et que les verdicts restent stables. Un effondrement de l'exactitude sur ce document signale un probleme de retrieval, pas de grille.",
+        "37": "CAS LIMITE ASSUME. Reseau hotelier avec programme de fidelite et personnalisation des offres : la qualification en « suivi regulier et systematique a grande echelle » est defendable dans les deux sens. Un DPO est designe et repond aux exigences. Verdict attendu conforme, mais cet article est marque en revue humaine systematique : un desaccord du moteur ici n'est pas une erreur de conception."
+      }
+    },
+    {
+      "fichier": "15_faux_semblants.txt",
+      "description": "Agence marketing : securite exemplaire et detaillee, tout le reste absent. Piege 32 contre 33.",
+      "score_attendu": [
+        10,
+        32
+      ],
+      "verdicts_attendus": {
+        "5": "manquement",
+        "6": "manquement",
+        "12": "manquement",
+        "13": "manquement",
+        "14": "manquement",
+        "15-22": "manquement",
+        "25": "manquement",
+        "28": "manquement",
+        "30": "manquement",
+        "32": "conforme",
+        "33": "manquement",
+        "34": "manquement",
+        "35": "manquement",
+        "37": "manquement",
+        "44-49": "manquement"
+      },
+      "jamais_exclure": [
+        "12",
+        "13",
+        "14",
+        "28",
+        "30",
+        "33",
+        "35",
+        "37",
+        "44-49"
+      ],
+      "commentaires": {
+        "32": "Le SEUL article conforme : comptes nominatifs, habilitations revues, chiffrement, sauvegardes testees, journalisation. Tous les elements bloquants sont couverts par des citations precises.",
+        "33": "PIEGE CENTRAL. « Grace aux mesures decrites ci-dessus, le risque est reduit au minimum » ne satisfait AUCUN element de l'article 33 : ni procedure ecrite de notification, ni delai de 72h, ni CNIL, ni registre des violations. La qualite du 32 ne doit pas contaminer le 33.",
+        "14": "Fichier constitue par extraction automatisee de profils publics sur les reseaux sociaux : collecte indirecte, aucune information delivree.",
+        "30": "Une liste de quatre intitules de traitements sans finalites, durees, destinataires ni mesures n'est pas un registre au sens de l'article 30.",
+        "35": "Constitution d'audiences publicitaires par traceurs et rapprochement avec des segments acquis : traitement a grande echelle a risque eleve, aucune AIPD.",
+        "37": "Suivi regulier et systematique a grande echelle (traceurs, audiences publicitaires) constituant l'activite de base : DPO obligatoire. Le cofondateur cumulant la direction commerciale est en conflit d'interets.",
+        "44-49": "Regies publicitaires et suite collaborative en ligne, sans aucun outil de transfert mentionne."
+      }
+    }
+  ]
+}

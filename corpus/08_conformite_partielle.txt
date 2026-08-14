@@ -1,0 +1,89 @@
+REGISTRE ET POLITIQUE DE PROTECTION DES DONNEES
+CENTRE DE FORMATION ATLANTIQUE — Association loi 1901 — 62 salaries
+
+PRESENTATION
+Le Centre de Formation Atlantique est une association de formation professionnelle
+continue implantee a Nantes, employant 62 salaries et accueillant environ 1400
+stagiaires par an.
+
+REGISTRE DES ACTIVITES DE TRAITEMENT
+Un registre des activites de traitement est tenu sous forme d'un classeur
+electronique par la responsable administrative. Il recense sept traitements :
+gestion des inscriptions, suivi pedagogique, facturation, gestion du personnel,
+paie, prospection des entreprises partenaires et gestion des anciens stagiaires.
+Pour chaque traitement, le registre indique la finalite poursuivie, les categories
+de personnes concernees et les categories de donnees collectees.
+Le registre ne comporte pas de mention des durees de conservation ni de description
+des mesures de securite, ces rubriques ayant ete laissees vides lors de sa creation
+en 2022. Il n'a pas ete revise depuis.
+
+FINALITES ET BASES JURIDIQUES
+La gestion des inscriptions et le suivi pedagogique reposent sur l'execution du
+contrat de formation. La paie et les declarations sociales reposent sur nos
+obligations legales. La prospection des entreprises partenaires repose sur notre
+interet legitime a developper notre activite aupres de personnes morales.
+
+INFORMATION DES STAGIAIRES
+Le dossier d'inscription comporte une notice indiquant que le Centre de Formation
+Atlantique, 17 boulevard de la Prairie a Nantes, est responsable du traitement, que
+les donnees servent a gerer l'inscription, le suivi pedagogique et la facturation,
+que la base juridique est le contrat de formation, que les donnees sont transmises
+au financeur de la formation et a l'organisme certificateur, que le stagiaire
+dispose d'un droit d'acces, de rectification, d'effacement, de limitation,
+d'opposition et de portabilite, et qu'il peut introduire une reclamation aupres de
+la CNIL. La notice ne mentionne pas la duree de conservation des donnees.
+
+EXERCICE DES DROITS
+Les demandes relatives aux donnees personnelles sont adressees a
+donnees@formation-atlantique.fr. Nous nous engageons a repondre dans un delai d'un
+mois a compter de la reception de la demande. L'exercice des droits est gratuit et
+nous demandons une piece d'identite en cas de doute sur l'identite du demandeur.
+La responsable administrative recoit la demande, la traite avec le service concerne
+et adresse la reponse ; un tableau recense les demandes recues et la date de reponse.
+Nous pouvons extraire l'ensemble des donnees d'un stagiaire par la fonction d'export
+de notre logiciel de gestion et supprimer sa fiche du logiciel. La suppression dans
+les sauvegardes intervient lors du cycle de rotation trimestriel. Une opposition a la
+prospection est enregistree dans le logiciel et verifiee avant chaque campagne.
+
+DUREES DE CONSERVATION
+Les dossiers de stagiaires sont conserves cinq ans apres la fin de la formation au
+titre des obligations liees au financement de la formation professionnelle. Les
+bulletins de paie sont conserves cinquante ans. Les donnees de prospection sont
+conservees trois ans apres le dernier contact.
+
+MINIMISATION
+Le dossier d'inscription a ete allege en 2024 : la date de naissance du conjoint et
+la situation familiale, qui figuraient auparavant, ont ete supprimees, seules etant
+desormais demandees les informations necessaires a l'inscription, au financement et
+a la delivrance de l'attestation. Les coordonnees des stagiaires peuvent etre mises
+a jour a leur demande a tout moment.
+
+SOUS-TRAITANCE
+Nous recourons a un editeur de logiciel de gestion de la formation, a un hebergeur
+et a un cabinet comptable. Un contrat de sous-traitance a ete signe avec chacun.
+Ces contrats precisent l'objet, la duree et la finalite du traitement, imposent au
+prestataire de n'agir que sur nos instructions documentees, engagent la
+confidentialite de son personnel, decrivent les mesures de securite mises en oeuvre
+et prevoient la restitution puis la destruction des donnees au terme de la
+prestation. Tous nos prestataires sont etablis en France.
+
+SECURITE
+Chaque salarie dispose d'un compte nominatif protege par un mot de passe repondant
+aux recommandations de l'ANSSI, et les habilitations sont attribuees selon les
+fonctions exercees, avec une revue annuelle. Le serveur de fichiers et les postes
+sont chiffres. Les echanges avec le logiciel de gestion se font en TLS. Une
+sauvegarde quotidienne est realisee sur un support externe conserve hors site et un
+test de restauration est effectue chaque semestre. Les acces au logiciel de gestion
+sont journalises et les journaux conserves six mois.
+
+VIOLATIONS DE DONNEES
+Le Centre applique une politique de securite informatique rigoureuse, avec pare-feu,
+antivirus a jour sur l'ensemble du parc, filtrage des messages entrants et
+sensibilisation annuelle des salaries aux risques de hameconnage. Ces mesures
+visent a prevenir tout incident affectant les donnees personnelles.
+
+PROTECTION DES DONNEES DES LA CONCEPTION
+Le choix du logiciel de gestion en 2022 a fait l'objet d'une comparaison de trois
+solutions, incluant un examen des donnees demandees par chacune et de la possibilite
+de supprimer un dossier. Les acces sont parametres par defaut au perimetre du service
+concerne, toute extension necessitant une demande a la responsable administrative.

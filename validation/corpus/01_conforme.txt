@@ -1,0 +1,109 @@
+POLITIQUE DE PROTECTION DES DONNEES A CARACTERE PERSONNEL
+Groupe Verlaine Distribution SA - Version 4.2 - 12 janvier 2026
+
+1. RESPONSABLE DU TRAITEMENT ET DELEGUE
+
+Groupe Verlaine Distribution SA, 14 avenue de la Republique, 59000 Lille.
+RCS Lille 402 118 776. Effectif : 840 salaries.
+
+Un delegue a la protection des donnees a ete designe le 3 mars 2019 :
+Mme Claire Fontaine, joignable a dpo@verlaine-distribution.fr et au
+03 20 45 78 12. Sa designation a ete notifiee a la CNIL le 8 mars 2019.
+Le DPO est rattache directement a la direction generale, dispose d'un budget
+propre et ne recoit aucune instruction concernant l'exercice de ses missions.
+Il est associe en amont a tout nouveau projet impliquant des donnees
+personnelles, informe et conseille les equipes, controle le respect du
+reglement, coopere avec la CNIL et dispense des conseils sur les analyses
+d'impact.
+
+2. REGISTRE DES ACTIVITES DE TRAITEMENT
+
+Un registre des activites de traitement est tenu et mis a jour trimestriellement
+par le DPO. Il recense 34 traitements et documente pour chacun : les finalites,
+les categories de personnes concernees, les categories de donnees, les
+categories de destinataires, les transferts eventuels hors Union, les durees de
+conservation et une description des mesures de securite. Le registre est
+disponible a tout moment pour la CNIL.
+
+3. FINALITES ET BASES LEGALES
+
+- Gestion des commandes et de la relation client : execution du contrat.
+- Facturation et comptabilite : obligation legale.
+- Prospection commerciale par courriel : consentement recueilli via une case a
+  cocher non precochee, horodate et conserve. Le retrait est possible a tout
+  moment par un lien present dans chaque message, aussi simple a exercer que le
+  consentement lui-meme.
+- Mesure d'audience du site : consentement recueilli via un bandeau offrant un
+  refus aussi accessible que l'acceptation.
+
+4. INFORMATION DES PERSONNES
+
+Les personnes concernees sont informees au moment de la collecte : identite du
+responsable, coordonnees du DPO, finalites, bases legales, destinataires,
+durees de conservation, droits et droit de reclamation aupres de la CNIL.
+Lorsque les donnees proviennent d'un tiers (annuaires professionnels), cette
+information est fournie dans le mois suivant l'obtention, et au plus tard lors
+du premier contact.
+
+5. DROITS DES PERSONNES
+
+Acces, rectification, effacement, limitation, opposition et portabilite.
+Toute demande recoit une reponse sous un mois, prolongeable de deux mois pour
+les demandes complexes, avec information motivee de la personne concernee.
+Les donnees fournies par la personne et traitees sur la base du consentement ou
+du contrat sont restituees au format CSV ou JSON, structure et lisible par
+machine, avec transmission directe a un autre responsable sur demande.
+Toute rectification, effacement ou limitation est notifiee a chaque destinataire
+des donnees, sauf impossibilite averee.
+
+6. SECURITE DU TRAITEMENT
+
+Chiffrement TLS 1.3 en transit et AES-256 au repos. Pseudonymisation des
+donnees de prospection. Authentification multifacteur sur tous les acces
+administrateurs. Cloisonnement reseau entre environnements. Sauvegardes
+chiffrees quotidiennes avec test de restauration mensuel documente. Plan de
+continuite teste deux fois par an. Revue semestrielle des habilitations.
+Un test d'intrusion externe est realise annuellement et ses conclusions sont
+suivies dans un plan d'action.
+
+7. PROTECTION DES DONNEES DES LA CONCEPTION
+
+Chaque nouveau projet fait l'objet d'une analyse prealable par le DPO
+appliquant les principes de minimisation, de limitation des finalites et de
+protection par defaut. Les parametres par defaut de nos services limitent la
+collecte au strict necessaire et n'activent aucun partage sans action positive
+de l'utilisateur.
+
+8. VIOLATIONS DE DONNEES
+
+Une procedure de gestion des violations est documentee et testee annuellement.
+Toute violation est notifiee a la CNIL dans les 72 heures suivant sa
+constatation, sauf risque nul pour les droits et libertes. Un registre interne
+des violations est tenu, y compris pour celles non notifiees, avec les motifs.
+Lorsque le risque est eleve, les personnes concernees sont informees
+individuellement dans les meilleurs delais, en termes clairs.
+
+9. ANALYSES D'IMPACT
+
+Une analyse d'impact relative a la protection des donnees est conduite pour tout
+traitement susceptible d'engendrer un risque eleve. Trois analyses ont ete
+realisees en 2025, sur la video-protection des entrepots, le scoring de
+solvabilite client et la geolocalisation des vehicules de livraison. L'avis du
+DPO y est systematiquement recueilli.
+
+10. SOUS-TRAITANTS
+
+Chaque sous-traitant est selectionne sur la base de garanties suffisantes et
+lie par un contrat conforme a l'article 28, precisant l'objet, la duree, la
+nature du traitement, les obligations de confidentialite, l'assistance au
+responsable, le sort des donnees en fin de contrat et le droit d'audit.
+Le recours a un sous-traitant ulterieur est soumis a autorisation ecrite.
+Nos sous-traitants principaux : OVHcloud (France), Cegid (France).
+
+11. DUREES DE CONSERVATION
+
+Clients actifs : duree de la relation, puis trois ans en archivage intermediaire.
+Prospects : trois ans a compter du dernier contact.
+Facturation : dix ans.
+Donnees de connexion : douze mois.
+Candidatures non retenues : deux ans avec accord du candidat.

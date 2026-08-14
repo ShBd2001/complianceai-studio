@@ -1,0 +1,111 @@
+POLITIQUE DE CONFIDENTIALITE RESSOURCES HUMAINES
+GROUPE INDUSTRIEL SAVERNE — 340 salaries — Version du 4 fevrier 2026
+
+OBJET
+Le present document decrit les traitements de donnees personnelles mis en oeuvre
+par la direction des ressources humaines du groupe Saverne, entreprise de
+mecanique de precision employant 340 salaries sur deux sites en Alsace.
+
+TRAITEMENTS RELEVANT DE CATEGORIES PARTICULIERES DE DONNEES
+La gestion administrative du personnel conduit a traiter des donnees relevant de
+categories particulieres. Sont concernes : les arrets de travail et les
+justificatifs d'absence pour raison de sante, transmis au service paie aux seules
+fins de calcul des indemnites journalieres et de maintien de salaire ; les
+declarations de travailleur handicape, traitees aux fins de la declaration
+annuelle obligatoire d'emploi des travailleurs handicapes ; les avis d'aptitude
+delivres par la medecine du travail, conserves aux fins d'amenagement de poste ;
+et les cotisations syndicales prelevees sur bulletin de paie a la demande ecrite
+du salarie, revelant son appartenance syndicale.
+Ces traitements sont necessaires aux fins de l'execution des obligations et de
+l'exercice des droits propres au responsable du traitement en matiere de droit du
+travail, de la securite sociale et de la protection sociale, dans les conditions
+prevues par le code du travail et le code de la securite sociale. Les cotisations
+syndicales sont en outre prelevees sur la base d'une demande ecrite et signee du
+salarie concerne, revocable a tout moment.
+Ces donnees font l'objet de garanties renforcees : elles sont conservees dans un
+espace distinct du dossier du personnel, accessible aux seules deux gestionnaires
+paie nommement habilitees et a la responsable RH ; l'espace est chiffre ; chaque
+consultation est journalisee avec l'identifiant du consultant, la date et le
+dossier consulte ; les avis d'aptitude ne comportent aucune mention de
+pathologie, seule l'aptitude ou l'inaptitude et les restrictions eventuelles
+etant enregistrees.
+
+RECRUTEMENT ET SELECTION DES CANDIDATURES
+Les candidatures recues sont examinees par la responsable RH et le manager
+concerne. Le groupe utilise depuis 2025 un outil de presélection qui attribue
+automatiquement une note de correspondance entre le curriculum vitae et la fiche
+de poste, a partir des competences declarees et de l'experience. Les candidatures
+dont la note est inferieure a un seuil sont ecartees automatiquement et recoivent
+une reponse negative standard sans qu'un recruteur n'examine le dossier.
+
+FINALITES ET BASES JURIDIQUES DES AUTRES TRAITEMENTS
+Gestion de la paie, declarations sociales et tenue du registre du personnel :
+obligation legale. Gestion des conges, entretiens annuels et formation :
+execution du contrat de travail. Annuaire interne et trombinoscope : interet
+legitime du groupe a faciliter les echanges internes, la photographie n'etant
+publiee qu'avec l'accord du salarie et son refus etant sans consequence.
+
+DUREES DE CONSERVATION
+Dossier du personnel : cinq ans apres le depart du salarie. Bulletins de paie :
+cinquante ans. Candidatures non retenues : deux ans apres le dernier contact.
+Arrets de travail : duree de l'absence augmentee de la periode de prescription
+sociale de trois ans. Avis d'aptitude : duree de la relation de travail.
+Journaux de consultation : six mois.
+
+DESTINATAIRES ET PRESTATAIRES
+Les donnees sont transmises a l'URSSAF, aux organismes de retraite complementaire
+et de prevoyance, a la medecine du travail et a l'administration fiscale. Le
+groupe recourt en outre a un editeur de logiciel de paie en mode hebergé, a un
+cabinet de recrutement pour les postes d'encadrement et a un prestataire
+d'archivage physique. Un contrat de sous-traitance conforme a l'article 28 a ete
+signe avec chacun de ces trois prestataires : il precise l'objet, la duree et la
+finalite du traitement, impose de n'agir que sur instruction documentee, engage la
+confidentialite du personnel, decrit les mesures de securite, subordonne la
+sous-traitance ulterieure a une autorisation ecrite prealable, et prevoit la
+restitution puis la suppression des donnees en fin de contrat. La liste de ces
+prestataires est tenue par la responsable RH. Tous sont etablis en France et
+aucune donnee n'est transferee hors de l'Union europeenne.
+
+INFORMATION DES SALARIES ET DES CANDIDATS
+Une notice est remise a l'embauche et annexee au reglement interieur. Elle indique
+l'identite et l'adresse du responsable de traitement, les finalites poursuivies et
+la base juridique de chacune, les categories de destinataires, les durees de
+conservation, les droits d'acces, de rectification, d'effacement, de limitation,
+d'opposition et de portabilite, le droit d'introduire une reclamation aupres de la
+CNIL et l'absence de transfert hors Union europeenne. Les candidats sont informes
+par une mention figurant sur l'espace de depot des candidatures, reprenant les
+memes elements.
+
+EXERCICE DES DROITS
+Les demandes sont adressees a rh@groupe-saverne.fr ou remises au service RH. Une
+reponse est apportee dans un delai d'un mois a compter de la reception, gratuitement.
+La procedure interne prevoit que la responsable RH enregistre la demande, verifie
+l'identite du demandeur, sollicite la gestionnaire paie pour l'extraction ou la
+suppression, controle la reponse et la transmet. Les demandes recues sont notees
+dans un tableau de suivi indiquant la date de reception et la date de reponse.
+L'extraction des donnees d'un salarie est realisee par la fonction d'export du
+logiciel de paie et par copie du dossier du personnel. La suppression est operee
+dans le logiciel et, sur demande, dans les archives papier lors de la campagne de
+destruction annuelle. Une opposition au trombinoscope entraine le retrait immediat
+de la photographie.
+
+SECURITE
+Les acces au logiciel de paie sont nominatifs et restreints aux trois personnes du
+service RH. Une revue des habilitations est realisee chaque semestre. Les postes
+sont chiffres, la session se verrouille automatiquement apres cinq minutes, et
+l'acces distant impose une authentification a deux facteurs. Les sauvegardes sont
+quotidiennes et une restauration de test est realisee chaque trimestre par le
+service informatique. Les consultations du logiciel de paie et de l'espace des
+donnees de sante sont journalisees, les journaux etant conserves six mois et revus
+mensuellement par la responsable RH.
+
+VIOLATIONS
+Une procedure ecrite decrit la conduite a tenir en cas de violation de donnees.
+Tout evenement est signale sans delai au service informatique et a la responsable
+RH, qui le qualifie et, en cas de risque pour les droits et libertes, procede a la
+notification a la CNIL dans les 72 heures suivant la prise de connaissance. Les
+personnes concernees sont informees individuellement lorsque le risque est eleve.
+Un registre des violations consigne chaque evenement, y compris ceux non notifies.
+
+ANALYSE D'IMPACT
+Aucune analyse d'impact n'a ete realisee a ce jour.

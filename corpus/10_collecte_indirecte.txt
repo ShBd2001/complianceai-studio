@@ -1,0 +1,112 @@
+NOTE DE CONFORMITE — TRAITEMENT DES DONNEES DE PROSPECTION
+AXENOR SOLUTIONS SAS — Editeur de logiciels B2B — 85 salaries
+
+CONTEXTE
+Axenor Solutions edite des logiciels de gestion destines aux entreprises. Notre
+direction commerciale constitue et exploite une base de prospection composee de
+contacts professionnels.
+
+ORIGINE DES DONNEES
+Les donnees de nos prospects ne sont pas collectees aupres des personnes
+concernees. Elles proviennent de trois sources : l'achat de fichiers aupres d'un
+courtier en donnees specialise dans les contacts professionnels, l'extraction de
+donnees publiques issues des registres du commerce et des sites institutionnels
+des entreprises, et la collecte de cartes de visite lors des salons professionnels
+auxquels nous participons.
+
+CATEGORIES DE DONNEES
+Nous traitons les nom et prenom du contact, sa fonction, son adresse electronique
+professionnelle, son numero de ligne directe, le nom et l'adresse de son
+entreprise, son secteur d'activite et sa taille.
+
+FINALITE ET BASE JURIDIQUE
+Ces donnees sont traitees aux fins de prospection commerciale aupres de
+professionnels pour des produits en rapport avec leur activite. Le traitement
+repose sur notre interet legitime a developper notre activite commerciale. Une
+mise en balance a ete formalisee en juin 2024 : elle constate que les personnes
+sont demarchees dans un cadre strictement professionnel, sur leur adresse
+professionnelle, pour des produits correspondant a leur fonction, qu'aucune donnee
+de la vie privee n'est traitee et qu'un droit d'opposition simple est offert des
+le premier contact, et conclut que l'atteinte aux droits des personnes reste
+limitee et proportionnee.
+
+INFORMATION DES PERSONNES CONCERNEES
+Les personnes dont les donnees proviennent d'un courtier ou d'une source publique
+n'ayant pas ete en contact avec nous, elles sont informees lors de la premiere
+communication qui leur est adressee. Chaque premier courriel de prospection
+comporte un encart d'information indiquant : l'identite et l'adresse d'Axenor
+Solutions ; la finalite de prospection commerciale ; la base juridique de
+l'interet legitime ; les categories de donnees traitees, a savoir les coordonnees
+professionnelles et la fonction ; l'origine des donnees, en precisant s'il s'agit
+d'un fichier acquis aupres d'un courtier, d'une source publique ou d'une carte de
+visite remise en salon ; les destinataires, limites a notre equipe commerciale et
+a notre prestataire d'envoi ; la duree de conservation de trois ans ; les droits
+d'acces, de rectification, d'effacement, de limitation, d'opposition et de
+portabilite ; et le droit d'introduire une reclamation aupres de la CNIL.
+Cette information est delivree au plus tard lors du premier contact, et en tout
+etat de cause dans un delai d'un mois a compter de l'obtention des donnees, notre
+processus imposant que tout lot importe soit sollicite dans le mois suivant son
+integration ou supprime.
+
+DUREE DE CONSERVATION
+Les donnees de prospection sont conservees trois ans a compter du dernier contact
+avec la personne. Les contacts ayant exerce leur droit d'opposition sont conserves
+en liste de suppression pendant trois ans, aux seules fins de ne plus etre
+sollicites.
+
+MINIMISATION
+Nous n'importons des fichiers acquis que les seuls champs necessaires a la
+prospection professionnelle et supprimons a l'import les champs eventuellement
+fournis mais non pertinents. Les coordonnees sont corrigees sur signalement du
+contact.
+
+REGISTRE
+Le traitement de prospection figure au registre des activites de traitement tenu
+par notre direction juridique dans l'outil de gouvernance interne. La fiche precise
+la finalite, la base juridique, les categories de personnes et de donnees,
+l'origine des donnees, les destinataires, la duree de conservation de trois ans et
+les mesures de securite. Le registre, qui recense douze traitements, a ete mis a
+jour le 15 fevrier 2026.
+
+DROITS ET MODALITES D'EXERCICE
+Toute demande peut etre adressee a rgpd@axenor.fr ou par le lien figurant dans nos
+courriels. Nous repondons dans un delai d'un mois a compter de la reception,
+gratuitement, apres verification de l'identite en cas de doute raisonnable. La
+direction juridique enregistre la demande, sollicite l'equipe commerciale pour
+l'extraction ou la suppression, controle et transmet la reponse. Un registre des
+demandes recense les saisines et leur date de traitement. L'extraction est realisee
+par export depuis notre outil de gestion commerciale, la suppression par
+effacement de la fiche puis inscription en liste de suppression, y compris dans les
+sauvegardes lors du cycle mensuel. Un lien de desinscription figure dans chaque
+courriel et l'opposition est prise en compte immediatement.
+
+SOUS-TRAITANCE
+Nous recourons au courtier en donnees, a un prestataire de routage de courriels et
+a un hebergeur, tous trois etablis dans l'Union europeenne. Un contrat de
+sous-traitance conforme a l'article 28 a ete conclu avec chacun, precisant l'objet,
+la duree et la finalite, l'obligation d'agir sur instruction documentee, la
+confidentialite, les mesures de securite, l'autorisation prealable pour la
+sous-traitance ulterieure et la suppression des donnees en fin de contrat. La liste
+est tenue par la direction juridique. Aucune donnee n'est transferee hors de
+l'Union europeenne.
+
+SECURITE
+Les acces a l'outil de gestion commerciale sont nominatifs et limites aux membres
+de l'equipe commerciale, avec revue semestrielle des habilitations. Les postes sont
+chiffres et l'acces distant requiert une authentification a deux facteurs. Les
+sauvegardes sont quotidiennes avec test de restauration trimestriel. Les acces a la
+base de prospection sont journalises, les journaux etant conserves six mois.
+
+VIOLATIONS
+Une procedure ecrite prevoit le signalement immediat de tout evenement au
+responsable de la securite des systemes d'information et a la direction juridique,
+la qualification sous vingt-quatre heures et, en cas de risque pour les droits et
+libertes, la notification a la CNIL dans les 72 heures suivant la prise de
+connaissance. En cas de risque eleve, les personnes concernees sont informees dans
+les meilleurs delais. Un registre des violations documente tous les evenements.
+
+PROTECTION DES DONNEES DES LA CONCEPTION
+Chaque nouvelle campagne ou nouvel outil fait l'objet d'un examen prealable par la
+direction juridique portant sur les donnees utilisees, leur origine, leur duree de
+conservation et les acces ouverts. Les acces par defaut sont limites a l'equipe
+commerciale.

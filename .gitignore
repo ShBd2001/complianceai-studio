@@ -1,0 +1,30 @@
+# Environnements virtuels
+.venv/
+venv/
+
+# Caches Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets — ne jamais versionner
+.env
+backend/.env
+*.key
+
+# Base et stockage local
+*.db
+*.sqlite3
+backend/storage/
+
+# Artefacts de sortie
+rapport.html
+*.log
+
+# Environnements de developpement
+.vscode/
+.idea/
+.DS_Store

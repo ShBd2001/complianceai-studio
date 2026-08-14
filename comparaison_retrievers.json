@@ -1,0 +1,66 @@
+[
+  {
+    "retriever": "LEXICAL (référence)",
+    "exactitude": 0.919,
+    "precision": 0.8211,
+    "rappel": 1.0,
+    "f1": 0.9017,
+    "faux_positifs": 17,
+    "faux_negatifs": 0,
+    "exclusions_abusives": 0,
+    "articles_erronés": {
+      "5": 1,
+      "7": 1,
+      "13": 2,
+      "30": 6,
+      "37": 5,
+      "32": 1,
+      "22": 1
+    },
+    "duree_s": 362.9
+  },
+  {
+    "retriever": "SÉMANTIQUE",
+    "exactitude": 0.8524,
+    "precision": 0.7327,
+    "rappel": 0.9487,
+    "f1": 0.8268,
+    "faux_positifs": 27,
+    "faux_negatifs": 4,
+    "exclusions_abusives": 0,
+    "articles_erronés": {
+      "13": 4,
+      "15-22": 3,
+      "30": 6,
+      "44-49": 1,
+      "37": 8,
+      "32": 2,
+      "5": 2,
+      "28": 1,
+      "22": 1,
+      "9": 2,
+      "7": 1
+    },
+    "duree_s": 434.8
+  },
+  {
+    "retriever": "HYBRIDE (lexical + sémantique)",
+    "exactitude": 0.9048,
+    "precision": 0.8152,
+    "rappel": 0.9615,
+    "f1": 0.8824,
+    "faux_positifs": 17,
+    "faux_negatifs": 3,
+    "exclusions_abusives": 0,
+    "articles_erronés": {
+      "13": 4,
+      "30": 6,
+      "37": 5,
+      "32": 2,
+      "22": 1,
+      "9": 1,
+      "5": 1
+    },
+    "duree_s": 399.3
+  }
+]

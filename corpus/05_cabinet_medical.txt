@@ -1,0 +1,35 @@
+CABINET MEDICAL DES TROIS RIVIERES — REGISTRE ET POLITIQUE INTERNE
+
+PRESENTATION DE LA STRUCTURE
+Le Cabinet médical des Trois Rivières regroupe quatre médecins généralistes et
+deux infirmières, tous soumis au secret professionnel médical au titre de
+l'article L.1110-4 du code de la santé publique. Le cabinet assure le suivi de
+près de 6000 patients.
+
+TRAITEMENT DES DONNEES DE SANTE
+Nous traitons des données de santé de nos patients dans le cadre exclusif de la
+prise en charge médicale : diagnostic, prescription, suivi thérapeutique et
+coordination des soins. Ce traitement est réalisé par des professionnels de santé
+soumis au secret professionnel, aux fins de médecine préventive, de diagnostic
+médical et de prise en charge sanitaire. Aucune donnée de santé n'est utilisée à
+des fins commerciales ou publicitaires.
+
+OUTIL D'AIDE A LA DECISION
+Le cabinet utilise depuis 2024 un outil d'aide à la décision clinique qui propose
+automatiquement un niveau de priorité de rendez-vous à partir des symptômes
+déclarés par le patient lors de la prise de rendez-vous en ligne. La proposition
+est systématiquement revue par le médecin ou l'infirmière de permanence avant
+toute décision, et le patient peut demander à être recontacté par un praticien.
+
+HEBERGEMENT ET TRANSFERTS
+Le dossier patient informatisé est hébergé chez un hébergeur de données de santé
+certifié HDS, établi en France. Notre solution de prise de rendez-vous en ligne
+est en revanche opérée par un prestataire dont les serveurs sont situés aux
+Etats-Unis, et les équipes de support de ce prestataire peuvent accéder aux
+données de contact des patients depuis l'Inde.
+
+SECURITE
+Les accès au dossier patient sont strictement nominatifs et tracés. Chaque
+consultation d'un dossier est journalisée avec l'identifiant du praticien.
+Les données sont chiffrées au repos et les postes sont verrouillés
+automatiquement. Les sauvegardes sont assurées par l'hébergeur HDS.

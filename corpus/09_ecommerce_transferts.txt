@@ -1,0 +1,118 @@
+POLITIQUE DE CONFIDENTIALITE
+MAISON LUBERON — Vente en ligne de produits regionaux — 28 salaries
+
+QUI SOMMES-NOUS
+Maison Luberon SAS, 3 chemin des Oliviers, 84400 Apt. Nous commercialisons des
+produits alimentaires regionaux via notre boutique en ligne et trois magasins.
+Nous comptons 28 salaries et environ 40 000 clients enregistres.
+
+DONNEES COLLECTEES ET FINALITES
+Nous collectons vos nom, prenom, adresses de livraison et de facturation, adresse
+electronique, numero de telephone et historique de commandes, aux fins de traiter
+et livrer votre commande, gerer votre compte client, assurer le service apres-vente
+et repondre a vos reclamations. Nous collectons egalement votre adresse
+electronique aux fins d'envoi de notre lettre d'information.
+
+BASES JURIDIQUES
+Le traitement de votre commande, la gestion de votre compte et le service
+apres-vente reposent sur l'execution du contrat de vente. La conservation des
+factures repond a notre obligation legale comptable. La lettre d'information est
+adressee sur la base de votre consentement, recueilli par une case a cocher non
+precochee lors de la creation du compte ou de l'inscription depuis le site. Ce
+consentement est horodate et conserve dans notre base ; vous pouvez le retirer a
+tout moment par le lien de desinscription figurant en bas de chaque envoi ou depuis
+votre espace client, aussi simplement que vous l'avez donne. Le refus de la lettre
+d'information n'a aucune consequence sur votre possibilite de commander.
+
+DUREES DE CONSERVATION
+Compte client : trois ans a compter de la derniere commande. Factures : dix ans.
+Adresse electronique pour la lettre d'information : jusqu'au retrait du consentement,
+et au plus tard trois ans apres le dernier contact. Journaux de connexion : six mois.
+
+MINIMISATION
+Le formulaire de commande a ete simplifie en 2025 pour ne demander que les
+informations necessaires a la livraison et a la facturation ; la date de naissance,
+auparavant demandee, a ete supprimee. Vous pouvez corriger vos coordonnees depuis
+votre espace client a tout moment.
+
+NOS PRESTATAIRES
+Notre boutique en ligne fonctionne sur une plateforme de commerce electronique dont
+l'editeur est etabli au Canada et dont les serveurs sont situes en Irlande. Notre
+outil d'envoi de courriels marketing est fourni par une societe americaine, et les
+donnees des abonnes a la lettre d'information sont hebergees aux Etats-Unis. Notre
+solution de service client permet a des equipes de support situees au Maroc
+d'acceder aux dossiers clients pour repondre aux demandes en dehors des heures
+ouvrables.
+Un contrat de sous-traitance a ete conclu avec chacun de ces prestataires. Il
+precise l'objet, la duree et la finalite du traitement, impose de n'agir que sur nos
+instructions documentees, engage la confidentialite du personnel, decrit les mesures
+de securite, subordonne la sous-traitance ulterieure a notre autorisation prealable
+et prevoit la suppression des donnees en fin de contrat. La liste de nos
+sous-traitants est tenue a jour par notre responsable administrative.
+
+TRANSFERTS HORS UNION EUROPEENNE
+Nos transferts vers le Canada sont couverts par la decision d'adequation dont
+beneficie ce pays pour les organismes prives soumis a la loi federale applicable.
+Les transferts vers notre prestataire d'emailing americain et l'acces de nos equipes
+de support depuis le Maroc sont encadres par les clauses contractuelles types
+adoptees par la Commission europeenne le 4 juin 2021, signees respectivement en
+mars 2023 et en septembre 2024. Une analyse d'impact du transfert a ete conduite
+pour le prestataire americain en 2023 ; elle a conclu a la necessite de mesures
+supplementaires, mises en oeuvre depuis sous la forme du chiffrement des exports et
+de la limitation des donnees transmises aux seules adresse electronique et prenom.
+
+REGISTRE DES TRAITEMENTS
+Nous tenons un registre des activites de traitement dans un fichier partage gere par
+notre responsable administrative. Il recense huit traitements : gestion des comptes
+clients, traitement des commandes, livraison, facturation, service apres-vente,
+lettre d'information, gestion du personnel et paie. Chaque fiche precise la finalite,
+les categories de personnes et de donnees, les destinataires, la duree de
+conservation et les mesures de securite. Le registre a ete mis a jour le 20 janvier 2026.
+
+INFORMATION
+La presente politique est accessible depuis toutes les pages du site et rappelee lors
+de la creation du compte. Elle indique notre identite et notre adresse, les finalites
+et la base juridique de chacune, les destinataires, les durees de conservation,
+l'existence de transferts hors Union europeenne et leur encadrement, vos droits
+d'acces, de rectification, d'effacement, de limitation, d'opposition et de
+portabilite, et votre droit d'introduire une reclamation aupres de la CNIL.
+
+VOS DROITS ET COMMENT LES EXERCER
+Adressez votre demande a donnees@maison-luberon.fr ou par courrier au siege. Nous
+repondons dans un delai d'un mois a compter de la reception, gratuitement, apres
+verification de votre identite en cas de doute. Notre responsable administrative
+enregistre la demande, sollicite le service concerne, controle la reponse et vous
+l'adresse ; un tableau de suivi recense chaque demande et sa date de traitement.
+Vous pouvez obtenir l'export de vos donnees au format CSV depuis votre espace client
+ou sur demande. La suppression de votre compte est effectuee sous quinze jours dans
+la base active et lors du cycle de rotation suivant dans les sauvegardes, soit au
+maximum trois mois. Votre opposition a la prospection est enregistree dans une liste
+de suppression verifiee avant chaque envoi.
+
+SECURITE
+Les acces aux outils contenant des donnees clients sont nominatifs, attribues selon
+la fonction et revus chaque semestre. L'authentification a deux facteurs est
+obligatoire pour l'administration de la boutique. Les donnees sont chiffrees au repos
+et les echanges se font en HTTPS avec TLS 1.3. Les mots de passe clients sont stockes
+sous forme hachee. Une sauvegarde quotidienne est realisee et un test de restauration
+est effectue chaque trimestre. Les acces a l'administration et les consultations de
+dossiers clients sont journalises, les journaux etant conserves six mois. Un test
+d'intrusion a ete realise en octobre 2025.
+
+VIOLATIONS DE DONNEES
+Une procedure ecrite decrit la conduite a tenir. Tout evenement suspect est signale
+au responsable technique et a la direction. La direction qualifie l'incident et, en
+cas de risque pour les droits et libertes, notifie la CNIL dans un delai maximal de
+72 heures apres en avoir pris connaissance. Lorsque le risque est eleve, les clients
+concernes sont informes individuellement par courriel dans les meilleurs delais. Un
+registre des violations documente chaque evenement, y compris ceux n'ayant pas donne
+lieu a notification.
+
+PROTECTION DES DONNEES DES LA CONCEPTION
+Tout nouvel outil est examine avant adoption sous l'angle des donnees qu'il collecte,
+de leur duree de conservation et des acces qu'il ouvre. Les parametres par defaut
+retiennent l'absence de partage et la visibilite restreinte au service concerne.
+
+COOKIES ET MESURE D'AUDIENCE
+Un bandeau permet d'accepter ou de refuser les cookies non essentiels, avec un choix
+aussi accessible dans les deux sens, et le refus est conserve treize mois.
