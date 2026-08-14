@@ -231,6 +231,32 @@ def test_data_export_contains_expected_sections(client):
     assert body["consentements"][0]["finalite"] == "terms_of_service"
 
 
+def test_data_export_serializes_a_real_session_ip(client):
+    """Regression : TestClient ne fournit jamais une IP valide (voir
+    activity.client_ip), donc ip_address reste NULL et le bug ne se voit
+    jamais avec la seule connexion de _login. La colonne est de type INET :
+    psycopg la deserialise en objet ipaddress.IPv4Address, non serialisable
+    par Pydantic tel quel — reproduit ici en forcant une vraie IP en base,
+    comme le ferait un serveur reel derriere une requete HTTP normale."""
+    from sqlalchemy import select
+
+    from app.db.session import SessionLocal
+    from app.models.user import UserSession
+
+    email = _email()
+    _register(client, email)
+    token = _login(client, email)
+
+    with SessionLocal() as db:
+        session = db.scalar(select(UserSession).order_by(UserSession.created_at.desc()))
+        session.ip_address = "203.0.113.42"
+        db.commit()
+
+    r = client.get("/api/v1/privacy/export", headers=_auth(token))
+    assert r.status_code == 200, r.text
+    assert r.json()["sessions"][0]["ip"] == "203.0.113.42"
+
+
 def test_owner_cannot_delete_account_without_transferring(client):
     email = _email()
     _register(client, email, "Tau SAS")
