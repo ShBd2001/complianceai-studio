@@ -15,10 +15,10 @@ from app.services.audit_engine import NON_CONFORMITY_SEVERITIES
 from app.services.documents import storage_root
 
 SEVERITY_LABEL = {
-    Severity.CRITICAL: ("Critique", "#b3261e"),
-    Severity.MAJOR: ("Majeure", "#e8710a"),
-    Severity.MINOR: ("Mineure", "#f2b705"),
-    Severity.INFO: ("Information", "#5b7fa6"),
+    Severity.CRITICAL: ("Critique", "#C0342A", "#FDECEA"),
+    Severity.MAJOR: ("Majeure", "#B4720C", "#FDF2DD"),
+    Severity.MINOR: ("Mineure", "#3457D5", "#EAEEFD"),
+    Severity.INFO: ("Information", "#565A73", "#EFF1F7"),
 }
 
 
@@ -32,41 +32,45 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
     improvements = [f for f in in_scope if f.severity not in NON_CONFORMITY_SEVERITIES]
 
     counts = {s: sum(1 for f in in_scope if f.severity == s) for s in Severity}
-    generated = datetime.now(timezone.utc).strftime("%d/%m/%Y a %H:%M UTC")
-    score = f"{audit.compliance_score:.1f}" if audit.compliance_score is not None else "n/d"
+    generated = datetime.now(timezone.utc).strftime("%d/%m/%Y à %H:%M UTC")
+    publie = audit.compliance_score is not None
+    score = f"{audit.compliance_score:.1f}" if publie else "—"
 
-    def render_rows(items: list[Finding]) -> str:
-        return "\n".join(
-            f"""<tr>
-  <td class="ref">{html.escape(f.article_ref)}</td>
-  <td><span class="sev" style="background:{SEVERITY_LABEL[f.severity][1]}">
-      {SEVERITY_LABEL[f.severity][0]}</span></td>
-  <td>
-    <strong>{html.escape(f.title)}</strong>
+    def finding_card(f: Finding) -> str:
+        label, color, bg = SEVERITY_LABEL[f.severity]
+        title = (f.title or "").strip()
+        return f"""<article class="carte-constat">
+  <div class="dos">
+    <span class="ref">{html.escape(f.article_ref)}</span>
+    <span class="badge" style="color:{color};background:{bg}">{label}</span>
+  </div>
+  <div class="corps">
+    <h3>{html.escape(title)}</h3>
     <p>{html.escape(f.description)}</p>
-    {f'<p class="reco"><em>Recommandation :</em> {html.escape(f.recommendation)}</p>' if f.recommendation else ''}
     {f'<blockquote>{html.escape(f.evidence[:400])}</blockquote>' if f.evidence else ''}
-  </td>
-  <td class="meta">{f.model_used or ''}<br>{(f.confidence or 0):.0%}</td>
-</tr>"""
-            for f in items
-        ) or '<tr><td colspan="4">Rien a signaler.</td></tr>'
+    {f'<div class="reco"><strong>Action corrective</strong>{html.escape(f.recommendation)}</div>' if f.recommendation else ''}
+    <div class="provenance">{html.escape(f.model_used or "—")}{f' · confiance {f.confidence:.0%}' if f.confidence is not None else ''}</div>
+  </div>
+</article>"""
+
+    def render_cards(items: list[Finding]) -> str:
+        return "\n".join(finding_card(f) for f in items) or '<p class="vide">Rien à signaler.</p>'
 
     def render_scope_rows(items: list[Finding]) -> str:
         return "\n".join(
-            f'<tr><td class="ref">{html.escape(f.article_ref)}</td>'
+            f'<tr><td class="ref-cell">{html.escape(f.article_ref)}</td>'
             f"<td>{html.escape(f.description)}</td></tr>"
             for f in items
-        ) or '<tr><td colspan="2">Toutes les exigences du referentiel s\'appliquent.</td></tr>'
+        ) or '<tr><td colspan="2">Toutes les exigences du référentiel s\'appliquent.</td></tr>'
 
     summary = " ".join(
-        f'<span class="pill" style="background:{SEVERITY_LABEL[s][1]}">'
-        f"{SEVERITY_LABEL[s][0]} : {counts[s]}</span>"
+        f'<span class="pill" style="color:{SEVERITY_LABEL[s][1]};background:{SEVERITY_LABEL[s][2]}">'
+        f"{SEVERITY_LABEL[s][0]} · {counts[s]}</span>"
         for s in Severity if counts[s]
-    ) or '<span class="pill" style="background:#2e7d32">Aucune non-conformite</span>'
+    ) or '<span class="pill" style="color:#178A4C;background:#E7F8EE">Aucune non-conformité</span>'
 
     warning_banner = (
-        f'<div class="warn"><strong>Analyse degradee.</strong> '
+        f'<div class="alerte"><strong>Analyse dégradée.</strong> '
         f'{html.escape(audit.error_message)}</div>'
         if audit.error_message else ""
     )
@@ -74,76 +78,105 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
     return f"""<!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8">
 <title>Rapport d'audit — {html.escape(audit.title)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-  body {{ font-family: Georgia, serif; max-width: 900px; margin: 40px auto;
-         color: #1a1a1a; line-height: 1.55; padding: 0 24px; }}
-  header {{ border-bottom: 3px solid #1a1a1a; padding-bottom: 16px; margin-bottom: 28px; }}
-  h1 {{ font-size: 26px; margin: 0 0 6px; }}
-  .subtitle {{ color: #555; font-size: 14px; }}
-  .score {{ font-size: 46px; font-weight: bold; margin: 20px 0 6px; }}
-  .pill, .sev {{ color: #fff; padding: 3px 10px; border-radius: 12px;
-                 font-size: 12px; font-family: system-ui, sans-serif;
-                 display: inline-block; white-space: nowrap; }}
-  table {{ width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 14px; }}
-  th {{ text-align: left; background: #f2f2f2; padding: 10px; font-family: system-ui, sans-serif; }}
-  td {{ border-bottom: 1px solid #e0e0e0; padding: 12px 10px; vertical-align: top; }}
-  td.ref {{ white-space: nowrap; font-weight: bold; width: 110px; }}
-  td.meta {{ font-size: 11px; color: #777; width: 90px; font-family: system-ui, sans-serif; }}
-  blockquote {{ border-left: 3px solid #ccc; margin: 8px 0 0; padding: 4px 12px;
-                color: #555; font-size: 13px; font-style: italic; }}
-  .reco {{ color: #1b5e20; margin: 8px 0 0; }}
-  table.compact td {{ font-size: 13px; color: #555; padding: 8px 10px; }}
-  .lead {{ color: #555; font-size: 14px; margin: 4px 0 0;
-           font-family: system-ui, sans-serif; }}
-  .warn {{ border-left: 4px solid #c8651b; background: #fdf6ee; padding: 12px 16px;
-           margin: 18px 0; font-size: 14px; font-family: system-ui, sans-serif;
-           color: #7a3d0c; }}
-  footer {{ margin-top: 40px; padding-top: 16px; border-top: 1px solid #ccc;
-            font-size: 12px; color: #666; font-family: system-ui, sans-serif; }}
+  @page {{ size: A4; margin: 20mm 16mm 22mm; }}
+  * {{ box-sizing: border-box }}
+  body {{ font-family: 'Inter', system-ui, sans-serif; max-width: 880px; margin: 0 auto;
+         color: #12142B; line-height: 1.55; padding: 36px 28px 60px; font-size: 13.5px; }}
+  h1, h2, h3 {{ font-family: 'Sora', 'Inter', sans-serif; letter-spacing: -.01em }}
+  header.tete {{ display: flex; justify-content: space-between; align-items: flex-start;
+         border-bottom: 2px solid #12142B; padding-bottom: 18px; margin-bottom: 24px; gap: 20px; }}
+  .marque {{ font-family: 'Sora', sans-serif; font-weight: 700; font-size: 15px; color: #4338CA }}
+  h1 {{ font-size: 22px; font-weight: 800; margin: 4px 0 6px; }}
+  .subtitle {{ color: #565A73; font-size: 12.5px; }}
+  .meta-droite {{ text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px;
+                  color: #8A8EA6; white-space: nowrap; }}
+
+  .verdict {{ display: flex; align-items: center; gap: 28px; background: linear-gradient(160deg,#fff 55%,#EEF0FE 130%);
+              border: 1px solid #E7E9F2; border-radius: 14px; padding: 22px 26px; margin-bottom: 22px; }}
+  .score {{ font-family: 'Sora', sans-serif; font-size: 44px; font-weight: 800; line-height: 1;
+            background: linear-gradient(135deg,#6D6BF5,#4C3FE0); -webkit-background-clip: text;
+            background-clip: text; color: transparent; white-space: nowrap; }}
+  .score .unite {{ font-size: 16px; color: #8A8EA6; -webkit-text-fill-color: #8A8EA6; font-family: 'Inter', sans-serif }}
+  .verdict-corps {{ flex: 1 }}
+  .pill {{ padding: 3px 10px; border-radius: 999px; font-size: 10.5px; font-weight: 600;
+           font-family: 'IBM Plex Mono', monospace; letter-spacing: .02em; display: inline-block;
+           margin: 2px 4px 2px 0; }}
+
+  h2 {{ font-size: 15px; font-weight: 700; margin: 30px 0 3px; break-after: avoid; }}
+  .lead {{ color: #565A73; font-size: 12px; margin: 0 0 14px; }}
+
+  .carte-constat {{ display: grid; grid-template-columns: 96px 1fr; gap: 16px; padding: 14px 0;
+                     border-bottom: 1px solid #EFF1F7; break-inside: avoid; page-break-inside: avoid; }}
+  .carte-constat .dos {{ padding-top: 2px }}
+  .ref {{ font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; display: block; margin-bottom: 6px; }}
+  .badge {{ font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: .03em;
+            text-transform: uppercase; padding: 2px 7px; border-radius: 999px; display: inline-block; white-space: nowrap; }}
+  .corps h3 {{ font-size: 13.5px; font-weight: 700; margin: 0 0 5px; }}
+  .corps p {{ margin: 0 0 7px; color: #333648; }}
+  blockquote {{ border-left: 2px solid #E7E9F2; margin: 6px 0; padding: 2px 12px; color: #565A73;
+                font-size: 12px; font-style: italic; }}
+  .reco {{ background: #E7F8EE; border-left: 2px solid #178A4C; border-radius: 0 6px 6px 0;
+           padding: 8px 12px; font-size: 12px; margin-top: 6px; }}
+  .reco strong {{ font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: .04em;
+                  text-transform: uppercase; color: #178A4C; display: block; margin-bottom: 2px; }}
+  .provenance {{ font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: #8A8EA6; margin-top: 6px; }}
+  .vide {{ color: #8A8EA6; font-size: 12.5px; font-style: italic; }}
+
+  table {{ width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 12px; }}
+  th {{ text-align: left; background: #F5F6FB; padding: 8px 10px; font-family: 'IBM Plex Mono', monospace;
+        font-size: 9.5px; letter-spacing: .03em; text-transform: uppercase; color: #8A8EA6; }}
+  td {{ border-bottom: 1px solid #EFF1F7; padding: 8px 10px; vertical-align: top; color: #333648; }}
+  td.ref-cell {{ white-space: nowrap; font-family: 'IBM Plex Mono', monospace; font-weight: 600; width: 100px; }}
+
+  .alerte {{ border-left: 3px solid #C0342A; background: #FDECEA; border-radius: 0 8px 8px 0;
+             padding: 10px 14px; margin: 0 0 18px; font-size: 12.5px; color: #7A241D; }}
+  footer {{ margin-top: 36px; padding-top: 14px; border-top: 1px solid #E7E9F2;
+            font-size: 10.5px; color: #8A8EA6; }}
 </style></head><body>
-<header>
-  <h1>Rapport d'audit de conformite</h1>
-  <div class="subtitle">
-    {html.escape(audit.title)} · Referentiel {audit.framework.value.upper()} ·
-    Version {version} du rapport · Genere le {generated}
+<header class="tete">
+  <div>
+    <div class="marque">ComplianceAI Studio</div>
+    <h1>{html.escape(audit.title)}</h1>
+    <div class="subtitle">Rapport d'audit de conformité · Référentiel {html.escape(audit.framework.value.upper())}</div>
   </div>
+  <div class="meta-droite">Version {version}<br>{generated}</div>
 </header>
 
 {warning_banner}
 
-<div class="score">{score} / 100</div>
-<div>{summary}</div>
+<div class="verdict">
+  <div class="score">{score}<span class="unite">/100</span></div>
+  <div class="verdict-corps">{summary}</div>
+</div>
 
-<h2>Non-conformites ({len(non_conformities)})</h2>
-<p class="lead">Manquements a une obligation substantielle. A traiter en priorite.</p>
-<table>
-  <thead><tr><th>Reference</th><th>Gravite</th><th>Constat et recommandation</th><th>Origine</th></tr></thead>
-  <tbody>{render_rows(non_conformities)}</tbody>
-</table>
+<h2>Non-conformités ({len(non_conformities)})</h2>
+<p class="lead">Manquements à une obligation substantielle. À traiter en priorité.</p>
+{render_cards(non_conformities)}
 
-<h2>Axes d'amelioration ({len(improvements)})</h2>
-<p class="lead">Obligations traitees, mais dont la formalisation peut etre completee.</p>
-<table>
-  <thead><tr><th>Reference</th><th>Gravite</th><th>Constat et recommandation</th><th>Origine</th></tr></thead>
-  <tbody>{render_rows(improvements)}</tbody>
-</table>
+<h2>Axes d'amélioration ({len(improvements)})</h2>
+<p class="lead">Obligations traitées, mais dont la formalisation peut être complétée.</p>
+{render_cards(improvements)}
 
-<h2>Exigences hors perimetre ({len(out_of_scope)})</h2>
+<h2>Exigences hors périmètre ({len(out_of_scope)})</h2>
 <p class="lead">
-  Articles ecartes du calcul du score : ils portent sur des situations absentes
-  de l'activite auditee. Cette liste est fournie pour que l'exclusion puisse
-  etre verifiee et contestee.
+  Articles écartés du calcul du score : ils portent sur des situations absentes
+  de l'activité auditée. Cette liste est fournie pour que l'exclusion puisse
+  être vérifiée et contestée.
 </p>
-<table class="compact">
-  <thead><tr><th>Reference</th><th>Motif de l'exclusion</th></tr></thead>
+<table>
+  <thead><tr><th>Référence</th><th>Motif de l'exclusion</th></tr></thead>
   <tbody>{render_scope_rows(out_of_scope)}</tbody>
 </table>
 
 <footer>
-  Rapport genere automatiquement par ComplianceAI Studio. Les constats sont
-  produits par analyse assistee des documents fournis et citent l'article dont
-  ils decoulent. Ils ne constituent pas un avis juridique et doivent etre
-  valides par un professionnel avant toute decision engageante.
+  Rapport généré automatiquement par ComplianceAI Studio. Les constats sont
+  produits par analyse assistée des documents fournis et citent l'article dont
+  ils découlent. Ils ne constituent pas un avis juridique et doivent être
+  validés par un professionnel avant toute décision engageante.
 </footer>
 </body></html>"""
 

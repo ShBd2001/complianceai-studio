@@ -2,7 +2,8 @@ FROM python:3.12-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 WORKDIR /app
 
@@ -13,10 +14,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Chromium pour la generation des rapports en PDF (services/pdf.py).
+# --with-deps installe aussi les bibliotheques systeme necessaires (fonts,
+# libnss, etc.) : doit s'executer avant de passer a l'utilisateur non
+# privilegie. PLAYWRIGHT_BROWSERS_PATH pointe vers un dossier partage, rendu
+# accessible a appuser ci-dessous.
+RUN playwright install --with-deps chromium
+
 COPY . .
 
 # Execution sans privileges (durcissement conteneur)
-RUN useradd --create-home --uid 10001 appuser && chown -R appuser:appuser /app
+RUN useradd --create-home --uid 10001 appuser \
+    && chown -R appuser:appuser /app /ms-playwright
 USER appuser
 
 EXPOSE 8000

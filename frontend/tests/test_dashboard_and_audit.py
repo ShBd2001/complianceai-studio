@@ -90,3 +90,33 @@ def test_full_audit_pipeline_and_findings_filter(page, frontend_server, backend_
     if constats_apres:
         for gravite in page.locator("#z-constats .etiq").all_text_contents():
             assert gravite.strip() == "Critique"
+
+
+def test_report_pdf_download(page, frontend_server, backend_server, tmp_path):
+    email = f"pdf-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register(page, frontend_server, email)
+
+    page.click("a[data-vue=\"audits\"]")
+    page.wait_for_selector("#n-titre")
+    page.fill("#n-titre", "Audit PDF E2E")
+    page.select_option("#n-ref", "rgpd")
+    page.click("button:has-text(\"Ouvrir la campagne\")")
+    page.wait_for_selector("#depot", timeout=15000)
+
+    fichier = tmp_path / "politique.txt"
+    fichier.write_text(POLICY, encoding="utf-8")
+    page.set_input_files("#fichiers", str(fichier))
+    page.wait_for_selector("#btn-run:not([disabled])", timeout=15000)
+    page.click("#btn-run")
+    page.wait_for_selector("#z-constats", timeout=60000)
+
+    page.click("button:has-text(\"Produire une nouvelle version\")")
+    page.wait_for_selector("table tbody tr", timeout=15000)
+
+    # La generation reelle (Chromium) prend quelques secondes : le bouton
+    # doit rester utilisable ensuite, pas rester bloque en « … ».
+    with page.expect_download(timeout=20000) as dl_info:
+        page.click("button:has-text(\"PDF\")")
+    download = dl_info.value
+    assert download.suggested_filename.endswith(".pdf")
+    expect(page.locator("button:has-text(\"PDF\")")).to_be_enabled()
