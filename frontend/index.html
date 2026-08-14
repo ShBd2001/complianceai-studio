@@ -540,7 +540,7 @@ async function vueAudit(auditId) {
           <button class="discret" onclick="supprimerCampagne('${auditId}')">Supprimer</button>
         </div>
       </div>
-      ${audit.status === 'completed' ? verdictCarte(audit, constats) : ''}
+      ${audit.status === 'completed' ? verdictCarte(audit, constats, rapports, auditId) : ''}
 
       <h2>Pièces versées</h2>
       <div class="depot" id="depot" tabindex="0" role="button"><p>Déposez vos fichiers ici, ou cliquez pour les choisir</p></div>
@@ -610,16 +610,24 @@ async function annulerPlanification(auditId) {
   } catch (e) { poser('z-plan', echoue(e)); }
 }
 
-function verdictCarte(audit, constats) {
+function verdictCarte(audit, constats, rapports, auditId) {
   const ouverts = constats.filter(c => c.status === 'open').length;
   const na = constats.filter(c => c.status === 'not_applicable').length;
   const publie = audit.compliance_score != null;
+  const dernier = rapports && rapports.length ? rapports[0] : null;
   return `<div class="verdict">
     ${publie
       ? `<div><span class="chiffre">${audit.compliance_score}<span class="unite">/100</span></span></div>
          <div class="jauge"><span style="width:${Math.max(0, Math.min(100, audit.compliance_score))}%"></span></div>`
       : `<div class="retenu"><div class="titre">Score non publié</div>
          <p>${h(audit.error_message || "L'analyse n'offre pas les garanties nécessaires à la publication d'un score.")}</p></div>`}
+    <div class="rangee" style="margin-top:16px">
+      ${dernier
+        ? `<button onclick="telechargerPDF('${auditId}',${dernier.version},this)">Télécharger le rapport (PDF)</button>
+           <button class="discret" onclick="telecharger('${auditId}',${dernier.version})">Version HTML</button>
+           <span class="vide" style="padding:0">v${dernier.version} · ${jour(dernier.created_at)}</span>`
+        : `<button onclick="produireRapport('${auditId}')">Produire le rapport</button>`}
+    </div>
     </div>
     <div class="cartes">
       <div class="carte"><span class="n">${constats.length}</span><span class="l">Constats</span></div>
@@ -693,7 +701,13 @@ async function lancerAnalyse(auditId) {
   $('btn-run').disabled = true;
   poser('msg-run', attente("Analyse en cours — chaque exigence du référentiel est confrontée aux pièces versées"));
   try {
-    await appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}/run`, { method:'POST' });
+    const resultat = await appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}/run`, { method:'POST' });
+    if (resultat.status === 'completed') {
+      // Un rapport telechargeable existe des la fin de l'analyse, sans etape
+      // manuelle supplementaire. Echec non bloquant : l'analyse elle-meme a
+      // reussi, on peut toujours produire le rapport plus tard depuis la page.
+      try { await appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}/reports`, { method:'POST' }); } catch {}
+    }
     vueAudit(auditId);
   } catch (e) { poser('msg-run', echoue(e)); $('btn-run').disabled = false; }
 }
@@ -702,8 +716,7 @@ async function produireRapport(auditId) {
   poser('z-rapports', attente('Production du rapport'));
   try {
     await appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}/reports`, { method:'POST' });
-    const rapports = await appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}/reports`);
-    poser('z-rapports', tableRapports(rapports, auditId));
+    vueAudit(auditId); // rafraichit aussi le bouton de telechargement en tete de page
   } catch (e) { poser('z-rapports', echoue(e)); }
 }
 

@@ -92,7 +92,10 @@ def test_full_audit_pipeline_and_findings_filter(page, frontend_server, backend_
             assert gravite.strip() == "Critique"
 
 
-def test_report_pdf_download(page, frontend_server, backend_server, tmp_path):
+def test_report_ready_immediately_after_analysis(page, frontend_server, backend_server, tmp_path):
+    """Le rapport doit etre telechargeable des la fin de l'analyse, bien en
+    vue a cote du score — pas une etape manuelle separee a decouvrir plus
+    bas sur la page (voir le retour utilisateur qui a motive ce test)."""
     email = f"pdf-{uuid.uuid4().hex[:8]}@exemple.fr"
     _register(page, frontend_server, email)
 
@@ -108,15 +111,27 @@ def test_report_pdf_download(page, frontend_server, backend_server, tmp_path):
     page.set_input_files("#fichiers", str(fichier))
     page.wait_for_selector("#btn-run:not([disabled])", timeout=15000)
     page.click("#btn-run")
-    page.wait_for_selector("#z-constats", timeout=60000)
 
-    page.click("button:has-text(\"Produire une nouvelle version\")")
-    page.wait_for_selector("table tbody tr", timeout=15000)
+    # Aucune action manuelle supplementaire : le bouton apparait dans le
+    # bandeau de score des que l'analyse se termine.
+    page.wait_for_selector(".verdict button:has-text(\"Télécharger le rapport\")", timeout=60000)
 
     # La generation reelle (Chromium) prend quelques secondes : le bouton
     # doit rester utilisable ensuite, pas rester bloque en « … ».
     with page.expect_download(timeout=20000) as dl_info:
-        page.click("button:has-text(\"PDF\")")
+        page.click(".verdict button:has-text(\"Télécharger le rapport\")")
     download = dl_info.value
     assert download.suggested_filename.endswith(".pdf")
-    expect(page.locator("button:has-text(\"PDF\")")).to_be_enabled()
+    expect(page.locator(".verdict button:has-text(\"Télécharger le rapport\")")).to_be_enabled()
+
+    # Produire une version supplementaire depuis le tableau plus bas doit
+    # aussi fonctionner, et le bouton du bandeau doit alors pointer sur la
+    # nouvelle version.
+    page.click("button:has-text(\"Produire une nouvelle version\")")
+    page.wait_for_selector("#z-rapports table tbody tr:nth-child(2)", timeout=15000)
+    expect(page.locator(".verdict .vide")).to_contain_text("v2")
+
+    with page.expect_download(timeout=20000) as dl_info2:
+        page.locator("#z-rapports button:has-text(\"PDF\")").first.click()
+    assert dl_info2.value.suggested_filename.endswith(".pdf")
+
