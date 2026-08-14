@@ -1,6 +1,7 @@
 """Pages ajoutees pour exposer des routes backend qui existaient sans
-interface : referentiels (articles/versions), et « Mon compte » (creation
-d'organisation, changement de mot de passe, deconnexion reelle, export RGPD).
+interface : referentiels (articles/versions), « Mon compte » (creation
+d'organisation, changement de mot de passe, deconnexion reelle, export RGPD),
+et la page « A propos » (contenu statique, disclaimers, contact).
 """
 
 from __future__ import annotations
@@ -92,3 +93,15 @@ def test_logout_actually_revokes_the_server_session(page, frontend_server, backe
     # reussirait malgre la deconnexion affichee a l'ecran.
     resp = page.context.request.post(f"{backend_server['url']}/api/v1/auth/refresh")
     assert resp.status == 401
+
+
+def test_about_page_has_content_and_contact_link(page, frontend_server, backend_server):
+    email = f"apropos-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register(page, frontend_server, email)
+
+    page.click("a[data-vue=\"apropos\"]")
+    page.wait_for_selector("a[href^='mailto:']", timeout=10000)
+
+    expect(page.get_by_text("Ce que fait l'outil")).to_be_visible()
+    expect(page.get_by_text("Ce que ce n'est pas")).to_be_visible()
+    assert page.locator("a[href^='mailto:']").get_attribute("href").startswith("mailto:")

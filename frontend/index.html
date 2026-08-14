@@ -237,6 +237,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 
     <div class="rail-groupe">Compte</div>
     <a href="#/compte" data-vue="compte">Mon compte</a>
+    <a href="#/apropos" data-vue="apropos">À propos</a>
 
     <div class="rail-pied">
       <span class="qui" id="qui"></span>
@@ -406,7 +407,7 @@ const ROUTES = {
   remediation: vueRemediation, correspondances: vueCrosswalks,
   referentiels: vueReferentiels,
   equipe: vueEquipe, notifications: vueNotifications, journal: vueJournal,
-  compte: vueCompte,
+  compte: vueCompte, apropos: vueApropos,
 };
 
 function router() {
@@ -1056,6 +1057,55 @@ async function supprimerMonCompte() {
     await appel('/api/v1/privacy/me', { method:'DELETE' });
     location.reload();
   } catch (e) { poser('msg-rgpd', echoue(e)); }
+}
+
+/* ---------- À propos ---------- */
+async function vueApropos() {
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Ressources</div><h1>À propos</h1></div></div>
+    <p class="chapeau">Comment fonctionne ComplianceAI Studio, et ce qu'il ne faut pas lui demander.</p>
+
+    <h2>Ce que fait l'outil</h2>
+    <p style="color:var(--encre-doux);max-width:70ch">
+      ComplianceAI Studio confronte les documents que vous déposez au texte réel des
+      référentiels réglementaires — RGPD, NIS2, DORA, AI Act, CSRD — et signale les
+      points qui appellent votre attention. Chaque campagne produit un score, des
+      constats classés par gravité avec leur preuve source, et un plan de remédiation.
+    </p>
+
+    <h2>Comment ça marche</h2>
+    <p style="color:var(--encre-doux);max-width:70ch">
+      Chaque exigence du référentiel est confrontée aux passages pertinents de vos
+      documents par recherche sémantique, puis évaluée individuellement par un modèle
+      de langage qui doit citer une preuve précise pour conclure à la conformité.
+      Le principe est délibérément inverse de ce qu'on attend d'un outil complaisant :
+      <strong>une exigence est en manquement par défaut</strong>, elle n'est déclarée
+      conforme que sur preuve explicite. Un score n'est publié que si l'analyse dispose
+      des garanties suffisantes ; sinon, l'audit le dit clairement plutôt que d'afficher
+      un chiffre trompeur.
+    </p>
+
+    <div class="retenu" style="margin:18px 0">
+      <div class="titre">Ce que ce n'est pas</div>
+      <p>ComplianceAI Studio est un outil d'aide à l'auto-évaluation. Il analyse les
+        documents que vous lui fournissez et signale les points qui appellent votre
+        attention. <strong>Il ne constitue pas un conseil juridique et ne vaut pas
+        preuve de conformité au sens du RGPD.</strong> Les conclusions doivent être
+        validées par votre délégué à la protection des données ou par un conseil
+        qualifié.</p>
+    </div>
+
+    <h2>Référentiels couverts</h2>
+    <div class="cartes">
+      <div class="carte"><span class="n" style="font-size:19px">RGPD</span><span class="l">Règlement (UE) 2016/679</span><div class="d">Protection des données à caractère personnel</div></div>
+      <div class="carte"><span class="n" style="font-size:19px">NIS2</span><span class="l">Directive (UE) 2022/2555</span><div class="d">Cybersécurité des réseaux et systèmes d'information</div></div>
+      <div class="carte"><span class="n" style="font-size:19px">DORA</span><span class="l">Règlement (UE) 2022/2554</span><div class="d">Résilience opérationnelle numérique</div></div>
+      <div class="carte"><span class="n" style="font-size:19px">AI Act</span><span class="l">Règlement (UE) 2024/1689</span><div class="d">Gouvernance de l'intelligence artificielle</div></div>
+      <div class="carte"><span class="n" style="font-size:19px">CSRD</span><span class="l">Directive (UE) 2022/2464</span><div class="d">Durabilité et reporting extra-financier</div></div>
+    </div>
+
+    <h2>Contact</h2>
+    <p class="chapeau">Une question, un problème, un retour ? Écrivez à
+      <a href="mailto:sarahbelmiloud2001@gmail.com">sarahbelmiloud2001@gmail.com</a>.</p>`);
 }
 
 /* ---------- Équipe ---------- */
