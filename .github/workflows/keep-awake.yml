@@ -1,0 +1,24 @@
+name: Anti-veille backend
+
+# Le backend tourne sur le plan gratuit Render, qui met le service en veille
+# apres 15 min d'inactivite (la requete suivante attend alors ~30-60s le
+# reveil du conteneur, voir render.yaml). Un ping regulier sur /health
+# suffit a le garder eveille en permanence, sans passer par un plan payant
+# ni un service tiers. Depot public : ce cron ne consomme aucun quota
+# Actions payant.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reveiller / maintenir eveille complianceai-api
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 https://complianceai-api-l51c.onrender.com/health)
+          echo "Reponse /health : $code"
+          if [ "$code" != "200" ]; then
+            echo "::warning::/health a repondu $code au lieu de 200"
+          fi
