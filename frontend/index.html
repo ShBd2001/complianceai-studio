@@ -170,45 +170,30 @@ button.petit{padding:6px 13px;font-size:13px}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
 /* ---------- Etapes interactives (A propos) ---------- */
-.etapes-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-.etape-btn{display:flex;align-items:center;gap:9px;background:var(--carte);color:var(--encre-doux);border:1px solid var(--regle);padding:9px 15px 9px 10px;border-radius:var(--rayon-pill);font-size:13px;font-weight:600;box-shadow:none;transition:border-color .15s ease,color .15s ease,background .15s ease,transform .15s ease}
-.etape-btn:hover{transform:translateY(-1px);border-color:var(--primaire)}
-.etape-btn .etape-num{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--sourdine);background:var(--regle-fine);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;transition:background .15s ease,color .15s ease}
-.etape-btn.actif{background:var(--grad-marque);color:#fff;border-color:transparent;box-shadow:0 4px 14px -3px rgba(76,63,224,.5)}
-.etape-btn.actif .etape-num{background:rgba(255,255,255,.22);color:#fff}
-.etape-detail{background:var(--carte);border:1px solid var(--regle);border-left:3px solid var(--primaire);border-radius:var(--rayon);padding:18px 20px;box-shadow:var(--ombre-sm);animation:carte-entree .35s cubic-bezier(.2,.7,.3,1)}
+.etapes-nav{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--regle);margin-bottom:0}
+.etape-btn{display:flex;align-items:center;gap:8px;background:none;color:var(--sourdine);border:none;border-bottom:2px solid transparent;padding:10px 4px;margin:0 22px 0 0;font-size:13.5px;font-weight:600;box-shadow:none;border-radius:0;transition:color .15s ease,border-color .15s ease}
+.etape-btn:hover{color:var(--encre-doux)}
+.etape-btn .etape-num{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--sourdine);font-variant-numeric:tabular-nums;transition:color .15s ease}
+.etape-btn.actif{color:var(--encre);border-bottom-color:var(--primaire)}
+.etape-btn.actif .etape-num{color:var(--primaire)}
+.etape-detail{background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:18px 20px;margin-top:18px;box-shadow:var(--ombre-sm);animation:carte-entree .35s cubic-bezier(.2,.7,.3,1)}
 .etape-detail p{margin:0;max-width:66ch;color:var(--encre-doux);font-size:14px;line-height:1.6}
 
 /* ---------- Cartes referentiels (A propos) ---------- */
-.ref-carte{position:relative;overflow:hidden;cursor:pointer;padding-top:16px;user-select:none}
-.ref-carte::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc,var(--primaire))}
-.ref-carte:hover{border-color:color-mix(in srgb,var(--acc,var(--primaire)) 45%,var(--regle));transform:translateY(-3px);box-shadow:var(--ombre)}
+.ref-carte{position:relative;overflow:hidden;cursor:pointer;user-select:none}
+.ref-carte:hover{border-color:color-mix(in srgb,var(--primaire) 40%,var(--regle));transform:translateY(-3px);box-shadow:var(--ombre)}
 .ref-tete{display:flex;align-items:center;justify-content:space-between}
-.ref-ic{width:26px;height:26px;padding:5px;border-radius:8px;background:var(--acc-t,var(--primaire-clair));color:var(--acc,var(--primaire));margin-bottom:10px;box-sizing:content-box}
+.ref-ic{width:26px;height:26px;padding:5px;border-radius:8px;background:var(--primaire-clair);color:var(--primaire);margin-bottom:10px;box-sizing:content-box}
 .ref-chevron{width:14px;height:14px;color:var(--sourdine);transition:transform .25s ease}
-.ref-carte.ouverte .ref-chevron{transform:rotate(180deg);color:var(--acc,var(--primaire))}
+.ref-carte.ouverte .ref-chevron{transform:rotate(180deg);color:var(--primaire)}
 .ref-detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
 .ref-detail p{overflow:hidden;margin:0;padding-top:0;font-size:12.5px;line-height:1.55;color:var(--encre-doux);border-top:0 solid var(--regle-fine)}
 .ref-carte.ouverte .ref-detail{grid-template-rows:1fr}
 .ref-carte.ouverte .ref-detail p{padding-top:11px;margin-top:9px;border-top-width:1px}
 
-/* ---------- Bandeau de principe (A propos) ---------- */
-.comp-carte{border-radius:var(--rayon);padding:18px 20px;border:1px solid;margin:18px 0 8px}
-.comp-carte p{margin:0;font-size:13.5px;line-height:1.55;max-width:44ch}
-.comp-tete{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14px;margin-bottom:9px}
-.comp-tete svg{width:18px;height:18px;flex:none}
-.comp-pleine{
-  position:relative;overflow:hidden;border:none;border-radius:16px;
-  background:linear-gradient(150deg,#14162E 0%,#173029 55%,#123B2E 100%);
-  padding:30px 34px;margin:14px 0 30px;box-shadow:var(--ombre-lg);
-}
-.comp-pleine::before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;top:-120px;right:-90px;
-  background:radial-gradient(circle,rgba(127,224,169,.22),transparent 70%);filter:blur(10px);pointer-events:none}
-.comp-pleine .comp-tete{color:#7FE0A9;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
-.comp-pleine .comp-tete svg{width:16px;height:16px;padding:5px;box-sizing:content-box;background:rgba(127,224,169,.15);border-radius:8px}
-.comp-pleine p{position:relative;z-index:1;max-width:62ch;font-family:var(--serif);font-size:19px;line-height:1.44;font-weight:600;color:#F4F5FC;letter-spacing:-.01em}
-.comp-pleine p strong{color:#7FE0A9;font-weight:700}
-.comp-oui strong{color:#0F5C33}
+/* ---------- Enonce de principe (A propos) ---------- */
+.ap-lead{font-family:var(--serif);font-size:25px;line-height:1.4;font-weight:600;color:var(--encre);max-width:52ch;margin:6px 0 34px;letter-spacing:-.01em}
+.ap-lead strong{color:var(--primaire-fonce);font-weight:700}
 
 /* ---------- Carte de contact ---------- */
 .contact-carte{display:flex;align-items:center;gap:16px;background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:18px 22px;box-shadow:var(--ombre-sm);text-decoration:none;color:var(--encre);max-width:520px;transition:box-shadow .18s ease,transform .18s ease,border-color .18s ease}
@@ -1407,15 +1392,15 @@ const IC_ROUAGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const IC_LIVRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>';
 const IC_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>';
 const REFERENTIELS = [
-  { c:'RGPD', l:'Règlement (UE) 2016/679', d:'Protection des données à caractère personnel', acc:'primaire', ic:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>',
+  { c:'RGPD', l:'Règlement (UE) 2016/679', d:'Protection des données à caractère personnel', ic:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>',
     detail:"99 exigences ingérées, dont 45 retenues comme auditables (articles 5 à 49 : principes, droits des personnes, sécurité, DPO, transferts hors UE) — les dispositions institutionnelles (autorités de contrôle, CEPD) sont écartées." },
-  { c:'NIS2', l:'Directive (UE) 2022/2555', d:"Cybersécurité des réseaux et systèmes d'information", acc:'azur', ic:'<rect x="2" y="4" width="20" height="6" rx="1"/><rect x="2" y="14" width="20" height="6" rx="1"/><path d="M6 7h.01M6 17h.01"/>',
+  { c:'NIS2', l:'Directive (UE) 2022/2555', d:"Cybersécurité des réseaux et systèmes d'information", ic:'<rect x="2" y="4" width="20" height="6" rx="1"/><rect x="2" y="14" width="20" height="6" rx="1"/><path d="M6 7h.01M6 17h.01"/>',
     detail:"46 exigences ingérées, dont 8 auditables : gouvernance, gestion des risques, notification d'incident — la gouvernance étatique du texte, hors sujet pour une entité auditée, est exclue." },
-  { c:'DORA', l:'Règlement (UE) 2022/2554', d:'Résilience opérationnelle numérique', acc:'ambre', ic:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/>',
+  { c:'DORA', l:'Règlement (UE) 2022/2554', d:'Résilience opérationnelle numérique', ic:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/>',
     detail:"64 exigences ingérées, dont 3 auditables, ciblées sur le secteur financier : gestion du risque TIC, tests de résilience, encadrement des prestataires critiques." },
-  { c:'AI Act', l:'Règlement (UE) 2024/1689', d:"Gouvernance de l'intelligence artificielle", acc:'valide', ic:'<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2 2M17.1 17.1l2 2M4.9 19.1l2-2M17.1 6.9l2-2"/>',
+  { c:'AI Act', l:'Règlement (UE) 2024/1689', d:"Gouvernance de l'intelligence artificielle", ic:'<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2 2M17.1 17.1l2 2M4.9 19.1l2-2M17.1 6.9l2-2"/>',
     detail:"113 exigences ingérées, dont 2 auditables, centrées sur les systèmes à haut risque : gestion des risques, qualité des données, documentation technique." },
-  { c:'CSRD', l:'Directive (UE) 2022/2464', d:'Durabilité et reporting extra-financier', acc:'sceau', ic:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 9.5 17 13c0 4-3 7-7 7Z"/><path d="M11 20c0-6 3-9 6-11"/>',
+  { c:'CSRD', l:'Directive (UE) 2022/2464', d:'Durabilité et reporting extra-financier', ic:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 9.5 17 13c0 4-3 7-7 7Z"/><path d="M11 20c0-6 3-9 6-11"/>',
     detail:"13 exigences ingérées, dont 5 auditables. Directive modificative : seuls les articles insérés (bis/ter…) portent une obligation directement opposable, le reste amende la directive comptable sans créer d'obligation propre." },
 ];
 
@@ -1423,12 +1408,9 @@ async function vueApropos() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Ressources</div>${titreIcone('apropos', 'À propos')}</div></div>
     <p class="chapeau reveal">Comment fonctionne ComplianceAI Studio, et ce qu'il ne faut pas lui demander.</p>
 
-    <div class="comp-carte reveal comp-pleine">
-      <div class="comp-tete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>ComplianceAI Studio</div>
-      <p>Chaque exigence est en <strong>manquement par défaut</strong> ; elle n'est déclarée conforme que si le modèle cite une preuve, et le code vérifie que cette citation existe vraiment.</p>
-    </div>
+    <p class="ap-lead reveal">Chaque exigence est en <strong>manquement par défaut</strong> ; elle n'est déclarée conforme que si le modèle cite une preuve, et le code vérifie que cette citation existe vraiment.</p>
 
-    <h2 class="reveal avec-icone" style="margin-top:32px"><span class="ic" style="--bg:var(--primaire-clair);--fg:var(--primaire)">${IC_ROUAGE}</span>Comment ça marche</h2>
+    <h2 class="reveal avec-icone"><span class="ic">${IC_ROUAGE}</span>Comment ça marche</h2>
     <p class="reveal chapeau" style="margin-bottom:18px">Cinq étapes, une par exigence — cliquez pour voir le détail.</p>
     <div class="reveal etapes" id="z-etapes"></div>
 
@@ -1442,10 +1424,10 @@ async function vueApropos() {
         qualifié.</p>
     </div>
 
-    <h2 class="reveal avec-icone"><span class="ic" style="--bg:var(--azur-t);--fg:var(--azur)">${IC_LIVRE}</span>Référentiels couverts</h2>
+    <h2 class="reveal avec-icone"><span class="ic">${IC_LIVRE}</span>Référentiels couverts</h2>
     <p class="reveal chapeau" style="margin-bottom:14px">Cliquez une carte pour voir le périmètre réellement ingéré.</p>
     <div class="cartes reveal">
-      ${REFERENTIELS.map((r, i) => `<div class="carte ref-carte" id="ref-${i}" style="--acc:var(--${r.acc});--acc-t:var(--${r.acc}-t)" onclick="toggleRef(${i})">
+      ${REFERENTIELS.map((r, i) => `<div class="carte ref-carte" id="ref-${i}" onclick="toggleRef(${i})">
         <div class="ref-tete">
           <svg class="ref-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${r.ic}</svg>
           <svg class="ref-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
@@ -1455,7 +1437,7 @@ async function vueApropos() {
       </div>`).join('')}
     </div>
 
-    <h2 class="reveal avec-icone"><span class="ic" style="--bg:var(--valide-t);--fg:var(--valide)">${IC_MAIL}</span>Contact</h2>
+    <h2 class="reveal avec-icone"><span class="ic">${IC_MAIL}</span>Contact</h2>
     <a class="reveal contact-carte" href="mailto:sarahbelmiloud2001@gmail.com">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
       <div><b>Une question, un problème, un retour ?</b><span>sarahbelmiloud2001@gmail.com</span></div>
