@@ -142,7 +142,7 @@ def test_report_ready_immediately_after_analysis(page, frontend_server, backend_
     # nouvelle version.
     page.click("button:has-text(\"Produire une nouvelle version\")")
     page.wait_for_selector("#z-rapports table tbody tr:nth-child(2)", timeout=15000)
-    expect(page.locator(".verdict .vide")).to_contain_text("v2")
+    expect(page.locator(".verdict .txt-sourdine")).to_contain_text("v2")
 
     with page.expect_download(timeout=20000) as dl_info2:
         page.locator("#z-rapports button:has-text(\"PDF\")").first.click()

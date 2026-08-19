@@ -91,6 +91,9 @@ main{margin-left:248px;padding:36px 44px 80px;max-width:1080px;transition:margin
 
 .tete{padding-bottom:18px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--regle)}
 h1{font-family:var(--serif);font-size:27px;font-weight:700;margin:0;letter-spacing:-.02em}
+h1.avec-icone{display:flex;align-items:center;gap:12px}
+h1.avec-icone .ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--bg,var(--primaire-clair));color:var(--fg,var(--primaire))}
+h1.avec-icone .ic svg{width:20px;height:20px}
 h2{font-family:var(--serif);font-size:18px;font-weight:700;margin:36px 0 14px;letter-spacing:-.01em}
 h2.avec-icone{display:flex;align-items:center;gap:10px}
 h2.avec-icone .ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--bg,var(--primaire-clair));color:var(--fg,var(--primaire))}
@@ -253,6 +256,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 @keyframes battre{0%,100%{opacity:.25}50%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.pulsation{animation:none;opacity:.7}}
 .vide{color:var(--sourdine);font-size:13.5px;padding:26px 20px;text-align:center;background:var(--carte);border:1.5px dashed var(--regle);border-radius:var(--rayon);display:flex;flex-direction:column;align-items:center;gap:8px}
+.txt-sourdine{color:var(--sourdine);font-size:12.5px;font-family:var(--mono)}
 .vide::before{content:"";width:34px;height:34px;border-radius:50%;background:var(--primaire-clair);
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235B5FEF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 3h6a1 1 0 0 1 1 1v1H8V4a1 1 0 0 1 1-1Z'/%3E%3Cpath d='M5 6h14v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6Z'/%3E%3Cpath d='M9 12h6M9 16h6'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:center;background-size:17px}
@@ -489,6 +493,34 @@ async function appel(chemin, options = {}) {
 const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = id => document.getElementById(id);
 const poser = (id, c) => { const n = $(id); if (n) n.innerHTML = c; };
+// Memes tracés que la sidebar (nav.rail), reutilises pour colorer le titre
+// de chaque page — une identite visuelle coherente d'un bout a l'autre.
+const ICONES_PAGE = {
+  tableau: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
+  audits: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6a1 1 0 0 1 1 1v1H8V4a1 1 0 0 1 1-1Z"/><path d="M5 6h14v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6Z"/><path d="m9 13 2 2 4-4"/></svg>',
+  remediation: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><path d="M18.4 2.6a1.9 1.9 0 1 1 2.7 2.7L12 14.4l-3.6.9.9-3.6 9.1-9.1Z"/></svg>',
+  correspondances: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M7 12h10"/><path d="m14 9 3 3-3 3"/></svg>',
+  referentiels: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>',
+  equipe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+  notifications: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
+  journal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>',
+  compte: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>',
+  apropos: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5"/><path d="M12 8h.01"/></svg>',
+};
+// Couleur par page : reprend la palette semantique deja utilisee ailleurs
+// (gravite des constats, referentiels) plutot que du violet partout.
+const COULEURS_PAGE = {
+  tableau: ['primaire-clair', 'primaire'], audits: ['primaire-clair', 'primaire'],
+  remediation: ['ambre-t', 'ambre'], correspondances: ['azur-t', 'azur'],
+  referentiels: ['azur-t', 'azur'], equipe: ['valide-t', 'valide'],
+  notifications: ['ambre-t', 'ambre'], journal: ['sourdine', 'encre-doux'],
+  compte: ['valide-t', 'valide'], apropos: ['sourdine', 'encre-doux'],
+};
+function titreIcone(cle, texte) {
+  const [bg, fg] = COULEURS_PAGE[cle] || ['primaire-clair', 'primaire'];
+  return `<h1 class="avec-icone"><span class="ic" style="--bg:var(--${bg});--fg:var(--${fg})">${ICONES_PAGE[cle]}</span>${h(texte)}</h1>`;
+}
+
 const ICONE_OEIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>';
 const ICONE_OEIL_BARRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.6 19.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a19.6 19.6 0 0 1-2.29 3.4M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>';
 function togglerMdp(id, bouton) {
@@ -672,7 +704,7 @@ window.addEventListener('hashchange', router);
 
 /* ---------- Tableau de bord ---------- */
 async function vueTableau() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div><h1>Tableau de bord</h1></div>
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('tableau', 'Tableau de bord')}</div>
     <button onclick="location.hash='#/audits'">Nouvelle campagne</button></div><div id="z">${attente('Chargement')}</div>`);
   try {
     const [historique, audits] = await Promise.all([
@@ -733,7 +765,7 @@ function tableAudits(audits) {
 
 /* ---------- Campagnes ---------- */
 async function vueAudits() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div><h1>Campagnes d'audit</h1></div></div>
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('audits', "Campagnes d'audit")}</div></div>
     <h2>Ouvrir une campagne</h2>
     <div class="grille">
       <div><label for="n-titre">Intitulé</label><input id="n-titre" value="Audit RGPD ${new Date().getFullYear()}"></div>
@@ -784,7 +816,7 @@ async function vueAudit(auditId) {
     poser('vue', `
       <div class="tete">
         <div><div class="eyebrow">${h((audit.framework || '').toUpperCase())} · ${h(ETAT_AUDIT[audit.status] || audit.status)}</div>
-          <h1>${h(audit.title)}</h1></div>
+          ${titreIcone('audits', audit.title)}</div>
         <div class="rangee">
           <button class="discret" onclick="location.hash='#/audits'">Toutes les campagnes</button>
           <button class="discret" onclick="supprimerCampagne('${auditId}')">Supprimer</button>
@@ -798,7 +830,7 @@ async function vueAudit(auditId) {
       <div id="z-pieces" style="margin-top:14px">${tablePieces(pieces)}</div>
       <div class="rangee" style="margin-top:16px">
         <button id="btn-run" onclick="lancerAnalyse('${auditId}')" ${pieces.length ? '' : 'disabled'}>Lancer l'analyse</button>
-        <span class="vide" style="padding:0" id="indice">${pieces.length ? '' : 'Au moins une pièce est nécessaire.'}</span>
+        <span class="txt-sourdine" id="indice">${pieces.length ? '' : 'Au moins une pièce est nécessaire.'}</span>
       </div>
       <div id="msg-run"></div>
 
@@ -875,7 +907,7 @@ function verdictCarte(audit, constats, rapports, auditId) {
       ${dernier
         ? `<button onclick="telechargerPDF('${auditId}',${dernier.version},this)">Télécharger le rapport (PDF)</button>
            <button class="discret" onclick="telecharger('${auditId}',${dernier.version})">Version HTML</button>
-           <span class="vide" style="padding:0">v${dernier.version} · ${jour(dernier.created_at)}</span>`
+           <span class="txt-sourdine">v${dernier.version} · ${jour(dernier.created_at)}</span>`
         : `<button onclick="produireRapport('${auditId}')">Produire le rapport</button>`}
     </div>
     </div>
@@ -1099,7 +1131,7 @@ async function changerSuivi(auditId, findingId, statut, champ) {
 
 /* ---------- Plan de remédiation ---------- */
 async function vueRemediation() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div><h1>Plan de remédiation</h1></div></div>
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('remediation', 'Plan de remédiation')}</div></div>
     <p class="chapeau">Les constats encore ouverts de la dernière campagne terminée, du plus grave au plus léger.
       Le statut se met à jour au fil du traitement.</p><div id="z">${attente('Chargement')}</div>`);
   try {
@@ -1132,7 +1164,7 @@ async function vueRemediation() {
 
 /* ---------- Correspondances entre référentiels ---------- */
 async function vueCrosswalks() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div><h1>Correspondances</h1></div></div>
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('correspondances', 'Correspondances')}</div></div>
     <p class="chapeau">Les obligations d'un référentiel qui recoupent celles d'un autre : utile pour ne pas
       instruire deux fois la même preuve.</p>
     <div class="retenu" style="margin-bottom:20px"><div class="titre">Indicatif, pas certifié</div>
@@ -1169,7 +1201,7 @@ async function chargerCrosswalks() {
 
 /* ---------- Référentiels ---------- */
 async function vueReferentiels() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div><h1>Référentiels</h1></div></div>
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('referentiels', 'Référentiels')}</div></div>
     <p class="chapeau">Le texte source de chaque référentiel ingéré, tel qu'utilisé par le moteur d'audit.</p>
     <div class="rangee">
       <select class="compact" id="ref-code" onchange="chargerReferentielDetail()"></select>
@@ -1224,7 +1256,7 @@ async function chargerReferentielDetail() {
 
 /* ---------- Mon compte ---------- */
 async function vueCompte() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Compte</div><h1>Mon compte</h1></div></div>
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Compte</div>${titreIcone('compte', 'Mon compte')}</div></div>
 
     <h2>Organisations</h2>
     <div id="z-orgs">${attente('Chargement')}</div>
@@ -1388,7 +1420,7 @@ const REFERENTIELS = [
 ];
 
 async function vueApropos() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Ressources</div><h1>À propos</h1></div></div>
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Ressources</div>${titreIcone('apropos', 'À propos')}</div></div>
     <p class="chapeau reveal">Comment fonctionne ComplianceAI Studio, et ce qu'il ne faut pas lui demander.</p>
 
     <div class="comp-carte reveal comp-pleine">
@@ -1462,7 +1494,7 @@ function toggleRef(i) {
 
 /* ---------- Équipe ---------- */
 async function vueEquipe() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Organisation</div><h1>Équipe</h1></div></div>
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Organisation</div>${titreIcone('equipe', 'Équipe')}</div></div>
     <p class="chapeau">Les rôles déterminent ce que chaque personne peut faire : un auditeur crée et lance des campagnes,
       un lecteur consulte sans modifier. La personne doit déjà disposer d'un compte.</p>
     <h2>Rattacher une personne</h2>
@@ -1487,7 +1519,7 @@ async function chargerMembres() {
         <td class="mono">${h(m.email)}</td>
         <td><span class="etiq e-neutre">${h(ROLE[m.role] || m.role)}</span></td>
         <td class="mono">${jour(m.joined_at)}</td>
-        <td>${m.email === E.moi.email ? '<span class="vide" style="padding:0">vous</span>'
+        <td>${m.email === E.moi.email ? '<span class="txt-sourdine">vous</span>'
           : `<button class="petit discret" onclick="retirerMembre('${m.user_id}')">Retirer</button>`}</td>
       </tr>`).join('')}</tbody></table>`);
   } catch (e) { poser('z', echoue(e)); }
@@ -1515,7 +1547,7 @@ async function retirerMembre(userId) {
 
 /* ---------- Notifications ---------- */
 async function vueNotifications() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Organisation</div><h1>Notifications</h1></div></div>
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Organisation</div>${titreIcone('notifications', 'Notifications')}</div></div>
     <p class="chapeau">Faits notables de l'organisation : campagnes planifiées exécutées, référentiels mis à jour.</p>
     <div id="z">${attente('Chargement')}</div>`);
   try {
@@ -1534,7 +1566,7 @@ async function vueNotifications() {
 
 /* ---------- Journal ---------- */
 async function vueJournal() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Organisation</div><h1>Journal d'activité</h1></div></div>
+  poser('vue', `<div class="tete"><div><div class="eyebrow">Organisation</div>${titreIcone('journal', "Journal d'activité")}</div></div>
     <p class="chapeau">Chaque action sensible est enregistrée avec son horodatage et son adresse d'origine.
       Le journal est en lecture seule : il ne peut être ni modifié ni effacé depuis l'interface.</p>
     <div id="z">${attente('Chargement')}</div>`);
