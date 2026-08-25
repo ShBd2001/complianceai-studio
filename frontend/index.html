@@ -196,6 +196,15 @@ button.petit{padding:6px 13px;font-size:13px}
 .ap-lead{font-family:var(--serif);font-size:25px;line-height:1.4;font-weight:600;color:var(--encre);max-width:52ch;margin:6px 0 34px;letter-spacing:-.01em}
 .ap-lead strong{color:var(--primaire-fonce);font-weight:700}
 
+/* ---------- Exemple concret (A propos) ---------- */
+.fiche{background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);box-shadow:var(--ombre-sm);overflow:hidden;margin:8px 0 32px}
+.fiche dl{margin:0;display:grid;grid-template-columns:180px 1fr}
+.fiche dt{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--sourdine);padding:14px 18px;border-bottom:1px solid var(--regle-fine);background:var(--papier);display:flex;align-items:center}
+.fiche dd{margin:0;padding:14px 18px;border-bottom:1px solid var(--regle-fine);font-size:14px;color:var(--encre);display:flex;align-items:center;gap:8px}
+.fiche dt:last-of-type,.fiche dd:last-of-type{border-bottom:none}
+.fiche .citation{font-family:var(--mono);font-size:12.5px;color:var(--encre-doux);font-style:italic}
+@media(max-width:640px){.fiche dl{grid-template-columns:1fr}.fiche dt{border-bottom:none;padding-bottom:2px}.fiche dd{padding-top:0}}
+
 /* ---------- Carte de contact ---------- */
 .contact-carte{display:flex;align-items:center;gap:16px;background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:18px 22px;box-shadow:var(--ombre-sm);text-decoration:none;color:var(--encre);max-width:520px;transition:box-shadow .18s ease,transform .18s ease,border-color .18s ease}
 .contact-carte:hover{box-shadow:var(--ombre-lg);transform:translateY(-2px);border-color:var(--primaire)}
@@ -1499,6 +1508,17 @@ async function vueApropos() {
     <p class="chapeau reveal">Comment fonctionne ComplianceAI Studio, et ce qu'il ne faut pas lui demander.</p>
 
     <p class="ap-lead reveal">Chaque exigence est en <strong>manquement par défaut</strong> ; elle n'est déclarée conforme que si le modèle cite une preuve, et le code vérifie que cette citation existe vraiment.</p>
+
+    <div class="eyebrow reveal">Exemple réel</div>
+    <div class="fiche reveal">
+      <dl>
+        <dt>Exigence</dt><dd>RGPD — Article 32, Sécurité du traitement</dd>
+        <dt>Document versé</dt><dd class="mono">Politique de sécurité - Acme SAS</dd>
+        <dt>Passage retrouvé</dt><dd class="citation">« Les données sont chiffrées au repos et en transit. » <span class="txt-sourdine">— ligne 14</span></dd>
+        <dt>Vérification</dt><dd>Le code recherche cette citation mot pour mot dans le document source, avant tout verdict</dd>
+        <dt>Verdict</dt><dd><span class="etiq e-ok">Conforme — preuve vérifiée</span></dd>
+      </dl>
+    </div>
 
     <h2 class="reveal avec-icone"><span class="ic">${IC_ROUAGE}</span>Comment ça marche</h2>
     <p class="reveal chapeau" style="margin-bottom:18px">Cinq étapes, une par exigence — cliquez pour voir le détail.</p>
