@@ -94,7 +94,14 @@ def _set_refresh_cookie(response: Response, raw_token: str) -> None:
         max_age=settings.REFRESH_TOKEN_TTL_DAYS * 86400,
         httponly=True,                 # inaccessible au JavaScript -> anti-XSS
         secure=settings.COOKIE_SECURE, # HTTPS uniquement en production
-        samesite="strict",             # anti-CSRF
+        # "strict" bloquerait totalement le cookie en production : frontend
+        # (complianceai-web.onrender.com) et API (complianceai-api-l51c.
+        # onrender.com) sont deux sites distincts pour le navigateur (chaque
+        # sous-domaine onrender.com est une entree separee de la liste des
+        # suffixes publics). "none" est necessaire pour ce cas inter-site
+        # reel ; en local (COOKIE_SECURE=false, meme site "localhost" quel
+        # que soit le port) "strict" reste la valeur la plus sure.
+        samesite="none" if settings.COOKIE_SECURE else "strict",
         path="/api/v1/auth",           # portee minimale
         domain=settings.COOKIE_DOMAIN or None,
     )

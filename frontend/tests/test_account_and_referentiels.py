@@ -108,6 +108,28 @@ def test_logout_actually_revokes_the_server_session(page, frontend_server, backe
     assert resp.status == 401
 
 
+def test_session_survives_a_page_reload(page, frontend_server, backend_server):
+    """Retour utilisateur : actualiser la page deconnectait systematiquement,
+    car le jeton d'acces ne vivait qu'en memoire JS (variable E.jeton),
+    jamais persiste. Desormais restaurerSession() relit le jeton depuis
+    localStorage au demarrage (ou le renouvelle via /auth/refresh s'il a
+    expire) avant d'afficher l'ecran de connexion."""
+    email = f"reload-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register(page, frontend_server, backend_server, email)
+
+    assert page.evaluate("!!localStorage.getItem('cai_jeton')")
+
+    page.reload(wait_until="networkidle")
+    page.wait_for_selector("#appli:not([hidden])", timeout=10000)
+
+    # Une deconnexion explicite doit rester definitive apres actualisation.
+    page.click("button.lien:has-text(\"Fermer la session\")")
+    page.wait_for_selector("#accueil:not([hidden])")
+    assert page.evaluate("localStorage.getItem('cai_jeton')") is None
+    page.reload(wait_until="networkidle")
+    page.wait_for_selector("#accueil:not([hidden])", timeout=10000)
+
+
 def test_delete_organization_then_delete_account(page, frontend_server, backend_server):
     """Le point precis remonte en retour utilisateur : la suppression de
     compte echouait ("vous etes owner d'une organisation") sans qu'aucun
