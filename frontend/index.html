@@ -209,9 +209,20 @@ button.petit{padding:6px 13px;font-size:13px}
 .courbe{background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:22px;box-shadow:var(--ombre-sm)}
 .courbe svg{width:100%;height:180px;display:block;overflow:visible}
 .courbe .grille-h{stroke:var(--regle-fine);stroke-width:1}
-.courbe .trace{fill:none;stroke:var(--primaire);stroke-width:2.5}
-.courbe .point{fill:var(--carte);stroke:var(--primaire);stroke-width:2.5}
+.courbe .aire-haut{stop-color:var(--primaire);stop-opacity:.22}
+.courbe .aire-bas{stop-color:var(--primaire);stop-opacity:0}
+.courbe .aire{fill:url(#aire-grad)}
+.courbe .trace{fill:none;stroke:var(--primaire);stroke-width:2.5;stroke-dasharray:100;stroke-dashoffset:100;animation:dessiner 1s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes dessiner{to{stroke-dashoffset:0}}
+.courbe .point{fill:var(--carte);stroke:var(--primaire);stroke-width:2.5;cursor:pointer;transform-box:fill-box;transform-origin:center;transition:transform .15s ease}
+.courbe .point:hover{transform:scale(1.5)}
 .courbe text{font-family:var(--mono);font-size:9.5px;fill:var(--sourdine)}
+@media(prefers-reduced-motion:reduce){.courbe .trace{animation:none;stroke-dashoffset:0}}
+.carte-ic{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;background:var(--bg,var(--primaire-clair));color:var(--fg,var(--primaire));margin-bottom:10px}
+.carte-ic svg{width:16px;height:16px}
+.carte .n.n-hausse{color:var(--valide)}
+.carte .n.n-baisse{color:var(--sceau)}
+.vide button{margin-top:4px}
 
 .famille{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--sourdine);font-weight:600;margin:30px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--regle);display:flex;justify-content:space-between}
 article.constat{display:grid;grid-template-columns:120px 1fr;gap:20px;padding:20px;margin:10px 0;background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);box-shadow:var(--ombre-sm);transition:box-shadow .15s ease}
@@ -699,6 +710,12 @@ function router() {
 window.addEventListener('hashchange', router);
 
 /* ---------- Tableau de bord ---------- */
+const IC_CIBLE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>';
+const IC_TENDANCE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>';
+const IC_CAMPAGNES = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6a1 1 0 0 1 1 1v1H8V4a1 1 0 0 1 1-1Z"/><path d="M5 6h14v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6Z"/><path d="m9 13 2 2 4-4"/></svg>';
+const IC_POINTS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>';
+const couleurScore = s => s >= 80 ? 'valide' : s >= 50 ? 'ambre' : 'sceau';
+
 async function vueTableau() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('tableau', 'Tableau de bord')}</div>
     <button onclick="location.hash='#/audits'">Nouvelle campagne</button></div><div id="z">${attente('Chargement')}</div>`);
@@ -712,39 +729,63 @@ async function vueTableau() {
     const premier = notes.length ? notes[0] : null;
     const delta = dernier && premier && notes.length > 1 ? (dernier.score - premier.score).toFixed(1) : null;
     const termines = audits.filter(a => a.status === 'completed').length;
+    const cScore = dernier ? couleurScore(dernier.score) : null;
+    const sensDelta = delta > 0 ? 'hausse' : delta < 0 ? 'baisse' : null;
 
     poser('z', `
       <div class="cartes">
-        <div class="carte"><span class="n">${dernier ? dernier.score : '—'}</span><span class="l">Score courant</span>
+        <div class="carte">
+          <span class="carte-ic" style="${cScore ? `--bg:var(--${cScore}-t);--fg:var(--${cScore})` : ''}">${IC_CIBLE}</span>
+          <span class="n" style="${cScore ? `color:var(--${cScore})` : ''}">${dernier ? dernier.score : '—'}</span><span class="l">Score courant</span>
           <div class="d">${dernier ? jour(dernier.completed_at) : 'Aucune campagne notée'}</div></div>
-        <div class="carte"><span class="n">${delta !== null ? (delta > 0 ? '+' : '') + delta : '—'}</span><span class="l">Évolution</span>
+        <div class="carte">
+          <span class="carte-ic">${IC_TENDANCE}</span>
+          <span class="n${sensDelta ? ' n-' + sensDelta : ''}">${delta !== null ? (delta > 0 ? '+' : '') + delta : '—'}</span><span class="l">Évolution</span>
           <div class="d">Depuis la première campagne</div></div>
-        <div class="carte"><span class="n">${audits.length}</span><span class="l">Campagnes</span>
+        <div class="carte">
+          <span class="carte-ic">${IC_CAMPAGNES}</span>
+          <span class="n">${audits.length}</span><span class="l">Campagnes</span>
           <div class="d">${termines} terminée${termines > 1 ? 's' : ''}</div></div>
-        <div class="carte"><span class="n">${notes.length}</span><span class="l">Points de mesure</span>
+        <div class="carte">
+          <span class="carte-ic">${IC_POINTS}</span>
+          <span class="n">${notes.length}</span><span class="l">Points de mesure</span>
           <div class="d">Campagnes avec score publié</div></div>
       </div>
       <h2>Trajectoire de conformité</h2>
       ${notes.length > 1 ? `<div class="courbe">${courbe(notes)}</div>`
-        : `<p class="vide">La trajectoire apparaîtra dès la deuxième campagne notée.</p>`}
+        : `<div class="vide">La trajectoire apparaîtra dès la deuxième campagne notée.
+             <button class="discret" onclick="location.hash='#/audits'">Lancer une campagne</button></div>`}
       <h2>Dernières campagnes</h2>
-      ${audits.length ? tableAudits(audits.slice(0, 6)) : `<p class="vide">Aucune campagne pour l'instant.</p>`}`);
+      ${audits.length ? tableAudits(audits.slice(0, 6)) : `<div class="vide">Aucune campagne pour l'instant.
+        <button class="discret" onclick="location.hash='#/audits'">Ouvrir une campagne</button></div>`}`);
   } catch (e) { poser('z', echoue(e)); }
 }
 
 function courbe(points) {
   const L = 720, H = 170, mg = { g:34, d:12, ht:12, b:26 };
   const lx = L - mg.g - mg.d, ly = H - mg.ht - mg.b;
+  const base = mg.ht + ly;
   const x = i => mg.g + (points.length === 1 ? lx / 2 : (i / (points.length - 1)) * lx);
   const y = v => mg.ht + ly - (v / 100) * ly;
   const chemin = points.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.score).toFixed(1)}`).join(' ');
+  const aire = `M${x(0).toFixed(1)},${base} ${points.map((p, i) => `L${x(i).toFixed(1)},${y(p.score).toFixed(1)}`).join(' ')} L${x(points.length - 1).toFixed(1)},${base} Z`;
   return `<svg viewBox="0 0 ${L} ${H}" role="img" aria-label="Évolution du score de conformité">
+    <defs><linearGradient id="aire-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop class="aire-haut" offset="0"/><stop class="aire-bas" offset="1"/>
+    </linearGradient></defs>
     ${[0,25,50,75,100].map(v => `<line class="grille-h" x1="${mg.g}" y1="${y(v)}" x2="${L - mg.d}" y2="${y(v)}"/>
        <text x="${mg.g - 7}" y="${y(v) + 3}" text-anchor="end">${v}</text>`).join('')}
-    <path class="trace" d="${chemin}"/>
+    <path class="aire" d="${aire}"/>
+    <path class="trace" pathLength="100" d="${chemin}"/>
     ${points.map((p, i) => `<circle class="point" cx="${x(i)}" cy="${y(p.score)}" r="4"><title>${h(p.title)} — ${p.score}/100</title></circle>
       <text x="${x(i)}" y="${H - 8}" text-anchor="middle">${jour(p.completed_at)}</text>`).join('')}
   </svg>`;
+}
+
+function pilleScore(s) {
+  if (s == null) return '—';
+  const c = couleurScore(s);
+  return `<span class="etiq e-${c === 'valide' ? 'ok' : c === 'ambre' ? 'major' : 'critical'}">${s}</span>`;
 }
 
 function tableAudits(audits) {
@@ -754,7 +795,7 @@ function tableAudits(audits) {
         <td>${h(a.title)}</td>
         <td class="mono">${h((a.framework || '').toUpperCase())}</td>
         <td><span class="etiq ${a.status === 'completed' ? 'e-ok' : 'e-neutre'}">${h(ETAT_AUDIT[a.status] || a.status)}</span></td>
-        <td class="mono">${a.compliance_score != null ? a.compliance_score : '—'}</td>
+        <td class="mono">${pilleScore(a.compliance_score)}</td>
         <td class="mono">${jour(a.completed_at)}</td>
       </tr>`).join('')}</tbody></table>`;
 }
