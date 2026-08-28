@@ -130,6 +130,13 @@ td.mono,th.mono{font-family:var(--mono);font-size:12.5px}
 
 label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--sourdine);margin-bottom:6px}
 .aide-mdp{font-size:12px;color:var(--sourdine);margin:5px 2px 0}
+.case-cgu{display:flex;align-items:flex-start;gap:8px;font-family:var(--sans);font-size:13px;font-weight:400;text-transform:none;letter-spacing:normal;color:var(--encre-doux);margin:14px 0 0;cursor:pointer}
+.case-cgu input{width:auto;margin:2px 0 0;padding:0}
+.case-cgu .lien{font-size:13px;text-align:left}
+.confidentialite-corps{max-height:55vh;overflow-y:auto;padding-right:8px;margin-top:2px}
+.confidentialite-corps p{font-size:13.5px;color:var(--encre-doux);line-height:1.55;margin:5px 0 0}
+.confidentialite-corps strong{color:var(--encre)}
+.confidentialite-corps a{color:var(--primaire)}
 input,select{width:100%;padding:10px 12px;border:1px solid var(--regle);border-radius:var(--rayon-sm);background:var(--carte);font-family:var(--sans);font-size:14.5px;color:var(--encre);transition:border-color .15s ease,box-shadow .15s ease}
 select.compact{width:auto;padding:6px 10px;font-size:13px;font-family:var(--mono)}
 .champ-mdp{position:relative}
@@ -393,6 +400,9 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
         <div><label for="i-mail">Adresse e-mail</label><input id="i-mail" type="email" autocomplete="email"></div>
         <div><label for="i-mdp">Mot de passe</label><div class="champ-mdp"><input id="i-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('i-mdp', this)" aria-label="Afficher le mot de passe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button></div><p class="aide-mdp">12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.</p></div>
       </div>
+      <label class="case-cgu"><input type="checkbox" id="i-cgu">
+        <span>J'accepte les <button type="button" class="lien" onclick="montrerPanneau('p-confidentialite')">conditions d'utilisation et la politique de confidentialité</button></span>
+      </label>
       <div class="rangee">
         <button onclick="sInscrire(this)">Créer le compte</button>
         <button class="lien" onclick="portail(false)">J'ai déjà un compte</button>
@@ -421,6 +431,45 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <div id="p-verification" hidden>
       <div id="msg-verification" class="attente"><span class="spinner"></span>Vérification de votre adresse</div>
       <div class="rangee" style="margin-top:14px"><button class="lien" onclick="montrerPanneau('p-connexion')">Aller à la connexion</button></div>
+    </div>
+
+    <div id="p-confidentialite" hidden>
+      <p class="chapeau" style="margin-top:0">Ce que ComplianceAI Studio fait de vos données — en clair, pas seulement dans un texte juridique.</p>
+      <div class="confidentialite-corps">
+        <div class="eyebrow">Données collectées</div>
+        <p>Nom, adresse e-mail, mot de passe et nom d'organisation à l'inscription. Le mot de passe
+          n'est jamais stocké en clair : seul son empreinte (Argon2id) l'est. Les documents que vous
+          déposez pour analyse, le temps de produire le rapport.</p>
+
+        <div class="eyebrow" style="margin-top:16px">Pourquoi</div>
+        <p>Uniquement pour faire fonctionner le service : créer et sécuriser votre compte, exécuter les
+          audits que vous lancez, générer vos rapports, et vous contacter pour la vérification d'adresse,
+          la réinitialisation de mot de passe ou les notifications de votre organisation.</p>
+
+        <div class="eyebrow" style="margin-top:16px">Sous-traitants</div>
+        <p><strong>Groq</strong> (moteur d'analyse) reçoit les extraits pertinents de vos documents pour
+          en extraire des citations. <strong>Brevo</strong> (envoi d'e-mails) reçoit votre adresse et votre
+          nom pour les e-mails transactionnels. Aucune donnée n'est vendue ni utilisée à des fins publicitaires.</p>
+
+        <div class="eyebrow" style="margin-top:16px">Conservation</div>
+        <p>L'hébergement actuel (offre gratuite) utilise un stockage éphémère : les pièces versées et
+          journaux locaux peuvent être réinitialisés lors d'une mise à jour du service. La base de données
+          des comptes n'est pas concernée. Que vos données existent quelques minutes ou plusieurs mois, vous
+          pouvez à tout moment les exporter ou en demander la suppression immédiate et complète.</p>
+
+        <div class="eyebrow" style="margin-top:16px">Vos droits</div>
+        <p>Depuis « Mon compte » une fois connecté·e : export de l'intégralité de vos données au format
+          JSON, ou suppression définitive de votre compte et de votre organisation — deux actions réellement
+          exécutées en un clic, pas de simple promesse.</p>
+
+        <div class="eyebrow" style="margin-top:16px">Sécurité</div>
+        <p>Connexion chiffrée (HTTPS), mots de passe hachés (Argon2id), jetons de session courts et cookie
+          de session inaccessible au JavaScript.</p>
+
+        <div class="eyebrow" style="margin-top:16px">Contact</div>
+        <p>Une question sur vos données ? <a href="mailto:sarahbelmiloud2001@gmail.com">sarahbelmiloud2001@gmail.com</a></p>
+      </div>
+      <div class="rangee" style="margin-top:16px"><button class="lien" onclick="montrerPanneau('p-inscription')">Retour à l'inscription</button></div>
     </div>
 
     <div id="msg-accueil"></div>
@@ -562,7 +611,7 @@ const SUIVI = {
 const ETAT_AUDIT = { draft:'Brouillon', running:'En cours', completed:'Terminé', failed:'Échec', archived:'Archivé' };
 const ROLE = { owner:'Propriétaire', admin:'Administrateur', auditor:'Auditeur', viewer:'Lecture seule' };
 
-const PANNEAUX = ['p-connexion', 'p-inscription', 'p-oubli', 'p-reinit', 'p-verification'];
+const PANNEAUX = ['p-connexion', 'p-inscription', 'p-oubli', 'p-reinit', 'p-verification', 'p-confidentialite'];
 function montrerPanneau(id) {
   PANNEAUX.forEach(p => { const n = $(p); if (n) n.hidden = (p !== id); });
   poser('msg-accueil', '');
@@ -678,8 +727,9 @@ async function renvoyerVerification() {
 async function sInscrire(btn) {
   const charge = {
     full_name: $('i-nom').value.trim(), organization_name: $('i-org').value.trim(),
-    email: $('i-mail').value.trim(), password: $('i-mdp').value, accept_terms: true,
+    email: $('i-mail').value.trim(), password: $('i-mdp').value, accept_terms: $('i-cgu').checked,
   };
+  if (!charge.accept_terms) return poser('msg-accueil', echoue({ message:"Vous devez accepter les conditions d'utilisation et la politique de confidentialité pour créer un compte." }));
   poser('msg-accueil', ''); chargerBouton(btn, true);
   try {
     await appel('/api/v1/auth/register', { method:'POST', body: JSON.stringify(charge) });

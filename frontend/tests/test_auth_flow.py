@@ -26,6 +26,7 @@ def _register(page, frontend_server: str, backend_server, email: str, org: str =
     page.fill("#i-org", org)
     page.fill("#i-mail", email)
     page.fill("#i-mdp", PWD)
+    page.check("#i-cgu")
     page.click("#p-inscription button:not(.lien)")
     page.wait_for_selector("#p-connexion:not([hidden])")
 
@@ -53,6 +54,7 @@ def test_register_then_verify_email_via_real_link(page, frontend_server, backend
     page.fill("#i-org", "Acme SAS")
     page.fill("#i-mail", email)
     page.fill("#i-mdp", PWD)
+    page.check("#i-cgu")
     page.click("#p-inscription button:not(.lien)")
     page.wait_for_selector("#p-connexion:not([hidden])")
     expect(page.locator("#msg-accueil")).to_contain_text("vérification")
@@ -77,6 +79,40 @@ def test_register_then_verify_email_via_real_link(page, frontend_server, backend
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+
+
+def test_registration_requires_accepting_privacy_policy(page, frontend_server, backend_server):
+    """Avant ce correctif, le frontend envoyait `accept_terms: true` en dur
+    sans jamais montrer de case a cocher : le consentement trace cote
+    serveur (table Consent) ne correspondait a rien de reellement accepte
+    par la personne. Verifie aussi que la politique est consultable avant
+    de s'inscrire, et que la case cochee ramene bien au formulaire rempli."""
+    email = _email("cgu")
+    page.goto(frontend_server, wait_until="networkidle")
+    page.click("button.lien:has-text(\"Créer un compte\")")
+    page.wait_for_selector("#p-inscription:not([hidden])")
+    page.fill("#i-nom", "Sarah Test")
+    page.fill("#i-org", "Acme SAS")
+    page.fill("#i-mail", email)
+    page.fill("#i-mdp", PWD)
+
+    page.click("#p-inscription button:not(.lien)")
+    expect(page.locator(".alerte")).to_contain_text("accepter")
+    expect(page.locator("#appli")).to_be_hidden()
+
+    page.click("text=conditions d'utilisation et la politique de confidentialité")
+    page.wait_for_selector("#p-confidentialite:not([hidden])")
+    expect(page.get_by_text("Sous-traitants")).to_be_visible()
+    page.click("button.lien:has-text(\"Retour à l'inscription\")")
+    page.wait_for_selector("#p-inscription:not([hidden])")
+
+    # Les champs remplis avant l'ouverture de la politique doivent survivre.
+    expect(page.locator("#i-mail")).to_have_value(email)
+
+    page.check("#i-cgu")
+    page.click("#p-inscription button:not(.lien)")
+    page.wait_for_selector("#p-connexion:not([hidden])")
+    expect(page.locator("#msg-accueil")).to_contain_text("vérification")
 
 
 def test_login_wrong_password_shows_error(page, frontend_server, backend_server):

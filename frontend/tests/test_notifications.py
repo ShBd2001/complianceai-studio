@@ -25,6 +25,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> str:
     page.fill("#i-org", "Acme SAS")
     page.fill("#i-mail", email)
     page.fill("#i-mdp", PWD)
+    page.check("#i-cgu")
     page.click("#p-inscription button:not(.lien)")
     page.wait_for_selector("#p-connexion:not([hidden])")
 
