@@ -105,6 +105,38 @@ def test_full_audit_pipeline_and_findings_filter(page, frontend_server, backend_
             assert gravite.strip() == "Critique"
 
 
+def test_remediation_plan_aggregates_across_completed_campaigns(page, frontend_server, backend_server, tmp_path):
+    """Avant ce correctif, Plan de remediation ne montrait que la derniere
+    campagne terminee : une deuxieme campagne restait invisible de cette
+    page meme si elle avait des constats encore ouverts (redondance signalee
+    par l'utilisatrice avec la page Campagnes d'audit, qui montre deja le
+    detail complet d'une campagne prise isolement)."""
+    email = f"remed-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register(page, frontend_server, backend_server, email)
+
+    fichier = tmp_path / "politique.txt"
+    fichier.write_text(POLICY, encoding="utf-8")
+
+    for titre in ["Audit RGPD A", "Audit RGPD B"]:
+        page.click("a[data-vue=\"audits\"]")
+        page.wait_for_selector("#n-titre")
+        page.fill("#n-titre", titre)
+        page.select_option("#n-ref", "rgpd")
+        page.click("button:has-text(\"Ouvrir la campagne\")")
+        page.wait_for_selector("#depot", timeout=15000)
+        page.set_input_files("#fichiers", str(fichier))
+        page.wait_for_selector("#btn-run:not([disabled])", timeout=15000)
+        page.click("#btn-run")
+        page.wait_for_selector("#z-constats", timeout=60000)
+
+    page.click("a[data-vue=\"remediation\"]")
+    page.wait_for_selector("#z-remed article.constat", timeout=15000)
+
+    expect(page.get_by_text("2 campagnes terminées")).to_be_visible()
+    assert page.get_by_text("Audit RGPD A", exact=False).count() > 0
+    assert page.get_by_text("Audit RGPD B", exact=False).count() > 0
+
+
 def test_report_ready_immediately_after_analysis(page, frontend_server, backend_server, tmp_path):
     """Le rapport doit etre telechargeable des la fin de l'analyse, bien en
     vue a cote du score — pas une etape manuelle separee a decouvrir plus

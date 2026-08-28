@@ -1176,7 +1176,7 @@ function appliquerFiltre(prefix) {
   etat.rendre(liste);
 }
 
-function carte(c, auditId) {
+function carte(c, auditId, campagne) {
   const g = c.status === 'not_applicable' ? 'info' : (c.severity || 'info');
   const intitule = (c.title || '').replace(/^Article\s+[\d\-]+\s*[—–-]\s*/i, '');
   const suivi = c.status === 'not_applicable' ? '' : `
@@ -1195,6 +1195,7 @@ function carte(c, auditId) {
       ${c.evidence ? `<blockquote>${h(c.evidence)}</blockquote>` : ''}
       ${c.recommendation ? `<div class="remede"><strong>Action corrective</strong>${h(c.recommendation)}</div>` : ''}
       <div class="provenance">
+        ${campagne ? `<span class="mono">${h(campagne)}</span>` : ''}
         <span>${h(c.model_used || '—')}${c.confidence != null ? ' · confiance ' + Math.round(c.confidence * 100) + ' %' : ''}</span>
         ${suivi}
       </div>
@@ -1214,15 +1215,31 @@ async function changerSuivi(auditId, findingId, statut, champ) {
 /* ---------- Plan de remédiation ---------- */
 async function vueRemediation() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('remediation', 'Plan de remédiation')}</div></div>
-    <p class="chapeau">Les constats encore ouverts de la dernière campagne terminée, du plus grave au plus léger.
-      Le statut se met à jour au fil du traitement.</p><div id="z">${attente('Chargement')}</div>`);
+    <p class="chapeau">Tous les constats encore ouverts, toutes campagnes terminées confondues, du plus grave au plus léger.
+      Le statut se met à jour au fil du traitement — pour revoir le détail complet d'une campagne précise
+      (y compris ce qui est déjà résolu), ouvrez-la depuis Campagnes d'audit.</p><div id="z">${attente('Chargement')}</div>`);
   try {
     const audits = await appel(`/api/v1/orgs/${E.orgId}/audits`);
-    const dernier = audits.filter(a => a.status === 'completed')
-      .sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at))[0];
-    if (!dernier) return poser('z', `<p class="vide">Aucune campagne terminée.</p>`);
+    // Plafonne le nombre de campagnes agregees : au-dela, les plus anciennes
+    // n'apportent plus rien a une file d'action (tout y est deja traite) et
+    // multiplier les requetes en parallele ne ferait que ralentir la page.
+    const terminees = audits.filter(a => a.status === 'completed')
+      .sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at))
+      .slice(0, 15);
+    if (!terminees.length) return poser('z', `<div class="vide">Aucune campagne terminée.
+      <button class="discret" onclick="location.hash='#/audits'">Ouvrir une campagne</button></div>`);
 
-    const constats = await appel(`/api/v1/orgs/${E.orgId}/audits/${dernier.id}/findings`);
+    const parCampagne = await Promise.all(terminees.map(a =>
+      appel(`/api/v1/orgs/${E.orgId}/audits/${a.id}/findings`)
+        .then(cs => ({ audit: a, constats: cs }))
+        .catch(() => ({ audit: a, constats: [] }))
+    ));
+    const plusieurs = terminees.length > 1;
+    const constats = parCampagne.flatMap(({ audit, constats }) => constats.map(c => ({
+      ...c, _auditId: audit.id,
+      _campagne: `${(audit.framework || '').toUpperCase()} · ${audit.title}`,
+    })));
+
     const ordre = { critical:0, major:1, minor:2, info:3 };
     const aTraiter = constats
       .filter(c => c.status === 'open' || c.status === 'in_progress')
@@ -1236,11 +1253,12 @@ async function vueRemediation() {
         <div class="carte"><span class="n">${parEtat('resolved')}</span><span class="l">Résolus</span></div>
         <div class="carte"><span class="n">${parEtat('accepted_risk')}</span><span class="l">Risques acceptés</span></div>
       </div>
-      <h2>Campagne « ${h(dernier.title)} »</h2>
+      <h2>${plusieurs ? `${terminees.length} campagnes terminées` : `Campagne « ${h(terminees[0].title)} »`}</h2>
       ${aTraiter.length ? `${barreFiltres('remed')}<div id="z-remed"></div>`
         : `<div class="succes">Aucun constat en attente : tous ont été traités ou écartés.</div>`}`);
     if (aTraiter.length) initFiltre('remed', aTraiter, liste => poser('z-remed',
-      liste.length ? liste.map(c => carte(c, dernier.id)).join('') : `<p class="vide">Aucun constat ne correspond aux filtres.</p>`));
+      liste.length ? liste.map(c => carte(c, c._auditId, plusieurs ? c._campagne : null)).join('')
+        : `<p class="vide">Aucun constat ne correspond aux filtres.</p>`));
   } catch (e) { poser('z', echoue(e)); }
 }
 
