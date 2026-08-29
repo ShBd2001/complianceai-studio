@@ -139,6 +139,7 @@ td{padding:13px 16px;border-bottom:1px solid var(--regle-fine);vertical-align:to
 tr:last-child td{border-bottom:none}
 tbody tr.cliquable{cursor:pointer;transition:background .12s ease}
 tbody tr.cliquable:hover{background:var(--primaire-clair)}
+tbody tr.cliquable:focus-visible{outline:2px solid var(--primaire);outline-offset:-2px;background:var(--primaire-clair)}
 td.mono,th.mono{font-family:var(--mono);font-size:12.5px}
 
 .etiq{font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;padding:3px 9px;border-radius:var(--rayon-pill);white-space:nowrap;display:inline-block}
@@ -210,6 +211,7 @@ button.petit{padding:6px 13px;font-size:13px}
 /* ---------- Cartes referentiels (A propos) ---------- */
 .ref-carte{position:relative;overflow:hidden;cursor:pointer;user-select:none}
 .ref-carte:hover{border-color:color-mix(in srgb,var(--primaire) 40%,var(--regle));transform:translateY(-3px);box-shadow:var(--ombre)}
+.ref-carte:focus-visible{outline:2px solid var(--primaire);outline-offset:2px}
 .ref-tete{display:flex;align-items:center;justify-content:space-between}
 .ref-ic{width:26px;height:26px;padding:5px;border-radius:8px;background:var(--primaire-clair);color:var(--primaire);margin-bottom:10px;box-sizing:content-box}
 .ref-chevron{width:14px;height:14px;color:var(--sourdine);transition:transform .25s ease}
@@ -897,10 +899,12 @@ function togglerMdp(id, bouton) {
   const visible = champ.type === 'text';
   champ.type = visible ? 'password' : 'text';
   bouton.innerHTML = visible ? ICONE_OEIL : ICONE_OEIL_BARRE;
-  bouton.setAttribute('aria-label', visible ? 'Afficher le mot de passe' : 'Masquer le mot de passe');
+  bouton.setAttribute('aria-label', LANG === 'en'
+    ? (visible ? 'Show password' : 'Hide password')
+    : (visible ? 'Afficher le mot de passe' : 'Masquer le mot de passe'));
 }
-const jour = d => d ? new Date(d).toLocaleDateString('fr-FR', {day:'2-digit',month:'short',year:'numeric'}) : '—';
-const instant = d => d ? new Date(d).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+const jour = d => d ? new Date(d).toLocaleDateString(LANG === 'en' ? 'en-GB' : 'fr-FR', {day:'2-digit',month:'short',year:'numeric'}) : '—';
+const instant = d => d ? new Date(d).toLocaleString(LANG === 'en' ? 'en-GB' : 'fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
 const attente = t => `<div class="attente"><span class="spinner"></span>${h(t)}</div>`;
 function chargerBouton(btn, actif) {
   if (!btn) return;
@@ -918,7 +922,15 @@ const SUIVI = {
   accepted_risk:'Risque accepté', false_positive:'Faux positif', not_applicable:'Hors périmètre',
 };
 const ETAT_AUDIT = { draft:'Brouillon', running:'En cours', completed:'Terminé', failed:'Échec', archived:'Archivé' };
+const ETAT_AUDIT_EN = { draft:'Draft', running:'In progress', completed:'Completed', failed:'Failed', archived:'Archived' };
+// Comme codeCadre() : necessaire partout ou cette valeur partage un noeud de
+// texte avec autre chose (ex. l'entete "GDPR · Terminé"), car traduireDOM()
+// ne traduit que des noeuds de texte entiers — un noeud melange ne
+// correspond jamais a une entree du dictionnaire.
+const etatAudit = status => (LANG === 'en' ? ETAT_AUDIT_EN[status] : ETAT_AUDIT[status]) || status;
 const ROLE = { owner:'Propriétaire', admin:'Administrateur', auditor:'Auditeur', viewer:'Lecture seule' };
+const ROLE_EN = { owner:'Owner', admin:'Admin', auditor:'Auditor', viewer:'Viewer' };
+const etiquetteRole = role => (LANG === 'en' ? ROLE_EN[role] : ROLE[role]) || role;
 
 const PANNEAUX = ['p-connexion', 'p-inscription', 'p-oubli', 'p-reinit', 'p-verification', 'p-confidentialite'];
 function montrerPanneau(id) {
@@ -1211,10 +1223,10 @@ function pilleScore(s) {
 function tableAudits(audits) {
   return `<table><thead><tr><th>Campagne</th><th>Référentiel</th><th>État</th><th class="mono">Score</th><th>Terminée</th></tr></thead>
     <tbody>${audits.map(a => `
-      <tr class="cliquable" onclick="location.hash='#/audit/${a.id}'">
+      <tr class="cliquable" tabindex="0" role="button" onclick="location.hash='#/audit/${a.id}'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();location.hash='#/audit/${a.id}'}">
         <td>${h(a.title)}</td>
         <td class="mono">${h(codeCadre(a.framework))}</td>
-        <td><span class="etiq ${a.status === 'completed' ? 'e-ok' : 'e-neutre'}">${h(ETAT_AUDIT[a.status] || a.status)}</span></td>
+        <td><span class="etiq ${a.status === 'completed' ? 'e-ok' : 'e-neutre'}">${h(etatAudit(a.status))}</span></td>
         <td class="mono">${pilleScore(a.compliance_score)}</td>
         <td class="mono">${jour(a.completed_at)}</td>
       </tr>`).join('')}</tbody></table>`;
@@ -1283,7 +1295,7 @@ async function vueAudit(auditId) {
 
     poser('vue', `
       <div class="tete">
-        <div><div class="eyebrow">${h(codeCadre(audit.framework))} · ${h(ETAT_AUDIT[audit.status] || audit.status)}</div>
+        <div><div class="eyebrow">${h(codeCadre(audit.framework))} · ${h(etatAudit(audit.status))}</div>
           ${titreIcone('audits', audit.title)}</div>
         <div class="rangee">
           <button class="discret" onclick="location.hash='#/audits'">Toutes les campagnes</button>
@@ -1585,7 +1597,7 @@ function carte(c, auditId, campagne) {
       ${c.recommendation ? `<div class="remede"><strong>Action corrective</strong>${h(c.recommendation)}</div>` : ''}
       <div class="provenance">
         ${campagne ? `<span class="mono">${h(campagne)}</span>` : ''}
-        <span>${h(c.model_used || '—')}${c.confidence != null ? ' · confiance ' + Math.round(c.confidence * 100) + ' %' : ''}</span>
+        <span>${h(c.model_used || '—')}${c.confidence != null ? ` · ${LANG === 'en' ? 'confidence' : 'confiance'} ${Math.round(c.confidence * 100)} %` : ''}</span>
         ${suivi}
       </div>
     </div>
@@ -1780,7 +1792,7 @@ function chargerMesOrganisations() {
   poser('z-orgs', E.orgs.length ? `<table><thead><tr><th>Organisation</th><th>Rôle</th><th></th><th></th></tr></thead>
     <tbody>${E.orgs.map(o => `<tr>
       <td>${h(o.name)}</td>
-      <td>${h(ROLE[o.my_role] || o.my_role)} ${o.member_count > 1
+      <td>${h(etiquetteRole(o.my_role))} ${o.member_count > 1
         ? `· ${o.member_count} ${LANG === 'en' ? 'members' : 'membres'}`
         : (LANG === 'en' ? '· only you' : '· vous seul(e)')}</td>
       <td>${o.id === E.orgId ? '<span class="etiq e-ok">Active</span>' : ''}</td>
@@ -1952,7 +1964,7 @@ async function vueApropos() {
     <h2 class="reveal avec-icone"><span class="ic">${IC_LIVRE}</span>Référentiels couverts</h2>
     <p class="reveal chapeau" style="margin-bottom:14px">Cliquez une carte pour voir le périmètre réellement ingéré.</p>
     <div class="cartes reveal">
-      ${REFERENTIELS.map((r, i) => `<div class="carte ref-carte" id="ref-${i}" onclick="toggleRef(${i})">
+      ${REFERENTIELS.map((r, i) => `<div class="carte ref-carte" id="ref-${i}" tabindex="0" role="button" aria-expanded="false" onclick="toggleRef(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRef(${i})}">
         <div class="ref-tete">
           <svg class="ref-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${r.ic}</svg>
           <svg class="ref-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
@@ -1996,7 +2008,9 @@ function initReveal() {
 }
 
 function toggleRef(i) {
-  $(`ref-${i}`).classList.toggle('ouverte');
+  const carte = $(`ref-${i}`);
+  const ouverte = carte.classList.toggle('ouverte');
+  carte.setAttribute('aria-expanded', String(ouverte));
 }
 
 /* ---------- Équipe ---------- */
@@ -2024,7 +2038,7 @@ async function chargerMembres() {
       <tbody>${membres.map(m => `<tr>
         <td>${h(m.full_name)}</td>
         <td class="mono">${h(m.email)}</td>
-        <td><span class="etiq e-neutre">${h(ROLE[m.role] || m.role)}</span></td>
+        <td><span class="etiq e-neutre">${h(etiquetteRole(m.role))}</span></td>
         <td class="mono">${jour(m.joined_at)}</td>
         <td>${m.email === E.moi.email ? '<span class="txt-sourdine">vous</span>'
           : `<button class="petit discret" onclick="retirerMembre('${m.user_id}')">Retirer</button>`}</td>
