@@ -25,6 +25,10 @@ class Passage:
     reference: str
     distance: float
     source: str
+    # Uniquement renseigne pour les passages de documents client (recherche
+    # sur le referentiel : None). Permet a l'appelant de retrouver le vrai
+    # document source d'une citation verifiee, plutot que de le supposer.
+    document_id: uuid.UUID | None = None
 
 
 def _query_vector(text: str) -> list[float]:
@@ -98,6 +102,9 @@ def search_client_documents(
 
     rows = db.execute(stmt).all()
     return [
-        Passage(text=c.content, reference=filename, distance=float(d), source=filename)
+        Passage(
+            text=c.content, reference=filename, distance=float(d), source=filename,
+            document_id=c.document_id,
+        )
         for c, filename, d in rows
     ]

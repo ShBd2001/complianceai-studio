@@ -323,6 +323,52 @@ def test_report_pdf_download_returns_valid_pdf_and_is_cached(client, org, framew
     assert r2.content == r.content  # servi depuis le cache disque
 
 
+def test_concurrent_report_generation_does_not_duplicate_versions(client, org, framework_ready):
+    """Deux requetes "produire un rapport" simultanees pour le meme audit ne
+    doivent ni produire deux fois la meme version, ni planter sur la
+    contrainte d'unicite en base : le verrou consultatif transactionnel doit
+    les serialiser proprement."""
+    import threading
+
+    from app.db.session import SessionLocal
+    from app.models.audit import Audit
+    from app.services import reports
+
+    org_id, headers = org
+    audit_id = client.post(
+        f"/api/v1/orgs/{org_id}/audits", headers=headers,
+        json={"title": "Audit concurrence", "framework": "rgpd"},
+    ).json()["id"]
+    client.post(
+        f"/api/v1/orgs/{org_id}/audits/{audit_id}/documents", headers=headers,
+        files={"file": ("politique.txt", POLICY.encode("utf-8"), "text/plain")},
+    )
+    client.post(f"/api/v1/orgs/{org_id}/audits/{audit_id}/run", headers=headers)
+
+    results: list[object] = []
+
+    def _produire():
+        with SessionLocal() as db:
+            audit = db.get(Audit, uuid.UUID(audit_id))
+            try:
+                report = reports.generate_report(db, audit)
+                db.commit()
+                results.append(report.version)
+            except Exception as exc:  # noqa: BLE001 - on veut voir toute erreur
+                db.rollback()
+                results.append(exc)
+
+    threads = [threading.Thread(target=_produire) for _ in range(2)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(timeout=10)
+
+    errors = [r for r in results if isinstance(r, Exception)]
+    assert not errors, f"generation concurrente en erreur : {errors}"
+    assert sorted(results) == [1, 2]  # deux versions distinctes, pas de doublon
+
+
 def test_run_without_document_fails_cleanly(client, org, framework_ready):
     org_id, headers = org
     audit_id = client.post(
@@ -485,6 +531,107 @@ def test_deadline_falls_back_without_calling_the_model(monkeypatch):
 
     assert called == []
     assert verdicts[0]["_source"] == "heuristique"
+
+
+class FakeRequirement:
+    reference = "Article 32"
+    title = "Sécurité du traitement"
+    body = "Les données à caractère personnel doivent être protégées."
+
+
+def test_verified_citation_is_kept_and_traces_its_source_document(monkeypatch):
+    """Une citation retrouvee telle quelle dans les passages est conservee,
+    et le document source retenu est celui d'ou elle provient reellement —
+    pas systematiquement le premier document depose sur l'audit."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    doc_id = uuid.uuid4()
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=doc_id,
+    )
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: {
+        "conforme": "oui", "severite": "info", "confiance": 0.9,
+        "constat": "Chiffrement en place.",
+        "preuve": "Les données sont chiffrées au repos et en transit.",
+        "recommandation": None,
+    })
+
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "oui"
+    assert verdict["_passage_verifie"] is passage
+    assert verdict["_passage_verifie"].document_id == doc_id
+
+
+def test_unverifiable_citation_downgrades_compliance_to_indetermine(monkeypatch):
+    """Le point precis que ce correctif impose : le modele ne peut pas faire
+    passer une conformite pour acquise sur une citation qu'il invente. Avant
+    ce correctif, `verdict["preuve"]` n'etait jamais confronte au texte
+    source — n'importe quelle citation, vraie ou fabriquee, produisait un
+    constat de conformite publie tel quel dans le rapport."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: {
+        "conforme": "oui", "severite": "info", "confiance": 0.9,
+        "constat": "Chiffrement en place.",
+        "preuve": "Une citation entièrement inventée, absente du document.",
+        "recommandation": None,
+    })
+
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "indetermine"
+    assert verdict["_passage_verifie"] is None
+    assert verdict["confiance"] <= 0.3
+    assert "n'a pas pu etre retrouvee" in verdict["constat"]
+
+
+def test_compliance_claim_with_no_passages_is_downgraded(monkeypatch):
+    """Sans passage recupere, aucune citation n'est de toute facon
+    verifiable : le modele ne doit pas pouvoir repondre "oui" dans le vide."""
+    from app.services import audit_engine, llm
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: {
+        "conforme": "oui", "severite": "info", "confiance": 0.9,
+        "constat": "Tout va bien.", "preuve": None, "recommandation": None,
+    })
+
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [])
+
+    assert verdict["conforme"] == "indetermine"
+
+
+def test_unverified_citation_does_not_affect_non_compliant_verdicts(monkeypatch):
+    """La verification ne s'applique qu'aux affirmations de conformite : un
+    constat de manquement ("non") n'a pas besoin d'etre desactive par
+    prudence, le risque d'un faux "non" est bien moindre que celui d'un faux
+    "oui" pour un outil dont c'est justement le metier de signaler les
+    manquements."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Politique de sécurité incomplète.",
+        reference="p1", distance=0.4, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: {
+        "conforme": "non", "severite": "major", "confiance": 0.7,
+        "constat": "Aucune mesure de chiffrement mentionnée.",
+        "preuve": "Une citation qui ne correspond a rien dans le passage fourni.",
+        "recommandation": "Documenter le chiffrement.",
+    })
+
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "non"
 
 
 # --------------------------------------------------------------------------

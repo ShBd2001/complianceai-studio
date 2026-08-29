@@ -6,7 +6,7 @@ import hashlib
 import html
 from datetime import datetime, timezone
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
 from app.models.audit import Audit, Finding, Report
@@ -182,6 +182,19 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
 
 
 def generate_report(db: Session, audit: Audit, user_id=None) -> Report:
+    # Verrou consultatif transactionnel, scope a cet audit : sans lui, deux
+    # requetes "produire un rapport" simultanees lisent le meme dernier
+    # numero de version, ecrivent sur le meme fichier (la derniere ecriture
+    # l'emporte silencieusement) puis se disputent la contrainte d'unicite en
+    # base -- la perdante remonte une IntegrityError brute, et le fichier
+    # laisse sur disque peut ne plus correspondre au sha256 finalement
+    # enregistre. Bloquant (pas *_try_*) : la seconde requete attend
+    # simplement son tour au lieu d'echouer, un rapport se generant en
+    # quelques dizaines de millisecondes. Meme mecanisme que le planificateur
+    # (pg_..._xact_lock) : liberation automatique au commit/rollback de la
+    # requete, jamais de fuite possible en cas d'exception.
+    db.execute(text("SELECT pg_advisory_xact_lock(hashtext(:key))"), {"key": f"report:{audit.id}"})
+
     findings = list(
         db.scalars(
             select(Finding)

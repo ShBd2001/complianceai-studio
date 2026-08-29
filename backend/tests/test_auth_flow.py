@@ -198,6 +198,43 @@ def test_viewer_cannot_add_members(client):
     assert r.status_code == 403  # RBAC applique
 
 
+def test_admin_cannot_remove_an_owner(client):
+    """Trouve en revue : add_member interdit deja a un admin de nommer un
+    owner, mais rien n'empechait symetriquement un admin de retirer un owner
+    existant — une hierarchie de roles qui ne tenait que dans un sens."""
+    owner_email, admin_email = _email(), _email()
+    owner = _register(client, owner_email, "Sigma3 SAS")
+    org_id = owner["memberships"][0]["organization_id"]
+    owner_token = _login(client, owner_email)
+    admin = _register(client, admin_email)
+
+    r = client.post(
+        f"/api/v1/orgs/{org_id}/members",
+        json={"email": admin_email, "role": "admin"},
+        headers=_auth(owner_token),
+    )
+    assert r.status_code == 201
+    admin_token = _login(client, admin_email)
+
+    r = client.delete(
+        f"/api/v1/orgs/{org_id}/members/{owner['id']}", headers=_auth(admin_token)
+    )
+    assert r.status_code == 403
+
+    # Un owner reste libre de se retirer lui-meme.
+    second_owner_email = _email()
+    second_owner = _register(client, second_owner_email)
+    client.post(
+        f"/api/v1/orgs/{org_id}/members",
+        json={"email": second_owner_email, "role": "owner"},
+        headers=_auth(owner_token),
+    )
+    r = client.delete(
+        f"/api/v1/orgs/{org_id}/members/{owner['id']}", headers=_auth(owner_token)
+    )
+    assert r.status_code == 204
+
+
 def test_last_owner_cannot_be_removed(client):
     email = _email()
     data = _register(client, email, "Omega SA")

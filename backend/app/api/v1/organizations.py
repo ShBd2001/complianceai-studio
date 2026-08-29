@@ -237,6 +237,16 @@ def remove_member(
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Membre introuvable.")
 
     if membership.role == OrgRole.OWNER:
+        # Un admin (niveau inferieur) ne doit pas pouvoir evincer un owner :
+        # add_member impose deja cette regle a la nomination (seul un owner
+        # peut nommer un owner), mais le retrait n'avait pas son pendant —
+        # un admin pouvait retirer un owner unilateralement, y compris sans
+        # son consentement. Un owner qui se retire lui-meme reste autorise :
+        # ctx.role vaut alors OWNER, cette condition ne le bloque pas.
+        if ctx.role != OrgRole.OWNER:
+            raise HTTPException(
+                status.HTTP_403_FORBIDDEN, "Seul un owner peut retirer un autre owner."
+            )
         remaining = db.scalar(
             select(Membership).where(
                 Membership.organization_id == ctx.org_id,

@@ -231,6 +231,7 @@ def _heuristic_evaluation(requirement: Requirement, passages: list[rag.Passage])
     if not passages:
         return {
             "_source": SOURCE_HEURISTIC,
+            "_passage_verifie": None,
             "conforme": "non",
             "confiance": 0.4,
             "severite": "major",
@@ -254,6 +255,9 @@ def _heuristic_evaluation(requirement: Requirement, passages: list[rag.Passage])
 
     return {
         "_source": SOURCE_HEURISTIC,
+        # Preuve deja verbatim par construction (tranche brute du passage) :
+        # pas besoin de la revalider comme pour la sortie du modele.
+        "_passage_verifie": passages[0],
         "conforme": verdict,
         "confiance": confidence,
         "severite": severity,
@@ -264,6 +268,30 @@ def _heuristic_evaluation(requirement: Requirement, passages: list[rag.Passage])
             f"({requirement.title})."
         ),
     }
+
+
+def _passage_correspondant(preuve: str | None, passages: list[rag.Passage]) -> rag.Passage | None:
+    """Retrouve, parmi les passages fournis au modele, celui qui contient
+    reellement la citation qu'il avance — plutot que de faire confiance a son
+    auto-declaration.
+
+    C'est le controle qui rend la citation opposable (voir docstring du
+    module) : sans lui, "preuve" n'est qu'un champ que le modele remplit sur
+    parole, jamais verifie contre le texte source. Normalise les espaces pour
+    tolerer une remise en forme mineure (retours a la ligne, espaces
+    multiples) mais exige une correspondance verbatim du reste, et une
+    longueur minimale — une citation de quelques mots ne prouve rien et
+    correspondrait presque toujours par hasard.
+    """
+    if not preuve:
+        return None
+    cible = " ".join(preuve.split()).lower()
+    if len(cible) < 15:
+        return None
+    for passage in passages:
+        if cible in " ".join(passage.text.split()).lower():
+            return passage
+    return None
 
 
 def evaluate_requirement(
@@ -294,6 +322,33 @@ def evaluate_requirement(
     try:
         verdict = llm.complete_json(SYSTEM_PROMPT, user_prompt)
         verdict["_source"] = SOURCE_LLM
+
+        # Le modele ne repond jamais de memoire (voir docstring du module) :
+        # une citation qu'on ne retrouve pas telle quelle dans les extraits
+        # fournis n'est pas une preuve, c'est une affirmation. On ne publie
+        # jamais une conformite ("oui"/"partiel") fondee sur une citation
+        # invérifiee ou absente — y compris quand aucun passage pertinent
+        # n'a ete retrouve, auquel cas aucune citation n'est de toute facon
+        # verifiable. Le verdict est alors ramene a "indetermine" : ni
+        # valide ni sanctionne, mais signale pour verification humaine
+        # plutot que presente comme un constat de conformite.
+        passage_verifie = _passage_correspondant(verdict.get("preuve"), passages)
+        verdict["_passage_verifie"] = passage_verifie
+        if str(verdict.get("conforme", "")).lower() in ("oui", "partiel") and passage_verifie is None:
+            logger.info(
+                "Citation non verifiee sur %s : conformite '%s' ramenee a "
+                "'indetermine' par prudence.",
+                requirement.reference, verdict.get("conforme"),
+            )
+            verdict["conforme"] = "indetermine"
+            verdict["confiance"] = min(float(verdict.get("confiance") or 0.5), 0.3)
+            verdict["constat"] = (
+                "Le modele indiquait une conformite mais la citation fournie n'a "
+                "pas pu etre retrouvee telle quelle dans les documents verses : "
+                "verdict ramene a indetermine par prudence, une verification "
+                "manuelle est necessaire. " + str(verdict.get("constat") or "")
+            ).strip()
+
         if breaker is not None:
             breaker.record_success()
         return verdict
@@ -609,9 +664,18 @@ def run_audit(
             else:
                 penalty += weight
 
-            source_id = None
-            if documents:
+            # Le document source est celui du passage effectivement verifie
+            # pour cette citation, pas systematiquement le premier depose :
+            # sur un audit a plusieurs documents, l'ancien comportement
+            # attribuait toute preuve au premier fichier quel que soit celui
+            # dont elle provenait reellement.
+            passage_verifie = verdict.get("_passage_verifie")
+            if passage_verifie is not None and passage_verifie.document_id is not None:
+                source_id = passage_verifie.document_id
+            elif documents:
                 source_id = documents[0].id
+            else:
+                source_id = None
 
             findings.append(
                 Finding(
