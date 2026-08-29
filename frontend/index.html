@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ComplianceAI Studio</title>
+<script>(function(){try{
+  if(localStorage.getItem('cai_theme')==='dark')document.documentElement.setAttribute('data-theme','dark');
+  var l=localStorage.getItem('cai_langue');if(l==='en')document.documentElement.setAttribute('lang','en');
+}catch(e){}})();</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237A78F7'/%3E%3Cstop offset='1' stop-color='%234C3FE0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z' fill='url(%23g)'/%3E%3Cpath d='M10.5 16.2 14 19.8 21.5 12' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +16,8 @@
 :root{
   --papier:#F5F6FB; --carte:#FFFFFF; --encre:#12142B; --encre-doux:#565A73;
   --sourdine:#8A8EA6; --regle:#E7E9F2; --regle-fine:#EFF1F7;
-  --sceau:#C0342A; --sceau-t:#FDECEA; --valide:#178A4C; --valide-t:#E7F8EE;
+  --sceau:#C0342A; --sceau-t:#FDECEA; --sceau-fonce:#7A241D;
+  --valide:#178A4C; --valide-t:#E7F8EE; --valide-fonce:#0F5C33;
   --ambre:#B4720C; --ambre-t:#FDF2DD; --azur:#3457D5; --azur-t:#EAEEFD;
   --primaire:#5B5FEF; --primaire-fonce:#4338CA; --primaire-clair:#EEF0FE;
   --grad-marque:linear-gradient(135deg,#6D6BF5 0%,#4C3FE0 100%);
@@ -23,9 +28,24 @@
   --serif:'Fraunces',ui-serif,Georgia,serif; --sans:'Inter',system-ui,sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,monospace;
 }
+/* Mode sombre : bascule manuelle (voir basculerTheme()), pas de detection
+   automatique prefers-color-scheme -- une soutenance en direct ne doit pas
+   dependre des reglages systeme de la machine utilisee. */
+:root[data-theme="dark"]{
+  --papier:#14162A; --carte:#1B1E38; --encre:#F1F2FA; --encre-doux:#B4B8D4;
+  --sourdine:#8286A8; --regle:#31355A; --regle-fine:#262a48;
+  --sceau:#FF7A70; --sceau-t:#3A2030; --sceau-fonce:#FFD9D5;
+  --valide:#4ADE94; --valide-t:#153728; --valide-fonce:#BEF5D4;
+  --ambre:#FFC168; --ambre-t:#3A2C12; --azur:#8DA6FF; --azur-t:#1E2547;
+  --primaire:#8B8AF8; --primaire-fonce:#B4B3FB; --primaire-clair:#292C56;
+  --grad-marque:linear-gradient(135deg,#7A78F7 0%,#5B54E8 100%);
+  --ombre-sm:0 1px 2px rgba(0,0,0,.35);
+  --ombre:0 1px 2px rgba(0,0,0,.3),0 6px 20px -4px rgba(0,0,0,.45);
+  --ombre-lg:0 12px 36px -8px rgba(0,0,0,.6),0 2px 8px rgba(0,0,0,.35);
+}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%}
-body{background:var(--papier);color:var(--encre);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{background:var(--papier);color:var(--encre);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;transition:background-color .2s ease,color .2s ease}
 a{color:var(--primaire)}
 ::selection{background:var(--primaire-clair);color:var(--primaire-fonce)}
 [hidden]{display:none !important}
@@ -242,6 +262,13 @@ button.petit{padding:6px 13px;font-size:13px}
 .amorce{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--papier);z-index:50}
 .amorce .spinner{width:26px;height:26px;border-width:3px}
 
+.reglages-rapides{position:fixed;top:16px;right:16px;z-index:60;display:flex;gap:8px}
+.rr-bouton{width:34px;height:34px;padding:0;border-radius:50%;background:var(--carte);border:1px solid var(--regle);color:var(--encre-doux);box-shadow:var(--ombre-sm)}
+.rr-bouton:hover{color:var(--primaire);border-color:var(--primaire);transform:none}
+.rr-bouton svg{width:17px;height:17px}
+.rr-langue{width:auto;border-radius:var(--rayon-pill);padding:0 13px;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.04em}
+@media(max-width:640px){.reglages-rapides{top:10px;right:10px}}
+
 .famille{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--sourdine);font-weight:600;margin:30px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--regle);display:flex;justify-content:space-between}
 article.constat{display:grid;grid-template-columns:120px 1fr;gap:20px;padding:20px;margin:10px 0;background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);box-shadow:var(--ombre-sm);transition:box-shadow .15s ease}
 article.constat:hover{box-shadow:var(--ombre)}
@@ -264,8 +291,8 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .entree .quoi{font-size:14px;margin-top:2px}
 .entree .quoi code{font-family:var(--mono);font-size:12.5px;background:var(--regle-fine);border-radius:4px;padding:1px 6px}
 
-.alerte{border-left:3px solid var(--sceau);background:var(--sceau-t);border-radius:0 var(--rayon-sm) var(--rayon-sm) 0;padding:12px 16px;margin:13px 0;font-size:14px;color:#7A241D}
-.succes{border-left:3px solid var(--valide);background:var(--valide-t);border-radius:0 var(--rayon-sm) var(--rayon-sm) 0;padding:12px 16px;margin:13px 0;font-size:14px;color:#0F5C33}
+.alerte{border-left:3px solid var(--sceau);background:var(--sceau-t);border-radius:0 var(--rayon-sm) var(--rayon-sm) 0;padding:12px 16px;margin:13px 0;font-size:14px;color:var(--sceau-fonce)}
+.succes{border-left:3px solid var(--valide);background:var(--valide-t);border-radius:0 var(--rayon-sm) var(--rayon-sm) 0;padding:12px 16px;margin:13px 0;font-size:14px;color:var(--valide-fonce)}
 .attente{font-family:var(--mono);font-size:12.5px;color:var(--sourdine);display:flex;align-items:center;gap:9px;padding:14px 0}
 .spinner{width:15px;height:15px;border:2px solid var(--regle-fine);border-top-color:var(--primaire);border-radius:50%;display:inline-block;flex:none;animation:tourner .6s linear infinite}
 .spinner.clair{border-color:rgba(255,255,255,.35);border-top-color:#fff}
@@ -348,6 +375,11 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <stop offset="0" stop-color="#7A78F7"/><stop offset="1" stop-color="#4C3FE0"/>
   </linearGradient>
 </defs></svg>
+
+<div class="reglages-rapides">
+  <button type="button" class="rr-bouton" id="rr-theme" onclick="basculerTheme()" aria-label="Bascule vers le mode sombre" title="Bascule vers le mode sombre"></button>
+  <button type="button" class="rr-bouton rr-langue" id="rr-langue" onclick="basculerLangue()" aria-label="Switch to English" title="Switch to English">EN</button>
+</div>
 
 <div id="amorce" class="amorce" hidden><span class="spinner"></span></div>
 
@@ -532,7 +564,7 @@ async function appel(chemin, options = {}) {
   if (options.body && !(options.body instanceof FormData)) entetes['Content-Type'] = 'application/json';
   let r;
   try { r = await fetch(API + chemin, { ...options, headers: entetes, credentials: 'include' }); }
-  catch { throw new Error("L'API ne répond pas. Vérifiez qu'elle tourne sur " + API + "."); }
+  catch { throw new Error((LANG === 'en' ? "The API is not responding. Check that it is running on " : "L'API ne répond pas. Vérifiez qu'elle tourne sur ") + API + "."); }
   if (r.status === 204) return null;
   const brut = await r.text();
   let corps = null;
@@ -552,7 +584,284 @@ async function appel(chemin, options = {}) {
 
 const h = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $ = id => document.getElementById(id);
-const poser = (id, c) => { const n = $(id); if (n) n.innerHTML = c; };
+const poser = (id, c) => { const n = $(id); if (n) { n.innerHTML = c; traduireDOM(n); } };
+
+/* ---------- Theme (clair/sombre) et langue (FR/EN) ---------- */
+let LANG = localStorage.getItem('cai_langue') === 'en' ? 'en' : 'fr';
+let THEME = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+const IC_SOLEIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const IC_LUNE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11Z"/></svg>';
+
+function appliquerTheme() {
+  const bouton = $('rr-theme');
+  if (!bouton) return;
+  bouton.innerHTML = THEME === 'dark' ? IC_SOLEIL : IC_LUNE;
+  const libelle = THEME === 'dark'
+    ? (LANG === 'en' ? 'Switch to light mode' : 'Basculer en mode clair')
+    : (LANG === 'en' ? 'Switch to dark mode' : 'Basculer en mode sombre');
+  bouton.title = libelle; bouton.setAttribute('aria-label', libelle);
+}
+function basculerTheme() {
+  THEME = THEME === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', THEME);
+  localStorage.setItem('cai_theme', THEME);
+  appliquerTheme();
+}
+
+function appliquerLangue() {
+  const bouton = $('rr-langue');
+  if (!bouton) return;
+  bouton.textContent = LANG === 'en' ? 'FR' : 'EN';
+  const libelle = LANG === 'en' ? 'Passer en français' : 'Switch to English';
+  bouton.title = libelle; bouton.setAttribute('aria-label', libelle);
+  document.documentElement.setAttribute('lang', LANG);
+}
+function basculerLangue() {
+  LANG = LANG === 'en' ? 'fr' : 'en';
+  localStorage.setItem('cai_langue', LANG);
+  appliquerLangue();
+  appliquerTheme();
+  traduireDOM(document.body);
+}
+
+// Dictionnaire cle en cle (texte francais exact -> anglais) applique par
+// traduireDOM() a chaque rendu. Volontairement une correspondance de chaine
+// exacte (pas de framework i18n) : coherent avec le reste du projet, aucune
+// dependance de build. Les portions dynamiques (dates, noms, nombres) sont
+// dans des noeuds separes du texte statique qui les entoure, donc ce
+// filtrage "noeud de texte entier" les traverse sans les casser.
+const TRAD_EN = {
+  // Reglages rapides
+  'Basculer en mode clair': 'Switch to light mode', 'Basculer en mode sombre': 'Switch to dark mode',
+  'Switch to English': 'Switch to English', 'Passer en français': 'Switch back to French',
+  // Accueil / connexion
+  'Audit réglementaire': 'Regulatory audit', "Audit réglementaire — RGPD · NIS2 · CSRD": 'Regulatory audit — GDPR · NIS2 · CSRD',
+  'La conformité,': 'Compliance,', 'prouvée': 'proven', 'ligne par ligne.': 'line by line.',
+  "Chaque exigence est confrontée au texte réel de vos documents. Aucune conformité n'est déclarée sans une citation vérifiable — jamais l'inverse.": 'Every requirement is checked against the real text of your documents. No compliance is ever declared without a verifiable citation — never the other way around.',
+  'Article 32 — preuve trouvée, ligne 14': 'Article 32 — evidence found, line 14',
+  'Référentiels': 'Frameworks', 'Exigences': 'Requirements', 'Vérifiées par citation': 'Verified by citation',
+  'Adresse e-mail': 'Email address', 'Mot de passe': 'Password',
+  'Se connecter': 'Sign in', 'Créer un compte': 'Create an account', 'Mot de passe oublié ?': 'Forgot your password?',
+  'Nom complet': 'Full name', "Nom de l'organisation": 'Organization name',
+  '12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.': 'At least 12 characters, combining at least 3 of: lowercase, uppercase, digits, special characters.',
+  "J'accepte les": 'I accept the', "conditions d'utilisation et la politique de confidentialité": 'terms of use and privacy policy',
+  'Créer le compte': 'Create account', "J'ai déjà un compte": 'I already have an account',
+  'Indiquez votre adresse : si un compte existe, un lien de réinitialisation est envoyé par e-mail.': "Enter your address: if an account exists, a reset link will be emailed to you.",
+  'Envoyer le lien': 'Send link', 'Retour à la connexion': 'Back to sign in',
+  'Choisissez un nouveau mot de passe.': 'Choose a new password.', 'Nouveau mot de passe': 'New password',
+  'Changer le mot de passe': 'Change password', 'Vérification de votre adresse': 'Verifying your address',
+  'Aller à la connexion': 'Go to sign in',
+  'Ce que ComplianceAI Studio fait de vos données — en clair, pas seulement dans un texte juridique.': 'What ComplianceAI Studio does with your data — in plain terms, not just in a legal text.',
+  'Données collectées': 'Data collected',
+  "Nom, adresse e-mail, mot de passe et nom d'organisation à l'inscription. Le mot de passe n'est jamais stocké en clair : seul son empreinte (Argon2id) l'est. Les documents que vous déposez pour analyse, le temps de produire le rapport.": "Name, email address, password and organization name at sign-up. The password is never stored in plain text: only its hash (Argon2id) is. Documents you upload for analysis, for as long as it takes to produce the report.",
+  'Pourquoi': 'Why',
+  "Uniquement pour faire fonctionner le service : créer et sécuriser votre compte, exécuter les audits que vous lancez, générer vos rapports, et vous contacter pour la vérification d'adresse, la réinitialisation de mot de passe ou les notifications de votre organisation.": "Only to run the service: create and secure your account, run the audits you launch, generate your reports, and contact you for address verification, password resets, or your organization's notifications.",
+  'Sous-traitants': 'Processors', 'Groq': 'Groq', 'Brevo': 'Brevo',
+  "(moteur d'analyse) reçoit les extraits pertinents de vos documents pour en extraire des citations.": "(analysis engine) receives the relevant excerpts of your documents to extract citations from them.",
+  "(envoi d'e-mails) reçoit votre adresse et votre nom pour les e-mails transactionnels. Aucune donnée n'est vendue ni utilisée à des fins publicitaires.": "(email delivery) receives your address and name for transactional emails. No data is sold or used for advertising.",
+  'Conservation': 'Retention',
+  "L'hébergement actuel (offre gratuite) utilise un stockage éphémère : les pièces versées et journaux locaux peuvent être réinitialisés lors d'une mise à jour du service. La base de données des comptes n'est pas concernée. Que vos données existent quelques minutes ou plusieurs mois, vous pouvez à tout moment les exporter ou en demander la suppression immédiate et complète.": "The current hosting (free tier) uses ephemeral storage: uploaded files and local logs may be reset when the service is updated. The account database is not affected. Whether your data has existed for minutes or months, you can export it or request its immediate, complete deletion at any time.",
+  'Vos droits': 'Your rights',
+  "Depuis « Mon compte » une fois connecté·e : export de l'intégralité de vos données au format JSON, ou suppression définitive de votre compte et de votre organisation — deux actions réellement exécutées en un clic, pas de simple promesse.": "From \"My account\" once signed in: export of all your data as JSON, or permanent deletion of your account and organization — two actions that are actually carried out in one click, not just a promise.",
+  'Sécurité': 'Security',
+  'Connexion chiffrée (HTTPS), mots de passe hachés (Argon2id), jetons de session courts et cookie de session inaccessible au JavaScript.': 'Encrypted connection (HTTPS), hashed passwords (Argon2id), short-lived session tokens, and a session cookie inaccessible to JavaScript.',
+  'Contact': 'Contact', 'Une question sur vos données ?': 'A question about your data?',
+  "Retour à l'inscription": 'Back to registration',
+  // Sidebar
+  'Tableau de bord': 'Dashboard', "Campagnes d'audit": 'Audit campaigns', 'Plan de remédiation': 'Remediation plan',
+  'Correspondances': 'Crosswalks', 'Pilotage': 'Overview', 'Organisation': 'Organization',
+  'Équipe': 'Team', 'Notifications': 'Notifications', "Journal d'activité": 'Activity log',
+  'Compte': 'Account', 'Mon compte': 'My account', 'À propos': 'About', 'Fermer la session': 'Sign out',
+  'Afficher le menu': 'Show menu', 'Masquer le menu': 'Hide menu',
+  'ComplianceAI Studio — outil d\'aide à l\'auto-évaluation, ne vaut pas preuve de conformité.': "ComplianceAI Studio — a self-assessment aid, not proof of compliance.",
+  // Partagé
+  'Chargement': 'Loading', 'Chargement de la campagne': 'Loading campaign', 'Envoi': 'Sending',
+  'Afficher le mot de passe': 'Show password', 'Masquer le mot de passe': 'Hide password',
+  'Critique': 'Critical', 'Majeure': 'Major', 'Mineure': 'Minor', 'Information': 'Info',
+  'À traiter': 'To address', 'En cours': 'In progress', 'Résolu': 'Resolved',
+  'Risque accepté': 'Risk accepted', 'Faux positif': 'False positive', 'Hors périmètre': 'Out of scope',
+  'Brouillon': 'Draft', 'Terminé': 'Completed', 'Échec': 'Failed', 'Archivé': 'Archived',
+  'Propriétaire': 'Owner', 'Administrateur': 'Admin', 'Auditeur': 'Auditor', 'Lecture seule': 'Viewer',
+  'Toutes gravités': 'All severities', 'Tous statuts': 'All statuses', 'Filtrer par article ou intitulé': 'Filter by article or title',
+  'Action corrective': 'Corrective action', 'Aucun constat ne correspond aux filtres.': 'No finding matches the filters.',
+  // Tableau de bord
+  'Nouvelle campagne': 'New campaign', 'Score courant': 'Current score', 'Aucune campagne notée': 'No scored campaign yet',
+  'Évolution': 'Trend', 'Depuis la première campagne': 'Since the first campaign', 'Campagnes': 'Campaigns',
+  'Points de mesure': 'Data points', 'Campagnes avec score publié': 'Campaigns with a published score',
+  'Trajectoire de conformité': 'Compliance trajectory', 'La trajectoire apparaîtra dès la deuxième campagne notée.': 'The trajectory will appear once a second campaign has been scored.',
+  'Lancer une campagne': 'Launch a campaign', 'Dernières campagnes': 'Latest campaigns',
+  "Aucune campagne pour l'instant.": 'No campaigns yet.', 'Ouvrir une campagne': 'Open a campaign',
+  'Campagne': 'Campaign', 'État': 'Status', 'Score': 'Score', 'Terminée': 'Completed on',
+  // Campagnes
+  'Ouvrir une campagne': 'Open a campaign', 'Intitulé': 'Title', 'Ouvrir la campagne': 'Open campaign', 'Historique': 'History',
+  // Detail campagne
+  'Toutes les campagnes': 'All campaigns', 'Supprimer': 'Delete', 'Pièces versées': 'Uploaded files',
+  'Déposez vos fichiers ici, ou cliquez pour les choisir': 'Drop your files here, or click to choose them',
+  "Lancer l'analyse": 'Run analysis', 'Au moins une pièce est nécessaire.': 'At least one file is required.',
+  'Constats': 'Findings', 'Rapports': 'Reports', 'Produire une nouvelle version': 'Produce a new version',
+  'Planification': 'Scheduling', 'Planification active': 'Schedule active', 'Désactiver': 'Disable',
+  'Activer la planification': 'Enable scheduling', 'Hebdomadaire': 'Weekly', 'Mensuelle': 'Monthly', 'Trimestrielle': 'Quarterly',
+  'Rejoue cette campagne sur les mêmes pièces, avec le référentiel à jour.': 'Re-runs this campaign on the same files, against the up-to-date framework text.',
+  'Score non publié': 'Score not published',
+  "L'analyse n'offre pas les garanties nécessaires à la publication d'un score.": "The analysis does not meet the guarantees required to publish a score.",
+  'Télécharger le rapport (PDF)': 'Download report (PDF)', 'Version HTML': 'HTML version',
+  'Produire le rapport': 'Produce report', 'Constats': 'Findings',
+  'Analysée le': 'Analyzed on', 'Fichier': 'File', 'Taille': 'Size', 'Empreinte': 'Fingerprint', 'Versée': 'Uploaded',
+  'Aucune pièce versée.': 'No files uploaded yet.', 'Version': 'Version', 'Produit le': 'Produced on',
+  'Aucun rapport produit.': 'No report produced yet.', 'HTML': 'HTML', 'PDF': 'PDF',
+  'Supprimer définitivement cette campagne, ses pièces, ses constats et ses rapports ?': 'Permanently delete this campaign, its files, findings and reports?',
+  // Constats / gravites
+  'Non-conformités critiques': 'Critical non-conformities', 'Non-conformités majeures': 'Major non-conformities',
+  "Axes d’amélioration": 'Areas for improvement', 'Observations': 'Observations', 'Écartées du périmètre': 'Excluded from scope',
+  // Remediation
+  'Tous les constats encore ouverts, toutes campagnes terminées confondues, du plus grave au plus léger. Le statut se met à jour au fil du traitement — pour revoir le détail complet d\'une campagne précise (y compris ce qui est déjà résolu), ouvrez-la depuis Campagnes d\'audit.': "All findings still open, across every completed campaign, from most to least severe. Status updates as you work through them — to review the full detail of one specific campaign (including what's already resolved), open it from Audit campaigns.",
+  'Aucune campagne terminée.': 'No completed campaigns yet.', 'Résolus': 'Resolved', 'Risques acceptés': 'Accepted risks',
+  "Aucun constat en attente : tous ont été traités ou écartés.": 'No findings pending: all have been handled or dismissed.',
+  // Correspondances
+  "Les obligations d'un référentiel qui recoupent celles d'un autre : utile pour ne pas instruire deux fois la même preuve.": "Obligations from one framework that overlap with another: useful so you don't gather the same evidence twice.",
+  'Indicatif, pas certifié': 'Indicative, not certified',
+  "Ces correspondances sont des rapprochements courants, fournis comme point de départ. Elles ne remplacent pas une analyse juridique et doivent être validées par votre conseil avant toute décision de conformité.": "These crosswalks are commonly-cited mappings, provided as a starting point. They do not replace legal analysis and must be validated by your counsel before any compliance decision.",
+  'Référentiel source': 'Source framework', 'Aucune correspondance enregistrée pour ce référentiel.': 'No crosswalk recorded for this framework.',
+  // Referentiels
+  "Le texte source de chaque référentiel ingéré, tel qu'utilisé par le moteur d'audit.": "The source text of each ingested framework, exactly as used by the audit engine.",
+  'Périmètre auditable uniquement': 'Auditable scope only', 'Articles': 'Articles',
+  'Version en vigueur': 'Current version', 'Aucune version ingérée pour ce référentiel.': 'No version ingested for this framework.',
+  'Note': 'Note', '(courante)': '(current)', 'Ingérée le': 'Ingested on',
+  'Référence': 'Reference', 'Intitulé': 'Title', 'Périmètre': 'Scope', 'Auditable': 'Auditable', 'Structurel': 'Structural',
+  'Aucune exigence.': 'No requirements.',
+  // Mon compte
+  'Organisations': 'Organizations', 'Nouvelle organisation': "New organization", 'Créer': 'Create',
+  'Organisation': 'Organization', 'Rôle': 'Role', 'Active': 'Active', 'Quitter': 'Leave',
+  'Aucune organisation.': 'No organizations.',
+  'Mot de passe actuel': 'Current password', 'Déconnecter tous les appareils': 'Sign out everywhere',
+  'Mes données': 'My data',
+  'Conformément au RGPD, vous pouvez à tout moment récupérer une copie de vos données ou demander leur effacement.': 'In line with GDPR, you can retrieve a copy of your data or request its erasure at any time.',
+  'Exporter mes données': 'Export my data', 'Supprimer mon compte': 'Delete my account',
+  'Déconnecter tous les appareils, y compris celui-ci ?': 'Sign out of every device, including this one?',
+  'Supprimer définitivement votre compte ? Cette action est irréversible.': 'Permanently delete your account? This action is irreversible.',
+  "Retirer cette personne de l'organisation ?": 'Remove this person from the organization?',
+  // A propos
+  'Comment fonctionne ComplianceAI Studio, et ce qu\'il ne faut pas lui demander.': "How ComplianceAI Studio works, and what not to ask of it.",
+  'Chaque exigence est en': 'Every requirement is', 'manquement par défaut': 'non-compliant by default',
+  "; elle n'est déclarée conforme que si le modèle cite une preuve, et le code vérifie que cette citation existe vraiment.": "; it is only declared compliant if the model cites evidence, and the code verifies that citation genuinely exists.",
+  'Exemple réel': 'Real example', 'Exigence': 'Requirement',
+  'RGPD — Article 32, Sécurité du traitement': 'GDPR — Article 32, Security of processing',
+  'Document versé': 'Uploaded document', 'Politique de sécurité - Acme SAS': 'Security policy - Acme SAS',
+  'Passage retrouvé': 'Passage found',
+  '« Les données sont chiffrées au repos et en transit. »': '"Data is encrypted at rest and in transit."',
+  '— ligne 14': '— line 14', 'Vérification': 'Verification',
+  'Le code recherche cette citation mot pour mot dans le document source, avant tout verdict': 'The code searches for this citation word for word in the source document, before any verdict',
+  'Verdict': 'Verdict', 'Conforme — preuve vérifiée': 'Compliant — evidence verified',
+  'Comment ça marche': 'How it works', 'Cinq étapes, une par exigence — cliquez pour voir le détail.': 'Five steps, one per requirement — click to see the detail.',
+  'Découpage': 'Chunking', 'Applicabilité': 'Applicability', 'Extraction': 'Extraction', 'Score': 'Score',
+  "Le document est segmenté en passages d'environ 500 tokens avec 15 % de recouvrement, en respectant les frontières de sections plutôt qu'une coupe arbitraire.": "The document is split into passages of roughly 500 tokens with 15% overlap, following section boundaries rather than an arbitrary cut.",
+  "Passe dédiée pour les articles dérogeables (ex. article 9 du RGPD et ses dix dérogations, indexées comme passages distincts) — avant tout constat de manquement.": "A dedicated pass for articles with exceptions (e.g. GDPR Article 9 and its ten exceptions, each indexed as a distinct passage) — before any non-compliance finding.",
+  "Le modèle extrait des preuves depuis les passages retrouvés par recherche sémantique — un appel par article, jamais un appel global sur tout le référentiel.": "The model extracts evidence from passages found through semantic search — one call per article, never a single call across the whole framework.",
+  "Le code — pas le modèle — vérifie mécaniquement que chaque citation existe réellement dans le texte source, avant de laisser rendre le verdict.": "The code — not the model — mechanically verifies that every citation genuinely exists in the source text, before letting a verdict be rendered.",
+  "Formule pondérée et explicable ligne par ligne, avec propagation des dépendances entre exigences et retenue du score si l'analyse n'a pas les garanties suffisantes.": "A weighted formula, explainable line by line, with dependency propagation between requirements and score withholding when the analysis lacks sufficient guarantees.",
+  "Ce que ce n'est pas": "What this is not",
+  "ComplianceAI Studio est un outil d'aide à l'auto-évaluation. Il analyse les documents que vous lui fournissez et signale les points qui appellent votre attention.": "ComplianceAI Studio is a self-assessment aid. It analyzes the documents you provide and flags points that need your attention.",
+  "Il ne constitue pas un conseil juridique et ne vaut pas preuve de conformité au sens du RGPD.": "It does not constitute legal advice and is not proof of compliance under GDPR.",
+  "Les conclusions doivent être validées par votre délégué à la protection des données ou par un conseil qualifié.": "Conclusions must be validated by your data protection officer or by qualified counsel.",
+  'Référentiels couverts': 'Frameworks covered', 'Cliquez une carte pour voir le périmètre réellement ingéré.': 'Click a card to see the scope actually ingested.',
+  'Règlement (UE) 2016/679': 'Regulation (EU) 2016/679', 'Protection des données à caractère personnel': 'Protection of personal data',
+  "99 exigences ingérées, dont 45 retenues comme auditables (articles 5 à 49 : principes, droits des personnes, sécurité, DPO, transferts hors UE) — les dispositions institutionnelles (autorités de contrôle, CEPD) sont écartées.": "99 requirements ingested, 45 of which are retained as auditable (Articles 5 to 49: principles, data-subject rights, security, DPO, transfers outside the EU) — institutional provisions (supervisory authorities, EDPB) are excluded.",
+  'Directive (UE) 2022/2555': 'Directive (EU) 2022/2555', "Cybersécurité des réseaux et systèmes d'information": 'Cybersecurity of network and information systems',
+  "46 exigences ingérées, dont 8 auditables : gouvernance, gestion des risques, notification d'incident — la gouvernance étatique du texte, hors sujet pour une entité auditée, est exclue.": "46 requirements ingested, 8 of which are auditable: governance, risk management, incident notification — the text's state-level governance provisions, out of scope for an audited entity, are excluded.",
+  'Règlement (UE) 2022/2554': 'Regulation (EU) 2022/2554', 'Résilience opérationnelle numérique': 'Digital operational resilience',
+  "64 exigences ingérées, dont 3 auditables, ciblées sur le secteur financier : gestion du risque TIC, tests de résilience, encadrement des prestataires critiques.": "64 requirements ingested, 3 of which are auditable, targeted at the financial sector: ICT risk management, resilience testing, oversight of critical providers.",
+  'Règlement (UE) 2024/1689': 'Regulation (EU) 2024/1689', "Gouvernance de l'intelligence artificielle": 'Governance of artificial intelligence',
+  "113 exigences ingérées, dont 2 auditables, centrées sur les systèmes à haut risque : gestion des risques, qualité des données, documentation technique.": "113 requirements ingested, 2 of which are auditable, focused on high-risk systems: risk management, data quality, technical documentation.",
+  'Directive (UE) 2022/2464': 'Directive (EU) 2022/2464', 'Durabilité et reporting extra-financier': 'Sustainability and non-financial reporting',
+  "13 exigences ingérées, dont 5 auditables. Directive modificative : seuls les articles insérés (bis/ter…) portent une obligation directement opposable, le reste amende la directive comptable sans créer d'obligation propre.": "13 requirements ingested, 5 of which are auditable. An amending directive: only the inserted articles (bis/ter…) carry a directly enforceable obligation, the rest amends the accounting directive without creating an obligation of its own.",
+  'Une question, un problème, un retour ?': 'A question, an issue, feedback?',
+  // Equipe
+  'Les rôles déterminent ce que chaque personne peut faire : un auditeur crée et lance des campagnes, un lecteur consulte sans modifier. La personne doit déjà disposer d\'un compte.': "Roles determine what each person can do: an auditor creates and launches campaigns, a viewer can only read. The person must already have an account.",
+  'Rattacher une personne': 'Add a person', 'Rôle': 'Role', 'Rattacher': 'Add', 'Membres': 'Members',
+  'Personne': 'Person', 'Adresse': 'Address', 'Depuis': 'Since', 'vous': 'you', 'Retirer': 'Remove',
+  'Personne rattachée.': 'Person added.',
+  // Notifications
+  'Faits notables de l\'organisation : campagnes planifiées exécutées, référentiels mis à jour.': "Notable events for the organization: scheduled campaigns run, frameworks updated.",
+  'Aucune notification pour l\'instant.': 'No notifications yet.',
+  // Journal
+  "Chaque action sensible est enregistrée avec son horodatage et son adresse d'origine. Le journal est en lecture seule : il ne peut être ni modifié ni effacé depuis l'interface.": "Every sensitive action is logged with its timestamp and originating address. The log is read-only: it cannot be edited or cleared from the interface.",
+  'Aucune activité enregistrée.': 'No activity recorded.',
+  // Messages de validation / succes statiques
+  'Renseignez votre adresse e-mail.': 'Enter your email address.',
+  'Choisissez un mot de passe.': 'Choose a password.',
+  'Mot de passe mis à jour. Connectez-vous.': 'Password updated. Please sign in.',
+  'Adresse vérifiée. Vous pouvez vous connecter.': 'Address verified. You can now sign in.',
+  'Renseignez votre e-mail et votre mot de passe.': 'Enter your email and password.',
+  'Aucun constat en attente : tous ont été traités ou écartés.': 'No findings pending: all have been handled or dismissed.',
+  'Organisation supprimée.': 'Organization deleted.',
+  'Organisation supprimée. Créez-en une nouvelle pour continuer, ou': 'Organization deleted. Create a new one to continue, or',
+  'fermez la session': 'sign out',
+  "Vous avez quitté l'organisation.": 'You have left the organization.',
+  'Indiquez un nom.': 'Enter a name.',
+  'Organisation créée.': 'Organization created.',
+  'Renseignez les deux mots de passe.': 'Enter both passwords.',
+  'Mot de passe mis à jour.': 'Password updated.',
+  'Export téléchargé.': 'Export downloaded.',
+};
+// Pour les textes qui ne passent jamais par le DOM (confirm(), alert(),
+// messages d'erreur bruts) : traduireDOM() ne peut pas les atteindre, donc
+// recherche directe dans le dictionnaire au point d'appel.
+function tr(fr) { return LANG === 'en' && TRAD_EN[fr] ? TRAD_EN[fr] : fr; }
+// Memorise le texte francais d'origine sur le noeud lui-meme (proprietes JS
+// non standard, jamais serialisees) au premier passage, puis reconstruit
+// TOUJOURS a partir de cet original a chaque appel — plutot que de partir du
+// dernier texte affiche. Sans ca, un aller-retour EN -> FR ne restaurait pas
+// le francais : on retraduisait un noeud deja passe en anglais, jamais trouve
+// tel quel dans le dictionnaire, et le texte restait bloque en anglais (bug
+// constate par le test E2E toggle FR<->EN).
+// Le contenu genere dynamiquement (poser()) echappe a ce probleme de toute
+// facon : innerHTML recree des noeuds neufs a chaque rendu, dont la valeur
+// de depart est toujours le francais du gabarit JS (source de verite).
+function traduireDOM(racine) {
+  if (!racine) return;
+  const marcheur = document.createTreeWalker(racine, NodeFilter.SHOW_TEXT);
+  const noeuds = [];
+  let n; while ((n = marcheur.nextNode())) noeuds.push(n);
+  for (const noeud of noeuds) {
+    if (noeud._fr === undefined) noeud._fr = noeud.nodeValue;
+    const brut = noeud._fr;
+    // Les chaines sources sont formatees sur plusieurs lignes (litteraux
+    // gabarits indentes) : on normalise les espaces/retours a la ligne pour
+    // la recherche dans le dictionnaire, independamment de la mise en forme
+    // du code source qui les a produites.
+    const nu = brut.replace(/\s+/g, ' ').trim();
+    if (LANG === 'en' && nu && TRAD_EN[nu]) {
+      const debut = /^\s/.test(brut) ? ' ' : '';
+      const fin = /\s$/.test(brut) ? ' ' : '';
+      noeud.nodeValue = debut + TRAD_EN[nu] + fin;
+    } else {
+      noeud.nodeValue = brut;
+    }
+  }
+  if (racine.querySelectorAll) {
+    // rr-theme/rr-langue gerent eux-memes leurs attributs (appliquerTheme/
+    // appliquerLangue) : les exclure evite tout risque de memoriser par
+    // erreur un libelle anglais comme s'il etait "l'original francais".
+    racine.querySelectorAll('[placeholder],[title],[aria-label]:not(#rr-theme):not(#rr-langue)').forEach(el => {
+      if (!el._frAttrs) {
+        el._frAttrs = {};
+        ['placeholder', 'title', 'aria-label'].forEach(attr => {
+          const v = el.getAttribute(attr);
+          if (v !== null) el._frAttrs[attr] = v;
+        });
+      }
+      ['placeholder', 'title', 'aria-label'].forEach(attr => {
+        const orig = el._frAttrs[attr];
+        if (orig === undefined) return;
+        el.setAttribute(attr, (LANG === 'en' && TRAD_EN[orig]) || orig);
+      });
+    });
+  }
+}
+traduireDOM(document.body);
+appliquerTheme();
+appliquerLangue();
+
 // Memes tracés que la sidebar (nav.rail), reutilises pour colorer le titre
 // de chaque page — une identite visuelle coherente d'un bout a l'autre.
 const ICONES_PAGE = {
@@ -627,7 +936,9 @@ async function demanderReinit(btn) {
   poser('msg-accueil', ''); chargerBouton(btn, true);
   try {
     await appel('/api/v1/auth/password-reset', { method:'POST', body: JSON.stringify({ email }) });
-    poser('msg-accueil', `<div class="succes">Si un compte existe pour cette adresse, un lien de réinitialisation vient d'être envoyé.</div>`);
+    poser('msg-accueil', `<div class="succes">${LANG === 'en'
+      ? 'If an account exists for this address, a reset link has just been sent.'
+      : "Si un compte existe pour cette adresse, un lien de réinitialisation vient d'être envoyé."}</div>`);
   } catch (e) { poser('msg-accueil', echoue(e)); } finally { chargerBouton(btn, false); }
 }
 
@@ -720,7 +1031,9 @@ async function renvoyerVerification() {
   poser('msg-accueil', attente('Envoi'));
   try {
     await appel('/api/v1/auth/resend-verification', { method:'POST', body: JSON.stringify({ email }) });
-    poser('msg-accueil', `<div class="succes">Si ce compte existe et n'est pas encore vérifié, un nouveau lien vient d'être envoyé à ${h(email)}.</div>`);
+    poser('msg-accueil', `<div class="succes">${LANG === 'en'
+      ? `If this account exists and is not yet verified, a new link has just been sent to ${h(email)}.`
+      : `Si ce compte existe et n'est pas encore vérifié, un nouveau lien vient d'être envoyé à ${h(email)}.`}</div>`);
   } catch (e) { poser('msg-accueil', echoue(e)); }
 }
 
@@ -729,14 +1042,17 @@ async function sInscrire(btn) {
     full_name: $('i-nom').value.trim(), organization_name: $('i-org').value.trim(),
     email: $('i-mail').value.trim(), password: $('i-mdp').value, accept_terms: $('i-cgu').checked,
   };
-  if (!charge.accept_terms) return poser('msg-accueil', echoue({ message:"Vous devez accepter les conditions d'utilisation et la politique de confidentialité pour créer un compte." }));
+  if (!charge.accept_terms) return poser('msg-accueil', echoue({ message: LANG === 'en'
+    ? 'You must accept the terms of use and privacy policy to create an account.'
+    : "Vous devez accepter les conditions d'utilisation et la politique de confidentialité pour créer un compte." }));
   poser('msg-accueil', ''); chargerBouton(btn, true);
   try {
     await appel('/api/v1/auth/register', { method:'POST', body: JSON.stringify(charge) });
     montrerPanneau('p-connexion');
     $('c-mail').value = charge.email;
-    poser('msg-accueil', `<div class="succes">Compte créé. Un lien de vérification a été envoyé à ${h(charge.email)} —
-      ouvrez-le (pensez aux indésirables) avant de vous connecter.</div>`);
+    poser('msg-accueil', `<div class="succes">${LANG === 'en'
+      ? `Account created. A verification link has been sent to ${h(charge.email)} — open it (check your spam folder) before signing in.`
+      : `Compte créé. Un lien de vérification a été envoyé à ${h(charge.email)} — ouvrez-le (pensez aux indésirables) avant de vous connecter.`}</div>`);
   } catch (e) { poser('msg-accueil', echoue(e)); } finally { chargerBouton(btn, false); }
 }
 
@@ -810,6 +1126,15 @@ const IC_TENDANCE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const IC_CAMPAGNES = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6a1 1 0 0 1 1 1v1H8V4a1 1 0 0 1 1-1Z"/><path d="M5 6h14v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6Z"/><path d="m9 13 2 2 4-4"/></svg>';
 const IC_POINTS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>';
 const couleurScore = s => s >= 80 ? 'valide' : s >= 50 ? 'ambre' : 'sceau';
+// Code de referentiel tel qu'affiche. Corrige au passage un bug preexistant
+// (independant de la traduction) : (code||'').toUpperCase() affichait
+// "AI_ACT" avec le tiret bas brut au lieu de "AI Act".
+const SIGLE_CADRE = { rgpd: 'RGPD', nis2: 'NIS2', ai_act: 'AI Act', dora: 'DORA', csrd: 'CSRD' };
+const codeCadre = code => {
+  const c = (code || '').toLowerCase();
+  if (LANG === 'en' && c === 'rgpd') return 'GDPR';
+  return SIGLE_CADRE[c] || (code || '').toUpperCase();
+};
 
 async function vueTableau() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('tableau', 'Tableau de bord')}</div>
@@ -840,7 +1165,7 @@ async function vueTableau() {
         <div class="carte">
           <span class="carte-ic">${IC_CAMPAGNES}</span>
           <span class="n">${audits.length}</span><span class="l">Campagnes</span>
-          <div class="d">${termines} terminée${termines > 1 ? 's' : ''}</div></div>
+          <div class="d">${termines} ${LANG === 'en' ? 'completed' : 'terminée' + (termines > 1 ? 's' : '')}</div></div>
         <div class="carte">
           <span class="carte-ic">${IC_POINTS}</span>
           <span class="n">${notes.length}</span><span class="l">Points de mesure</span>
@@ -888,7 +1213,7 @@ function tableAudits(audits) {
     <tbody>${audits.map(a => `
       <tr class="cliquable" onclick="location.hash='#/audit/${a.id}'">
         <td>${h(a.title)}</td>
-        <td class="mono">${h((a.framework || '').toUpperCase())}</td>
+        <td class="mono">${h(codeCadre(a.framework))}</td>
         <td><span class="etiq ${a.status === 'completed' ? 'e-ok' : 'e-neutre'}">${h(ETAT_AUDIT[a.status] || a.status)}</span></td>
         <td class="mono">${pilleScore(a.compliance_score)}</td>
         <td class="mono">${jour(a.completed_at)}</td>
@@ -900,7 +1225,7 @@ async function vueAudits() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('audits', "Campagnes d'audit")}</div></div>
     <h2>Ouvrir une campagne</h2>
     <div class="grille">
-      <div><label for="n-titre">Intitulé</label><input id="n-titre" value="Audit RGPD ${new Date().getFullYear()}"></div>
+      <div><label for="n-titre">Intitulé</label><input id="n-titre" value="${LANG === 'en' ? 'GDPR Audit' : 'Audit RGPD'} ${new Date().getFullYear()}"></div>
       <div><label for="n-ref">Référentiel</label><select id="n-ref"></select></div>
     </div>
     <button onclick="creerCampagne()">Ouvrir la campagne</button>
@@ -913,11 +1238,22 @@ async function vueAudits() {
   } catch (e) { poser('z', echoue(e)); }
 }
 
+// Noms complets des referentiels tels que renvoyes par l'API : texte libre
+// en base (metadonnees d'ingestion), toujours en francais. Seuls ces 5
+// codes existent dans l'application, donc une table de correspondance cote
+// frontend suffit pour l'anglais, sans toucher au backend/a la base.
+const NOM_CADRE_EN = {
+  rgpd: 'General Data Protection Regulation (EU) 2016/679',
+  nis2: 'Directive (EU) 2022/2555 (NIS 2)',
+  ai_act: 'Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence',
+  dora: 'Regulation (EU) 2022/2554 on digital operational resilience for the financial sector',
+  csrd: 'Directive (EU) 2022/2464 on corporate sustainability reporting',
+};
 async function chargerReferentiels(id) {
-  let liste = [['rgpd','RGPD'],['nis2','NIS2'],['ai_act','AI Act'],['dora','DORA'],['csrd','CSRD']];
+  let liste = [['rgpd', LANG === 'en' ? 'GDPR' : 'RGPD'],['nis2','NIS2'],['ai_act','AI Act'],['dora','DORA'],['csrd','CSRD']];
   try {
     const f = await appel('/api/v1/frameworks');
-    if (Array.isArray(f) && f.length) liste = f.map(x => [x.code, x.name || x.code.toUpperCase()]);
+    if (Array.isArray(f) && f.length) liste = f.map(x => [x.code, (LANG === 'en' && NOM_CADRE_EN[x.code]) || x.name || x.code.toUpperCase()]);
   } catch {}
   poser(id, liste.map(([c, n]) => `<option value="${c}">${h(n)}</option>`).join(''));
 }
@@ -947,7 +1283,7 @@ async function vueAudit(auditId) {
 
     poser('vue', `
       <div class="tete">
-        <div><div class="eyebrow">${h((audit.framework || '').toUpperCase())} · ${h(ETAT_AUDIT[audit.status] || audit.status)}</div>
+        <div><div class="eyebrow">${h(codeCadre(audit.framework))} · ${h(ETAT_AUDIT[audit.status] || audit.status)}</div>
           ${titreIcone('audits', audit.title)}</div>
         <div class="rangee">
           <button class="discret" onclick="location.hash='#/audits'">Toutes les campagnes</button>
@@ -981,6 +1317,7 @@ async function vueAudit(auditId) {
 }
 
 const CADENCE = { weekly: 'Hebdomadaire', monthly: 'Mensuelle', quarterly: 'Trimestrielle' };
+const CADENCE_EN = { weekly: 'weekly', monthly: 'monthly', quarterly: 'quarterly' };
 
 async function chargerPlanification(auditId) {
   try {
@@ -995,7 +1332,9 @@ function rendrePlanification(auditId, s) {
   if (s && s.is_active) {
     return `<div class="carte" style="max-width:420px">
       <span class="l">Planification active</span>
-      <p style="margin:6px 0 0;font-size:14px">Cadence ${CADENCE[s.cadence].toLowerCase()}, prochaine exécution le ${jour(s.next_run_at)}.</p>
+      <p style="margin:6px 0 0;font-size:14px">${LANG === 'en'
+        ? `${CADENCE_EN[s.cadence].charAt(0).toUpperCase() + CADENCE_EN[s.cadence].slice(1)} cadence, next run on ${jour(s.next_run_at)}.`
+        : `Cadence ${CADENCE[s.cadence].toLowerCase()}, prochaine exécution le ${jour(s.next_run_at)}.`}</p>
       <div class="rangee" style="margin-top:10px"><button class="petit discret" onclick="annulerPlanification('${auditId}')">Désactiver</button></div>
     </div>`;
   }
@@ -1104,7 +1443,7 @@ async function verser(auditId, fichiers) {
 }
 
 async function supprimerCampagne(auditId) {
-  if (!confirm("Supprimer définitivement cette campagne, ses pièces, ses constats et ses rapports ?")) return;
+  if (!confirm(tr("Supprimer définitivement cette campagne, ses pièces, ses constats et ses rapports ?"))) return;
   try {
     await appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}`, { method:'DELETE' });
     location.hash = '#/audits';
@@ -1138,7 +1477,7 @@ async function telecharger(auditId, version) {
   try {
     const r = await fetch(`${API}/api/v1/orgs/${E.orgId}/audits/${auditId}/reports/${version}/download`,
       { headers: { Authorization: 'Bearer ' + E.jeton } });
-    if (!r.ok) throw new Error('Le rapport n’a pas pu être téléchargé (erreur ' + r.status + ').');
+    if (!r.ok) throw new Error((LANG === 'en' ? 'The report could not be downloaded (error ' : 'Le rapport n’a pas pu être téléchargé (erreur ') + r.status + ').');
     const a = document.createElement('a');
     a.href = URL.createObjectURL(await r.blob());
     a.download = `rapport-audit-v${version}.html`;
@@ -1154,7 +1493,7 @@ async function telechargerPDF(auditId, version, bouton) {
   try {
     const r = await fetch(`${API}/api/v1/orgs/${E.orgId}/audits/${auditId}/reports/${version}/download.pdf`,
       { headers: { Authorization: 'Bearer ' + E.jeton } });
-    if (!r.ok) throw new Error('Le PDF n’a pas pu être généré (erreur ' + r.status + ').');
+    if (!r.ok) throw new Error((LANG === 'en' ? 'The PDF could not be generated (error ' : 'Le PDF n’a pas pu être généré (erreur ') + r.status + ').');
     const a = document.createElement('a');
     a.href = URL.createObjectURL(await r.blob());
     a.download = `rapport-audit-v${version}.pdf`;
@@ -1258,7 +1597,7 @@ async function changerSuivi(auditId, findingId, statut, champ) {
   try {
     await appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}/findings/${findingId}`,
       { method:'PATCH', body: JSON.stringify({ status: statut }) });
-  } catch (e) { alert(e.message); }
+  } catch (e) { alert(tr(e.message)); }
   champ.disabled = false;
 }
 
@@ -1287,7 +1626,7 @@ async function vueRemediation() {
     const plusieurs = terminees.length > 1;
     const constats = parCampagne.flatMap(({ audit, constats }) => constats.map(c => ({
       ...c, _auditId: audit.id,
-      _campagne: `${(audit.framework || '').toUpperCase()} · ${audit.title}`,
+      _campagne: `${codeCadre(audit.framework)} · ${audit.title}`,
     })));
 
     const ordre = { critical:0, major:1, minor:2, info:3 };
@@ -1342,7 +1681,7 @@ async function chargerCrosswalks() {
         </div>
         <div class="corps">
           <h3>${h(c.source_title)}</h3>
-          <p><strong>${h((c.target_framework || '').toUpperCase())} — ${h(c.target_reference)}</strong> · ${h(c.target_title)}</p>
+          <p><strong>${h(codeCadre(c.target_framework))} — ${h(c.target_reference)}</strong> · ${h(c.target_title)}</p>
           ${c.rationale ? `<blockquote>${h(c.rationale)}</blockquote>` : ''}
         </div>
       </article>`).join(''));
@@ -1381,14 +1720,14 @@ async function chargerReferentielDetail() {
     poser('z-version', courante ? `
       <div class="carte" style="max-width:520px">
         <span class="l">Version en vigueur</span>
-        <p style="margin:6px 0 0;font-size:14px">${h(courante.label)} · ingérée le ${instant(courante.ingested_at)}</p>
+        <p style="margin:6px 0 0;font-size:14px">${h(courante.label)} · ${LANG === 'en' ? 'ingested on' : 'ingérée le'} ${instant(courante.ingested_at)}</p>
         ${courante.change_note ? `<p style="margin:4px 0 0;font-size:13px;color:var(--sourdine)">${h(courante.change_note)}</p>` : ''}
       </div>
       ${versions.length > 1 ? `<details style="margin-top:10px">
         <summary style="cursor:pointer;font-size:13px;color:var(--sourdine)">Historique (${versions.length} versions)</summary>
         <table style="margin-top:8px"><thead><tr><th class="mono">Version</th><th>Ingérée le</th><th>Note</th></tr></thead>
         <tbody>${versions.map(v => `<tr>
-          <td class="mono">${h(v.label)}${v.is_current ? ' (courante)' : ''}</td>
+          <td class="mono">${h(v.label)}${v.is_current ? (LANG === 'en' ? ' (current)' : ' (courante)') : ''}</td>
           <td class="mono">${instant(v.ingested_at)}</td>
           <td>${h(v.change_note || '—')}</td>
         </tr>`).join('')}</tbody></table>
@@ -1441,7 +1780,9 @@ function chargerMesOrganisations() {
   poser('z-orgs', E.orgs.length ? `<table><thead><tr><th>Organisation</th><th>Rôle</th><th></th><th></th></tr></thead>
     <tbody>${E.orgs.map(o => `<tr>
       <td>${h(o.name)}</td>
-      <td>${h(ROLE[o.my_role] || o.my_role)} ${o.member_count > 1 ? `· ${o.member_count} membres` : '· vous seul(e)'}</td>
+      <td>${h(ROLE[o.my_role] || o.my_role)} ${o.member_count > 1
+        ? `· ${o.member_count} ${LANG === 'en' ? 'members' : 'membres'}`
+        : (LANG === 'en' ? '· only you' : '· vous seul(e)')}</td>
       <td>${o.id === E.orgId ? '<span class="etiq e-ok">Active</span>' : ''}</td>
       <td>${o.my_role === 'owner' && o.member_count === 1
         ? `<button class="discret" style="border-color:var(--sceau);color:var(--sceau)" onclick="supprimerOrganisation('${o.id}')">Supprimer</button>`
@@ -1461,7 +1802,10 @@ async function rafraichirOrganisations(orgIdRetiree) {
 
 async function supprimerOrganisation(orgId) {
   const org = E.orgs.find(o => o.id === orgId);
-  if (!confirm(`Supprimer définitivement « ${org?.name || 'cette organisation'} » et tout ce qu'elle contient (campagnes, pièces, rapports) ? Cette action est irréversible.`)) return;
+  const nomOrg = org?.name || (LANG === 'en' ? 'this organization' : 'cette organisation');
+  if (!confirm(LANG === 'en'
+    ? `Permanently delete "${nomOrg}" and everything it contains (campaigns, files, reports)? This action is irreversible.`
+    : `Supprimer définitivement « ${nomOrg} » et tout ce qu'elle contient (campagnes, pièces, rapports) ? Cette action est irréversible.`)) return;
   poser('msg-org', attente('Suppression'));
   try {
     await appel(`/api/v1/orgs/${orgId}`, { method:'DELETE' });
@@ -1475,7 +1819,10 @@ async function supprimerOrganisation(orgId) {
 
 async function quitterOrganisation(orgId) {
   const org = E.orgs.find(o => o.id === orgId);
-  if (!confirm(`Quitter « ${org?.name || 'cette organisation'} » ? Vous perdrez l'accès à ses campagnes et devrez être réinvité(e) pour y revenir.`)) return;
+  const nomOrgQ = org?.name || (LANG === 'en' ? 'this organization' : 'cette organisation');
+  if (!confirm(LANG === 'en'
+    ? `Leave "${nomOrgQ}"? You will lose access to its campaigns and will need to be re-invited to come back.`
+    : `Quitter « ${nomOrgQ} » ? Vous perdrez l'accès à ses campagnes et devrez être réinvité(e) pour y revenir.`)) return;
   poser('msg-org', attente('Sortie'));
   try {
     await appel(`/api/v1/orgs/${orgId}/members/${E.moi.id}`, { method:'DELETE' });
@@ -1515,7 +1862,7 @@ async function changerMotDePasse() {
 }
 
 async function deconnecterPartout() {
-  if (!confirm('Déconnecter tous les appareils, y compris celui-ci ?')) return;
+  if (!confirm(tr('Déconnecter tous les appareils, y compris celui-ci ?'))) return;
   try {
     await appel('/api/v1/auth/logout-all', { method:'POST' });
     definirJeton(null);
@@ -1538,7 +1885,7 @@ async function exporterDonnees() {
 }
 
 async function supprimerMonCompte() {
-  if (!confirm('Supprimer définitivement votre compte ? Cette action est irréversible.')) return;
+  if (!confirm(tr('Supprimer définitivement votre compte ? Cette action est irréversible.'))) return;
   try {
     await appel('/api/v1/privacy/me', { method:'DELETE' });
     definirJeton(null);
@@ -1698,7 +2045,7 @@ async function ajouterMembre() {
 }
 
 async function retirerMembre(userId) {
-  if (!confirm("Retirer cette personne de l'organisation ?")) return;
+  if (!confirm(tr("Retirer cette personne de l'organisation ?"))) return;
   try {
     await appel(`/api/v1/orgs/${E.orgId}/members/${userId}`, { method:'DELETE' });
     chargerMembres();
@@ -1736,7 +2083,7 @@ async function vueJournal() {
     poser('z', `<div class="journal">${entrees.map(e => `
       <div class="entree">
         <div class="quand">${instant(e.created_at)}${e.ip_address ? ' · ' + h(e.ip_address) : ''}</div>
-        <div class="quoi"><code>${h(e.action)}</code>${e.entity_type ? ' sur ' + h(e.entity_type) : ''}</div>
+        <div class="quoi"><code>${h(e.action)}</code>${e.entity_type ? (LANG === 'en' ? ' on ' : ' sur ') + h(e.entity_type) : ''}</div>
       </div>`).join('')}</div>`);
   } catch (e) { poser('z', echoue(e)); }
 }

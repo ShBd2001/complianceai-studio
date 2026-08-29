@@ -42,6 +42,43 @@ def _register(page, frontend_server: str, backend_server, email: str, org: str =
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
 
 
+def test_theme_and_language_toggles_persist_across_reload(page, frontend_server, backend_server):
+    """Les deux boutons du coin superieur droit (mode sombre, FR/EN) doivent
+    changer l'affichage immediatement et survivre a une actualisation, avant
+    ET apres connexion — pas seulement un etat JS en memoire."""
+    email = _email("theme")
+    page.goto(frontend_server, wait_until="networkidle")
+
+    expect(page.locator("html")).not_to_have_attribute("data-theme", "dark")
+    page.click("#rr-theme")
+    expect(page.locator("html")).to_have_attribute("data-theme", "dark")
+
+    page.click("#rr-langue")
+    expect(page.locator("html")).to_have_attribute("lang", "en")
+    expect(page.locator("#p-connexion button:not(.lien)")).to_have_text("Sign in")
+
+    page.reload(wait_until="networkidle")
+    expect(page.locator("html")).to_have_attribute("data-theme", "dark")
+    expect(page.locator("html")).to_have_attribute("lang", "en")
+    expect(page.locator("#p-connexion button:not(.lien)")).to_have_text("Sign in")
+
+    # Bascule retour en francais pour s'inscrire avec le flux standard
+    # (verify_email/latest_email_for ne dependent pas de la langue, mais on
+    # verifie ici que re-basculer fonctionne aussi dans ce sens).
+    page.click("#rr-langue")
+    expect(page.locator("html")).not_to_have_attribute("lang", "en")
+    expect(page.locator("#p-connexion button:not(.lien)")).to_have_text("Se connecter")
+
+    _register(page, frontend_server, backend_server, email)
+    expect(page.locator("a[data-vue=\"tableau\"]")).to_be_visible()
+
+    # L'etat sombre pose avant la connexion doit rester actif dans l'appli.
+    expect(page.locator("html")).to_have_attribute("data-theme", "dark")
+    page.reload(wait_until="networkidle")
+    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    expect(page.locator("html")).to_have_attribute("data-theme", "dark")
+
+
 def test_register_then_verify_email_via_real_link(page, frontend_server, backend_server):
     """Le point precis impose par cette fonctionnalite : le compte existe des
     l'inscription, mais la connexion doit rester bloquee tant que le lien
