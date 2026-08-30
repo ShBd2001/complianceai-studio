@@ -96,10 +96,22 @@ def ingest(db: Session, connector: Connector, *, force: bool = False) -> Ingesti
 
     if current is not None:
         current.is_current = False
-        change_note = (
-            f"Evolution detectee : empreinte {current.source_sha256[:12]} "
-            f"-> {digest[:12]} le {now.date().isoformat()}."
-        )
+        if current.source_sha256 == digest:
+            # N'arrive que par --force sur un texte source inchange (la
+            # ligne 85 court-circuite deja le cas normal identique+non-force
+            # avec le statut "unchanged"). Le message doit le dire tel quel :
+            # annoncer une "evolution detectee" alors que l'empreinte est
+            # rigoureusement la meme des deux cotes de la fleche induit en
+            # erreur quiconque consulte l'historique des versions.
+            change_note = (
+                f"Reingestion forcee le {now.date().isoformat()} : "
+                f"texte source inchange (empreinte {digest[:12]})."
+            )
+        else:
+            change_note = (
+                f"Evolution detectee : empreinte {current.source_sha256[:12]} "
+                f"-> {digest[:12]} le {now.date().isoformat()}."
+            )
         # Deux versions ne peuvent pas partager le meme label. Plusieurs
         # reingestions peuvent survenir le meme jour : on suffixe jusqu'a
         # trouver un libelle libre plutot que de compter sur la seule date.

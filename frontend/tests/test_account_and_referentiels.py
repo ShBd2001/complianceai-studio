@@ -58,6 +58,33 @@ def test_referentiels_page_lists_articles_and_current_version(page, frontend_ser
     assert auditable < total
 
 
+def test_referentiel_article_expands_to_show_full_text_and_is_searchable(page, frontend_server, backend_server):
+    """Le texte integral d'un article (deja recupere par l'API mais jamais
+    affiche auparavant) doit etre consultable en un clic, et la recherche
+    doit filtrer sur le contenu reel du texte, pas seulement le titre."""
+    email = f"reftxt-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register(page, frontend_server, backend_server, email)
+
+    page.click("a[data-vue=\"referentiels\"]")
+    page.wait_for_selector("#z-req table", timeout=15000)
+
+    premiere_ligne = page.locator(".req-ligne").first
+    premiere_ligne.click()
+    expect(page.locator(".req-detail-ligne").first).to_be_visible()
+    expect(page.locator(".req-corps").first).not_to_have_text("")
+    expect(premiere_ligne).to_have_attribute("aria-expanded", "true")
+
+    # "violation" n'apparait que dans le corps de l'article 33 du referentiel
+    # factice utilise par cette suite (voir _seed.py) : un mot present dans
+    # le texte integral mais absent du titre prouve que la recherche filtre
+    # bien sur le corps de l'article, pas seulement sur reference/titre.
+    total = page.locator(".req-ligne").count()
+    page.fill("#req-recherche", "violation")
+    page.wait_for_timeout(400)
+    filtre = page.locator(".req-ligne").count()
+    assert 0 < filtre < total
+
+
 def test_create_organization_from_account_page(page, frontend_server, backend_server):
     email = f"acc-{uuid.uuid4().hex[:8]}@exemple.fr"
     _register(page, frontend_server, backend_server, email)

@@ -216,6 +216,19 @@ button.petit{padding:6px 13px;font-size:13px}
 .ref-ic{width:26px;height:26px;padding:5px;border-radius:8px;background:var(--primaire-clair);color:var(--primaire);margin-bottom:10px;box-sizing:content-box}
 .ref-chevron{width:14px;height:14px;color:var(--sourdine);transition:transform .25s ease}
 .ref-carte.ouverte .ref-chevron{transform:rotate(180deg);color:var(--primaire)}
+
+/* ---------- Articles d'un referentiel (Referentiels) ---------- */
+.req-chevron{width:14px;height:14px;margin-left:8px;vertical-align:-2px;color:var(--sourdine);transition:transform .2s ease}
+.req-ligne.ouverte .req-chevron{transform:rotate(180deg);color:var(--primaire)}
+.req-ligne.ouverte{background:var(--primaire-clair)}
+tr.req-detail-ligne td{padding:0 16px 20px;border-bottom:1px solid var(--regle-fine)}
+.req-corps{
+  font-family:var(--serif);font-size:16px;line-height:1.75;color:var(--encre);
+  max-width:72ch;white-space:pre-line;padding:16px 20px;margin-top:2px;
+  background:var(--papier);border-left:3px solid var(--primaire);
+  border-radius:0 var(--rayon-sm) var(--rayon-sm) 0;
+  animation:carte-entree .3s cubic-bezier(.2,.7,.3,1);
+}
 .ref-detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
 .ref-detail p{overflow:hidden;margin:0;padding-top:0;font-size:12.5px;line-height:1.55;color:var(--encre-doux);border-top:0 solid var(--regle-fine)}
 .ref-carte.ouverte .ref-detail{grid-template-rows:1fr}
@@ -260,6 +273,12 @@ button.petit{padding:6px 13px;font-size:13px}
 .carte-ic svg{width:16px;height:16px}
 .carte .n.n-hausse{color:var(--valide)}
 .carte .n.n-baisse{color:var(--sceau)}
+/* Le score de conformite est la metrique la plus importante du tableau de
+   bord : lui donner un corps plus grand que les trois autres cartes cree
+   une hierarchie visuelle immediate, au lieu de quatre chiffres d'egale
+   importance qui obligent a lire les libelles pour savoir lequel compte. */
+.carte-score .n{font-size:40px}
+.carte-score .n-unite{font-size:16px;font-weight:600;color:var(--sourdine);letter-spacing:0;margin-left:1px}
 .vide button{margin-top:4px}
 .amorce{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--papier);z-index:50}
 .amorce .spinner{width:26px;height:26px;border-width:3px}
@@ -725,7 +744,8 @@ const TRAD_EN = {
   "Ces correspondances sont des rapprochements courants, fournis comme point de départ. Elles ne remplacent pas une analyse juridique et doivent être validées par votre conseil avant toute décision de conformité.": "These crosswalks are commonly-cited mappings, provided as a starting point. They do not replace legal analysis and must be validated by your counsel before any compliance decision.",
   'Référentiel source': 'Source framework', 'Aucune correspondance enregistrée pour ce référentiel.': 'No crosswalk recorded for this framework.',
   // Referentiels
-  "Le texte source de chaque référentiel ingéré, tel qu'utilisé par le moteur d'audit.": "The source text of each ingested framework, exactly as used by the audit engine.",
+  "Le texte source de chaque référentiel ingéré, tel qu'utilisé par le moteur d'audit — cliquez un article pour lire son texte intégral.": "The source text of each ingested framework, exactly as used by the audit engine — click an article to read its full text.",
+  "Rechercher un article, un intitulé ou un mot du texte": "Search an article, a title or a word in the text",
   'Périmètre auditable uniquement': 'Auditable scope only', 'Articles': 'Articles',
   'Version en vigueur': 'Current version', 'Aucune version ingérée pour ce référentiel.': 'No version ingested for this framework.',
   'Note': 'Note', '(courante)': '(current)', 'Ingérée le': 'Ingested on',
@@ -1166,9 +1186,9 @@ async function vueTableau() {
 
     poser('z', `
       <div class="cartes">
-        <div class="carte">
+        <div class="carte carte-score">
           <span class="carte-ic" style="${cScore ? `--bg:var(--${cScore}-t);--fg:var(--${cScore})` : ''}">${IC_CIBLE}</span>
-          <span class="n" style="${cScore ? `color:var(--${cScore})` : ''}">${dernier ? dernier.score : '—'}</span><span class="l">Score courant</span>
+          <span class="n" style="${cScore ? `color:var(--${cScore})` : ''}">${dernier ? dernier.score : '—'}${dernier ? '<span class="n-unite">/100</span>' : ''}</span><span class="l">Score courant</span>
           <div class="d">${dernier ? jour(dernier.completed_at) : 'Aucune campagne notée'}</div></div>
         <div class="carte">
           <span class="carte-ic">${IC_TENDANCE}</span>
@@ -1703,7 +1723,7 @@ async function chargerCrosswalks() {
 /* ---------- Référentiels ---------- */
 async function vueReferentiels() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('referentiels', 'Référentiels')}</div></div>
-    <p class="chapeau">Le texte source de chaque référentiel ingéré, tel qu'utilisé par le moteur d'audit.</p>
+    <p class="chapeau">Le texte source de chaque référentiel ingéré, tel qu'utilisé par le moteur d'audit — cliquez un article pour lire son texte intégral.</p>
     <div class="rangee">
       <select class="compact" id="ref-code" onchange="chargerReferentielDetail()"></select>
       <label style="margin:0;font-size:13px;color:var(--encre-doux)">
@@ -1712,10 +1732,14 @@ async function vueReferentiels() {
     </div>
     <div id="z-version" style="margin-top:16px">${attente('Chargement')}</div>
     <h2>Articles</h2>
+    <input type="text" id="req-recherche" placeholder="Rechercher un article, un intitulé ou un mot du texte" style="max-width:340px;margin-bottom:12px" oninput="filtrerExigences()">
     <div id="z-req"></div>`);
   await chargerReferentiels('ref-code');
   chargerReferentielDetail();
 }
+
+let EXIGENCES_COURANTES = [];
+let minuteurExigences = null;
 
 async function chargerReferentielDetail() {
   const code = $('ref-code').value;
@@ -1723,6 +1747,7 @@ async function chargerReferentielDetail() {
   const auditableOnly = $('ref-auditable').checked;
   poser('z-version', attente('Chargement'));
   poser('z-req', '');
+  $('req-recherche').value = '';
   try {
     const [versions, exigences] = await Promise.all([
       appel(`/api/v1/frameworks/${code}/versions`),
@@ -1731,6 +1756,7 @@ async function chargerReferentielDetail() {
     const courante = versions.find(v => v.is_current);
     poser('z-version', courante ? `
       <div class="carte" style="max-width:520px">
+        <span class="carte-ic">${IC_LIVRE}</span>
         <span class="l">Version en vigueur</span>
         <p style="margin:6px 0 0;font-size:14px">${h(courante.label)} · ${LANG === 'en' ? 'ingested on' : 'ingérée le'} ${instant(courante.ingested_at)}</p>
         ${courante.change_note ? `<p style="margin:4px 0 0;font-size:13px;color:var(--sourdine)">${h(courante.change_note)}</p>` : ''}
@@ -1746,13 +1772,43 @@ async function chargerReferentielDetail() {
       </details>` : ''}`
       : `<p class="vide">Aucune version ingérée pour ce référentiel.</p>`);
 
-    poser('z-req', exigences.length ? `<table><thead><tr><th class="mono">Référence</th><th>Intitulé</th><th>Périmètre</th></tr></thead>
-      <tbody>${exigences.map(r => `<tr>
+    EXIGENCES_COURANTES = exigences;
+    poser('z-req', rendreExigences(exigences));
+  } catch (e) { poser('z-version', echoue(e)); }
+}
+
+function rendreExigences(liste) {
+  if (!liste.length) return `<p class="vide">Aucune exigence.</p>`;
+  return `<table><thead><tr><th class="mono">Référence</th><th>Intitulé</th><th>Périmètre</th></tr></thead>
+    <tbody>${liste.map((r, i) => `
+      <tr class="cliquable req-ligne" tabindex="0" role="button" aria-expanded="false" onclick="toggleExigence(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleExigence(${i})}">
         <td class="mono">${h(r.reference)}</td>
         <td>${h(r.title)}</td>
-        <td><span class="etiq ${r.is_auditable ? 'e-ok' : 'e-neutre'}">${r.is_auditable ? 'Auditable' : 'Structurel'}</span></td>
-      </tr>`).join('')}</tbody></table>` : `<p class="vide">Aucune exigence.</p>`);
-  } catch (e) { poser('z-version', echoue(e)); }
+        <td><span class="etiq ${r.is_auditable ? 'e-ok' : 'e-neutre'}">${r.is_auditable ? 'Auditable' : 'Structurel'}</span>
+          <svg class="req-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></td>
+      </tr>
+      <tr class="req-detail-ligne" id="req-detail-${i}" hidden><td colspan="3"><div class="req-corps">${h(r.body)}</div></td></tr>`).join('')}
+    </tbody></table>`;
+}
+
+function toggleExigence(i) {
+  const detail = $(`req-detail-${i}`);
+  const ligne = detail.previousElementSibling;
+  const ouvrir = detail.hidden;
+  detail.hidden = !ouvrir;
+  ligne.classList.toggle('ouverte', ouvrir);
+  ligne.setAttribute('aria-expanded', String(ouvrir));
+}
+
+function filtrerExigences() {
+  clearTimeout(minuteurExigences);
+  minuteurExigences = setTimeout(() => {
+    const q = ($('req-recherche').value || '').toLowerCase().trim();
+    const liste = !q ? EXIGENCES_COURANTES : EXIGENCES_COURANTES.filter(r =>
+      r.reference.toLowerCase().includes(q) || r.title.toLowerCase().includes(q)
+      || (r.body || '').toLowerCase().includes(q));
+    poser('z-req', rendreExigences(liste));
+  }, 150);
 }
 
 /* ---------- Mon compte ---------- */

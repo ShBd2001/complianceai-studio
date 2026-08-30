@@ -174,6 +174,24 @@ def test_unchanged_source_is_not_reingested(framework_ready):
     assert report.status == "unchanged"
 
 
+def test_forced_reingestion_of_unchanged_text_does_not_claim_an_evolution(framework_ready):
+    """Trouve en usage reel (capture d'ecran de l'utilisatrice) : --force sur
+    un texte source identique creait quand meme une version, avec un message
+    "Evolution detectee : empreinte X -> X" ou les deux empreintes affichees
+    etaient rigoureusement identiques -- rien n'avait pourtant evolue, seule
+    la reingestion avait ete forcee."""
+    with SessionLocal() as db:
+        report = ingest(db, FakeConnector(), force=True)
+        db.commit()
+
+        assert report.status == "updated"  # force cree une version malgre tout
+        framework = db.scalar(select(Framework).where(Framework.code == "rgpd"))
+        current = [v for v in framework.versions if v.is_current][0]
+        assert "Evolution detectee" not in (current.change_note or "")
+        assert "Reingestion forcee" in (current.change_note or "")
+        assert "texte source inchange" in (current.change_note or "")
+
+
 def test_changed_source_creates_new_version(framework_ready):
     """Le dispositif de veille : une empreinte differente cree une version."""
     with SessionLocal() as db:
