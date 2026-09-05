@@ -75,7 +75,9 @@ class Settings(BaseSettings):
     SMTP_USE_SSL: bool = False
 
     GROQ_API_KEY: str | None = None
-    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+    # llama-3.3-70b-versatile a ete definitivement arrete par Groq le 16/08/2026
+    # (404 model_not_found depuis) : bascule sur son remplacement recommande.
+    GROQ_MODEL: str = "openai/gpt-oss-120b"
     # Temperature de l'evaluation. Zero pour maximiser la reproductibilite :
     # un audit doit rendre le meme verdict sur le meme document. La
     # determination reste imparfaite — l'inference GPU n'est pas stable au bit
