@@ -14,6 +14,13 @@ import json
 import sys
 from pathlib import Path
 
+# La console Windows n'utilise pas l'UTF-8 par defaut (cp1252) : les fleches et
+# accents ci-dessous y provoquent un UnicodeEncodeError qui interrompt le
+# script avant meme d'afficher le resultat des tests. La CI (Ubuntu, UTF-8
+# natif) n'est jamais concernee ; ce correctif ne vise que l'execution locale.
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from evaluation.evaluateur import Evaluateur  # noqa: E402

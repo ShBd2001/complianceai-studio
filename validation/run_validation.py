@@ -18,6 +18,14 @@ import json
 import sys
 from pathlib import Path
 
+# La console Windows n'utilise pas l'UTF-8 par defaut (cp1252) : les fleches et
+# accents affiches par ce script y provoquent un UnicodeEncodeError qui
+# interrompt l'execution avant meme d'afficher le rapport. La CI (Ubuntu,
+# UTF-8 natif) n'est jamais concernee ; ce correctif ne vise que l'execution
+# locale sur un poste Windows.
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 # Permet l'exécution depuis n'importe quel répertoire
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 try:
