@@ -199,13 +199,19 @@ button.petit{padding:6px 13px;font-size:13px}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
 /* ---------- Etapes interactives (A propos) ---------- */
-.etapes-nav{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--regle);margin-bottom:0}
-.etape-btn{display:flex;align-items:center;gap:8px;background:none;color:var(--sourdine);border:none;border-bottom:2px solid transparent;padding:10px 4px;margin:0 22px 0 0;font-size:13.5px;font-weight:600;box-shadow:none;border-radius:0;transition:color .15s ease,border-color .15s ease}
+.etapes-nav{display:flex;margin-bottom:0;position:relative}
+.etape-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;background:none;color:var(--sourdine);border:none;padding:2px 4px 0;margin:0;font-size:11.5px;font-weight:600;text-align:center;box-shadow:none;border-radius:0;transition:color .15s ease}
+.etape-btn:not(:last-child)::after{content:"";position:absolute;top:15px;left:calc(50% + 21px);right:calc(-50% + 21px);height:2px;background:var(--regle);transition:background .25s ease;z-index:0}
+.etape-btn.fait:not(:last-child)::after{background:var(--primaire)}
 .etape-btn:hover{color:var(--encre-doux)}
-.etape-btn .etape-num{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--sourdine);font-variant-numeric:tabular-nums;transition:color .15s ease}
-.etape-btn.actif{color:var(--encre);border-bottom-color:var(--primaire)}
-.etape-btn.actif .etape-num{color:var(--primaire)}
-.etape-detail{background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:18px 20px;margin-top:18px;box-shadow:var(--ombre-sm);animation:carte-entree .35s cubic-bezier(.2,.7,.3,1)}
+.etape-cercle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--carte);border:2px solid var(--regle);color:var(--sourdine);position:relative;z-index:1;transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,color .2s ease}
+.etape-btn .etape-num{font-family:var(--mono);font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
+.etape-btn.actif .etape-cercle{border-color:var(--primaire);background:var(--primaire);color:#fff;box-shadow:0 0 0 4px var(--primaire-clair)}
+.etape-btn.fait .etape-cercle{border-color:var(--primaire);background:var(--primaire-clair);color:var(--primaire-fonce)}
+.etape-btn.actif{color:var(--encre)}
+.etape-label{max-width:14ch;line-height:1.3}
+@media(max-width:560px){.etapes-nav{flex-wrap:wrap;row-gap:16px}.etape-btn{flex:0 0 auto;min-width:64px}.etape-btn::after{display:none}}
+.etape-detail{background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:18px 20px;margin-top:22px;box-shadow:var(--ombre-sm);animation:carte-entree .35s cubic-bezier(.2,.7,.3,1)}
 .etape-detail p{margin:0;max-width:66ch;color:var(--encre-doux);font-size:14px;line-height:1.6}
 
 /* ---------- Cartes referentiels (A propos) ---------- */
@@ -216,6 +222,10 @@ button.petit{padding:6px 13px;font-size:13px}
 .ref-ic{width:26px;height:26px;padding:5px;border-radius:8px;background:var(--primaire-clair);color:var(--primaire);margin-bottom:10px;box-sizing:content-box}
 .ref-chevron{width:14px;height:14px;color:var(--sourdine);transition:transform .25s ease}
 .ref-carte.ouverte .ref-chevron{transform:rotate(180deg);color:var(--primaire)}
+.ref-ratio{margin-top:11px}
+.ref-ratio-barre{height:5px;background:var(--regle-fine);border-radius:var(--rayon-pill);overflow:hidden}
+.ref-ratio-barre span{display:block;height:100%;background:var(--grad-marque);border-radius:var(--rayon-pill);transition:width .5s cubic-bezier(.2,.7,.3,1)}
+.ref-ratio-txt{display:block;margin-top:6px;font-family:var(--mono);font-size:10px;color:var(--sourdine)}
 
 /* ---------- Articles d'un referentiel (Referentiels) ---------- */
 .req-chevron{width:14px;height:14px;margin-left:8px;vertical-align:-2px;color:var(--sourdine);transition:transform .2s ease}
@@ -234,8 +244,22 @@ tr.req-detail-ligne td{padding:0 16px 20px;border-bottom:1px solid var(--regle-f
 .ref-carte.ouverte .ref-detail{grid-template-rows:1fr}
 .ref-carte.ouverte .ref-detail p{padding-top:11px;margin-top:9px;border-top-width:1px}
 
+/* ---------- Page A propos : mise en page dediee ---------- */
+/* Contenu recentre dans une colonne de lecture, plutot que de s'etirer
+   sur toute la largeur de <main> -- sinon, quand la sidebar est repliee
+   et que <main> s'elargit, ce texte court reste colle a gauche avec un
+   grand vide a droite. */
+.ap-page{max-width:840px;margin:0 auto}
+
+.ap-stats{display:flex;gap:34px;flex-wrap:wrap;margin:2px 0 26px}
+.ap-stats div b{display:block;font-family:var(--serif);font-size:27px;font-weight:800;color:var(--encre);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ap-stats div span{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--sourdine)}
+
 /* ---------- Enonce de principe (A propos) ---------- */
-.ap-lead{font-family:var(--serif);font-size:25px;line-height:1.4;font-weight:600;color:var(--encre);max-width:52ch;margin:6px 0 34px;letter-spacing:-.01em}
+.ap-hero{position:relative;display:flex;gap:18px;align-items:flex-start;background:linear-gradient(160deg,var(--carte) 55%,var(--primaire-clair) 145%);border:1px solid var(--regle);border-radius:var(--rayon);padding:24px 26px;margin:0 0 36px;box-shadow:var(--ombre-sm)}
+.ap-hero-ic{flex:none;width:42px;height:42px;border-radius:12px;background:var(--primaire-clair);color:var(--primaire);display:flex;align-items:center;justify-content:center}
+.ap-hero-ic svg{width:21px;height:21px}
+.ap-lead{font-family:var(--serif);font-size:23px;line-height:1.4;font-weight:600;color:var(--encre);max-width:52ch;margin:0;letter-spacing:-.01em}
 .ap-lead strong{color:var(--primaire-fonce);font-weight:700}
 
 
@@ -782,6 +806,7 @@ const TRAD_EN = {
   'Directive (UE) 2022/2464': 'Directive (EU) 2022/2464', 'Durabilité et reporting extra-financier': 'Sustainability and non-financial reporting',
   "13 exigences ingérées, dont 5 auditables. Directive modificative : seuls les articles insérés (bis/ter…) portent une obligation directement opposable, le reste amende la directive comptable sans créer d'obligation propre.": "13 requirements ingested, 5 of which are auditable. An amending directive: only the inserted articles (bis/ter…) carry a directly enforceable obligation, the rest amends the accounting directive without creating an obligation of its own.",
   'Une question, un problème, un retour ?': 'A question, an issue, feedback?',
+  'Exigences ingérées': 'Requirements ingested', 'Auditables': 'Auditable', 'auditables': 'auditable',
   // Equipe
   'Les rôles déterminent ce que chaque personne peut faire : un auditeur crée et lance des campagnes, un lecteur consulte sans modifier. La personne doit déjà disposer d\'un compte.': "Roles determine what each person can do: an auditor creates and launches campaigns, a viewer can only read. The person must already have an account.",
   'Rattacher une personne': 'Add a person', 'Rôle': 'Role', 'Rattacher': 'Add', 'Membres': 'Members',
@@ -1958,24 +1983,37 @@ const ETAPES_MOTEUR = [
 const IC_ROUAGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>';
 const IC_LIVRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>';
 const IC_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>';
+const IC_BOUCLIER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>';
 const REFERENTIELS = [
-  { c:'RGPD', l:'Règlement (UE) 2016/679', d:'Protection des données à caractère personnel', ic:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>',
+  { c:'RGPD', l:'Règlement (UE) 2016/679', d:'Protection des données à caractère personnel', ic:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>', total:99, auditables:45,
     detail:"99 exigences ingérées, dont 45 retenues comme auditables (articles 5 à 49 : principes, droits des personnes, sécurité, DPO, transferts hors UE) — les dispositions institutionnelles (autorités de contrôle, CEPD) sont écartées." },
-  { c:'NIS2', l:'Directive (UE) 2022/2555', d:"Cybersécurité des réseaux et systèmes d'information", ic:'<rect x="2" y="4" width="20" height="6" rx="1"/><rect x="2" y="14" width="20" height="6" rx="1"/><path d="M6 7h.01M6 17h.01"/>',
+  { c:'NIS2', l:'Directive (UE) 2022/2555', d:"Cybersécurité des réseaux et systèmes d'information", ic:'<rect x="2" y="4" width="20" height="6" rx="1"/><rect x="2" y="14" width="20" height="6" rx="1"/><path d="M6 7h.01M6 17h.01"/>', total:46, auditables:8,
     detail:"46 exigences ingérées, dont 8 auditables : gouvernance, gestion des risques, notification d'incident — la gouvernance étatique du texte, hors sujet pour une entité auditée, est exclue." },
-  { c:'DORA', l:'Règlement (UE) 2022/2554', d:'Résilience opérationnelle numérique', ic:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/>',
+  { c:'DORA', l:'Règlement (UE) 2022/2554', d:'Résilience opérationnelle numérique', ic:'<path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/>', total:64, auditables:3,
     detail:"64 exigences ingérées, dont 3 auditables, ciblées sur le secteur financier : gestion du risque TIC, tests de résilience, encadrement des prestataires critiques." },
-  { c:'AI Act', l:'Règlement (UE) 2024/1689', d:"Gouvernance de l'intelligence artificielle", ic:'<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2 2M17.1 17.1l2 2M4.9 19.1l2-2M17.1 6.9l2-2"/>',
+  { c:'AI Act', l:'Règlement (UE) 2024/1689', d:"Gouvernance de l'intelligence artificielle", ic:'<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2 2M17.1 17.1l2 2M4.9 19.1l2-2M17.1 6.9l2-2"/>', total:113, auditables:2,
     detail:"113 exigences ingérées, dont 2 auditables, centrées sur les systèmes à haut risque : gestion des risques, qualité des données, documentation technique." },
-  { c:'CSRD', l:'Directive (UE) 2022/2464', d:'Durabilité et reporting extra-financier', ic:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 9.5 17 13c0 4-3 7-7 7Z"/><path d="M11 20c0-6 3-9 6-11"/>',
+  { c:'CSRD', l:'Directive (UE) 2022/2464', d:'Durabilité et reporting extra-financier', ic:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 9.5 17 13c0 4-3 7-7 7Z"/><path d="M11 20c0-6 3-9 6-11"/>', total:13, auditables:5,
     detail:"13 exigences ingérées, dont 5 auditables. Directive modificative : seuls les articles insérés (bis/ter…) portent une obligation directement opposable, le reste amende la directive comptable sans créer d'obligation propre." },
 ];
 
 async function vueApropos() {
-  poser('vue', `<div class="tete"><div><div class="eyebrow">Ressources</div>${titreIcone('apropos', 'À propos')}</div></div>
+  const totalExig = REFERENTIELS.reduce((s, r) => s + r.total, 0);
+  const totalAud = REFERENTIELS.reduce((s, r) => s + r.auditables, 0);
+  poser('vue', `<div class="ap-page">
+    <div class="tete"><div><div class="eyebrow">Ressources</div>${titreIcone('apropos', 'À propos')}</div></div>
     <p class="chapeau reveal">Comment fonctionne ComplianceAI Studio, et ce qu'il ne faut pas lui demander.</p>
 
-    <p class="ap-lead reveal">Chaque exigence est en <strong>manquement par défaut</strong> ; elle n'est déclarée conforme que si le modèle cite une preuve, et le code vérifie que cette citation existe vraiment.</p>
+    <div class="ap-stats reveal">
+      <div><b>${REFERENTIELS.length}</b><span>Référentiels</span></div>
+      <div><b>${totalExig}</b><span>Exigences ingérées</span></div>
+      <div><b>${totalAud}</b><span>Auditables</span></div>
+    </div>
+
+    <div class="ap-hero reveal">
+      <div class="ap-hero-ic">${IC_BOUCLIER}</div>
+      <p class="ap-lead">Chaque exigence est en <strong>manquement par défaut</strong> ; elle n'est déclarée conforme que si le modèle cite une preuve, et le code vérifie que cette citation existe vraiment.</p>
+    </div>
 
     <h2 class="reveal avec-icone"><span class="ic">${IC_ROUAGE}</span>Comment ça marche</h2>
     <p class="reveal chapeau" style="margin-bottom:18px">Cinq étapes, une par exigence — cliquez pour voir le détail.</p>
@@ -2000,6 +2038,7 @@ async function vueApropos() {
           <svg class="ref-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </div>
         <span class="n" style="font-size:19px">${h(r.c)}</span><span class="l">${h(r.l)}</span><div class="d">${h(r.d)}</div>
+        <div class="ref-ratio"><div class="ref-ratio-barre"><span style="width:${Math.round(r.auditables / r.total * 100)}%"></span></div><span class="ref-ratio-txt">${r.auditables} / ${r.total} <span>auditables</span></span></div>
         <div class="ref-detail"><p>${h(r.detail)}</p></div>
       </div>`).join('')}
     </div>
@@ -2009,7 +2048,8 @@ async function vueApropos() {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
       <div><b>Une question, un problème, un retour ?</b><span>sarahbelmiloud2001@gmail.com</span></div>
       <svg class="fleche" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-    </a>`);
+    </a>
+  </div>`);
   initEtapes();
   initReveal();
 }
@@ -2017,8 +2057,9 @@ async function vueApropos() {
 function initEtapes(actif = 0) {
   poser('z-etapes', `
     <div class="etapes-nav">${ETAPES_MOTEUR.map((e, i) => `
-      <button class="etape-btn${i === actif ? ' actif' : ''}" onclick="initEtapes(${i})">
-        <span class="etape-num">${String(i + 1).padStart(2, '0')}</span>${h(e.t)}
+      <button class="etape-btn${i === actif ? ' actif' : ''}${i < actif ? ' fait' : ''}" onclick="initEtapes(${i})">
+        <span class="etape-cercle">${i < actif ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M20 6 9 17l-5-5"/></svg>' : `<span class="etape-num">${i + 1}</span>`}</span>
+        <span class="etape-label">${h(e.t)}</span>
       </button>`).join('')}</div>
     <div class="etape-detail"><p>${h(ETAPES_MOTEUR[actif].d)}</p></div>`);
 }
