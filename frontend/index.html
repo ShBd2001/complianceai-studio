@@ -497,7 +497,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     </div>
 
     <div id="p-verification" hidden>
-      <div id="msg-verification" class="attente"><span class="spinner"></span>Vérification de votre adresse</div>
+      <div id="msg-verification" class="attente" aria-live="polite"><span class="spinner"></span>Vérification de votre adresse</div>
       <div class="rangee" style="margin-top:14px"><button class="lien" onclick="montrerPanneau('p-connexion')">Aller à la connexion</button></div>
     </div>
 
@@ -540,7 +540,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
       <div class="rangee" style="margin-top:16px"><button class="lien" onclick="montrerPanneau('p-inscription')">Retour à l'inscription</button></div>
     </div>
 
-    <div id="msg-accueil"></div>
+    <div id="msg-accueil" aria-live="polite"></div>
   </div>
   </div>
 </div>
@@ -712,6 +712,10 @@ const TRAD_EN = {
   'ComplianceAI Studio — outil d\'aide à l\'auto-évaluation, ne vaut pas preuve de conformité.': "ComplianceAI Studio — a self-assessment aid, not proof of compliance.",
   // Partagé
   'Chargement': 'Loading', 'Chargement de la campagne': 'Loading campaign', 'Envoi': 'Sending',
+  'Aucune organisation rattachée à ce compte.': 'No organization is attached to this account.',
+  'Ouverture': 'Opening', 'Suppression': 'Deleting', 'Sortie': 'Leaving', 'Création': 'Creating',
+  'Mise à jour': 'Updating', 'Rattachement': 'Adding', 'Versement des pièces': 'Uploading documents',
+  'Production du rapport': 'Generating report', "Préparation de l'export": 'Preparing the export',
   'Afficher le mot de passe': 'Show password', 'Masquer le mot de passe': 'Hide password',
   'Critique': 'Critical', 'Majeure': 'Major', 'Mineure': 'Minor', 'Information': 'Info',
   'À traiter': 'To address', 'En cours': 'In progress', 'Résolu': 'Resolved',
@@ -752,6 +756,7 @@ const TRAD_EN = {
   // Remediation
   'Tous les constats encore ouverts, toutes campagnes terminées confondues, du plus grave au plus léger. Le statut se met à jour au fil du traitement — pour revoir le détail complet d\'une campagne précise (y compris ce qui est déjà résolu), ouvrez-la depuis Campagnes d\'audit.': "All findings still open, across every completed campaign, from most to least severe. Status updates as you work through them — to review the full detail of one specific campaign (including what's already resolved), open it from Audit campaigns.",
   'Aucune campagne terminée.': 'No completed campaigns yet.', 'Résolus': 'Resolved', 'Risques acceptés': 'Accepted risks',
+  'campagnes terminées': 'completed campaigns',
   "Aucun constat en attente : tous ont été traités ou écartés.": 'No findings pending: all have been handled or dismissed.',
   // Correspondances
   "Les obligations d'un référentiel qui recoupent celles d'un autre : utile pour ne pas instruire deux fois la même preuve.": "Obligations from one framework that overlap with another: useful so you don't gather the same evidence twice.",
@@ -1108,7 +1113,7 @@ async function quitter() {
 async function demarrer() {
   E.moi = await appel('/api/v1/auth/me');
   E.orgs = await appel('/api/v1/orgs');
-  if (!E.orgs.length) throw new Error('Aucune organisation rattachée à ce compte.');
+  if (!E.orgs.length) throw new Error(tr('Aucune organisation rattachée à ce compte.'));
   E.orgId = E.orgs[0].id;
   $('accueil').hidden = true;
   $('appli').hidden = false;
@@ -1272,7 +1277,7 @@ async function vueAudits() {
       <div><label for="n-ref">Référentiel</label><select id="n-ref"></select></div>
     </div>
     <button onclick="creerCampagne()">Ouvrir la campagne</button>
-    <div id="msg-n"></div>
+    <div id="msg-n" aria-live="polite"></div>
     <h2>Historique</h2><div id="z">${attente('Chargement')}</div>`);
   chargerReferentiels('n-ref');
   try {
@@ -1341,9 +1346,9 @@ async function vueAudit(auditId) {
       <div id="z-pieces" style="margin-top:14px">${tablePieces(pieces)}</div>
       <div class="rangee" style="margin-top:16px">
         <button id="btn-run" onclick="lancerAnalyse('${auditId}')" ${pieces.length ? '' : 'disabled'}>Lancer l'analyse</button>
-        <span class="txt-sourdine" id="indice">${pieces.length ? '' : 'Au moins une pièce est nécessaire.'}</span>
+        <span class="txt-sourdine" id="indice" aria-live="polite">${pieces.length ? '' : 'Au moins une pièce est nécessaire.'}</span>
       </div>
-      <div id="msg-run"></div>
+      <div id="msg-run" aria-live="polite"></div>
 
       ${constats.length ? `<h2>Constats</h2>${barreFiltres('constats')}<div id="z-constats"></div>` : ''}
 
@@ -1685,7 +1690,7 @@ async function vueRemediation() {
         <div class="carte"><span class="n">${parEtat('resolved')}</span><span class="l">Résolus</span></div>
         <div class="carte"><span class="n">${parEtat('accepted_risk')}</span><span class="l">Risques acceptés</span></div>
       </div>
-      <h2>${plusieurs ? `${terminees.length} campagnes terminées` : `Campagne « ${h(terminees[0].title)} »`}</h2>
+      <h2>${plusieurs ? `${terminees.length} <span>campagnes terminées</span>` : `Campagne « ${h(terminees[0].title)} »`}</h2>
       ${aTraiter.length ? `${barreFiltres('remed')}<div id="z-remed"></div>`
         : `<div class="succes">Aucun constat en attente : tous ont été traités ou écartés.</div>`}`);
     if (aTraiter.length) initFiltre('remed', aTraiter, liste => poser('z-remed',
@@ -1773,7 +1778,7 @@ async function chargerReferentielDetail() {
         ${courante.change_note ? `<p style="margin:4px 0 0;font-size:13px;color:var(--sourdine)">${h(courante.change_note)}</p>` : ''}
       </div>
       ${versions.length > 1 ? `<details style="margin-top:10px">
-        <summary style="cursor:pointer;font-size:13px;color:var(--sourdine)">Historique (${versions.length} versions)</summary>
+        <summary style="cursor:pointer;font-size:13px;color:var(--sourdine)">${LANG === 'en' ? 'History' : 'Historique'} (${versions.length} versions)</summary>
         <table style="margin-top:8px"><thead><tr><th class="mono">Version</th><th>Ingérée le</th><th>Note</th></tr></thead>
         <tbody>${versions.map(v => `<tr>
           <td class="mono">${h(v.label)}${v.is_current ? (LANG === 'en' ? ' (current)' : ' (courante)') : ''}</td>
@@ -1832,7 +1837,7 @@ async function vueCompte() {
       <div><label for="co-nom">Nouvelle organisation</label><input id="co-nom" placeholder="Nom de l'organisation"></div>
     </div>
     <button id="btn-creer-org" onclick="creerOrganisation()">Créer</button>
-    <div id="msg-org"></div>
+    <div id="msg-org" aria-live="polite"></div>
 
     <h2>Sécurité</h2>
     <div class="grille">
@@ -1843,7 +1848,7 @@ async function vueCompte() {
       <button id="btn-changer-mdp" onclick="changerMotDePasse()">Changer le mot de passe</button>
       <button class="discret" onclick="deconnecterPartout()">Déconnecter tous les appareils</button>
     </div>
-    <div id="msg-secu"></div>
+    <div id="msg-secu" aria-live="polite"></div>
 
     <h2>Mes données</h2>
     <p class="chapeau">Conformément au RGPD, vous pouvez à tout moment récupérer une copie de vos données ou demander leur effacement.</p>
@@ -1851,7 +1856,7 @@ async function vueCompte() {
       <button class="discret" onclick="exporterDonnees()">Exporter mes données</button>
       <button class="discret" onclick="supprimerMonCompte()" style="border-color:var(--sceau);color:var(--sceau)">Supprimer mon compte</button>
     </div>
-    <div id="msg-rgpd"></div>`);
+    <div id="msg-rgpd" aria-live="polite"></div>`);
   chargerMesOrganisations();
 }
 
@@ -2125,7 +2130,7 @@ async function vueEquipe() {
       </select></div>
     </div>
     <button onclick="ajouterMembre()">Rattacher</button>
-    <div id="msg-m"></div>
+    <div id="msg-m" aria-live="polite"></div>
     <h2>Membres</h2><div id="z">${attente('Chargement')}</div>`);
   chargerMembres();
 }
