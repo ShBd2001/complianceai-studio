@@ -251,12 +251,11 @@ tr.req-detail-ligne td{padding:0 16px 20px;border-bottom:1px solid var(--regle-f
    grand vide a droite. */
 .ap-page{max-width:840px;margin:0 auto}
 
-.ap-stats{display:flex;gap:34px;flex-wrap:wrap;margin:2px 0 26px}
-.ap-stats div b{display:block;font-family:var(--serif);font-size:27px;font-weight:800;color:var(--encre);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.ap-stats div span{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--sourdine)}
+.ap-stats{margin-bottom:28px}
 
 /* ---------- Enonce de principe (A propos) ---------- */
-.ap-hero{position:relative;display:flex;gap:18px;align-items:flex-start;background:linear-gradient(160deg,var(--carte) 55%,var(--primaire-clair) 145%);border:1px solid var(--regle);border-radius:var(--rayon);padding:24px 26px;margin:0 0 36px;box-shadow:var(--ombre-sm)}
+.ap-hero{position:relative;display:flex;gap:18px;align-items:flex-start;background:linear-gradient(160deg,var(--carte) 55%,var(--primaire-clair) 145%);border:1px solid var(--regle);border-radius:var(--rayon);padding:24px 26px;margin:0 0 36px;box-shadow:var(--ombre-sm);transition:box-shadow .18s ease,transform .18s ease}
+.ap-hero:hover{box-shadow:var(--ombre);transform:translateY(-2px)}
 .ap-hero-ic{flex:none;width:42px;height:42px;border-radius:12px;background:var(--primaire-clair);color:var(--primaire);display:flex;align-items:center;justify-content:center}
 .ap-hero-ic svg{width:21px;height:21px}
 .ap-lead{font-family:var(--serif);font-size:23px;line-height:1.4;font-weight:600;color:var(--encre);max-width:52ch;margin:0;letter-spacing:-.01em}
@@ -807,6 +806,8 @@ const TRAD_EN = {
   "13 exigences ingérées, dont 5 auditables. Directive modificative : seuls les articles insérés (bis/ter…) portent une obligation directement opposable, le reste amende la directive comptable sans créer d'obligation propre.": "13 requirements ingested, 5 of which are auditable. An amending directive: only the inserted articles (bis/ter…) carry a directly enforceable obligation, the rest amends the accounting directive without creating an obligation of its own.",
   'Une question, un problème, un retour ?': 'A question, an issue, feedback?',
   'Exigences ingérées': 'Requirements ingested', 'Auditables': 'Auditable', 'auditables': 'auditable',
+  'Couverts par le moteur': 'Covered by the engine', 'Tous articles confondus': 'All articles combined',
+  'Réellement évaluées en audit': 'Actually assessed in an audit',
   // Equipe
   'Les rôles déterminent ce que chaque personne peut faire : un auditeur crée et lance des campagnes, un lecteur consulte sans modifier. La personne doit déjà disposer d\'un compte.': "Roles determine what each person can do: an auditor creates and launches campaigns, a viewer can only read. The person must already have an account.",
   'Rattacher une personne': 'Add a person', 'Rôle': 'Role', 'Rattacher': 'Add', 'Membres': 'Members',
@@ -1984,6 +1985,7 @@ const IC_ROUAGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const IC_LIVRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>';
 const IC_MAIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>';
 const IC_BOUCLIER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg>';
+const IC_COUCHES = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></svg>';
 const REFERENTIELS = [
   { c:'RGPD', l:'Règlement (UE) 2016/679', d:'Protection des données à caractère personnel', ic:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>', total:99, auditables:45,
     detail:"99 exigences ingérées, dont 45 retenues comme auditables (articles 5 à 49 : principes, droits des personnes, sécurité, DPO, transferts hors UE) — les dispositions institutionnelles (autorités de contrôle, CEPD) sont écartées." },
@@ -2004,10 +2006,22 @@ async function vueApropos() {
     <div class="tete"><div><div class="eyebrow">Ressources</div>${titreIcone('apropos', 'À propos')}</div></div>
     <p class="chapeau reveal">Comment fonctionne ComplianceAI Studio, et ce qu'il ne faut pas lui demander.</p>
 
-    <div class="ap-stats reveal">
-      <div><b>${REFERENTIELS.length}</b><span>Référentiels</span></div>
-      <div><b>${totalExig}</b><span>Exigences ingérées</span></div>
-      <div><b>${totalAud}</b><span>Auditables</span></div>
+    <div class="cartes ap-stats">
+      <div class="carte">
+        <span class="carte-ic">${IC_LIVRE}</span>
+        <span class="n" data-cible="${REFERENTIELS.length}">0</span><span class="l">Référentiels</span>
+        <div class="d">Couverts par le moteur</div>
+      </div>
+      <div class="carte">
+        <span class="carte-ic" style="--bg:var(--azur-t);--fg:var(--azur)">${IC_COUCHES}</span>
+        <span class="n" data-cible="${totalExig}">0</span><span class="l">Exigences ingérées</span>
+        <div class="d">Tous articles confondus</div>
+      </div>
+      <div class="carte">
+        <span class="carte-ic" style="--bg:var(--valide-t);--fg:var(--valide)">${IC_BOUCLIER}</span>
+        <span class="n" data-cible="${totalAud}">0</span><span class="l">Auditables</span>
+        <div class="d">Réellement évaluées en audit</div>
+      </div>
     </div>
 
     <div class="ap-hero reveal">
@@ -2052,6 +2066,21 @@ async function vueApropos() {
   </div>`);
   initEtapes();
   initReveal();
+  animerCompteurs();
+}
+
+function animerCompteurs() {
+  const reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('#vue [data-cible]').forEach(el => {
+    const cible = parseInt(el.dataset.cible, 10);
+    if (reduit) { el.textContent = cible; return; }
+    const duree = 800, depart = performance.now();
+    (function tick(maintenant) {
+      const p = Math.min((maintenant - depart) / duree, 1);
+      el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(tick);
+    })(depart);
+  });
 }
 
 function initEtapes(actif = 0) {
