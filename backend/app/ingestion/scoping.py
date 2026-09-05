@@ -61,6 +61,49 @@ RGPD_STRUCTURAL = {1, 2, 3, 4}
 NIS2_AUDITABLE = {20, 21, 23, 24, 27, 28, 29, 30}
 NIS2_STRUCTURAL = {1, 2, 3, 4, 5, 6}
 
+# DORA : chapitres II a V section I. Ce sont les seuls chapitres qui imposent
+# des obligations directes a l'entite financiere elle-meme :
+#   5-16  gouvernance et cadre de gestion du risque lie aux TIC
+#   17-23 gestion et notification des incidents lies aux TIC
+#   24-27 tests de resilience operationnelle numerique
+#   28-30 gestion du risque lie aux prestataires tiers de TIC (principes
+#         generaux, evaluation du risque de concentration, clauses
+#         contractuelles obligatoires)
+# A partir de l'article 31, le texte bascule sur le cadre de supervision des
+# prestataires tiers CRITIQUES par les autorites europeennes de surveillance
+# (designation, pouvoirs du superviseur principal, enquetes, sanctions) : un
+# regime institutionnel entre AES et prestataires, pas une obligation pesant
+# sur l'entite financiere auditee. Anciennement determine par une detection
+# lexicale du destinataire, qui ne reconnaissait pas "entite financiere" (le
+# vocabulaire propre a DORA) et ne retenait que 3 articles sans rapport avec
+# le texte (2 champ d'application, 35 pouvoirs du superviseur, 46 autorites
+# competentes) : aucun ne constitue une obligation reelle pour un client audite.
+DORA_AUDITABLE = set(range(5, 31))
+DORA_STRUCTURAL = {1, 2, 3, 4}
+
+# AI Act : obligations substantielles pesant sur le fournisseur/deployeur d'un
+# systeme d'IA a haut risque, plus les quelques articles hors de ce bloc qui
+# creent une obligation directe independante du niveau de risque.
+#   5     pratiques interdites (s'applique a tout operateur, pas seulement
+#         aux systemes a haut risque)
+#   8-15  exigences applicables aux systemes a haut risque (gestion des
+#         risques, gouvernance des donnees, documentation technique,
+#         enregistrement, transparence, controle humain, robustesse)
+#   16-27 obligations des fournisseurs, mandataires, importateurs,
+#         distributeurs et deployeurs de ces systemes
+#   47-49 declaration UE de conformite, marquage CE, enregistrement
+#   50    obligations de transparence (deepfakes, agents conversationnels)
+#   72-73 surveillance apres commercialisation, signalement d'incidents graves
+#   86    droit a l'explication d'une decision individuelle
+# Le reste (28-46 organismes notifies, 57-71 bacs a sable et gouvernance
+# europeenne, 74 et suivants surveillance du marche, sanctions) organise
+# l'infrastructure institutionnelle de mise en oeuvre, pas les obligations du
+# client audite. Anciennement determine par la meme detection lexicale
+# defaillante que DORA, qui ne retenait que 2 articles hors sujet (33 filiales
+# des organismes notifies, 58 bacs a sable reglementaires).
+AI_ACT_AUDITABLE = {5} | set(range(8, 28)) | {47, 48, 49, 50, 72, 73, 86}
+AI_ACT_STRUCTURAL = {1, 2, 3, 4, 6, 7}
+
 # CSRD : directive modificative. Les obligations reelles sont portees par les
 # articles inseres dans la directive comptable 2013/34/UE, reconnaissables a
 # leur suffixe ordinal latin.
@@ -69,6 +112,8 @@ CSRD_INSERTED_SUFFIXES = ("bis", "ter", "quater", "quinquies", "sexies", "septie
 WHITELISTS: dict[str, tuple[set[int], set[int]]] = {
     "rgpd": (RGPD_AUDITABLE, RGPD_STRUCTURAL),
     "nis2": (NIS2_AUDITABLE, NIS2_STRUCTURAL),
+    "dora": (DORA_AUDITABLE, DORA_STRUCTURAL),
+    "ai_act": (AI_ACT_AUDITABLE, AI_ACT_STRUCTURAL),
 }
 
 # --------------------------------------------------------------------------
