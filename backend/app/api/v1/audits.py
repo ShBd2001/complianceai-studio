@@ -17,7 +17,7 @@ from fastapi import (
     UploadFile,
     status,
 )
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
 from app.api.deps import OrgContext, get_org_context, require_role
@@ -246,6 +246,24 @@ def run_audit(
     prevue.
     """
     audit = _get_audit(db, ctx, audit_id)
+
+    # Verrou consultatif non bloquant, scope a cet audit : la verification de
+    # statut ci-dessous et le lancement effectif n'etaient pas atomiques (deux
+    # requetes quasi simultanees passaient toutes les deux le garde-fou avant
+    # que l'une ou l'autre n'ait commite son changement de statut). La seconde
+    # continuait alors jusqu'a evaluer de nouveau tout le referentiel,
+    # supprimant les constats que la premiere venait d'ecrire et doublant la
+    # consommation du modele pour une seule action utilisateur (double-clic,
+    # requete rejouee). *_try_* et non bloquant : un audit peut depasser
+    # AUDIT_MAX_SECONDS, la requete concurrente doit echouer tout de suite
+    # avec un 409 clair plutot que d'attendre plusieurs minutes.
+    verrou_acquis = db.execute(
+        text("SELECT pg_try_advisory_xact_lock(hashtext(:key))"),
+        {"key": f"audit-run:{audit.id}"},
+    ).scalar()
+    if not verrou_acquis:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Audit deja en cours d'execution.")
+
     if audit.status == AuditStatus.RUNNING:
         raise HTTPException(status.HTTP_409_CONFLICT, "Audit deja en cours d'execution.")
 
@@ -397,6 +415,19 @@ def download_report_pdf(
 
     pdf_key = report.storage_key.rsplit(".", 1)[0] + ".pdf"
     pdf_path = storage_root() / pdf_key
+
+    # Verrou consultatif transactionnel, scope a ce rapport : sans lui, deux
+    # premiers telechargements simultanes du meme PDF (deux onglets, un
+    # double-clic) trouvent tous les deux le cache vide et lancent chacun leur
+    # propre navigateur Chromium headless via pdf.html_to_pdf — sur l'hebergement
+    # a 512 Mo de RAM documente dans render.yaml, deux instances Chromium
+    # concurrentes sont un chemin concret vers un OOM. Bloquant (pas *_try_*) :
+    # la generation prend environ une seconde (voir docstring de l'endpoint),
+    # la requete concurrente attend simplement son tour au lieu d'echouer.
+    # Meme mecanisme que services/reports.py::generate_report.
+    db.execute(
+        text("SELECT pg_advisory_xact_lock(hashtext(:key))"), {"key": f"report-pdf:{report.id}"}
+    )
     if pdf_path.exists():
         content = pdf_path.read_bytes()
     else:
