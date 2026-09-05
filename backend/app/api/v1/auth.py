@@ -150,9 +150,24 @@ def register(
         db.flush()
     except IntegrityError:
         db.rollback()
-        raise HTTPException(
-            status.HTTP_409_CONFLICT, "Un compte existe deja pour cette adresse."
-        ) from None
+        # Deux contraintes uniques peuvent declencher ce IntegrityError :
+        # l'email (users) ou le slug d'organisation (organizations), genere
+        # par _unique_slug sans garantie sous course (deux inscriptions
+        # concurrentes pour le meme nom d'entreprise peuvent toutes les deux
+        # lire "slug libre" avant que l'une n'ait commite). Sans cette
+        # distinction, un conflit de slug etait a tort rapporte comme "un
+        # compte existe deja pour cette adresse" — un email pourtant
+        # disponible, message qui bloque l'utilisateur sur un faux motif.
+        if db.scalar(select(User.id).where(User.email == email)) is not None:
+            raise HTTPException(
+                status.HTTP_409_CONFLICT, "Un compte existe deja pour cette adresse."
+            ) from None
+        # Le conflit porte donc sur le slug : regenere avec un suffixe
+        # garanti unique et reessaie une seule fois plutot que de faire
+        # echouer une inscription valide sur un hasard de calendrier.
+        org.slug = f"{_slugify(payload.organization_name)}-{uuid.uuid4().hex[:6]}"
+        db.add_all([user, org])
+        db.flush()
 
     db.add(Membership(user_id=user.id, organization_id=org.id, role=OrgRole.OWNER))
     db.add(

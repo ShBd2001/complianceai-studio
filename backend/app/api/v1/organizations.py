@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.deps import OrgContext, get_current_user, get_org_context, require_role
@@ -81,7 +82,20 @@ def create_organization(
         headcount=payload.headcount,
     )
     db.add(org)
-    db.flush()
+    try:
+        db.flush()
+    except IntegrityError:
+        # Le pre-controle ci-dessus n'est pas atomique avec cette ecriture :
+        # deux creations concurrentes pour le meme nom d'organisation peuvent
+        # toutes les deux lire "slug libre" avant que l'une ou l'autre n'ait
+        # commite. Sans ce rattrapage, la course se terminait en 500 generique
+        # (geree seulement par le handler global) au lieu d'aboutir avec un
+        # slug rendu unique — meme correctif que auth.py::register pour la
+        # meme cause.
+        db.rollback()
+        org.slug = f"{slug}-{uuid.uuid4().hex[:6]}"
+        db.add(org)
+        db.flush()
     db.add(Membership(user_id=user.id, organization_id=org.id, role=OrgRole.OWNER))
     activity.log(
         db, action="org.created", actor_id=user.id, organization_id=org.id,
