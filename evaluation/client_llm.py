@@ -20,7 +20,9 @@ from dataclasses import dataclass, field
 
 logger = logging.getLogger(__name__)
 
-MODELE_DEFAUT = "llama-3.3-70b-versatile"
+# llama-3.3-70b-versatile a ete definitivement arrete par Groq le 16/08/2026 ;
+# openai/gpt-oss-120b est son remplacement recommande.
+MODELE_DEFAUT = "openai/gpt-oss-120b"
 
 
 @dataclass
