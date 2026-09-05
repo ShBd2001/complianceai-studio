@@ -6,7 +6,12 @@ Deux implementations derriere une interface commune :
   sans appel reseau apres le telechargement initial, adapte au francais.
 - HashingEmbedder : repli deterministe sans dependance. La qualite semantique
   est nulle, mais il permet de faire tourner l'application et les tests sans
-  telecharger de modele. Jamais utilise en production.
+  telecharger de modele. C'est en fait le backend utilise en production
+  aujourd'hui (EMBEDDING_BACKEND=hashing dans render.yaml) : le plan gratuit
+  Render (512 Mo de RAM) ne suffit pas a charger fastembed en plus du reste
+  du processus. La recherche "semantique" en production n'est donc pas
+  semantique — compromis assume, documente dans render.yaml, a lever des que
+  l'hebergement dispose de plus de RAM.
 
 Le choix est fait au demarrage selon la configuration et la disponibilite du
 paquet, jamais au milieu d'un traitement.
