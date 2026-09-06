@@ -1633,7 +1633,6 @@ function carte(c, auditId, campagne) {
       ${c.recommendation ? `<div class="remede"><strong>Action corrective</strong>${h(c.recommendation)}</div>` : ''}
       <div class="provenance">
         ${campagne ? `<span class="mono">${h(campagne)}</span>` : ''}
-        <span>${h(c.model_used || '—')}${c.confidence != null ? ` · ${LANG === 'en' ? 'confidence' : 'confiance'} ${Math.round(c.confidence * 100)} %` : ''}</span>
         ${suivi}
       </div>
     </div>
@@ -1746,7 +1745,6 @@ async function vueReferentiels() {
         <input type="checkbox" id="ref-auditable" onchange="chargerReferentielDetail()"> Périmètre auditable uniquement
       </label>
     </div>
-    <div id="z-version" style="margin-top:16px">${attente('Chargement')}</div>
     <h2>Articles</h2>
     <input type="text" id="req-recherche" placeholder="Rechercher un article, un intitulé ou un mot du texte" style="max-width:340px;margin-bottom:12px" oninput="filtrerExigences()">
     <div id="z-req"></div>`);
@@ -1761,36 +1759,13 @@ async function chargerReferentielDetail() {
   const code = $('ref-code').value;
   if (!code) return;
   const auditableOnly = $('ref-auditable').checked;
-  poser('z-version', attente('Chargement'));
-  poser('z-req', '');
+  poser('z-req', attente('Chargement'));
   $('req-recherche').value = '';
   try {
-    const [versions, exigences] = await Promise.all([
-      appel(`/api/v1/frameworks/${code}/versions`),
-      appel(`/api/v1/frameworks/${code}/requirements?limit=500&auditable_only=${auditableOnly}`),
-    ]);
-    const courante = versions.find(v => v.is_current);
-    poser('z-version', courante ? `
-      <div class="carte" style="max-width:520px">
-        <span class="carte-ic">${IC_LIVRE}</span>
-        <span class="l">Version en vigueur</span>
-        <p style="margin:6px 0 0;font-size:14px">${h(courante.label)} · ${LANG === 'en' ? 'ingested on' : 'ingérée le'} ${instant(courante.ingested_at)}</p>
-        ${courante.change_note ? `<p style="margin:4px 0 0;font-size:13px;color:var(--sourdine)">${h(courante.change_note)}</p>` : ''}
-      </div>
-      ${versions.length > 1 ? `<details style="margin-top:10px">
-        <summary style="cursor:pointer;font-size:13px;color:var(--sourdine)">${LANG === 'en' ? 'History' : 'Historique'} (${versions.length} versions)</summary>
-        <table style="margin-top:8px"><thead><tr><th class="mono">Version</th><th>Ingérée le</th><th>Note</th></tr></thead>
-        <tbody>${versions.map(v => `<tr>
-          <td class="mono">${h(v.label)}${v.is_current ? (LANG === 'en' ? ' (current)' : ' (courante)') : ''}</td>
-          <td class="mono">${instant(v.ingested_at)}</td>
-          <td>${h(v.change_note || '—')}</td>
-        </tr>`).join('')}</tbody></table>
-      </details>` : ''}`
-      : `<p class="vide">Aucune version ingérée pour ce référentiel.</p>`);
-
+    const exigences = await appel(`/api/v1/frameworks/${code}/requirements?limit=500&auditable_only=${auditableOnly}`);
     EXIGENCES_COURANTES = exigences;
     poser('z-req', rendreExigences(exigences));
-  } catch (e) { poser('z-version', echoue(e)); }
+  } catch (e) { poser('z-req', echoue(e)); }
 }
 
 function rendreExigences(liste) {

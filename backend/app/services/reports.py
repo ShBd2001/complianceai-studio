@@ -49,7 +49,6 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
     <p>{html.escape(f.description)}</p>
     {f'<blockquote>{html.escape(f.evidence[:400])}</blockquote>' if f.evidence else ''}
     {f'<div class="reco"><strong>Action corrective</strong>{html.escape(f.recommendation)}</div>' if f.recommendation else ''}
-    <div class="provenance">{html.escape(f.model_used or "—")}{f' · confiance {f.confidence:.0%}' if f.confidence is not None else ''}</div>
   </div>
 </article>"""
 
