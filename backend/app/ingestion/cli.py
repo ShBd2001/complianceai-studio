@@ -19,7 +19,7 @@ import sys
 
 from app.db.session import SessionLocal
 from app.ingestion.crosswalks import seed_crosswalks
-from app.ingestion.eurlex import SOURCES, EurLexConnector
+from app.ingestion.eurlex import SOURCES
 from app.ingestion.runner import ingest_all
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)-8s %(message)s")
@@ -31,10 +31,13 @@ def dry_run(codes: list[str], fichier=None) -> int:
     A utiliser au premier lancement : si EUR-Lex a modifie sa structure HTML,
     le probleme se voit immediatement ici plutot qu'apres une ecriture.
     """
+    from app.ingestion.runner import _connector_for
+
     failures = 0
     for code in codes:
-        connector = EurLexConnector(code, fichier=fichier)
-        print(f"\n{'=' * 70}\n{code.upper()} — {connector.url}\n{'=' * 70}")
+        connector = _connector_for(code, fichier)
+        origine = getattr(connector, "url", "texte consolide (API Cellar)")
+        print(f"\n{'=' * 70}\n{code.upper()} — {origine}\n{'=' * 70}")
         try:
             result = connector.fetch()
         except Exception as exc:

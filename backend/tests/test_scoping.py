@@ -108,9 +108,34 @@ def test_ai_act_perimeter_size():
 
 
 def test_csrd_inserted_articles_carry_the_obligations():
+    assert classify("csrd", "Article 19 bis", "information en matiere de durabilite").auditable is True
     assert classify("csrd", "Article 29 quater", "La Commission adopte").auditable is True
     assert classify("csrd", "Article 40 bis", "Les Etats membres exigent").auditable is True
     assert classify("csrd", "Article 5", "Transposition").auditable is False
+
+
+def test_csrd_excludes_unrelated_tax_reporting_articles():
+    """48 bis a 48 septies sont inseres dans le meme texte comptable par la
+    directive sur la publication d'informations relatives a l'impot sur les
+    societes (UE) 2021/2101, pas par le CSRD -- meme suffixe latin, sujet
+    different. Une detection par simple suffixe les confondrait."""
+    for suffixe in ("bis", "ter", "quater", "quinquies", "sexies", "septies"):
+        assert classify("csrd", f"Article 48 {suffixe}", "declaration relative a l'impot").auditable is False
+    # Ceux-la sont administratifs (dates d'application, reexamen, transitoires),
+    # pas des obligations de fond, meme s'ils portent aussi un suffixe latin.
+    assert classify("csrd", "Article 48 octies", "date d'ouverture").auditable is False
+    assert classify("csrd", "Article 48 decies", "dispositions transitoires").auditable is False
+
+
+def test_csrd_perimeter_size():
+    """13 articles precisement portent une obligation de durabilite opposable,
+    sur les 77 articles de la directive comptable consolidee."""
+    auditable = [
+        (n, s) for n in range(1, 56)
+        for s in ("bis", "ter", "quater", "quater bis", "quinquies", "sexies", "septies")
+        if classify("csrd", f"Article {n} {s}", "texte").auditable
+    ]
+    assert len(auditable) == 13
 
 
 def test_unknown_framework_falls_back_to_markers():
