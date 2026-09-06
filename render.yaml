@@ -1,36 +1,27 @@
-# Deploiement Render (offre gratuite).
-# Attention : le service se met en veille apres 15 min d'inactivite ; la
-# premiere requete suivante prend ~1 min le temps du reveil. Un cron de
-# "keep-awake" reglerait ca, mais Render facture tout service cron au moins
-# 1 $/mois, meme le plus simple : incompatible avec une offre 100% gratuite,
-# donc volontairement absent d'ici. A ajouter a la main avant une
-# demonstration si l'attente au reveil pose probleme.
+# Deploiement Render.
+# complianceai-api tourne sur une instance Standard (1 CPU / 2 Go de RAM,
+# passee le 2026-09-06) : assez de RAM pour charger fastembed en plus du
+# reste du processus, donc EMBEDDING_BACKEND=fastembed ci-dessous plutot que
+# le repli par hachage lexical (voir app/services/embeddings.py). Apres tout
+# changement de backend d'embeddings, rejouer l'ingestion des referentiels :
+# le referentiel et les documents client doivent partager le meme espace
+# vectoriel.
 #
-# Stockage ephemere (plan free) : STORAGE_DIR (pieces versees, rapports,
-# repli local des e-mails) vit sur le disque du conteneur et disparait a
-# chaque redeploiement/redemarrage. Suffisant pour une demonstration, pas
-# pour une mise en production reelle — la solution correcte serait un disque
-# persistant Render (plan payant) ou un stockage objet externe (S3-compatible).
+# complianceai-db reste sur le plan free : la base Postgres gratuite expire
+# 30 jours apres sa creation (limite du plan free Render) : a recreer /
+# re-ingerer passe ce delai.
 #
-# La base Postgres gratuite expire 30 jours apres sa creation (limite du
-# plan free Render) : a recreer / re-ingerer passe ce delai.
+# Stockage toujours ephemere (pas encore de disque persistant Render ni de
+# stockage objet externe) : STORAGE_DIR (pieces versees, rapports, repli
+# local des e-mails) vit sur le disque du conteneur et disparait a chaque
+# redeploiement/redemarrage. Suffisant pour une demonstration, pas pour une
+# mise en production reelle.
 #
 # E-mail transactionnel via Brevo (API HTTP), pas SMTP : constate en
 # conditions reelles, Render bloque les ports sortants 25/465/587 sur son
 # plan gratuit, quels que soient les identifiants — seul du trafic HTTPS
 # (443) sort. BREVO_API_KEY reste `sync: false` : jamais dans le depot,
 # saisi a la main dans le tableau de bord Render.
-#
-# EMBEDDING_BACKEND=hashing : le plan free (512 Mo de RAM) ne suffit pas a
-# charger le modele fastembed en plus du reste du processus — verifie en
-# conditions reelles, le conteneur est tue par manque de memoire des le
-# premier audit et Render le redemarre en boucle. Le repli par hachage n'a
-# aucune qualite semantique (voir app/services/embeddings.py) : c'est un
-# compromis assume pour rester sur l'offre gratuite, pas la configuration
-# recommandee. Sur un plan avec plus de RAM, retirer cette ligne pour
-# revenir a la vraie recherche semantique — et rejouer l'ingestion des
-# referentiels ensuite, les deux cotes doivent utiliser le meme espace
-# vectoriel.
 services:
   - type: web
     name: complianceai-api
@@ -39,7 +30,7 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /health
-    plan: free
+    plan: standard
     envVars:
       - key: ENV
         value: production
@@ -61,7 +52,7 @@ services:
       - key: FRONTEND_URL
         value: https://complianceai-web.onrender.com
       - key: EMBEDDING_BACKEND
-        value: hashing
+        value: fastembed
       - key: EMAIL_FROM
         value: sasarah482@gmail.com
       - key: BREVO_API_KEY
