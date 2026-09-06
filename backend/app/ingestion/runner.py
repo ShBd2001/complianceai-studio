@@ -170,6 +170,22 @@ def ingest(db: Session, connector: Connector, *, force: bool = False) -> Ingesti
     )
 
 
+def _connector_for(code: str, fichier):
+    # CSRD est une directive modificative : le texte consolide de la
+    # directive comptable qu'elle modifie (2013/34/UE) porte les obligations
+    # sous forme d'articles de premier niveau, contrairement au texte brut de
+    # la directive CSRD elle-meme ou elles restent imbriquees dans la
+    # description des modifications. Voir csrd_consolide.py pour le detail.
+    if code == "csrd":
+        from app.ingestion.csrd_consolide import CsrdConsolideConnector
+
+        return CsrdConsolideConnector(fichier=fichier)
+
+    from app.ingestion.eurlex import EurLexConnector
+
+    return EurLexConnector(code, fichier=fichier)
+
+
 def ingest_all(
     db: Session,
     codes: list[str] | None = None,
@@ -177,10 +193,10 @@ def ingest_all(
     force: bool = False,
     fichier=None,
 ) -> list[IngestionReport]:
-    from app.ingestion.eurlex import SOURCES, EurLexConnector
+    from app.ingestion.eurlex import SOURCES
 
     targets = codes or list(SOURCES)
     return [
-        ingest(db, EurLexConnector(code, fichier=fichier), force=force)
+        ingest(db, _connector_for(code, fichier), force=force)
         for code in targets
     ]

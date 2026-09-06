@@ -104,10 +104,42 @@ DORA_STRUCTURAL = {1, 2, 3, 4}
 AI_ACT_AUDITABLE = {5} | set(range(8, 28)) | {47, 48, 49, 50, 72, 73, 86}
 AI_ACT_STRUCTURAL = {1, 2, 3, 4, 6, 7}
 
-# CSRD : directive modificative. Les obligations reelles sont portees par les
+# CSRD : directive modificative. Les obligations reelles sont portees par des
 # articles inseres dans la directive comptable 2013/34/UE, reconnaissables a
-# leur suffixe ordinal latin.
-CSRD_INSERTED_SUFFIXES = ("bis", "ter", "quater", "quinquies", "sexies", "septies")
+# leur suffixe ordinal latin (bis/ter/quater...) -- mais tous les articles a
+# suffixe latin de ce texte ne relevent pas du CSRD : la directive sur la
+# publication d'informations relatives a l'impot sur les societes (UE)
+# 2021/2101 insere elle aussi des articles "bis/ter/quater" dans le meme
+# texte comptable (48 bis a 48 septies). Une detection par simple suffixe les
+# confondrait avec les obligations de durabilite. Liste blanche par article,
+# construite depuis le texte consolide reel (voir csrd_consolide.py) :
+#   19 bis            information en matiere de durabilite (rapport de gestion)
+#   29 bis-septies     rapport consolide, normes, format electronique, portail
+#   33 bis             accessibilite sur le point d'acces unique europeen
+#   40 bis-quinquies   entreprises de pays tiers
+# Exclus a raison : 48 bis-septies (reporting fiscal pays par pays, hors sujet),
+# 48 octies-decies (dates d'application, clause de reexamen, dispositions
+# transitoires -- administratif, pas une obligation de fond).
+CSRD_ARTICLES = {
+    (19, "bis"),
+    (29, "bis"), (29, "ter"), (29, "quater"), (29, "quater bis"),
+    (29, "quinquies"), (29, "sexies"), (29, "septies"),
+    (33, "bis"),
+    (40, "bis"), (40, "ter"), (40, "quater"), (40, "quinquies"),
+}
+CSRD_REFERENCE_RE = re.compile(
+    r"article\s+(\d+)\s*(bis|ter|quater(?:\s+bis)?|quinquies|sexies|septies|"
+    r"octies|nonies|decies)?",
+    re.IGNORECASE,
+)
+
+
+def _csrd_cle(reference: str) -> tuple[int, str] | None:
+    m = CSRD_REFERENCE_RE.search(reference.lower())
+    if m is None or m.group(2) is None:
+        return None
+    suffixe = re.sub(r"\s+", " ", m.group(2).strip())
+    return int(m.group(1)), suffixe
 
 WHITELISTS: dict[str, tuple[set[int], set[int]]] = {
     "rgpd": (RGPD_AUDITABLE, RGPD_STRUCTURAL),
@@ -205,8 +237,8 @@ def classify(framework_code: str, reference: str, body: str) -> Scope:
     """Determine si une exigence est auditable chez un client."""
 
     if framework_code == "csrd":
-        # Les articles inseres portent les obligations de publication.
-        if any(suffix in reference.lower() for suffix in CSRD_INSERTED_SUFFIXES):
+        cle = _csrd_cle(reference)
+        if cle in CSRD_ARTICLES:
             return Scope(auditable=True, audience=Audience.ENTITY)
         return Scope(auditable=False, audience=Audience.MEMBER_STATE)
 
