@@ -354,9 +354,11 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .accueil-visuel::before,.accueil-visuel::after{content:"";position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none}
 .accueil-visuel::before{width:420px;height:420px;top:-140px;right:-120px;background:radial-gradient(circle,rgba(109,107,245,.35),transparent 70%)}
 .accueil-visuel::after{width:360px;height:360px;bottom:-160px;left:-100px;background:radial-gradient(circle,rgba(52,87,213,.28),transparent 70%)}
-.av-entete{position:relative;z-index:1;flex:none}
+.av-entete{position:relative;z-index:1;flex:none;display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
 .av-entete .marque{font-size:21px}
 .av-entete .marque-sous{padding:0;color:#9CA0C4}
+.av-lien-tarifs{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);color:#EDEEFC;font-family:var(--sans);font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:var(--rayon-pill);box-shadow:none;white-space:nowrap;flex:none}
+.av-lien-tarifs:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);transform:none}
 
 .av-corps{position:relative;z-index:1;margin-top:clamp(24px,5vh,64px);padding:14px 0;min-height:0}
 .av-titre{font-family:var(--serif);font-size:clamp(26px,3vh,34px);font-weight:900;line-height:1.12;letter-spacing:-.025em;margin:0 0 10px;max-width:14ch;text-wrap:balance}
@@ -402,6 +404,54 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .portail .marque{padding:0 0 3px;font-size:24px;color:var(--encre)}
 .portail .marque-sous{padding:0 0 26px;color:var(--sourdine)}
 @media(max-width:980px){.accueil-forme{padding:40px 20px}}
+
+/* ---------- Page Tarifs ---------- */
+#tarifs{min-height:100vh;background:var(--papier)}
+.tarifs-entete{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1180px;margin:0 auto;padding:26px 48px}
+.tarifs-entete .marque{font-size:20px;color:var(--encre)}
+.tarifs-corps{max-width:1180px;margin:0 auto;padding:12px 48px 90px}
+@media(max-width:640px){.tarifs-entete,.tarifs-corps{padding-left:22px;padding-right:22px}}
+
+.tarifs-hero{text-align:center;max-width:620px;margin:24px auto 0}
+.tarifs-hero .eyebrow{justify-content:center;display:flex}
+.tarifs-titre{font-family:var(--serif);font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.02em;margin:10px 0 12px;text-wrap:balance;color:var(--encre)}
+.tarifs-hero p{color:var(--encre-doux);font-size:15px;margin:0;line-height:1.55}
+
+.cycle-bascule{display:flex;width:max-content;align-items:center;gap:2px;margin:30px auto 0;padding:4px;background:var(--regle-fine);border-radius:var(--rayon-pill)}
+.cycle-option{background:none;box-shadow:none;border:none;padding:9px 18px;border-radius:var(--rayon-pill);font-size:13.5px;font-weight:600;color:var(--sourdine);display:flex;align-items:center;gap:8px;transition:background .18s ease,color .18s ease}
+.cycle-option.actif{background:var(--carte);color:var(--encre);box-shadow:var(--ombre-sm)}
+.cycle-option:hover{transform:none}
+.cycle-economie{font-family:var(--mono);font-size:10px;color:var(--valide);background:var(--valide-t);padding:3px 8px;border-radius:var(--rayon-pill)}
+
+.tarifs-grille{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:start;margin-top:46px}
+@media(max-width:900px){.tarifs-grille{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}}
+.plan-carte{position:relative;background:var(--carte);border:1px solid var(--regle);border-radius:16px;padding:30px 26px;display:flex;flex-direction:column;box-shadow:var(--ombre-sm);transition:box-shadow .18s ease,transform .18s ease;animation:carte-entree .4s cubic-bezier(.2,.7,.3,1) backwards}
+.tarifs-grille .plan-carte:nth-child(1){animation-delay:.03s}.tarifs-grille .plan-carte:nth-child(2){animation-delay:.09s}.tarifs-grille .plan-carte:nth-child(3){animation-delay:.15s}
+.plan-carte:hover{box-shadow:var(--ombre-lg);transform:translateY(-3px)}
+.plan-carte.plan-vedette{border-color:var(--primaire);box-shadow:0 18px 40px -14px rgba(91,95,239,.4);background:linear-gradient(180deg,var(--primaire-clair) 0%,var(--carte) 160px)}
+@media(min-width:901px){.plan-vedette{transform:translateY(-10px)}.plan-vedette:hover{transform:translateY(-13px)}}
+.plan-etiquette{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--grad-marque);color:#fff;font-size:11px;font-weight:700;letter-spacing:.03em;padding:5px 16px;border-radius:var(--rayon-pill);box-shadow:0 4px 14px -3px rgba(76,63,224,.5);white-space:nowrap}
+.plan-nom{font-family:var(--serif);font-size:21px;font-weight:800;margin:4px 0 4px}
+.plan-souligne{font-size:13px;color:var(--sourdine);min-height:36px;line-height:1.45;margin:0}
+.plan-prix{display:flex;align-items:baseline;gap:5px;margin:18px 0 2px}
+.plan-prix b{font-family:var(--sans);font-size:38px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.plan-prix span{color:var(--sourdine);font-size:13px}
+.plan-prix-detail{font-family:var(--mono);font-size:11px;color:var(--sourdine);min-height:15px;margin:0 0 22px}
+.plan-liste{list-style:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:11px;flex:1}
+.plan-liste li{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:var(--encre-doux);line-height:1.45}
+.plan-liste svg{width:16px;height:16px;flex:none;margin-top:1.5px;color:var(--valide)}
+.plan-cta{width:100%}
+.plan-carte:not(.plan-vedette) .plan-cta{background:none;color:var(--primaire);border:1.5px solid var(--regle);box-shadow:none}
+.plan-carte:not(.plan-vedette) .plan-cta:hover{border-color:var(--primaire);background:var(--primaire-clair)}
+
+.tarifs-faq{max-width:700px;margin:86px auto 0}
+.tarifs-faq h2{font-family:var(--serif);text-align:center;font-size:25px;margin:0 0 26px}
+.faq-item{border-bottom:1px solid var(--regle);padding:17px 2px}
+.faq-item summary{cursor:pointer;font-weight:600;font-size:14px;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary svg{width:16px;height:16px;flex:none;color:var(--sourdine);transition:transform .2s ease}
+.faq-item[open] summary svg{transform:rotate(180deg)}
+.faq-item p{margin:12px 0 0;color:var(--encre-doux);font-size:13.5px;line-height:1.6;max-width:64ch}
 </style>
 </head>
 <body>
@@ -422,8 +472,11 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 <div id="accueil">
   <div class="accueil-visuel">
     <div class="av-entete">
-      <div class="marque"><svg class="logo" viewBox="0 0 32 32" fill="none"><path d="M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z" fill="url(#marque-grad)"/><path d="M10.5 16.2 14 19.8 21.5 12" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span>ComplianceAI <em>Studio</em></span></div>
-      <div class="marque-sous">Audit réglementaire</div>
+      <div>
+        <div class="marque"><svg class="logo" viewBox="0 0 32 32" fill="none"><path d="M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z" fill="url(#marque-grad)"/><path d="M10.5 16.2 14 19.8 21.5 12" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span>ComplianceAI <em>Studio</em></span></div>
+        <div class="marque-sous">Audit réglementaire</div>
+      </div>
+      <button type="button" class="av-lien-tarifs" onclick="afficherTarifs()">Tarifs</button>
     </div>
     <div class="av-corps">
       <div class="av-badges">
@@ -542,6 +595,92 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 
     <div id="msg-accueil" aria-live="polite"></div>
   </div>
+  </div>
+</div>
+
+<div id="tarifs" hidden>
+  <div class="tarifs-entete">
+    <div class="marque"><svg class="logo" viewBox="0 0 32 32" fill="none"><path d="M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z" fill="url(#marque-grad)"/><path d="M10.5 16.2 14 19.8 21.5 12" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span>ComplianceAI <em>Studio</em></span></div>
+    <button type="button" class="lien" onclick="masquerTarifs()">Retour à la connexion</button>
+  </div>
+
+  <div class="tarifs-corps">
+    <div class="tarifs-hero reveal">
+      <div class="eyebrow">Tarifs</div>
+      <p class="tarifs-titre">Un tarif simple, qui grandit avec votre conformité.</p>
+      <p>Commencez gratuitement sur un référentiel. Passez à l'échelle quand votre équipe et vos obligations réglementaires s'élargissent.</p>
+    </div>
+
+    <div class="cycle-bascule reveal">
+      <button type="button" class="cycle-option actif" data-cycle="mensuel" onclick="basculerCycle('mensuel')">Mensuel</button>
+      <button type="button" class="cycle-option" data-cycle="annuel" onclick="basculerCycle('annuel')">Annuel <span class="cycle-economie">-20 %</span></button>
+    </div>
+
+    <div class="tarifs-grille">
+      <div class="plan-carte reveal">
+        <div class="plan-nom">Essentiel</div>
+        <p class="plan-souligne">Pour découvrir l'outil sur un premier référentiel.</p>
+        <div class="plan-prix"><b>0 €</b><span>/mois</span></div>
+        <p class="plan-prix-detail">Sans carte bancaire</p>
+        <ul class="plan-liste">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>1 référentiel au choix</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>3 campagnes d'audit / mois</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>1 organisation, 2 membres</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Rapports PDF</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Support par e-mail</span></li>
+        </ul>
+        <button type="button" class="plan-cta" onclick="portail(true); masquerTarifs()">Commencer gratuitement</button>
+      </div>
+
+      <div class="plan-carte plan-vedette reveal">
+        <div class="plan-etiquette">Le plus choisi</div>
+        <div class="plan-nom">Pro</div>
+        <p class="plan-souligne">Pour les équipes qui pilotent leur conformité au quotidien.</p>
+        <div class="plan-prix"><b><span class="px-mensuel">49 €</span><span class="px-annuel" hidden>39 €</span></b><span>/mois</span></div>
+        <p class="plan-prix-detail"><span class="px-mensuel">Facturé mensuellement</span><span class="px-annuel" hidden>Facturé annuellement, soit 468 €/an</span></p>
+        <ul class="plan-liste">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Les 4 référentiels (RGPD, NIS2, DORA, AI Act)</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Campagnes d'audit illimitées</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>10 membres, rôles &amp; permissions</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Correspondances entre référentiels</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Campagnes récurrentes planifiées</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Historique et export illimités</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Support prioritaire</span></li>
+        </ul>
+        <button type="button" class="plan-cta" onclick="portail(true); masquerTarifs()">Essayer Pro</button>
+      </div>
+
+      <div class="plan-carte reveal">
+        <div class="plan-nom">Entreprise</div>
+        <p class="plan-souligne">Pour les organisations aux exigences spécifiques.</p>
+        <div class="plan-prix"><b>Sur devis</b></div>
+        <p class="plan-prix-detail">Adapté à votre périmètre</p>
+        <ul class="plan-liste">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Tout Pro, sans limite de membres</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>SSO / SAML</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Rétention des données personnalisée</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>API et intégrations dédiées</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Accompagnement dédié et SLA contractuel</span></li>
+        </ul>
+        <button type="button" class="plan-cta" onclick="location.href='mailto:sarahbelmiloud2001@gmail.com?subject=Offre%20Entreprise%20ComplianceAI%20Studio'">Nous contacter</button>
+      </div>
+    </div>
+
+    <div class="tarifs-faq reveal">
+      <h2>Questions fréquentes</h2>
+      <details class="faq-item">
+        <summary>Puis-je changer de formule à tout moment ?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>Oui, à tout moment depuis votre espace « Mon compte », sans période d'engagement sur l'offre mensuelle.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Comment est calculé le nombre de membres ?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>Chaque personne rattachée à une organisation compte pour un membre, quel que soit son rôle (lecture seule, auditeur, administrateur).</p>
+      </details>
+      <details class="faq-item">
+        <summary>L'offre Entreprise inclut-elle un accompagnement ?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>Oui : mise en place, formation des équipes et un point de contact dédié pour toute question réglementaire ou technique.</p>
+      </details>
+    </div>
   </div>
 </div>
 
@@ -840,6 +979,50 @@ const TRAD_EN = {
   'Renseignez les deux mots de passe.': 'Enter both passwords.',
   'Mot de passe mis à jour.': 'Password updated.',
   'Export téléchargé.': 'Export downloaded.',
+  // Tarifs
+  'Tarifs': 'Pricing',
+  'Un tarif simple, qui grandit avec votre conformité.': 'Simple pricing that grows with your compliance.',
+  "Commencez gratuitement sur un référentiel. Passez à l'échelle quand votre équipe et vos obligations réglementaires s'élargissent.":
+    'Start for free on a single framework. Scale up as your team and regulatory obligations grow.',
+  'Mensuel': 'Monthly', 'Annuel': 'Annual',
+  'Essentiel': 'Essential',
+  "Pour découvrir l'outil sur un premier référentiel.": 'To discover the tool on a first framework.',
+  '/mois': '/mo', 'Sans carte bancaire': 'No credit card',
+  '1 référentiel au choix': '1 framework of your choice',
+  "3 campagnes d'audit / mois": '3 audit campaigns / month',
+  '1 organisation, 2 membres': '1 organization, 2 members',
+  'Rapports PDF': 'PDF reports', 'Support par e-mail': 'Email support',
+  'Commencer gratuitement': 'Start for free',
+  'Le plus choisi': 'Most popular', 'Pro': 'Pro',
+  'Pour les équipes qui pilotent leur conformité au quotidien.': 'For teams running compliance day to day.',
+  'Facturé mensuellement': 'Billed monthly',
+  'Facturé annuellement, soit 468 €/an': 'Billed annually, i.e. €468/yr',
+  'Les 4 référentiels (RGPD, NIS2, DORA, AI Act)': 'All 4 frameworks (GDPR, NIS2, DORA, AI Act)',
+  "Campagnes d'audit illimitées": 'Unlimited audit campaigns',
+  '10 membres, rôles & permissions': '10 members, roles & permissions',
+  'Correspondances entre référentiels': 'Crosswalks between frameworks',
+  'Campagnes récurrentes planifiées': 'Scheduled recurring campaigns',
+  'Historique et export illimités': 'Unlimited history and export',
+  'Support prioritaire': 'Priority support',
+  'Essayer Pro': 'Try Pro',
+  'Entreprise': 'Enterprise',
+  'Pour les organisations aux exigences spécifiques.': 'For organizations with specific requirements.',
+  'Sur devis': 'Custom pricing', 'Adapté à votre périmètre': 'Tailored to your scope',
+  'Tout Pro, sans limite de membres': 'Everything in Pro, unlimited members',
+  'Rétention des données personnalisée': 'Custom data retention',
+  'API et intégrations dédiées': 'Dedicated API and integrations',
+  'Accompagnement dédié et SLA contractuel': 'Dedicated onboarding and contractual SLA',
+  'Nous contacter': 'Contact us',
+  'Questions fréquentes': 'Frequently asked questions',
+  'Puis-je changer de formule à tout moment ?': 'Can I change plans at any time?',
+  "Oui, à tout moment depuis votre espace « Mon compte », sans période d'engagement sur l'offre mensuelle.":
+    'Yes, at any time from your "My account" area, with no commitment period on the monthly plan.',
+  'Comment est calculé le nombre de membres ?': 'How is the number of members counted?',
+  'Chaque personne rattachée à une organisation compte pour un membre, quel que soit son rôle (lecture seule, auditeur, administrateur).':
+    'Every person attached to an organization counts as one member, regardless of role (viewer, auditor, admin).',
+  "L'offre Entreprise inclut-elle un accompagnement ?": 'Does the Enterprise plan include onboarding support?',
+  "Oui : mise en place, formation des équipes et un point de contact dédié pour toute question réglementaire ou technique.":
+    'Yes: setup, team training, and a dedicated point of contact for any regulatory or technical question.',
 };
 // Pour les textes qui ne passent jamais par le DOM (confirm(), alert(),
 // messages d'erreur bruts) : traduireDOM() ne peut pas les atteindre, donc
@@ -975,6 +1158,22 @@ function montrerPanneau(id) {
 }
 
 function portail(inscription) { montrerPanneau(inscription ? 'p-inscription' : 'p-connexion'); }
+
+function afficherTarifs() {
+  $('accueil').hidden = true;
+  $('tarifs').hidden = false;
+  basculerCycle('mensuel');
+  initReveal('#tarifs');
+}
+function masquerTarifs() {
+  $('tarifs').hidden = true;
+  $('accueil').hidden = false;
+}
+function basculerCycle(cycle) {
+  document.querySelectorAll('.cycle-option').forEach(b => b.classList.toggle('actif', b.dataset.cycle === cycle));
+  document.querySelectorAll('.px-mensuel').forEach(el => el.hidden = cycle !== 'mensuel');
+  document.querySelectorAll('.px-annuel').forEach(el => el.hidden = cycle !== 'annuel');
+}
 
 let REINIT_TOKEN = null;
 
@@ -2078,8 +2277,8 @@ function initEtapes(actif = 0) {
     <div class="etape-detail"><p>${h(ETAPES_MOTEUR[actif].d)}</p></div>`);
 }
 
-function initReveal() {
-  const els = document.querySelectorAll('#vue .reveal:not(.visible)');
+function initReveal(racine = '#vue') {
+  const els = document.querySelectorAll(`${racine} .reveal:not(.visible)`);
   if (!('IntersectionObserver' in window) || !els.length) {
     els.forEach(el => el.classList.add('visible'));
     return;
