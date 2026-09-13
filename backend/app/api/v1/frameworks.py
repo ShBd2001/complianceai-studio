@@ -23,7 +23,18 @@ def list_frameworks(
     _: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> list[Framework]:
-    return list(db.scalars(select(Framework).order_by(Framework.pillar, Framework.code)))
+    # is_active=false masque un referentiel de l'interface sans le
+    # supprimer (voir app.ingestion.runner.FRAMEWORKS_MASQUES) : les routes
+    # /{code}/requirements, /{code}/versions et /{code}/crosswalks restent
+    # volontairement accessibles hors de cette liste, pour que les audits
+    # deja lances sur un referentiel masque continuent de s'afficher.
+    return list(
+        db.scalars(
+            select(Framework)
+            .where(Framework.is_active.is_(True))
+            .order_by(Framework.pillar, Framework.code)
+        )
+    )
 
 
 @router.get("/{code}/versions", response_model=list[FrameworkVersionOut])

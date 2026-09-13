@@ -174,6 +174,43 @@ def test_unchanged_source_is_not_reingested(framework_ready):
     assert report.status == "unchanged"
 
 
+def test_masked_framework_ingests_as_inactive_by_default():
+    """CSRD est dans FRAMEWORKS_MASQUES (app.ingestion.runner) : une
+    ingestion de zero, sur une base fraiche (CI, nouvel environnement de
+    dev), doit le creer directement masque -- pas seulement les lignes deja
+    existantes corrigees par la migration 0010_masque_csrd."""
+
+    class FakeCsrdConnector:
+        code = "csrd"
+
+        def fetch(self) -> IngestionResult:
+            return IngestionResult(
+                code="csrd",
+                name="Directive CSRD",
+                pillar=Pillar.SUSTAINABILITY,
+                authority="Parlement europeen et Conseil",
+                source_url="https://eur-lex.europa.eu/eli/dir/2022/2464/oj",
+                license="Decision 2011/833/UE",
+                version_label="2022/2464",
+                requirements=[
+                    RawRequirement(
+                        reference="Article 19 bis", title="Information en matiere de durabilite",
+                        body="Texte.", kind=RequirementKind.ARTICLE, ordering=1,
+                    )
+                ],
+            )
+
+    with SessionLocal() as db:
+        # "created" sur une base fraiche (CI) ; "unchanged" si ce test a
+        # deja tourne contre cette meme base Postgres locale auparavant --
+        # ce qui compte ici est l'etat final de is_active, pas le statut.
+        report = ingest(db, FakeCsrdConnector())
+        db.commit()
+        assert report.status in {"created", "unchanged"}
+        framework = db.scalar(select(Framework).where(Framework.code == "csrd"))
+        assert framework.is_active is False
+
+
 def test_forced_reingestion_of_unchanged_text_does_not_claim_an_evolution(framework_ready):
     """Trouve en usage reel (capture d'ecran de l'utilisatrice) : --force sur
     un texte source identique creait quand meme une version, avec un message
@@ -219,6 +256,35 @@ def test_frameworks_endpoint_lists_rgpd(client, org, framework_ready):
     assert r.status_code == 200
     codes = {f["code"] for f in r.json()}
     assert "rgpd" in codes
+
+
+def test_inactive_framework_is_hidden_from_the_list_but_stays_reachable_directly(
+    client, org, framework_ready
+):
+    """CSRD reste ingere (voir FRAMEWORKS_MASQUES) mais n'est plus propose
+    dans l'interface : is_active=false doit le retirer de la liste sans
+    couper l'acces direct a ses exigences, pour que les audits deja lances
+    dessus continuent de s'afficher."""
+    _, headers = org
+    with SessionLocal() as db:
+        framework = db.scalar(select(Framework).where(Framework.code == "rgpd"))
+        framework.is_active = False
+        db.commit()
+
+    r = client.get("/api/v1/frameworks", headers=headers)
+    assert "rgpd" not in {f["code"] for f in r.json()}
+
+    r = client.get("/api/v1/frameworks/rgpd/requirements", headers=headers)
+    assert r.status_code == 200
+    assert len(r.json()) == 6
+
+    with SessionLocal() as db:
+        framework = db.scalar(select(Framework).where(Framework.code == "rgpd"))
+        framework.is_active = True
+        db.commit()
+
+    r = client.get("/api/v1/frameworks", headers=headers)
+    assert "rgpd" in {f["code"] for f in r.json()}
 
 
 def test_requirements_endpoint_returns_articles(client, org, framework_ready):

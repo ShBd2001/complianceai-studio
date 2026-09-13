@@ -33,6 +33,13 @@ class IngestionReport:
     message: str | None = None
 
 
+# Referentiels ingeres et pleinement fonctionnels cote backend mais
+# volontairement absents de l'interface (voir migration 0010_masque_csrd) :
+# masques, pas supprimes -- retirer un code de cet ensemble puis rejouer
+# l'ingestion suffit a le reactiver, sans perte de donnees.
+FRAMEWORKS_MASQUES: set[str] = {"csrd"}
+
+
 def _upsert_framework(db: Session, result: IngestionResult) -> Framework:
     framework = db.scalar(select(Framework).where(Framework.code == result.code))
     if framework is None:
@@ -45,6 +52,7 @@ def _upsert_framework(db: Session, result: IngestionResult) -> Framework:
             celex_id=result.celex_id,
             license=result.license,
             is_redistributable=result.is_redistributable,
+            is_active=result.code not in FRAMEWORKS_MASQUES,
         )
         db.add(framework)
         db.flush()

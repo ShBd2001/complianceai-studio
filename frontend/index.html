@@ -427,7 +427,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     </div>
     <div class="av-corps">
       <div class="av-badges">
-        <span>RGPD</span><span>NIS2</span><span>DORA</span><span>AI Act</span><span>CSRD</span>
+        <span>RGPD</span><span>NIS2</span><span>DORA</span><span>AI Act</span>
       </div>
       <p class="av-titre">La conformité, <em>prouvée</em> ligne par ligne.</p>
       <p class="av-texte">Chaque exigence est confrontée au texte réel de vos documents. Aucune conformité n'est déclarée sans une citation vérifiable — jamais l'inverse.</p>
@@ -438,8 +438,8 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
       </div>
     </div>
     <div class="av-stats">
-      <div><b>5</b><span>Référentiels</span></div>
-      <div><b>335</b><span>Exigences</span></div>
+      <div><b>4</b><span>Référentiels</span></div>
+      <div><b>322</b><span>Exigences</span></div>
       <div><b>100%</b><span>Vérifiées par citation</span></div>
     </div>
   </div>
@@ -447,7 +447,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
   <div class="accueil-forme">
   <div class="portail">
     <div class="marque"><svg class="logo" viewBox="0 0 32 32" fill="none"><path d="M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z" fill="url(#marque-grad)"/><path d="M10.5 16.2 14 19.8 21.5 12" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span>ComplianceAI <em>Studio</em></span></div>
-    <div class="marque-sous">Audit réglementaire — RGPD · NIS2 · CSRD</div>
+    <div class="marque-sous">Audit réglementaire — RGPD · NIS2 · DORA · AI Act</div>
 
     <div id="p-connexion">
       <div class="grille" style="grid-template-columns:1fr">
@@ -671,7 +671,7 @@ const TRAD_EN = {
   'Basculer en mode clair': 'Switch to light mode', 'Basculer en mode sombre': 'Switch to dark mode',
   'Switch to English': 'Switch to English', 'Passer en français': 'Switch back to French',
   // Accueil / connexion
-  'Audit réglementaire': 'Regulatory audit', "Audit réglementaire — RGPD · NIS2 · CSRD": 'Regulatory audit — GDPR · NIS2 · CSRD',
+  'Audit réglementaire': 'Regulatory audit', "Audit réglementaire — RGPD · NIS2 · DORA · AI Act": 'Regulatory audit — GDPR · NIS2 · DORA · AI Act',
   'La conformité,': 'Compliance,', 'prouvée': 'proven', 'ligne par ligne.': 'line by line.',
   "Chaque exigence est confrontée au texte réel de vos documents. Aucune conformité n'est déclarée sans une citation vérifiable — jamais l'inverse.": 'Every requirement is checked against the real text of your documents. No compliance is ever declared without a verifiable citation — never the other way around.',
   'Article 32 — preuve trouvée, ligne 14': 'Article 32 — evidence found, line 14',
@@ -1298,7 +1298,12 @@ const NOM_CADRE_EN = {
   csrd: 'Directive (EU) 2022/2464 on corporate sustainability reporting',
 };
 async function chargerReferentiels(id) {
-  let liste = [['rgpd', LANG === 'en' ? 'GDPR' : 'RGPD'],['nis2','NIS2'],['ai_act','AI Act'],['dora','DORA'],['csrd','CSRD']];
+  // csrd est ingere et reste consultable pour tout audit deja existant
+  // dessus (voir SIGLE_CADRE/NOM_CADRE_EN), mais n'est plus propose a la
+  // selection : la liste par defaut (repli si l'API est indisponible) et
+  // la liste reelle (filtree cote backend par Framework.is_active) sont
+  // toutes deux volontairement sans lui.
+  let liste = [['rgpd', LANG === 'en' ? 'GDPR' : 'RGPD'],['nis2','NIS2'],['ai_act','AI Act'],['dora','DORA']];
   try {
     const f = await appel('/api/v1/frameworks');
     if (Array.isArray(f) && f.length) liste = f.map(x => [x.code, (LANG === 'en' && NOM_CADRE_EN[x.code]) || x.name || x.code.toUpperCase()]);
@@ -1975,9 +1980,10 @@ const REFERENTIELS = [
     detail:"64 exigences ingérées, dont 26 auditables (articles 5 à 30 : gouvernance et cadre de gestion du risque lié aux TIC, gestion des incidents, tests de résilience, prestataires tiers de TIC) — le cadre de supervision des prestataires critiques par les autorités européennes, à partir de l'article 31, est écarté." },
   { c:'AI Act', l:'Règlement (UE) 2024/1689', d:"Gouvernance de l'intelligence artificielle", ic:'<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2 2M17.1 17.1l2 2M4.9 19.1l2-2M17.1 6.9l2-2"/>', total:113, auditables:28,
     detail:"113 exigences ingérées, dont 28 auditables : pratiques interdites, exigences applicables aux systèmes à haut risque (gestion des risques, gouvernance des données, documentation technique), obligations des fournisseurs et déployeurs — le régime des organismes notifiés et la gouvernance européenne de l'IA sont écartés." },
-  { c:'CSRD', l:'Directive (UE) 2022/2464', d:'Durabilité et reporting extra-financier', ic:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 9.5 17 13c0 4-3 7-7 7Z"/><path d="M11 20c0-6 3-9 6-11"/>', total:77, auditables:13,
-    detail:"77 exigences ingérées depuis le texte consolidé de la directive comptable qu'elle modifie, dont 13 auditables (rapport de durabilité, normes applicables, format électronique, accessibilité) — les articles insérés par une directive fiscale distincte dans ce même texte, sans rapport avec la durabilité, sont écartés." },
 ];
+// Le CSRD reste ingere et fonctionnel cote backend (voir
+// app.ingestion.runner.FRAMEWORKS_MASQUES) mais n'est plus mis en avant
+// ici : retirer son code de cet ensemble suffit a le faire reapparaitre.
 
 async function vueApropos() {
   const totalExig = REFERENTIELS.reduce((s, r) => s + r.total, 0);
