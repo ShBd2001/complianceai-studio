@@ -7,9 +7,12 @@
 # le referentiel et les documents client doivent partager le meme espace
 # vectoriel.
 #
-# complianceai-db reste sur le plan free : la base Postgres gratuite expire
-# 30 jours apres sa creation (limite du plan free Render) : a recreer /
-# re-ingerer passe ce delai.
+# complianceai-db est passee du plan free au plan payant basic-256mb le
+# 2026-09-13, suite a une premiere expiration en conditions reelles : le
+# plan free Render expire 30 jours apres sa creation, coupant l'acces a la
+# base (verrouillee, pas supprimee dans notre cas — recuperee en upgradant
+# depuis le tableau de bord Render, sans perte de donnees). Le plan payant
+# supprime ce risque de coupure recurrente.
 #
 # Stockage toujours ephemere (pas encore de disque persistant Render ni de
 # stockage objet externe) : STORAGE_DIR (pieces versees, rapports, repli
@@ -70,5 +73,5 @@ services:
 
 databases:
   - name: complianceai-db
-    plan: free
+    plan: basic-256mb
     postgresMajorVersion: "16"
