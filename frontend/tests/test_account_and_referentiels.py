@@ -40,13 +40,15 @@ def _register(page, frontend_server: str, backend_server, email: str) -> None:
 
 
 def test_referentiels_page_lists_articles_and_current_version(page, frontend_server, backend_server):
+    """Le nom du test date d'avant le retrait volontaire des notes
+    d'ingestion internes (commit 990e79a) : la page ne montre plus la
+    version/empreinte, uniquement les articles eux-memes desormais."""
     email = f"ref-{uuid.uuid4().hex[:8]}@exemple.fr"
     _register(page, frontend_server, backend_server, email)
 
     page.click("a[data-vue=\"referentiels\"]")
     page.wait_for_selector("#z-req table", timeout=15000)
 
-    expect(page.get_by_text("Version en vigueur")).to_be_visible()
     assert page.locator("#z-req tbody tr").count() > 0
 
     # Le filtre « perimetre auditable » doit reduire la liste (articles
