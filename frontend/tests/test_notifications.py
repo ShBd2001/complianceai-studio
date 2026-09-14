@@ -78,7 +78,7 @@ def test_notification_appears_with_badge(page, frontend_server, backend_server, 
     # Se deconnecter puis se reconnecter est donc le vrai chemin, pas un
     # rechargement de page qui perdrait la session comme n'importe quel
     # rechargement en conditions reelles.
-    page.click("button.lien:has-text(\"Fermer la session\")")
+    page.click("button.rail-sortie:has-text(\"Fermer la session\")")
     page.wait_for_selector("#lancement:not([hidden])")
     page.click(".lance-connexion")
     page.fill("#c-mail", email)

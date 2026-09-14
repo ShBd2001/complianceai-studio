@@ -16,8 +16,8 @@
 :root{
   --papier:#F5F6FB; --carte:#FFFFFF; --encre:#12142B; --encre-doux:#565A73;
   --sourdine:#8A8EA6; --regle:#E7E9F2; --regle-fine:#EFF1F7;
-  --sceau:#C0342A; --sceau-t:#FDECEA; --sceau-fonce:#7A241D;
-  --valide:#178A4C; --valide-t:#E7F8EE; --valide-fonce:#0F5C33;
+  --sceau:#BE3358; --sceau-t:#FCEAF0; --sceau-fonce:#7A1F3D;
+  --valide:#0E8F73; --valide-t:#E3F7F1; --valide-fonce:#0A5C4A;
   --ambre:#B4720C; --ambre-t:#FDF2DD; --azur:#3457D5; --azur-t:#EAEEFD;
   --primaire:#5B5FEF; --primaire-fonce:#4338CA; --primaire-clair:#EEF0FE;
   --grad-marque:linear-gradient(135deg,#6D6BF5 0%,#4C3FE0 100%);
@@ -34,8 +34,8 @@
 :root[data-theme="dark"]{
   --papier:#14162A; --carte:#1B1E38; --encre:#F1F2FA; --encre-doux:#B4B8D4;
   --sourdine:#8286A8; --regle:#31355A; --regle-fine:#262a48;
-  --sceau:#FF7A70; --sceau-t:#3A2030; --sceau-fonce:#FFD9D5;
-  --valide:#4ADE94; --valide-t:#153728; --valide-fonce:#BEF5D4;
+  --sceau:#FF7A9E; --sceau-t:#3A1F30; --sceau-fonce:#FFD9E4;
+  --valide:#3EE0C4; --valide-t:#123531; --valide-fonce:#B8F5E8;
   --ambre:#FFC168; --ambre-t:#3A2C12; --azur:#8DA6FF; --azur-t:#1E2547;
   --primaire:#8B8AF8; --primaire-fonce:#B4B3FB; --primaire-clair:#292C56;
   --grad-marque:linear-gradient(135deg,#7A78F7 0%,#5B54E8 100%);
@@ -94,6 +94,9 @@ nav.rail{
 .badge-nav{display:inline-block;min-width:8px;height:8px;border-radius:50%;background:var(--sceau);margin-left:5px;vertical-align:middle}
 .rail-pied{margin-top:auto;padding:18px 22px 0;border-top:1px solid rgba(255,255,255,.08);font-size:12.5px;color:#8286AD}
 .rail-pied .qui{font-family:var(--mono);font-size:11px;color:#D7D8EA;word-break:break-all;display:block;margin-bottom:10px}
+.rail-sortie{display:flex;align-items:center;gap:9px;width:100%;margin-top:12px;background:none;box-shadow:none;border:1px solid rgba(255,255,255,.1);color:#C3C5DE;font-size:13px;font-weight:500;padding:9px 12px;border-radius:var(--rayon-sm)}
+.rail-sortie svg{width:16px;height:16px;flex:none}
+.rail-sortie:hover{background:rgba(255,255,255,.06);color:#fff;border-color:rgba(255,255,255,.2);transform:none}
 main{margin-left:248px;padding:36px 44px 80px;max-width:1080px;transition:margin-left .22s ease,max-width .22s ease}
 #appli.rail-fermee main{margin-left:auto;margin-right:auto;max-width:1240px}
 @media(max-width:820px){
@@ -413,6 +416,9 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 #tarifs{min-height:100vh;background:var(--papier)}
 .tarifs-entete{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1180px;margin:0 auto;padding:26px 48px}
 .tarifs-entete .marque{font-size:20px;color:var(--encre)}
+.tarifs-retour{display:inline-flex;align-items:center;gap:7px;background:var(--carte);color:var(--encre);border:1px solid var(--regle);box-shadow:var(--ombre-sm);font-size:13px;padding:9px 16px}
+.tarifs-retour:hover{border-color:var(--sourdine);box-shadow:var(--ombre);transform:none}
+.tarifs-retour svg{width:15px;height:15px}
 .tarifs-corps{max-width:1180px;margin:0 auto;padding:12px 48px 90px}
 @media(max-width:640px){.tarifs-entete,.tarifs-corps{padding-left:22px;padding-right:22px}}
 
@@ -751,7 +757,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 <div id="tarifs" hidden>
   <div class="tarifs-entete">
     <div class="marque"><svg class="logo" viewBox="0 0 32 32" fill="none"><path d="M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z" fill="url(#marque-grad)"/><path d="M10.5 16.2 14 19.8 21.5 12" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span>ComplianceAI <em>Studio</em></span></div>
-    <button type="button" class="lien" onclick="masquerTarifs()">Retour à la connexion</button>
+    <button type="button" class="tarifs-retour" onclick="masquerTarifs()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Retour</button>
   </div>
 
   <div class="tarifs-corps">
@@ -862,7 +868,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <div class="rail-pied">
       <span class="qui" id="qui"></span>
       <select id="ch-org-global" class="compact" onchange="changerOrganisation()"></select>
-      <div style="margin-top:10px"><button class="lien" onclick="quitter()">Fermer la session</button></div>
+      <button type="button" class="rail-sortie" onclick="quitter()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Fermer la session</button>
     </div>
   </nav>
 
@@ -1130,7 +1136,7 @@ const TRAD_EN = {
   'Mot de passe mis à jour.': 'Password updated.',
   'Export téléchargé.': 'Export downloaded.',
   // Tarifs
-  'Tarifs': 'Pricing',
+  'Tarifs': 'Pricing', 'Retour': 'Back',
   'Un tarif simple, qui grandit avec votre conformité.': 'Simple pricing that grows with your compliance.',
   "Commencez gratuitement sur un référentiel. Passez à l'échelle quand votre équipe et vos obligations réglementaires s'élargissent.":
     'Start for free on a single framework. Scale up as your team and regulatory obligations grow.',
