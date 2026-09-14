@@ -581,7 +581,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
       <p class="lance-titre reveal">La conformité, <em>prouvée</em> ligne par ligne.</p>
       <p class="lance-sous reveal">Chaque exigence est confrontée au texte réel de vos documents. Aucune conformité n'est déclarée sans une citation vérifiable — jamais l'inverse.</p>
       <div class="lance-ctas reveal">
-        <button type="button" class="principal" onclick="afficherConnexion(true)">Commencer gratuitement</button>
+        <button type="button" class="principal" onclick="afficherConnexion(true)">Créer un compte</button>
         <button type="button" class="secondaire" onclick="afficherConnexion(false)">Se connecter</button>
       </div>
     </div>
@@ -630,8 +630,8 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 
   <div class="lance-tarifs-teaser reveal">
     <div class="teaser-carte">
-      <h2>Des tarifs simples, à partir de 0 €.</h2>
-      <p>Un référentiel gratuit pour commencer, toute l'équipe pour aller plus loin.</p>
+      <h2>Un tarif par volume d'audits, pas par surprise.</h2>
+      <p>De l'auditeur indépendant au cabinet, un palier adapté au nombre de campagnes que vous menez chaque mois.</p>
       <button type="button" onclick="afficherTarifs()">Voir les tarifs</button>
     </div>
   </div>
@@ -789,61 +789,63 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <div class="tarifs-hero reveal">
       <div class="eyebrow">Tarifs</div>
       <p class="tarifs-titre">Un tarif simple, qui grandit avec votre conformité.</p>
-      <p>Commencez gratuitement sur un référentiel. Passez à l'échelle quand votre équipe et vos obligations réglementaires s'élargissent.</p>
+      <p>Choisissez le palier adapté à votre volume d'audits. Passez à l'échelle quand votre équipe et vos obligations réglementaires s'élargissent.</p>
     </div>
 
     <div class="cycle-bascule reveal">
       <button type="button" class="cycle-option actif" data-cycle="mensuel" onclick="basculerCycle('mensuel')">Mensuel</button>
-      <button type="button" class="cycle-option" data-cycle="annuel" onclick="basculerCycle('annuel')">Annuel <span class="cycle-economie">-20 %</span></button>
+      <button type="button" class="cycle-option" data-cycle="annuel" onclick="basculerCycle('annuel')">Annuel <span class="cycle-economie">-10 %</span></button>
     </div>
 
     <div class="tarifs-grille">
       <div class="plan-carte reveal">
         <div class="plan-nom">Essentiel</div>
-        <p class="plan-souligne">Pour découvrir l'outil sur un premier référentiel.</p>
-        <div class="plan-prix"><b>0 €</b><span>/mois</span></div>
-        <p class="plan-prix-detail">Sans carte bancaire</p>
+        <p class="plan-souligne">Pour un auditeur indépendant ou une première mise en conformité.</p>
+        <div class="plan-prix"><b><span class="px-mensuel">105 €</span><span class="px-annuel" hidden>94,50 €</span></b><span>/mois</span></div>
+        <p class="plan-prix-detail"><span class="px-mensuel">Facturé mensuellement</span><span class="px-annuel" hidden>Facturé annuellement, soit 1 134 €/an</span></p>
         <ul class="plan-liste">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>1 référentiel au choix</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>3 campagnes d'audit / mois</span></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>1 organisation, 2 membres</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>1 utilisateur, 1 organisation</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Rapports PDF</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Support par e-mail</span></li>
         </ul>
-        <button type="button" class="plan-cta" onclick="portail(true); masquerTarifs()">Commencer gratuitement</button>
+        <button type="button" class="plan-cta" onclick="portail(true); masquerTarifs()">Choisir Essentiel</button>
       </div>
 
       <div class="plan-carte plan-vedette reveal">
         <div class="plan-etiquette">Le plus choisi</div>
         <div class="plan-nom">Pro</div>
         <p class="plan-souligne">Pour les équipes qui pilotent leur conformité au quotidien.</p>
-        <div class="plan-prix"><b><span class="px-mensuel">49 €</span><span class="px-annuel" hidden>39 €</span></b><span>/mois</span></div>
-        <p class="plan-prix-detail"><span class="px-mensuel">Facturé mensuellement</span><span class="px-annuel" hidden>Facturé annuellement, soit 468 €/an</span></p>
+        <div class="plan-prix"><b><span class="px-mensuel">495 €</span><span class="px-annuel" hidden>445,50 €</span></b><span>/mois</span></div>
+        <p class="plan-prix-detail"><span class="px-mensuel">Facturé mensuellement</span><span class="px-annuel" hidden>Facturé annuellement, soit 5 346 €/an</span></p>
         <ul class="plan-liste">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Les 4 référentiels (RGPD, NIS2, DORA, AI Act)</span></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Campagnes d'audit illimitées</span></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>10 membres, rôles &amp; permissions</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>15 campagnes d'audit / mois</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>3 utilisateurs, 3 organisations</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Correspondances entre référentiels</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Campagnes récurrentes planifiées</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Historique et export illimités</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Support prioritaire</span></li>
         </ul>
-        <button type="button" class="plan-cta" onclick="portail(true); masquerTarifs()">Essayer Pro</button>
+        <button type="button" class="plan-cta" onclick="portail(true); masquerTarifs()">Choisir Pro</button>
       </div>
 
       <div class="plan-carte reveal">
-        <div class="plan-nom">Entreprise</div>
-        <p class="plan-souligne">Pour les organisations aux exigences spécifiques.</p>
-        <div class="plan-prix"><b>Sur devis</b></div>
-        <p class="plan-prix-detail">Adapté à votre périmètre</p>
+        <div class="plan-nom">Cabinet</div>
+        <p class="plan-souligne">Pour les cabinets et directions conformité à fort volume d'audits.</p>
+        <div class="plan-prix"><b><span class="px-mensuel">3 100 €</span><span class="px-annuel" hidden>2 790 €</span></b><span>/mois</span></div>
+        <p class="plan-prix-detail"><span class="px-mensuel">Facturé mensuellement</span><span class="px-annuel" hidden>Facturé annuellement, soit 33 480 €/an</span></p>
         <ul class="plan-liste">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Tout Pro, sans limite de membres</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Tout Pro</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>100 campagnes d'audit / mois</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Utilisateurs et organisations illimités</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>SSO / SAML</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Rétention des données personnalisée</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>API et intégrations dédiées</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Accompagnement dédié et SLA contractuel</span></li>
         </ul>
-        <button type="button" class="plan-cta" onclick="location.href='mailto:sarahbelmiloud2001@gmail.com?subject=Offre%20Entreprise%20ComplianceAI%20Studio'">Nous contacter</button>
+        <button type="button" class="plan-cta" onclick="portail(true); masquerTarifs()">Choisir Cabinet</button>
       </div>
     </div>
 
@@ -854,11 +856,15 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
         <p>Oui, à tout moment depuis votre espace « Mon compte », sans période d'engagement sur l'offre mensuelle.</p>
       </details>
       <details class="faq-item">
-        <summary>Comment est calculé le nombre de membres ?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
-        <p>Chaque personne rattachée à une organisation compte pour un membre, quel que soit son rôle (lecture seule, auditeur, administrateur).</p>
+        <summary>Comment est calculé le nombre d'utilisateurs ?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>Chaque personne rattachée à une organisation compte pour un utilisateur, quel que soit son rôle (lecture seule, auditeur, administrateur).</p>
       </details>
       <details class="faq-item">
-        <summary>L'offre Entreprise inclut-elle un accompagnement ?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <summary>Que se passe-t-il si je dépasse mon quota de campagnes ?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <p>Le quota se réinitialise chaque mois. Si vous en avez besoin plus régulièrement, il suffit de passer au palier supérieur depuis votre espace « Mon compte », sans interruption de service.</p>
+      </details>
+      <details class="faq-item">
+        <summary>L'offre Cabinet inclut-elle un accompagnement ?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
         <p>Oui : mise en place, formation des équipes et un point de contact dédié pour toute question réglementaire ou technique.</p>
       </details>
     </div>
@@ -1176,45 +1182,53 @@ const TRAD_EN = {
   // Tarifs
   'Tarifs': 'Pricing', 'Retour': 'Back',
   'Un tarif simple, qui grandit avec votre conformité.': 'Simple pricing that grows with your compliance.',
-  "Commencez gratuitement sur un référentiel. Passez à l'échelle quand votre équipe et vos obligations réglementaires s'élargissent.":
-    'Start for free on a single framework. Scale up as your team and regulatory obligations grow.',
+  "Choisissez le palier adapté à votre volume d'audits. Passez à l'échelle quand votre équipe et vos obligations réglementaires s'élargissent.":
+    "Pick the tier that matches your audit volume. Scale up as your team and regulatory obligations grow.",
   'Mensuel': 'Monthly', 'Annuel': 'Annual',
+  // Formats numeriques : virgule francaise -> point anglais, espace -> virgule des milliers.
+  '94,50 €': '94.50 €', '445,50 €': '445.50 €', '3 100 €': '3,100 €', '2 790 €': '2,790 €',
   'Essentiel': 'Essential',
-  "Pour découvrir l'outil sur un premier référentiel.": 'To discover the tool on a first framework.',
-  '/mois': '/mo', 'Sans carte bancaire': 'No credit card',
+  'Pour un auditeur indépendant ou une première mise en conformité.': 'For an independent auditor or a first compliance effort.',
+  '/mois': '/mo',
+  'Facturé annuellement, soit 1 134 €/an': 'Billed annually, i.e. €1,134/yr',
   '1 référentiel au choix': '1 framework of your choice',
   "3 campagnes d'audit / mois": '3 audit campaigns / month',
-  '1 organisation, 2 membres': '1 organization, 2 members',
+  '1 utilisateur, 1 organisation': '1 user, 1 organization',
   'Rapports PDF': 'PDF reports', 'Support par e-mail': 'Email support',
-  'Commencer gratuitement': 'Start for free',
+  'Choisir Essentiel': 'Choose Essential',
   'Le plus choisi': 'Most popular', 'Pro': 'Pro',
   'Pour les équipes qui pilotent leur conformité au quotidien.': 'For teams running compliance day to day.',
   'Facturé mensuellement': 'Billed monthly',
-  'Facturé annuellement, soit 468 €/an': 'Billed annually, i.e. €468/yr',
+  'Facturé annuellement, soit 5 346 €/an': 'Billed annually, i.e. €5,346/yr',
   'Les 4 référentiels (RGPD, NIS2, DORA, AI Act)': 'All 4 frameworks (GDPR, NIS2, DORA, AI Act)',
-  "Campagnes d'audit illimitées": 'Unlimited audit campaigns',
-  '10 membres, rôles & permissions': '10 members, roles & permissions',
+  "15 campagnes d'audit / mois": '15 audit campaigns / month',
+  '3 utilisateurs, 3 organisations': '3 users, 3 organizations',
   'Correspondances entre référentiels': 'Crosswalks between frameworks',
   'Campagnes récurrentes planifiées': 'Scheduled recurring campaigns',
   'Historique et export illimités': 'Unlimited history and export',
   'Support prioritaire': 'Priority support',
-  'Essayer Pro': 'Try Pro',
-  'Entreprise': 'Enterprise',
-  'Pour les organisations aux exigences spécifiques.': 'For organizations with specific requirements.',
-  'Sur devis': 'Custom pricing', 'Adapté à votre périmètre': 'Tailored to your scope',
-  'Tout Pro, sans limite de membres': 'Everything in Pro, unlimited members',
+  'Choisir Pro': 'Choose Pro',
+  'Cabinet': 'Firm',
+  "Pour les cabinets et directions conformité à fort volume d'audits.": 'For firms and compliance teams with a high audit volume.',
+  'Facturé annuellement, soit 33 480 €/an': 'Billed annually, i.e. €33,480/yr',
+  'Tout Pro': 'Everything in Pro',
+  "100 campagnes d'audit / mois": '100 audit campaigns / month',
+  'Utilisateurs et organisations illimités': 'Unlimited users and organizations',
   'Rétention des données personnalisée': 'Custom data retention',
   'API et intégrations dédiées': 'Dedicated API and integrations',
   'Accompagnement dédié et SLA contractuel': 'Dedicated onboarding and contractual SLA',
-  'Nous contacter': 'Contact us',
+  'Choisir Cabinet': 'Choose Firm',
   'Questions fréquentes': 'Frequently asked questions',
   'Puis-je changer de formule à tout moment ?': 'Can I change plans at any time?',
   "Oui, à tout moment depuis votre espace « Mon compte », sans période d'engagement sur l'offre mensuelle.":
     'Yes, at any time from your "My account" area, with no commitment period on the monthly plan.',
-  'Comment est calculé le nombre de membres ?': 'How is the number of members counted?',
-  'Chaque personne rattachée à une organisation compte pour un membre, quel que soit son rôle (lecture seule, auditeur, administrateur).':
-    'Every person attached to an organization counts as one member, regardless of role (viewer, auditor, admin).',
-  "L'offre Entreprise inclut-elle un accompagnement ?": 'Does the Enterprise plan include onboarding support?',
+  "Comment est calculé le nombre d'utilisateurs ?": 'How is the number of users counted?',
+  'Chaque personne rattachée à une organisation compte pour un utilisateur, quel que soit son rôle (lecture seule, auditeur, administrateur).':
+    'Every person attached to an organization counts as one user, regardless of role (viewer, auditor, admin).',
+  'Que se passe-t-il si je dépasse mon quota de campagnes ?': 'What happens if I exceed my campaign quota?',
+  'Le quota se réinitialise chaque mois. Si vous en avez besoin plus régulièrement, il suffit de passer au palier supérieur depuis votre espace « Mon compte », sans interruption de service.':
+    'The quota resets every month. If you need more regularly, just move up a tier from your "My account" area, with no service interruption.',
+  "L'offre Cabinet inclut-elle un accompagnement ?": 'Does the Firm plan include onboarding support?',
   "Oui : mise en place, formation des équipes et un point de contact dédié pour toute question réglementaire ou technique.":
     'Yes: setup, team training, and a dedicated point of contact for any regulatory or technical question.',
   // Lancement (page marketing)
@@ -1231,9 +1245,9 @@ const TRAD_EN = {
   'Rapports prêts à partager': 'Reports ready to share',
   "PDF et HTML générés en un clic, avec l'historique complet de chaque campagne pour suivre votre trajectoire de conformité.":
     'PDF and HTML generated in one click, with the full history of every campaign to track your compliance trajectory.',
-  'Des tarifs simples, à partir de 0 €.': 'Simple pricing, starting at €0.',
-  "Un référentiel gratuit pour commencer, toute l'équipe pour aller plus loin.":
-    'One framework free to start, your whole team to go further.',
+  "Un tarif par volume d'audits, pas par surprise.": 'Priced by audit volume, not by surprise.',
+  "De l'auditeur indépendant au cabinet, un palier adapté au nombre de campagnes que vous menez chaque mois.":
+    'From the independent auditor to the firm, a tier matched to how many campaigns you run each month.',
   'Voir les tarifs': 'See pricing',
   'Confidentialité': 'Privacy',
   "ComplianceAI Studio — outil d'aide à l'auto-évaluation, ne vaut pas preuve de conformité.":
