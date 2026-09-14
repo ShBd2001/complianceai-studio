@@ -17,7 +17,7 @@ PWD = "Compliance!2026x"
 
 def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.goto(frontend_server, wait_until="networkidle")
-    page.click("button.lien:has-text(\"Créer un compte\")")
+    page.click(".lance-inscription")
     page.wait_for_selector("#p-inscription:not([hidden])")
     page.fill("#i-nom", "Sarah Test")
     page.fill("#i-org", "Acme SAS")
@@ -33,6 +33,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.wait_for_selector("#p-verification:not([hidden])")
 
     page.goto(frontend_server, wait_until="networkidle")
+    page.click(".lance-connexion")
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
@@ -114,7 +115,8 @@ def test_change_password_from_account_page(page, frontend_server, backend_server
     expect(page.locator("#msg-secu .succes")).to_be_visible()
 
     page.click("button.lien:has-text(\"Fermer la session\")")
-    page.wait_for_selector("#accueil:not([hidden])")
+    page.wait_for_selector("#lancement:not([hidden])")
+    page.click(".lance-connexion")
     page.fill("#c-mail", email)
     page.fill("#c-mdp", new_pwd)
     page.click("#p-connexion button:not(.lien)")
@@ -129,7 +131,7 @@ def test_logout_actually_revokes_the_server_session(page, frontend_server, backe
     _register(page, frontend_server, backend_server, email)
 
     page.click("button.lien:has-text(\"Fermer la session\")")
-    page.wait_for_selector("#accueil:not([hidden])")
+    page.wait_for_selector("#lancement:not([hidden])")
 
     # Le cookie de rafraichissement (httpOnly) est toujours dans le contexte
     # du navigateur : s'il etait encore valide cote serveur, /auth/refresh
@@ -154,10 +156,10 @@ def test_session_survives_a_page_reload(page, frontend_server, backend_server):
 
     # Une deconnexion explicite doit rester definitive apres actualisation.
     page.click("button.lien:has-text(\"Fermer la session\")")
-    page.wait_for_selector("#accueil:not([hidden])")
+    page.wait_for_selector("#lancement:not([hidden])")
     assert page.evaluate("localStorage.getItem('cai_jeton')") is None
     page.reload(wait_until="networkidle")
-    page.wait_for_selector("#accueil:not([hidden])", timeout=10000)
+    page.wait_for_selector("#lancement:not([hidden])", timeout=10000)
 
 
 def test_delete_organization_then_delete_account(page, frontend_server, backend_server):
@@ -177,7 +179,7 @@ def test_delete_organization_then_delete_account(page, frontend_server, backend_
 
     page.once("dialog", lambda d: d.accept())
     page.click("button:has-text(\"Supprimer mon compte\")")
-    page.wait_for_selector("#accueil:not([hidden])", timeout=15000)
+    page.wait_for_selector("#lancement:not([hidden])", timeout=15000)
 
 
 def test_about_page_has_content_and_contact_link(page, frontend_server, backend_server):

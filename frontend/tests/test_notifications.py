@@ -19,7 +19,7 @@ PWD = "Compliance!2026x"
 
 def _register(page, frontend_server: str, backend_server, email: str) -> str:
     page.goto(frontend_server, wait_until="networkidle")
-    page.click("button.lien:has-text(\"Créer un compte\")")
+    page.click(".lance-inscription")
     page.wait_for_selector("#p-inscription:not([hidden])")
     page.fill("#i-nom", "Sarah Test")
     page.fill("#i-org", "Acme SAS")
@@ -35,6 +35,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> str:
     page.wait_for_selector("#p-verification:not([hidden])")
 
     page.goto(frontend_server, wait_until="networkidle")
+    page.click(".lance-connexion")
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
@@ -78,7 +79,8 @@ def test_notification_appears_with_badge(page, frontend_server, backend_server, 
     # rechargement de page qui perdrait la session comme n'importe quel
     # rechargement en conditions reelles.
     page.click("button.lien:has-text(\"Fermer la session\")")
-    page.wait_for_selector("#accueil:not([hidden])")
+    page.wait_for_selector("#lancement:not([hidden])")
+    page.click(".lance-connexion")
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
