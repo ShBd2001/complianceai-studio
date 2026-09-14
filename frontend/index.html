@@ -275,6 +275,26 @@ tr.req-detail-ligne td{padding:0 16px 20px;border-bottom:1px solid var(--regle-f
 .contact-carte .fleche{width:16px;height:16px;flex:none;color:var(--sourdine);transition:transform .18s ease}
 .contact-carte:hover .fleche{transform:translateX(4px);color:var(--primaire)}
 
+/* ---------- Guide de demarrage (tableau de bord) ---------- */
+.guide-demarrage{position:relative;background:var(--carte);border:1px solid var(--regle);border-radius:16px;padding:26px 28px;margin-bottom:26px;box-shadow:var(--ombre-sm)}
+.guide-fermer{position:absolute;top:14px;right:14px;background:none;box-shadow:none;border:none;color:var(--sourdine);padding:7px;border-radius:var(--rayon-sm)}
+.guide-fermer:hover{background:var(--regle-fine);color:var(--encre);transform:none}
+.guide-fermer svg{width:16px;height:16px;display:block}
+.guide-tete h2{font-family:var(--serif);font-size:19px;margin:6px 0 12px}
+.guide-barre{height:6px;background:var(--regle-fine);border-radius:var(--rayon-pill);overflow:hidden;max-width:320px}
+.guide-barre span{display:block;height:100%;background:var(--grad-marque);border-radius:var(--rayon-pill);transition:width .4s ease}
+.guide-etapes{display:flex;flex-direction:column;margin-top:18px}
+.guide-etape{display:flex;align-items:center;gap:14px;padding:13px 4px;border-top:1px solid var(--regle-fine);flex-wrap:wrap}
+.guide-etape:first-child{border-top:none}
+.guide-puce{flex:none;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:600;background:var(--regle-fine);color:var(--sourdine)}
+.guide-etape.faite .guide-puce{background:var(--valide-t);color:var(--valide)}
+.guide-etape.faite .guide-puce svg{width:14px;height:14px}
+.guide-texte{flex:1;min-width:200px}
+.guide-texte b{display:block;font-size:14px;font-weight:600}
+.guide-etape.faite .guide-texte b{color:var(--sourdine);text-decoration:line-through;text-decoration-color:var(--regle)}
+.guide-texte span{display:block;font-size:12.5px;color:var(--sourdine);margin-top:2px}
+.guide-etape button{flex:none}
+
 .courbe{background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:22px;box-shadow:var(--ombre-sm)}
 .courbe svg{width:100%;height:180px;display:block;overflow:visible}
 .courbe .grille-h{stroke:var(--regle-fine);stroke-width:1}
@@ -953,6 +973,11 @@ function basculerLangue() {
   appliquerLangue();
   appliquerTheme();
   traduireDOM(document.body);
+  // traduireDOM() ne retraduit que les noeuds de texte deja dans le DOM :
+  // un texte construit dynamiquement en JS avec un ternaire sur LANG (ex.
+  // "3 terminees" / "3 completed") reste fige dans l'ancienne langue tant
+  // que la vue n'est pas redessinee avec la valeur a jour de LANG.
+  if (!$('appli').hidden) router();
 }
 
 // Dictionnaire cle en cle (texte francais exact -> anglais) applique par
@@ -1021,6 +1046,14 @@ const TRAD_EN = {
   'Action corrective': 'Corrective action', 'Aucun constat ne correspond aux filtres.': 'No finding matches the filters.',
   // Tableau de bord
   'Nouvelle campagne': 'New campaign', 'Score courant': 'Current score', 'Aucune campagne notée': 'No scored campaign yet',
+  // Guide de demarrage
+  'Guide de démarrage': 'Getting started', 'Masquer le guide': 'Hide the guide', 'Continuer': 'Continue',
+  'Lancer une première campagne': 'Launch a first campaign',
+  "Choisissez un référentiel et ouvrez votre première campagne d'audit.": 'Pick a framework and open your first audit campaign.',
+  "Déposer une pièce et lancer l'analyse": 'Upload a file and run the analysis',
+  'Versez un document et laissez le moteur confronter vos exigences au texte réel.': 'Upload a document and let the engine check your requirements against the real text.',
+  'Inviter un membre de votre équipe': 'Invite a teammate',
+  'Ajoutez un auditeur ou un lecteur pour partager le suivi de vos campagnes.': 'Add an auditor or a viewer to share the tracking of your campaigns.',
   'Évolution': 'Trend', 'Depuis la première campagne': 'Since the first campaign', 'Campagnes': 'Campaigns',
   'Points de mesure': 'Data points', 'Campagnes avec score publié': 'Campaigns with a published score',
   'Trajectoire de conformité': 'Compliance trajectory', 'La trajectoire apparaîtra dès la deuxième campagne notée.': 'The trajectory will appear once a second campaign has been scored.',
@@ -1596,8 +1629,19 @@ async function vueTableau() {
     const termines = audits.filter(a => a.status === 'completed').length;
     const cScore = dernier ? couleurScore(dernier.score) : null;
     const sensDelta = delta > 0 ? 'hausse' : delta < 0 ? 'baisse' : null;
+    const org = E.orgs.find(o => o.id === E.orgId);
+    const etapes = [
+      { fait: audits.length > 0, titre: 'Lancer une première campagne',
+        texte: "Choisissez un référentiel et ouvrez votre première campagne d'audit.", cible: '#/audits' },
+      { fait: termines > 0, titre: "Déposer une pièce et lancer l'analyse",
+        texte: 'Versez un document et laissez le moteur confronter vos exigences au texte réel.',
+        cible: audits.length ? `#/audit/${audits[0].id}` : '#/audits' },
+      { fait: (org?.member_count || 1) > 1, titre: 'Inviter un membre de votre équipe',
+        texte: 'Ajoutez un auditeur ou un lecteur pour partager le suivi de vos campagnes.', cible: '#/equipe' },
+    ];
 
     poser('z', `
+      ${(etapes.some(e => !e.fait) && !localStorage.getItem('cai_guide_masque')) ? guideDemarrage(etapes) : ''}
       <div class="cartes">
         <div class="carte carte-score">
           <span class="carte-ic" style="${cScore ? `--bg:var(--${cScore}-t);--fg:var(--${cScore})` : ''}">${IC_CIBLE}</span>
@@ -1624,6 +1668,33 @@ async function vueTableau() {
       ${audits.length ? tableAudits(audits.slice(0, 6)) : `<div class="vide">Aucune campagne pour l'instant.
         <button class="discret" onclick="location.hash='#/audits'">Ouvrir une campagne</button></div>`}`);
   } catch (e) { poser('z', echoue(e)); }
+}
+
+const IC_COCHE_GUIDE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+function guideDemarrage(etapes) {
+  const faites = etapes.filter(e => e.fait).length;
+  const progres = LANG === 'en' ? `${faites} of ${etapes.length} steps completed` : `${faites} sur ${etapes.length} étapes complétées`;
+  return `<div class="guide-demarrage" id="guide-demarrage">
+    <button type="button" class="guide-fermer" onclick="masquerGuide()" aria-label="Masquer le guide" title="Masquer le guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <div class="guide-tete">
+      <div class="eyebrow">Guide de démarrage</div>
+      <h2>${h(progres)}</h2>
+      <div class="guide-barre"><span style="width:${Math.round(faites / etapes.length * 100)}%"></span></div>
+    </div>
+    <div class="guide-etapes">
+      ${etapes.map((e, i) => `
+        <div class="guide-etape${e.fait ? ' faite' : ''}">
+          <span class="guide-puce">${e.fait ? IC_COCHE_GUIDE : i + 1}</span>
+          <div class="guide-texte"><b>${h(e.titre)}</b><span>${h(e.texte)}</span></div>
+          ${!e.fait ? `<button class="discret" onclick="location.hash='${e.cible}'">Continuer</button>` : ''}
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+function masquerGuide() {
+  localStorage.setItem('cai_guide_masque', '1');
+  const el = $('guide-demarrage');
+  if (el) el.remove();
 }
 
 function courbe(points) {
