@@ -159,7 +159,7 @@ def test_registration_requires_accepting_privacy_policy(page, frontend_server, b
 def test_login_wrong_password_shows_error(page, frontend_server, backend_server):
     email = _email("login")
     _register(page, frontend_server, backend_server, email)
-    page.click("button.lien:has-text(\"Fermer la session\")")
+    page.click("button.rail-sortie:has-text(\"Fermer la session\")")
     page.wait_for_selector("#lancement:not([hidden])")
     page.click(".lance-connexion")
 
@@ -174,7 +174,7 @@ def test_password_reset_full_round_trip(page, frontend_server, backend_server):
     email = _email("reset")
     new_pwd = "NouveauMdp!2026x"
     _register(page, frontend_server, backend_server, email)
-    page.click("button.lien:has-text(\"Fermer la session\")")
+    page.click("button.rail-sortie:has-text(\"Fermer la session\")")
     page.wait_for_selector("#lancement:not([hidden])")
     page.click(".lance-connexion")
 

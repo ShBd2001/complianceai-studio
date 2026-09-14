@@ -114,7 +114,7 @@ def test_change_password_from_account_page(page, frontend_server, backend_server
     page.click("#btn-changer-mdp")
     expect(page.locator("#msg-secu .succes")).to_be_visible()
 
-    page.click("button.lien:has-text(\"Fermer la session\")")
+    page.click("button.rail-sortie:has-text(\"Fermer la session\")")
     page.wait_for_selector("#lancement:not([hidden])")
     page.click(".lance-connexion")
     page.fill("#c-mail", email)
@@ -130,7 +130,7 @@ def test_logout_actually_revokes_the_server_session(page, frontend_server, backe
     email = f"logout-{uuid.uuid4().hex[:8]}@exemple.fr"
     _register(page, frontend_server, backend_server, email)
 
-    page.click("button.lien:has-text(\"Fermer la session\")")
+    page.click("button.rail-sortie:has-text(\"Fermer la session\")")
     page.wait_for_selector("#lancement:not([hidden])")
 
     # Le cookie de rafraichissement (httpOnly) est toujours dans le contexte
@@ -155,7 +155,7 @@ def test_session_survives_a_page_reload(page, frontend_server, backend_server):
     page.wait_for_selector("#appli:not([hidden])", timeout=10000)
 
     # Une deconnexion explicite doit rester definitive apres actualisation.
-    page.click("button.lien:has-text(\"Fermer la session\")")
+    page.click("button.rail-sortie:has-text(\"Fermer la session\")")
     page.wait_for_selector("#lancement:not([hidden])")
     assert page.evaluate("localStorage.getItem('cai_jeton')") is None
     page.reload(wait_until="networkidle")
