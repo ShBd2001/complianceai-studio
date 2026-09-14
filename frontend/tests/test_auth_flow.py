@@ -20,7 +20,7 @@ def _email(prefix: str) -> str:
 
 def _register(page, frontend_server: str, backend_server, email: str, org: str = "Acme SAS") -> None:
     page.goto(frontend_server, wait_until="networkidle")
-    page.click("button.lien:has-text(\"Créer un compte\")")
+    page.click(".lance-inscription")
     page.wait_for_selector("#p-inscription:not([hidden])")
     page.fill("#i-nom", "Sarah Test")
     page.fill("#i-org", org)
@@ -36,6 +36,7 @@ def _register(page, frontend_server: str, backend_server, email: str, org: str =
     page.wait_for_selector("#p-verification:not([hidden])")
 
     page.goto(frontend_server, wait_until="networkidle")
+    page.click(".lance-connexion")
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
@@ -48,6 +49,7 @@ def test_theme_and_language_toggles_persist_across_reload(page, frontend_server,
     ET apres connexion — pas seulement un etat JS en memoire."""
     email = _email("theme")
     page.goto(frontend_server, wait_until="networkidle")
+    page.click(".lance-connexion")
 
     expect(page.locator("html")).not_to_have_attribute("data-theme", "dark")
     page.click("#rr-theme")
@@ -58,6 +60,7 @@ def test_theme_and_language_toggles_persist_across_reload(page, frontend_server,
     expect(page.locator("#p-connexion button:not(.lien)")).to_have_text("Sign in")
 
     page.reload(wait_until="networkidle")
+    page.click(".lance-connexion")
     expect(page.locator("html")).to_have_attribute("data-theme", "dark")
     expect(page.locator("html")).to_have_attribute("lang", "en")
     expect(page.locator("#p-connexion button:not(.lien)")).to_have_text("Sign in")
@@ -85,7 +88,7 @@ def test_register_then_verify_email_via_real_link(page, frontend_server, backend
     reellement envoye (repli fichier local) n'a pas ete ouvert."""
     email = _email("verif")
     page.goto(frontend_server, wait_until="networkidle")
-    page.click("button.lien:has-text(\"Créer un compte\")")
+    page.click(".lance-inscription")
     page.wait_for_selector("#p-inscription:not([hidden])")
     page.fill("#i-nom", "Sarah Test")
     page.fill("#i-org", "Acme SAS")
@@ -112,6 +115,7 @@ def test_register_then_verify_email_via_real_link(page, frontend_server, backend
     expect(page.locator("#msg-verification")).to_contain_text("vérifiée")
 
     page.goto(frontend_server, wait_until="networkidle")
+    page.click(".lance-connexion")
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
@@ -126,7 +130,7 @@ def test_registration_requires_accepting_privacy_policy(page, frontend_server, b
     de s'inscrire, et que la case cochee ramene bien au formulaire rempli."""
     email = _email("cgu")
     page.goto(frontend_server, wait_until="networkidle")
-    page.click("button.lien:has-text(\"Créer un compte\")")
+    page.click(".lance-inscription")
     page.wait_for_selector("#p-inscription:not([hidden])")
     page.fill("#i-nom", "Sarah Test")
     page.fill("#i-org", "Acme SAS")
@@ -156,7 +160,8 @@ def test_login_wrong_password_shows_error(page, frontend_server, backend_server)
     email = _email("login")
     _register(page, frontend_server, backend_server, email)
     page.click("button.lien:has-text(\"Fermer la session\")")
-    page.wait_for_selector("#accueil:not([hidden])")
+    page.wait_for_selector("#lancement:not([hidden])")
+    page.click(".lance-connexion")
 
     page.fill("#c-mail", email)
     page.fill("#c-mdp", "MauvaisMotDePasse!123")
@@ -170,7 +175,8 @@ def test_password_reset_full_round_trip(page, frontend_server, backend_server):
     new_pwd = "NouveauMdp!2026x"
     _register(page, frontend_server, backend_server, email)
     page.click("button.lien:has-text(\"Fermer la session\")")
-    page.wait_for_selector("#accueil:not([hidden])")
+    page.wait_for_selector("#lancement:not([hidden])")
+    page.click(".lance-connexion")
 
     page.click("button.lien:has-text(\"Mot de passe oublié\")")
     page.wait_for_selector("#p-oubli:not([hidden])")

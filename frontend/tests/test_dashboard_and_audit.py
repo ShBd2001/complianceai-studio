@@ -24,7 +24,7 @@ POLICY = (
 
 def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.goto(frontend_server, wait_until="networkidle")
-    page.click("button.lien:has-text(\"Créer un compte\")")
+    page.click(".lance-inscription")
     page.wait_for_selector("#p-inscription:not([hidden])")
     page.fill("#i-nom", "Sarah Test")
     page.fill("#i-org", "Acme SAS")
@@ -40,6 +40,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.wait_for_selector("#p-verification:not([hidden])")
 
     page.goto(frontend_server, wait_until="networkidle")
+    page.click(".lance-connexion")
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")

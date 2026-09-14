@@ -327,8 +327,12 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .entree .quoi{font-size:14px;margin-top:2px}
 .entree .quoi code{font-family:var(--mono);font-size:12.5px;background:var(--regle-fine);border-radius:4px;padding:1px 6px}
 
-.alerte{border-left:3px solid var(--sceau);background:var(--sceau-t);border-radius:0 var(--rayon-sm) var(--rayon-sm) 0;padding:12px 16px;margin:13px 0;font-size:14px;color:var(--sceau-fonce)}
-.succes{border-left:3px solid var(--valide);background:var(--valide-t);border-radius:0 var(--rayon-sm) var(--rayon-sm) 0;padding:12px 16px;margin:13px 0;font-size:14px;color:var(--valide-fonce)}
+.alerte,.succes{display:flex;align-items:flex-start;gap:10px;border-radius:var(--rayon-sm);padding:12px 14px;margin:13px 0;font-size:13.5px;line-height:1.5;box-shadow:var(--ombre-sm)}
+.alerte::before,.succes::before{content:"";flex:none;width:18px;height:18px;margin-top:1px}
+.alerte{border:1px solid color-mix(in srgb, var(--sceau) 28%, transparent);background:var(--sceau-t);color:var(--sceau-fonce)}
+.alerte::before{background-color:var(--sceau);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E") center/contain no-repeat}
+.succes{border:1px solid color-mix(in srgb, var(--valide) 28%, transparent);background:var(--valide-t);color:var(--valide-fonce)}
+.succes::before{background-color:var(--valide);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat}
 .attente{font-family:var(--mono);font-size:12.5px;color:var(--sourdine);display:flex;align-items:center;gap:9px;padding:14px 0}
 .spinner{width:15px;height:15px;border:2px solid var(--regle-fine);border-top-color:var(--primaire);border-radius:50%;display:inline-block;flex:none;animation:tourner .6s linear infinite}
 .spinner.clair{border-color:rgba(255,255,255,.35);border-top-color:#fff}
@@ -452,6 +456,68 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .faq-item summary svg{width:16px;height:16px;flex:none;color:var(--sourdine);transition:transform .2s ease}
 .faq-item[open] summary svg{transform:rotate(180deg)}
 .faq-item p{margin:12px 0 0;color:var(--encre-doux);font-size:13.5px;line-height:1.6;max-width:64ch}
+
+/* ---------- Page de lancement (accueil marketing) ---------- */
+#lancement{background:var(--papier)}
+.lance-nav{display:flex;align-items:center;justify-content:space-between;max-width:1180px;margin:0 auto;padding:22px 48px;position:relative;z-index:2}
+.lance-nav .marque{font-size:19px;color:#fff}
+.lance-nav-liens{display:flex;align-items:center;gap:8px}
+.lance-lien{background:none;box-shadow:none;border:none;color:rgba(255,255,255,.85);font-size:13.5px;font-weight:500;padding:8px 14px}
+.lance-lien:hover{color:#fff;transform:none}
+.lance-cta{background:#fff;color:var(--primaire-fonce);font-size:13.5px;padding:9px 18px;box-shadow:0 4px 14px -3px rgba(0,0,0,.25)}
+.lance-cta:hover{background:#fff;transform:translateY(-1px)}
+
+.lance-hero{position:relative;overflow:hidden;background:linear-gradient(165deg,#14162E 0%,#1B1E3D 55%,#232759 100%);color:#F4F5FC;padding-bottom:70px}
+.lance-hero::before{content:"";position:absolute;width:520px;height:520px;top:-180px;right:-140px;border-radius:50%;background:radial-gradient(circle,rgba(109,107,245,.32),transparent 70%);filter:blur(70px);pointer-events:none}
+.lance-hero::after{content:"";position:absolute;width:420px;height:420px;bottom:-200px;left:-120px;border-radius:50%;background:radial-gradient(circle,rgba(52,87,213,.26),transparent 70%);filter:blur(70px);pointer-events:none}
+.lance-hero-corps{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:50px 48px 0;text-align:center}
+.lance-hero .av-badges{justify-content:center}
+.lance-titre{font-family:var(--serif);font-size:clamp(34px,5vw,56px);font-weight:900;line-height:1.08;letter-spacing:-.03em;margin:18px 0 16px;text-wrap:balance}
+.lance-titre em{font-style:italic;font-weight:500;background:linear-gradient(135deg,#9C9BFF,#7FE0C9);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lance-sous{font-size:16px;color:#B7BAD9;max-width:56ch;margin:0 auto 30px;line-height:1.6}
+.lance-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:54px}
+.lance-ctas button{padding:13px 26px;font-size:14.5px}
+.lance-ctas .principal{box-shadow:0 10px 28px -8px rgba(109,107,245,.55)}
+.lance-ctas .secondaire{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);color:#fff}
+.lance-ctas .secondaire:hover{background:rgba(255,255,255,.12)}
+
+.lance-visuel{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 48px}
+.lance-visuel .av-scan{max-width:none;margin:0 auto}
+
+.lance-stats{max-width:1180px;margin:-40px auto 0;padding:0 48px;position:relative;z-index:2}
+.lance-stats-grille{display:grid;grid-template-columns:repeat(3,1fr);background:var(--carte);border:1px solid var(--regle);border-radius:16px;box-shadow:var(--ombre-lg)}
+.lance-stats-grille div{padding:26px 20px;text-align:center;border-left:1px solid var(--regle-fine)}
+.lance-stats-grille div:first-child{border-left:none}
+.lance-stats-grille b{display:block;font-family:var(--serif);font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.lance-stats-grille span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--sourdine)}
+@media(max-width:700px){.lance-stats-grille{grid-template-columns:1fr}.lance-stats-grille div{border-left:none;border-top:1px solid var(--regle-fine)}.lance-stats-grille div:first-child{border-top:none}}
+
+.lance-section{max-width:1180px;margin:0 auto;padding:90px 48px 0}
+.lance-section-tete{text-align:center;max-width:620px;margin:0 auto 44px}
+.lance-section-tete h2{font-family:var(--serif);font-size:clamp(26px,3vw,34px);font-weight:800;margin:10px 0 12px;text-wrap:balance}
+.lance-section-tete p{color:var(--encre-doux);font-size:15px;margin:0}
+.lance-atouts{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+@media(max-width:860px){.lance-atouts{grid-template-columns:1fr;max-width:440px;margin:0 auto}}
+.atout-carte{background:var(--carte);border:1px solid var(--regle);border-radius:16px;padding:28px 24px}
+.atout-carte .carte-ic{width:38px;height:38px;border-radius:11px}
+.atout-carte .carte-ic svg{width:20px;height:20px}
+.atout-carte h3{font-family:var(--serif);font-size:17px;margin:14px 0 8px}
+.atout-carte p{margin:0;font-size:13.5px;color:var(--encre-doux);line-height:1.55}
+
+.lance-tarifs-teaser{max-width:1180px;margin:96px auto 0;padding:0 48px}
+.teaser-carte{background:linear-gradient(150deg,#14162E 0%,#1B1E3D 55%,#232759 100%);border-radius:20px;padding:54px 48px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.teaser-carte::before{content:"";position:absolute;width:380px;height:380px;top:-160px;left:50%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,rgba(109,107,245,.3),transparent 70%);filter:blur(60px);pointer-events:none}
+.teaser-carte h2{position:relative;z-index:1;font-family:var(--serif);font-size:clamp(24px,3vw,30px);margin:0 0 12px}
+.teaser-carte p{position:relative;z-index:1;color:#B7BAD9;margin:0 0 26px;font-size:14.5px}
+.teaser-carte button{position:relative;z-index:1;background:#fff;color:var(--primaire-fonce);padding:12px 26px;font-size:14px}
+
+.lance-pied{max-width:1180px;margin:90px auto 0;padding:30px 48px;border-top:1px solid var(--regle);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.lance-pied .marque{font-size:16px;color:var(--encre)}
+.lance-pied-liens{display:flex;gap:20px}
+.lance-pied-liens button{font-size:12.5px;color:var(--sourdine);background:none;box-shadow:none;border:none;padding:0}
+.lance-pied-liens button:hover{color:var(--primaire);transform:none}
+.lance-copyright{font-family:var(--mono);font-size:11px;color:var(--sourdine)}
+@media(max-width:640px){.lance-nav,.lance-hero-corps,.lance-visuel,.lance-stats,.lance-section,.lance-tarifs-teaser,.lance-pied{padding-left:22px;padding-right:22px}}
 </style>
 </head>
 <body>
@@ -469,7 +535,91 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 
 <div id="amorce" class="amorce" hidden><span class="spinner"></span></div>
 
-<div id="accueil">
+<div id="lancement">
+  <div class="lance-hero">
+    <div class="lance-nav">
+      <div class="marque"><svg class="logo" viewBox="0 0 32 32" fill="none"><path d="M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z" fill="url(#marque-grad)"/><path d="M10.5 16.2 14 19.8 21.5 12" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span>ComplianceAI <em>Studio</em></span></div>
+      <div class="lance-nav-liens">
+        <button type="button" class="lance-lien lance-tarifs" onclick="afficherTarifs()">Tarifs</button>
+        <button type="button" class="lance-lien lance-connexion" onclick="afficherConnexion(false)">Se connecter</button>
+        <button type="button" class="lance-cta lance-inscription" onclick="afficherConnexion(true)">Créer un compte</button>
+      </div>
+    </div>
+
+    <div class="lance-hero-corps">
+      <div class="av-badges reveal">
+        <span>RGPD</span><span>NIS2</span><span>DORA</span><span>AI Act</span>
+      </div>
+      <p class="lance-titre reveal">La conformité, <em>prouvée</em> ligne par ligne.</p>
+      <p class="lance-sous reveal">Chaque exigence est confrontée au texte réel de vos documents. Aucune conformité n'est déclarée sans une citation vérifiable — jamais l'inverse.</p>
+      <div class="lance-ctas reveal">
+        <button type="button" class="principal" onclick="afficherConnexion(true)">Commencer gratuitement</button>
+        <button type="button" class="secondaire" onclick="afficherConnexion(false)">Se connecter</button>
+      </div>
+    </div>
+
+    <div class="lance-visuel reveal">
+      <div class="av-scan" aria-hidden="true">
+        <div class="av-scan-tete"><span>politique_securite.pdf</span><div class="av-scan-pt"><i></i><i></i><i></i></div></div>
+        <div class="av-ligne"></div><div class="av-ligne"></div><div class="av-ligne"></div><div class="av-ligne"></div>
+        <div class="av-verdict"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Article 32 — preuve trouvée, ligne 14</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lance-stats reveal">
+    <div class="lance-stats-grille">
+      <div><b>4</b><span>Référentiels</span></div>
+      <div><b>322</b><span>Exigences</span></div>
+      <div><b>100%</b><span>Vérifiées par citation</span></div>
+    </div>
+  </div>
+
+  <div class="lance-section">
+    <div class="lance-section-tete reveal">
+      <div class="eyebrow" style="justify-content:center;display:flex">Pourquoi ComplianceAI Studio</div>
+      <h2>Ce qui change vraiment</h2>
+      <p>Pensé pour remplacer les tableurs et les relectures manuelles, pas pour les imiter.</p>
+    </div>
+    <div class="lance-atouts">
+      <div class="atout-carte reveal">
+        <span class="carte-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <h3>Preuves vérifiées, pas affirmées</h3>
+        <p>Chaque non-conformité doit citer une preuve, et le code vérifie que cette citation existe vraiment dans vos documents.</p>
+      </div>
+      <div class="atout-carte reveal">
+        <span class="carte-ic" style="--bg:var(--azur-t);--fg:var(--azur)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></svg></span>
+        <h3>4 référentiels, un seul outil</h3>
+        <p>RGPD, NIS2, DORA et AI Act couverts nativement, avec des correspondances entre eux pour éviter d'instruire deux fois la même preuve.</p>
+      </div>
+      <div class="atout-carte reveal">
+        <span class="carte-ic" style="--bg:var(--valide-t);--fg:var(--valide)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6a1 1 0 0 1 1 1v1H8V4a1 1 0 0 1 1-1Z"/><path d="M5 6h14v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6Z"/><path d="m9 13 2 2 4-4"/></svg></span>
+        <h3>Rapports prêts à partager</h3>
+        <p>PDF et HTML générés en un clic, avec l'historique complet de chaque campagne pour suivre votre trajectoire de conformité.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lance-tarifs-teaser reveal">
+    <div class="teaser-carte">
+      <h2>Des tarifs simples, à partir de 0 €.</h2>
+      <p>Un référentiel gratuit pour commencer, toute l'équipe pour aller plus loin.</p>
+      <button type="button" onclick="afficherTarifs()">Voir les tarifs</button>
+    </div>
+  </div>
+
+  <div class="lance-pied">
+    <div class="marque"><svg class="logo" viewBox="0 0 32 32" fill="none"><path d="M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z" fill="url(#marque-grad)"/><path d="M10.5 16.2 14 19.8 21.5 12" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span>ComplianceAI <em>Studio</em></span></div>
+    <div class="lance-pied-liens">
+      <button type="button" onclick="afficherTarifs()">Tarifs</button>
+      <button type="button" onclick="afficherConnexion(false); montrerPanneau('p-confidentialite')">Confidentialité</button>
+      <a href="mailto:sarahbelmiloud2001@gmail.com">Nous contacter</a>
+    </div>
+  </div>
+  <p class="lance-copyright" style="text-align:center;padding:20px 0 34px">ComplianceAI Studio — outil d'aide à l'auto-évaluation, ne vaut pas preuve de conformité.</p>
+</div>
+
+<div id="accueil" hidden>
   <div class="accueil-visuel">
     <div class="av-entete">
       <div>
@@ -499,7 +649,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 
   <div class="accueil-forme">
   <div class="portail">
-    <div class="marque"><svg class="logo" viewBox="0 0 32 32" fill="none"><path d="M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z" fill="url(#marque-grad)"/><path d="M10.5 16.2 14 19.8 21.5 12" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span>ComplianceAI <em>Studio</em></span></div>
+    <button type="button" class="marque" onclick="afficherLancement()" style="background:none;box-shadow:none;border:none;padding:0;cursor:pointer"><svg class="logo" viewBox="0 0 32 32" fill="none"><path d="M16 2 3 7v8c0 8.5 5.8 15.6 13 17 7.2-1.4 13-8.5 13-17V7L16 2Z" fill="url(#marque-grad)"/><path d="M10.5 16.2 14 19.8 21.5 12" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span>ComplianceAI <em>Studio</em></span></button>
     <div class="marque-sous">Audit réglementaire — RGPD · NIS2 · DORA · AI Act</div>
 
     <div id="p-connexion">
@@ -1023,6 +1173,27 @@ const TRAD_EN = {
   "L'offre Entreprise inclut-elle un accompagnement ?": 'Does the Enterprise plan include onboarding support?',
   "Oui : mise en place, formation des équipes et un point de contact dédié pour toute question réglementaire ou technique.":
     'Yes: setup, team training, and a dedicated point of contact for any regulatory or technical question.',
+  // Lancement (page marketing)
+  'Pourquoi ComplianceAI Studio': 'Why ComplianceAI Studio',
+  'Ce qui change vraiment': 'What actually changes',
+  'Pensé pour remplacer les tableurs et les relectures manuelles, pas pour les imiter.':
+    'Built to replace spreadsheets and manual reviews, not imitate them.',
+  'Preuves vérifiées, pas affirmées': 'Verified evidence, not just claims',
+  "Chaque non-conformité doit citer une preuve, et le code vérifie que cette citation existe vraiment dans vos documents.":
+    'Every non-conformity must cite evidence, and the code checks that citation actually exists in your documents.',
+  '4 référentiels, un seul outil': '4 frameworks, one tool',
+  "RGPD, NIS2, DORA et AI Act couverts nativement, avec des correspondances entre eux pour éviter d'instruire deux fois la même preuve.":
+    "GDPR, NIS2, DORA and the AI Act covered natively, with crosswalks between them so you never gather the same evidence twice.",
+  'Rapports prêts à partager': 'Reports ready to share',
+  "PDF et HTML générés en un clic, avec l'historique complet de chaque campagne pour suivre votre trajectoire de conformité.":
+    'PDF and HTML generated in one click, with the full history of every campaign to track your compliance trajectory.',
+  'Des tarifs simples, à partir de 0 €.': 'Simple pricing, starting at €0.',
+  "Un référentiel gratuit pour commencer, toute l'équipe pour aller plus loin.":
+    'One framework free to start, your whole team to go further.',
+  'Voir les tarifs': 'See pricing',
+  'Confidentialité': 'Privacy',
+  "ComplianceAI Studio — outil d'aide à l'auto-évaluation, ne vaut pas preuve de conformité.":
+    "ComplianceAI Studio — a self-assessment aid, not proof of compliance.",
 };
 // Pour les textes qui ne passent jamais par le DOM (confirm(), alert(),
 // messages d'erreur bruts) : traduireDOM() ne peut pas les atteindre, donc
@@ -1082,6 +1253,7 @@ function traduireDOM(racine) {
 traduireDOM(document.body);
 appliquerTheme();
 appliquerLangue();
+initReveal('#lancement');
 
 // Memes tracés que la sidebar (nav.rail), reutilises pour colorer le titre
 // de chaque page — une identite visuelle coherente d'un bout a l'autre.
@@ -1159,7 +1331,21 @@ function montrerPanneau(id) {
 
 function portail(inscription) { montrerPanneau(inscription ? 'p-inscription' : 'p-connexion'); }
 
+function afficherLancement() {
+  $('accueil').hidden = true;
+  $('tarifs').hidden = true;
+  $('lancement').hidden = false;
+}
+function afficherConnexion(inscription) {
+  $('lancement').hidden = true;
+  $('accueil').hidden = false;
+  portail(inscription);
+}
+
+let ECRAN_AVANT_TARIFS = 'lancement';
 function afficherTarifs() {
+  ECRAN_AVANT_TARIFS = $('accueil').hidden ? 'lancement' : 'accueil';
+  $('lancement').hidden = true;
   $('accueil').hidden = true;
   $('tarifs').hidden = false;
   basculerCycle('mensuel');
@@ -1167,7 +1353,7 @@ function afficherTarifs() {
 }
 function masquerTarifs() {
   $('tarifs').hidden = true;
-  $('accueil').hidden = false;
+  $(ECRAN_AVANT_TARIFS).hidden = false;
 }
 function basculerCycle(cycle) {
   document.querySelectorAll('.cycle-option').forEach(b => b.classList.toggle('actif', b.dataset.cycle === cycle));
@@ -1216,9 +1402,13 @@ async function verifierEmailDepuisLien(token) {
 (function ouvrirDepuisLienEmail() {
   const params = new URLSearchParams(location.search);
   if (params.has('verify_email')) {
+    $('lancement').hidden = true;
+    $('accueil').hidden = false;
     montrerPanneau('p-verification');
     verifierEmailDepuisLien(params.get('verify_email'));
   } else if (params.has('reset_password')) {
+    $('lancement').hidden = true;
+    $('accueil').hidden = false;
     REINIT_TOKEN = params.get('reset_password');
     montrerPanneau('p-reinit');
   }
@@ -1235,6 +1425,7 @@ async function restaurerSession() {
   if (params.has('verify_email') || params.has('reset_password')) return;
   const jeton = localStorage.getItem(CLE_JETON);
   if (!jeton) return;
+  $('lancement').hidden = true;
   $('accueil').hidden = true;
   $('amorce').hidden = false;
   E.jeton = jeton;
@@ -1314,6 +1505,7 @@ async function demarrer() {
   E.orgs = await appel('/api/v1/orgs');
   if (!E.orgs.length) throw new Error(tr('Aucune organisation rattachée à ce compte.'));
   E.orgId = E.orgs[0].id;
+  $('lancement').hidden = true;
   $('accueil').hidden = true;
   $('appli').hidden = false;
   initRail();
