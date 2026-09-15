@@ -503,7 +503,11 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .lance-titre{font-family:var(--serif);font-size:clamp(34px,5vw,56px);font-weight:900;line-height:1.08;letter-spacing:-.03em;margin:18px 0 16px;text-wrap:balance}
 .lance-titre em{font-style:italic;font-weight:500;background:linear-gradient(135deg,#9C9BFF,#7FE0C9);-webkit-background-clip:text;background-clip:text;color:transparent}
 .lance-sous{font-size:16px;color:#B7BAD9;max-width:56ch;margin:0 auto 30px;line-height:1.6}
-.lance-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:54px}
+.lance-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.lance-confiance{display:flex;align-items:center;justify-content:center;gap:7px;margin:0 0 46px;font-size:12.5px;color:#9CA0C4}
+.lance-confiance svg{width:14px;height:14px;flex:none;color:#7FE0C9}
+.lance-confiance button{background:none;box-shadow:none;border:none;color:#B7BAD9;text-decoration:underline;font-size:12.5px;padding:0}
+.lance-confiance button:hover{color:#fff;transform:none}
 .lance-ctas button{padding:13px 26px;font-size:14.5px}
 .lance-ctas .principal{box-shadow:0 10px 28px -8px rgba(109,107,245,.55)}
 .lance-ctas .secondaire{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);color:#fff}
@@ -584,6 +588,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
         <button type="button" class="principal" onclick="afficherConnexion(true)">Créer un compte</button>
         <button type="button" class="secondaire" onclick="afficherConnexion(false)">Se connecter</button>
       </div>
+      <p class="lance-confiance reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Vos données restent confidentielles : connexion chiffrée, jamais revendues, exportables ou supprimables à tout moment. <button type="button" onclick="afficherConnexion(false); montrerPanneau('p-confidentialite')">En savoir plus</button></p>
     </div>
 
     <div class="lance-visuel reveal">
@@ -1249,7 +1254,9 @@ const TRAD_EN = {
   "De l'auditeur indépendant au cabinet, un palier adapté au nombre de campagnes que vous menez chaque mois.":
     'From the independent auditor to the firm, a tier matched to how many campaigns you run each month.',
   'Voir les tarifs': 'See pricing',
-  'Confidentialité': 'Privacy',
+  'Confidentialité': 'Privacy', 'En savoir plus': 'Learn more',
+  'Vos données restent confidentielles : connexion chiffrée, jamais revendues, exportables ou supprimables à tout moment.':
+    'Your data stays confidential: encrypted connection, never resold, exportable or deletable at any time.',
   "ComplianceAI Studio — outil d'aide à l'auto-évaluation, ne vaut pas preuve de conformité.":
     "ComplianceAI Studio — a self-assessment aid, not proof of compliance.",
 };
