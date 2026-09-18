@@ -225,7 +225,7 @@ button.petit{padding:6px 13px;font-size:13px}
 .ref-carte:hover{border-color:color-mix(in srgb,var(--primaire) 40%,var(--regle));transform:translateY(-3px);box-shadow:var(--ombre)}
 .ref-carte:focus-visible{outline:2px solid var(--primaire);outline-offset:2px}
 .ref-tete{display:flex;align-items:center;justify-content:space-between}
-.ref-ic{width:26px;height:26px;padding:5px;border-radius:8px;background:var(--primaire-clair);color:var(--primaire);margin-bottom:10px;box-sizing:content-box}
+.ref-ic{width:26px;height:26px;padding:5px;border-radius:8px;background:var(--bg,var(--primaire-clair));color:var(--fg,var(--primaire));margin-bottom:10px;box-sizing:content-box}
 .ref-chevron{width:14px;height:14px;color:var(--sourdine);transition:transform .25s ease}
 .ref-carte.ouverte .ref-chevron{transform:rotate(180deg);color:var(--primaire)}
 .ref-ratio{margin-top:11px}
@@ -234,6 +234,21 @@ button.petit{padding:6px 13px;font-size:13px}
 .ref-ratio-txt{display:block;margin-top:6px;font-family:var(--mono);font-size:10px;color:var(--sourdine)}
 
 /* ---------- Articles d'un referentiel (Referentiels) ---------- */
+.cadre-switch{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.cadre-btn{display:flex;align-items:center;gap:8px;background:var(--carte);border:1px solid var(--regle);color:var(--encre-doux);padding:9px 16px;margin:0;font-size:13.5px;font-weight:600;font-family:var(--sans);border-radius:var(--rayon-pill);box-shadow:none;cursor:pointer;transition:border-color .18s ease,color .18s ease,transform .18s ease}
+.cadre-btn svg{width:16px;height:16px;flex:none}
+.cadre-btn:hover{border-color:var(--primaire);color:var(--encre);transform:translateY(-1px)}
+.cadre-btn.actif{background:var(--grad-marque);border-color:transparent;color:#fff;box-shadow:0 4px 14px -2px rgba(76,63,224,.5)}
+.ref-resume{display:flex;gap:16px;align-items:center;background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:16px 20px;margin-bottom:20px;box-shadow:var(--ombre-sm);animation:carte-entree .3s cubic-bezier(.2,.7,.3,1)}
+.ref-resume-ic{flex:none;width:38px;height:38px;border-radius:10px;background:var(--primaire-clair);color:var(--primaire);display:flex;align-items:center;justify-content:center}
+.ref-resume-ic svg{width:19px;height:19px}
+.ref-resume-txt{flex:1;min-width:0}
+.ref-resume-txt b{font-family:var(--serif);font-size:16px;font-weight:700}
+.ref-resume-txt span{display:block;font-family:var(--mono);font-size:11.5px;color:var(--sourdine);margin-top:2px}
+.ref-resume .ref-ratio{flex:none;width:140px;margin-top:0}
+.recherche-boite{position:relative;max-width:360px;margin-bottom:14px}
+.recherche-boite svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--sourdine);pointer-events:none}
+.recherche-boite input{padding-left:36px}
 .req-chevron{width:14px;height:14px;margin-left:8px;vertical-align:-2px;color:var(--sourdine);transition:transform .2s ease}
 .req-ligne.ouverte .req-chevron{transform:rotate(180deg);color:var(--primaire)}
 .req-ligne.ouverte{background:var(--primaire-clair)}
@@ -256,6 +271,7 @@ tr.req-detail-ligne td{padding:0 16px 20px;border-bottom:1px solid var(--regle-f
    et que <main> s'elargit, ce texte court reste colle a gauche avec un
    grand vide a droite. */
 .ap-page{max-width:840px;margin:0 auto}
+.ap-page .tete{background:linear-gradient(155deg,var(--primaire-clair) 0%,var(--carte) 72%);border:1px solid var(--regle);border-radius:var(--rayon);padding:26px 30px;margin-bottom:26px}
 
 .ap-stats{margin-bottom:28px}
 
@@ -334,6 +350,10 @@ tr.req-detail-ligne td{padding:0 16px 20px;border-bottom:1px solid var(--regle-f
 .famille{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--sourdine);font-weight:600;margin:30px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--regle);display:flex;justify-content:space-between}
 article.constat{display:grid;grid-template-columns:120px 1fr;gap:20px;padding:20px;margin:10px 0;background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);box-shadow:var(--ombre-sm);transition:box-shadow .15s ease}
 article.constat:hover{box-shadow:var(--ombre)}
+.constat-cw{transition:box-shadow .15s ease,transform .15s ease}
+.constat-cw:hover{transform:translateY(-2px)}
+.cw-cible{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cw-cible-ic{width:15px;height:15px;flex:none;color:var(--primaire);background:var(--primaire-clair);border-radius:5px;padding:4px;box-sizing:content-box}
 .dos{border-left:3px solid var(--regle);padding-left:13px;border-radius:2px}
 .dos .art{font-family:var(--mono);font-size:12.5px;font-weight:600;display:block;margin-bottom:8px}
 .dos.d-critical{border-left-color:var(--sceau)}
@@ -352,6 +372,19 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .entree .quand{font-family:var(--mono);font-size:10.5px;color:var(--sourdine)}
 .entree .quoi{font-size:14px;margin-top:2px}
 .entree .quoi code{font-family:var(--mono);font-size:12.5px;background:var(--regle-fine);border-radius:4px;padding:1px 6px}
+
+/* ---------- Journal d'activite : chronologie a icones ---------- */
+.journal-jour{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sourdine);margin:22px 0 12px;padding-left:40px}
+.journal-jour:first-child{margin-top:0}
+.entree-action{display:flex;gap:14px;position:relative;padding:0 0 20px}
+.entree-action::after{content:"";position:absolute;left:12px;top:27px;bottom:0;width:2px;background:var(--regle)}
+.entree-action:last-child::after{display:none}
+.entree-ic{position:relative;z-index:1;flex:none;width:26px;height:26px;border-radius:50%;background:var(--bg);color:var(--fg);display:flex;align-items:center;justify-content:center}
+.entree-ic svg{width:13px;height:13px}
+.entree-corps{flex:1;min-width:0;padding-top:2px}
+.entree-corps .quoi{font-size:14px;font-weight:500;color:var(--encre)}
+.entree-corps .quand{margin-top:4px;font-family:var(--mono);font-size:10.5px;color:var(--sourdine);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.entree-corps .quand code{background:var(--regle-fine);border-radius:4px;padding:1px 6px;font-size:10px}
 
 .alerte,.succes{display:flex;align-items:flex-start;gap:10px;border-radius:var(--rayon-sm);padding:12px 14px;margin:13px 0;font-size:13.5px;line-height:1.5;box-shadow:var(--ombre-sm)}
 .alerte::before,.succes::before{content:"";flex:none;width:18px;height:18px;margin-top:1px}
@@ -2241,10 +2274,18 @@ async function vueCrosswalks() {
     <div class="retenu" style="margin-bottom:20px"><div class="titre">Indicatif, pas certifié</div>
       <p>Ces correspondances sont des rapprochements courants, fournis comme point de départ. Elles ne remplacent
         pas une analyse juridique et doivent être validées par votre conseil avant toute décision de conformité.</p></div>
-    <div class="rangee"><label for="cw-ref" style="margin:0">Référentiel source</label>
-      <select class="compact" id="cw-ref" onchange="chargerCrosswalks()"></select></div>
-    <div id="z" style="margin-top:16px">${attente('Chargement')}</div>`);
+    <label style="margin-bottom:8px">Référentiel source</label>
+    <div class="cadre-switch" id="cw-switch"></div>
+    <select class="compact" id="cw-ref" onchange="choisirCadreCrosswalk(this.value)" hidden></select>
+    <div id="z" style="margin-top:4px">${attente('Chargement')}</div>`);
   await chargerReferentiels('cw-ref');
+  construireCadreSwitch('cw-ref', 'cw-switch', 'choisirCadreCrosswalk');
+  chargerCrosswalks();
+}
+
+function choisirCadreCrosswalk(code) {
+  $('cw-ref').value = code;
+  marquerCadreActif('cw-switch', code);
   chargerCrosswalks();
 }
 
@@ -2255,52 +2296,105 @@ async function chargerCrosswalks() {
   try {
     const liste = await appel(`/api/v1/frameworks/${code}/crosswalks`);
     if (!liste.length) return poser('z', `<p class="vide">Aucune correspondance enregistrée pour ce référentiel.</p>`);
-    poser('z', liste.map(c => `
-      <article class="constat">
+    poser('z', liste.map(c => {
+      const pct = Math.round(c.coverage * 100);
+      const badge = pct >= 60 ? 'e-ok' : pct >= 35 ? 'e-major' : 'e-neutre';
+      return `
+      <article class="constat constat-cw">
         <div class="dos">
           <span class="art">${h(c.source_reference)}</span>
-          <span class="etiq e-neutre">${Math.round(c.coverage * 100)} %</span>
+          <span class="etiq ${badge}">${pct} %</span>
         </div>
         <div class="corps">
           <h3>${h(c.source_title)}</h3>
-          <p><strong>${h(codeCadre(c.target_framework))} — ${h(c.target_reference)}</strong> · ${h(c.target_title)}</p>
+          <p class="cw-cible"><svg class="cw-cible-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconeCadre(c.target_framework)}</svg><strong>${h(codeCadre(c.target_framework))} — ${h(c.target_reference)}</strong> · ${h(c.target_title)}</p>
           ${c.rationale ? `<blockquote>${h(c.rationale)}</blockquote>` : ''}
         </div>
-      </article>`).join(''));
+      </article>`;
+    }).join(''));
   } catch (e) { poser('z', echoue(e)); }
 }
 
 /* ---------- Référentiels ---------- */
+const IC_LIVRE_INTERIEUR = '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>';
+
+// Indexe par code technique (independant de LANG) plutot que par sigle
+// affiche : "rgpd" reste "rgpd" cote API meme quand codeCadre() l'affiche
+// "GDPR" en anglais, alors que REFERENTIELS[].c reste toujours 'RGPD'.
+const REF_PAR_CODE = { rgpd: 0, nis2: 1, dora: 2, ai_act: 3 };
+function iconeCadre(code) {
+  const idx = REF_PAR_CODE[(code || '').toLowerCase()];
+  return idx !== undefined ? REFERENTIELS[idx].ic : IC_LIVRE_INTERIEUR;
+}
+
 async function vueReferentiels() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('referentiels', 'Référentiels')}</div></div>
     <p class="chapeau">Le texte source de chaque référentiel ingéré, tel qu'utilisé par le moteur d'audit — cliquez un article pour lire son texte intégral.</p>
-    <div class="rangee">
-      <select class="compact" id="ref-code" onchange="chargerReferentielDetail()"></select>
-      <label style="margin:0;font-size:13px;color:var(--encre-doux)">
-        <input type="checkbox" id="ref-auditable" onchange="chargerReferentielDetail()"> Périmètre auditable uniquement
-      </label>
-    </div>
+    <div class="cadre-switch" id="cadre-switch"></div>
+    <select class="compact" id="ref-code" onchange="choisirCadreReferentiel(this.value)" hidden></select>
+    <div id="z-resume"></div>
+    <label class="case-cgu" style="margin:0 0 20px">
+      <input type="checkbox" id="ref-auditable" onchange="appliquerFiltresReferentiel()"><span>Périmètre auditable uniquement</span>
+    </label>
     <h2>Articles</h2>
-    <input type="text" id="req-recherche" placeholder="Rechercher un article, un intitulé ou un mot du texte" style="max-width:340px;margin-bottom:12px" oninput="filtrerExigences()">
+    <div class="recherche-boite">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="req-recherche" placeholder="Rechercher un article, un intitulé ou un mot du texte" oninput="filtrerExigences()">
+    </div>
     <div id="z-req"></div>`);
   await chargerReferentiels('ref-code');
+  construireCadreSwitch('ref-code', 'cadre-switch', 'choisirCadreReferentiel');
   chargerReferentielDetail();
 }
 
-let EXIGENCES_COURANTES = [];
+// Reutilise par Referentiels ET Correspondances : les deux pages choisissent
+// parmi les memes 4 referentiels, autant partager la meme pilule visuelle.
+function construireCadreSwitch(selectId, switchId, callback) {
+  const options = Array.from($(selectId).options);
+  poser(switchId, options.map((o, i) => `
+    <button type="button" class="cadre-btn${i === 0 ? ' actif' : ''}" data-code="${h(o.value)}" title="${h(o.textContent)}" onclick="${callback}('${o.value}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconeCadre(o.value)}</svg>${h(codeCadre(o.value))}
+    </button>`).join(''));
+}
+
+function marquerCadreActif(switchId, code) {
+  document.querySelectorAll(`#${switchId} .cadre-btn`).forEach(b => b.classList.toggle('actif', b.dataset.code === code));
+}
+
+function choisirCadreReferentiel(code) {
+  $('ref-code').value = code;
+  marquerCadreActif('cadre-switch', code);
+  chargerReferentielDetail();
+}
+
+let EXIGENCES_TOUTES = [];
 let minuteurExigences = null;
 
 async function chargerReferentielDetail() {
   const code = $('ref-code').value;
   if (!code) return;
-  const auditableOnly = $('ref-auditable').checked;
+  poser('z-resume', '');
   poser('z-req', attente('Chargement'));
   $('req-recherche').value = '';
   try {
-    const exigences = await appel(`/api/v1/frameworks/${code}/requirements?limit=500&auditable_only=${auditableOnly}`);
-    EXIGENCES_COURANTES = exigences;
-    poser('z-req', rendreExigences(exigences));
+    const exigences = await appel(`/api/v1/frameworks/${code}/requirements?limit=500&auditable_only=false`);
+    EXIGENCES_TOUTES = exigences;
+    const total = exigences.length;
+    const aud = exigences.filter(r => r.is_auditable).length;
+    const nom = $('ref-code').selectedOptions[0]?.textContent || codeCadre(code);
+    poser('z-resume', `<div class="ref-resume">
+      <div class="ref-resume-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconeCadre(code)}</svg></div>
+      <div class="ref-resume-txt"><b>${h(nom)}</b><span>${total} articles · ${aud} ${LANG === 'en' ? 'auditable' : 'auditables'}</span></div>
+      <div class="ref-ratio"><div class="ref-ratio-barre"><span style="width:${total ? Math.round(aud / total * 100) : 0}%"></span></div>
+        <span class="ref-ratio-txt">${aud} / ${total} <span>${LANG === 'en' ? 'auditable' : 'auditables'}</span></span></div>
+    </div>`);
+    appliquerFiltresReferentiel();
   } catch (e) { poser('z-req', echoue(e)); }
+}
+
+function appliquerFiltresReferentiel() {
+  const auditableOnly = $('ref-auditable').checked;
+  poser('z-req', rendreExigences(auditableOnly ? EXIGENCES_TOUTES.filter(r => r.is_auditable) : EXIGENCES_TOUTES));
 }
 
 function rendreExigences(liste) {
@@ -2330,7 +2424,9 @@ function filtrerExigences() {
   clearTimeout(minuteurExigences);
   minuteurExigences = setTimeout(() => {
     const q = ($('req-recherche').value || '').toLowerCase().trim();
-    const liste = !q ? EXIGENCES_COURANTES : EXIGENCES_COURANTES.filter(r =>
+    const auditableOnly = $('ref-auditable').checked;
+    const base = auditableOnly ? EXIGENCES_TOUTES.filter(r => r.is_auditable) : EXIGENCES_TOUTES;
+    const liste = !q ? base : base.filter(r =>
       r.reference.toLowerCase().includes(q) || r.title.toLowerCase().includes(q)
       || (r.body || '').toLowerCase().includes(q));
     poser('z-req', rendreExigences(liste));
@@ -2512,6 +2608,10 @@ const REFERENTIELS = [
   { c:'AI Act', l:'Règlement (UE) 2024/1689', d:"Gouvernance de l'intelligence artificielle", ic:'<rect x="7" y="7" width="10" height="10" rx="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2 2M17.1 17.1l2 2M4.9 19.1l2-2M17.1 6.9l2-2"/>', total:113, auditables:28,
     detail:"113 exigences ingérées, dont 28 auditables : pratiques interdites, exigences applicables aux systèmes à haut risque (gestion des risques, gouvernance des données, documentation technique), obligations des fournisseurs et déployeurs — le régime des organismes notifiés et la gouvernance européenne de l'IA sont écartés." },
 ];
+// Un accent different par referentiel (ordre RGPD/NIS2/DORA/AI Act) : purement
+// visuel, pour que les 4 cartes se distinguent d'un coup d'oeil plutot que de
+// repeter la meme icone violette quatre fois.
+const COULEUR_REF = [['primaire-clair', 'primaire'], ['azur-t', 'azur'], ['valide-t', 'valide'], ['ambre-t', 'ambre']];
 // Le CSRD reste ingere et fonctionnel cote backend (voir
 // app.ingestion.runner.FRAMEWORKS_MASQUES) mais n'est plus mis en avant
 // ici : retirer son code de cet ensemble suffit a le faire reapparaitre.
@@ -2563,15 +2663,15 @@ async function vueApropos() {
     <h2 class="reveal avec-icone"><span class="ic">${IC_LIVRE}</span>Référentiels couverts</h2>
     <p class="reveal chapeau" style="margin-bottom:14px">Cliquez une carte pour voir le périmètre réellement ingéré.</p>
     <div class="cartes reveal">
-      ${REFERENTIELS.map((r, i) => `<div class="carte ref-carte" id="ref-${i}" tabindex="0" role="button" aria-expanded="false" onclick="toggleRef(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRef(${i})}">
+      ${REFERENTIELS.map((r, i) => { const [rbg, rfg] = COULEUR_REF[i % COULEUR_REF.length]; return `<div class="carte ref-carte" id="ref-${i}" tabindex="0" role="button" aria-expanded="false" onclick="toggleRef(${i})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRef(${i})}">
         <div class="ref-tete">
-          <svg class="ref-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${r.ic}</svg>
+          <svg class="ref-ic" style="--bg:var(--${rbg});--fg:var(--${rfg})" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${r.ic}</svg>
           <svg class="ref-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </div>
         <span class="n" style="font-size:19px">${h(r.c)}</span><span class="l">${h(r.l)}</span><div class="d">${h(r.d)}</div>
         <div class="ref-ratio"><div class="ref-ratio-barre"><span style="width:${Math.round(r.auditables / r.total * 100)}%"></span></div><span class="ref-ratio-txt">${r.auditables} / ${r.total} <span>auditables</span></span></div>
         <div class="ref-detail"><p>${h(r.detail)}</p></div>
-      </div>`).join('')}
+      </div>`; }).join('')}
     </div>
 
     <h2 class="reveal avec-icone"><span class="ic">${IC_MAIL}</span>Contact</h2>
@@ -2702,6 +2802,68 @@ async function vueNotifications() {
 }
 
 /* ---------- Journal ---------- */
+const LIBELLE_ACTION = {
+  'user.registered': 'Compte créé', 'user.email_verified': 'E-mail vérifié',
+  'org.created': 'Organisation créée', 'org.deleted': 'Organisation supprimée',
+  'org.member_added': 'Membre ajouté', 'org.member_removed': 'Membre retiré',
+  'auth.login': 'Connexion', 'auth.login_failed': 'Échec de connexion',
+  'auth.logout': 'Déconnexion', 'auth.logout_all': 'Déconnexion de tous les appareils',
+  'auth.refresh_reuse_detected': 'Jeton de session réutilisé (bloqué)',
+  'auth.verification_resent': 'E-mail de vérification renvoyé',
+  'auth.password_reset_requested': 'Réinitialisation du mot de passe demandée',
+  'auth.password_reset': 'Mot de passe réinitialisé', 'auth.password_changed': 'Mot de passe modifié',
+  'audit.created': 'Campagne créée', 'audit.deleted': 'Campagne supprimée',
+  'audit.executed': 'Campagne exécutée', 'audit.schedule_executed': 'Campagne planifiée exécutée',
+  'audit.schedule_cancelled': 'Planification annulée',
+  'document.uploaded': 'Pièce déposée', 'finding.status_changed': "Statut d'un constat modifié",
+  'report.generated': 'Rapport généré',
+  'privacy.data_exported': 'Données exportées', 'privacy.account_deleted': 'Compte supprimé',
+};
+const LIBELLE_ACTION_EN = {
+  'user.registered': 'Account created', 'user.email_verified': 'Email verified',
+  'org.created': 'Organization created', 'org.deleted': 'Organization deleted',
+  'org.member_added': 'Member added', 'org.member_removed': 'Member removed',
+  'auth.login': 'Signed in', 'auth.login_failed': 'Sign-in failed',
+  'auth.logout': 'Signed out', 'auth.logout_all': 'Signed out on every device',
+  'auth.refresh_reuse_detected': 'Session token reuse blocked',
+  'auth.verification_resent': 'Verification email resent',
+  'auth.password_reset_requested': 'Password reset requested',
+  'auth.password_reset': 'Password reset', 'auth.password_changed': 'Password changed',
+  'audit.created': 'Campaign created', 'audit.deleted': 'Campaign deleted',
+  'audit.executed': 'Campaign run', 'audit.schedule_executed': 'Scheduled campaign run',
+  'audit.schedule_cancelled': 'Schedule cancelled',
+  'document.uploaded': 'File uploaded', 'finding.status_changed': 'Finding status changed',
+  'report.generated': 'Report generated',
+  'privacy.data_exported': 'Data exported', 'privacy.account_deleted': 'Account deleted',
+};
+// Evenements a surveiller en priorite dans le journal : toujours colores en
+// "sceau" (rouge/critique), quelle que soit la famille de l'action.
+const ACTIONS_SENSIBLES = new Set([
+  'org.deleted', 'org.member_removed', 'auth.login_failed',
+  'auth.refresh_reuse_detected', 'audit.deleted', 'privacy.account_deleted',
+]);
+const IC_FAMILLE_ACTION = {
+  auth: '<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>',
+  org: '<path d="M3 21h18M6 21V7l6-4 6 4v14M10 21v-4h4v4"/>',
+  audit: '<path d="M9 3h6a1 1 0 0 1 1 1v1H8V4a1 1 0 0 1 1-1Z"/><path d="M5 6h14v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6Z"/><path d="m9 13 2 2 4-4"/>',
+  document: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/>',
+  finding: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1Z"/><path d="M4 22V15"/>',
+  report: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/>',
+  privacy: '<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/>',
+};
+const COULEUR_FAMILLE_ACTION = {
+  auth: ['azur-t', 'azur'], user: ['primaire-clair', 'primaire'], org: ['primaire-clair', 'primaire'],
+  audit: ['valide-t', 'valide'], document: ['ambre-t', 'ambre'], finding: ['ambre-t', 'ambre'],
+  report: ['azur-t', 'azur'], privacy: ['sceau-t', 'sceau'],
+};
+function detailActivite(action) {
+  const famille = (action || '').split('.')[0];
+  const libelle = (LANG === 'en' ? LIBELLE_ACTION_EN[action] : LIBELLE_ACTION[action]) || (action || '').replace(/[._]/g, ' ');
+  const [bg, fg] = ACTIONS_SENSIBLES.has(action) ? ['sceau-t', 'sceau'] : (COULEUR_FAMILLE_ACTION[famille] || ['sourdine', 'encre-doux']);
+  return { libelle, bg, fg, ic: IC_FAMILLE_ACTION[famille] || IC_LIVRE_INTERIEUR };
+}
+
 async function vueJournal() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Organisation</div>${titreIcone('journal', "Journal d'activité")}</div></div>
     <p class="chapeau">Chaque action sensible est enregistrée avec son horodatage et son adresse d'origine.
@@ -2710,11 +2872,20 @@ async function vueJournal() {
   try {
     const entrees = await appel(`/api/v1/orgs/${E.orgId}/activity`);
     if (!entrees.length) return poser('z', `<p class="vide">Aucune activité enregistrée.</p>`);
-    poser('z', `<div class="journal">${entrees.map(e => `
-      <div class="entree">
-        <div class="quand">${instant(e.created_at)}${e.ip_address ? ' · ' + h(e.ip_address) : ''}</div>
-        <div class="quoi"><code>${h(e.action)}</code>${e.entity_type ? (LANG === 'en' ? ' on ' : ' sur ') + h(e.entity_type) : ''}</div>
-      </div>`).join('')}</div>`);
+    let dernierJour = null, html = '';
+    entrees.forEach(e => {
+      const cleJour = new Date(e.created_at).toLocaleDateString(LANG === 'en' ? 'en-GB' : 'fr-FR', { day:'2-digit', month:'long', year:'numeric' });
+      if (cleJour !== dernierJour) { html += `<div class="journal-jour">${h(cleJour)}</div>`; dernierJour = cleJour; }
+      const { libelle, bg, fg, ic } = detailActivite(e.action);
+      html += `<div class="entree-action">
+        <span class="entree-ic" style="--bg:var(--${bg});--fg:var(--${fg})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg></span>
+        <div class="entree-corps">
+          <div class="quoi"><strong>${h(libelle)}</strong>${e.entity_type ? ` <span class="txt-sourdine">${LANG === 'en' ? 'on ' : 'sur '}${h(e.entity_type)}</span>` : ''}</div>
+          <div class="quand">${instant(e.created_at)}${e.ip_address ? ' · ' + h(e.ip_address) : ''} <code>${h(e.action)}</code></div>
+        </div>
+      </div>`;
+    });
+    poser('z', `<div class="journal-riche">${html}</div>`);
   } catch (e) { poser('z', echoue(e)); }
 }
 </script>
