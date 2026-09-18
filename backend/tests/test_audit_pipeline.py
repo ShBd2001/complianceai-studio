@@ -376,6 +376,22 @@ def test_full_audit_pipeline(client, org, framework_ready):
     assert len(r.json()) == 1
 
 
+def test_essentiel_plan_blocks_a_fourth_campaign_this_month(client, org, framework_ready):
+    """L'offre Essentiel vend "3 campagnes d'audit / mois" (voir la page
+    Tarifs) : la 4e creation du mois doit etre refusee, pas silencieusement
+    acceptee."""
+    org_id, headers = org
+    for i in range(3):
+        r = client.post(f"/api/v1/orgs/{org_id}/audits", headers=headers,
+                        json={"title": f"Audit {i}", "framework": "rgpd"})
+        assert r.status_code == 201, r.text
+
+    r = client.post(f"/api/v1/orgs/{org_id}/audits", headers=headers,
+                    json={"title": "Audit de trop", "framework": "rgpd"})
+    assert r.status_code == 409, r.text
+    assert "Quota" in r.json()["detail"]
+
+
 def test_report_pdf_download_returns_valid_pdf_and_is_cached(client, org, framework_ready):
     """Rendu par un vrai navigateur (services/pdf.py) : verifie les octets
     magiques PDF et que le second appel sert le fichier mis en cache sur
