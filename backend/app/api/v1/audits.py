@@ -1,7 +1,11 @@
 """Cycle de vie d'un audit : creation, depot de documents, execution,
 resultats, rapport et historique."""
 
-from __future__ import annotations
+# NOTE : pas de `from __future__ import annotations` dans ce module (meme
+# raison que auth.py) : slowapi enveloppe run_audit via @limiter.limit, et
+# FastAPI resoudrait alors les annotations differees dans les globals de
+# slowapi plutot que les notres -- casse la resolution d'un simple
+# `audit_id: uuid.UUID` en parametre de chemin (PydanticUserError a l'import).
 
 import uuid
 from datetime import datetime, timezone
@@ -22,6 +26,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import OrgContext, get_org_context, require_role
 from app.core.config import settings
+from app.core.rate_limit import AUDIT_RUN_LIMIT, limiter
 from app.db.session import get_db
 from app.models.audit import Audit, Document, Finding, Report
 from app.models.enums import AuditStatus, OrgRole
@@ -39,6 +44,7 @@ from app.schemas.audit import (
 from app.schemas.scheduling import ScheduleCreate, ScheduleOut
 from app.services import activity, audit_engine, pdf, reports
 from app.services.documents import ALLOWED_MIME, read_document, save_document, storage_root
+from app.services.quotas import PLAN_LIMITS, campaign_quota_remaining
 from app.services.scheduling import compute_next_run
 
 router = APIRouter(prefix="/orgs/{org_id}/audits", tags=["Audits"])
@@ -79,6 +85,14 @@ def create_audit(
     ctx: OrgContext = Depends(require_role(OrgRole.AUDITOR)),
     db: Session = Depends(get_db),
 ) -> Audit:
+    if campaign_quota_remaining(db, ctx.organization) == 0:
+        limit = PLAN_LIMITS[ctx.organization.plan]["campaigns_per_month"]
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            f"Quota de campagnes atteint pour ce mois-ci ({limit} campagnes / mois sur "
+            f"l'offre {ctx.organization.plan.value.capitalize()}). Passez a une offre "
+            "superieure pour en lancer davantage.",
+        )
     audit = Audit(
         organization_id=ctx.org_id,
         created_by_id=ctx.user.id,
@@ -227,6 +241,7 @@ def list_documents(
 # Execution
 # --------------------------------------------------------------------------
 @router.post("/{audit_id}/run", response_model=AuditRunOut)
+@limiter.limit(AUDIT_RUN_LIMIT)
 def run_audit(
     audit_id: uuid.UUID,
     request: Request,

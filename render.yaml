@@ -62,6 +62,13 @@ services:
         sync: false
       - key: GROQ_API_KEY
         sync: false
+      # Veille reglementaire (voir app/services/scheduler.py) : reingestion
+      # periodique (repli sans risque si le texte source est inchange, voir
+      # ingestion/runner.py::ingest ligne ~93) qui notifie les organisations
+      # concernees quand un referentiel change reellement. Poll toutes les
+      # 5 min, verification par referentiel au plus une fois par 24h.
+      - key: SCHEDULER_ENABLED
+        value: "true"
 
   # Site statique : sert frontend/index.html tel quel, sans etape de build
   # (le frontend n'en a jamais eu besoin, voir frontend/README.md).

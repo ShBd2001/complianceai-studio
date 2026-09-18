@@ -120,13 +120,28 @@ def test_notify_by_email_false_sends_nothing(client, org, monkeypatch):
     assert sent == []
 
 
-def test_notify_emails_every_active_member(client, org, monkeypatch):
+def test_notify_emails_every_active_member(client, monkeypatch):
+    """Deux membres actifs : l'offre Essentiel (fixture `org`) plafonne a un
+    seul utilisateur (voir app/services/quotas.py), donc Pro ici plutot que
+    la fixture partagee."""
     from app.services import notifications as notifications_service
+
+    owner_email = f"notif-owner-{uuid.uuid4().hex[:8]}@exemple.fr"
+    r = client.post("/api/v1/auth/register", json={
+        "email": owner_email, "password": PWD, "full_name": "Sarah Test",
+        "organization_name": "Acme Pro SAS", "accept_terms": True, "plan": "pro",
+    })
+    assert r.status_code == 201, r.text
+    org_id = r.json()["memberships"][0]["organization_id"]
+    verify_email(client, owner_email)  # lit storage/emails : doit precede le mock ci-dessous
+    token = client.post(
+        "/api/v1/auth/login", json={"email": owner_email, "password": PWD}
+    ).json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
 
     sent = []
     monkeypatch.setattr(notifications_service.email_service, "send_email", lambda **k: sent.append(k))
 
-    org_id, headers = org
     second_email = f"notif-member-{uuid.uuid4().hex[:8]}@exemple.fr"
     client.post("/api/v1/auth/register", json={
         "email": second_email, "password": PWD, "full_name": "Autre Membre",

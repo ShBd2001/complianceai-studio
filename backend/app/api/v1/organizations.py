@@ -24,6 +24,7 @@ from app.schemas.organization import (
     OrganizationOut,
 )
 from app.services import activity
+from app.services.quotas import PLAN_LIMITS, member_quota_remaining
 
 router = APIRouter(prefix="/orgs", tags=["Organisations"])
 
@@ -200,6 +201,15 @@ def add_member(
     if payload.role == OrgRole.OWNER and ctx.role != OrgRole.OWNER:
         raise HTTPException(
             status.HTTP_403_FORBIDDEN, "Seul un owner peut nommer un autre owner."
+        )
+
+    if member_quota_remaining(db, ctx.organization) == 0:
+        limit = PLAN_LIMITS[ctx.organization.plan]["max_members"]
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            f"Quota d'utilisateurs atteint ({limit} sur l'offre "
+            f"{ctx.organization.plan.value.capitalize()}). Passez a une offre "
+            "superieure pour rattacher davantage de personnes.",
         )
 
     target = db.scalar(select(User).where(User.email == payload.email.lower().strip()))

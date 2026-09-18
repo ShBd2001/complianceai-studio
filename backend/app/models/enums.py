@@ -16,11 +16,14 @@ class OrgRole(str, enum.Enum):
 
 class OrgPlan(str, enum.Enum):
     """Offre tarifaire choisie a l'inscription (voir la page Tarifs du
-    frontend). Purement declaratif pour l'instant : aucun quota (campagnes/
-    utilisateurs/organisations par palier) n'est encore applique cote
-    serveur -- ce champ sert de base pour le brancher plus tard, et permet
-    deja d'afficher l'offre reellement choisie dans Mon compte plutot que
-    de la perdre au moment de l'inscription."""
+    frontend). Les quotas de campagnes/mois et d'utilisateurs par palier
+    sont appliques cote serveur -- voir app/services/quotas.py. Le nombre
+    d'organisations par palier et la restriction "1 referentiel au choix"
+    de l'offre Essentiel restent en revanche non appliques : le premier
+    demanderait de choisir quel critere prevaut quand un meme utilisateur
+    possede plusieurs organisations sur des paliers differents, le second
+    quoi faire d'un choix deja fait avant la souscription -- des decisions
+    produit, pas seulement techniques."""
 
     ESSENTIEL = "essentiel"
     PRO = "pro"

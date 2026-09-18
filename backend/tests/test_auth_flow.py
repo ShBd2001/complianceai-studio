@@ -24,17 +24,17 @@ def client() -> TestClient:
     return TestClient(app)
 
 
-def _register(client: TestClient, email: str, org: str = "Acme SAS") -> dict:
-    r = client.post(
-        "/api/v1/auth/register",
-        json={
-            "email": email,
-            "password": PWD,
-            "full_name": "Sarah Test",
-            "organization_name": org,
-            "accept_terms": True,
-        },
-    )
+def _register(client: TestClient, email: str, org: str = "Acme SAS", plan: str | None = None) -> dict:
+    payload = {
+        "email": email,
+        "password": PWD,
+        "full_name": "Sarah Test",
+        "organization_name": org,
+        "accept_terms": True,
+    }
+    if plan is not None:
+        payload["plan"] = plan
+    r = client.post("/api/v1/auth/register", json=payload)
     assert r.status_code == 201, r.text
     verify_email(client, email)
     return r.json()
@@ -177,7 +177,7 @@ def test_user_cannot_reach_another_organization(client):
 
 def test_viewer_cannot_add_members(client):
     owner_email, viewer_email = _email(), _email()
-    owner = _register(client, owner_email, "Gamma SAS")
+    owner = _register(client, owner_email, "Gamma SAS", plan="pro")
     _register(client, viewer_email, "Delta SAS")
     org_id = owner["memberships"][0]["organization_id"]
 
@@ -203,7 +203,7 @@ def test_admin_cannot_remove_an_owner(client):
     owner, mais rien n'empechait symetriquement un admin de retirer un owner
     existant — une hierarchie de roles qui ne tenait que dans un sens."""
     owner_email, admin_email = _email(), _email()
-    owner = _register(client, owner_email, "Sigma3 SAS")
+    owner = _register(client, owner_email, "Sigma3 SAS", plan="pro")
     org_id = owner["memberships"][0]["organization_id"]
     owner_token = _login(client, owner_email)
     admin = _register(client, admin_email)
@@ -261,7 +261,7 @@ def test_delete_organization_removes_it_and_everything_under_it(client):
 
 def test_delete_organization_refused_while_other_members_remain(client):
     owner_email, other_email = _email(), _email()
-    owner = _register(client, owner_email, "Lambda SAS")
+    owner = _register(client, owner_email, "Lambda SAS", plan="pro")
     org_id = owner["memberships"][0]["organization_id"]
     _register(client, other_email)
     owner_token = _login(client, owner_email)
@@ -288,7 +288,7 @@ def test_delete_organization_refused_while_other_members_remain(client):
 
 def test_delete_organization_requires_owner_role(client):
     owner_email, viewer_email = _email(), _email()
-    owner = _register(client, owner_email, "Sigma2 SAS")
+    owner = _register(client, owner_email, "Sigma2 SAS", plan="pro")
     org_id = owner["memberships"][0]["organization_id"]
     _register(client, viewer_email)
     owner_token = _login(client, owner_email)
@@ -341,6 +341,61 @@ def test_register_defaults_to_the_essentiel_plan(client):
     token = _login(client, data["email"])
     orgs = client.get("/api/v1/orgs", headers=_auth(token)).json()
     assert orgs[0]["plan"] == "essentiel"
+
+
+def test_essentiel_plan_blocks_adding_a_second_member(client):
+    """L'offre Essentiel vend "1 utilisateur" (voir la page Tarifs) : le
+    seul membre autorise est l'owner qui a cree l'organisation."""
+    owner_email = _email()
+    data = _register(client, owner_email, "Solo SAS")
+    org_id = data["memberships"][0]["organization_id"]
+    owner_token = _login(client, owner_email)
+
+    other_email = _email()
+    _register(client, other_email, "Autre organisation SAS")
+
+    r = client.post(
+        f"/api/v1/orgs/{org_id}/members",
+        headers=_auth(owner_token),
+        json={"email": other_email, "role": "viewer"},
+    )
+    assert r.status_code == 409, r.text
+    assert "Quota" in r.json()["detail"]
+
+
+def test_pro_plan_allows_up_to_three_members_then_blocks(client):
+    owner_email = _email()
+    r = client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": owner_email, "password": PWD, "full_name": "Sarah Test",
+            "organization_name": "Trio Pro SAS", "accept_terms": True, "plan": "pro",
+        },
+    )
+    assert r.status_code == 201, r.text
+    verify_email(client, owner_email)
+    org_id = r.json()["memberships"][0]["organization_id"]
+    owner_token = _login(client, owner_email)
+
+    second_email, third_email, fourth_email = _email(), _email(), _email()
+    for email in (second_email, third_email, fourth_email):
+        _register(client, email, f"Membre {email} SAS")
+
+    for email in (second_email, third_email):
+        r = client.post(
+            f"/api/v1/orgs/{org_id}/members",
+            headers=_auth(owner_token),
+            json={"email": email, "role": "viewer"},
+        )
+        assert r.status_code == 201, r.text
+
+    r = client.post(
+        f"/api/v1/orgs/{org_id}/members",
+        headers=_auth(owner_token),
+        json={"email": fourth_email, "role": "viewer"},
+    )
+    assert r.status_code == 409, r.text
+    assert "Quota" in r.json()["detail"]
 
 
 def test_activity_log_records_login(client):
