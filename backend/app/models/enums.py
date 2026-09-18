@@ -14,6 +14,19 @@ class OrgRole(str, enum.Enum):
         return {"viewer": 0, "auditor": 1, "admin": 2, "owner": 3}[self.value]
 
 
+class OrgPlan(str, enum.Enum):
+    """Offre tarifaire choisie a l'inscription (voir la page Tarifs du
+    frontend). Purement declaratif pour l'instant : aucun quota (campagnes/
+    utilisateurs/organisations par palier) n'est encore applique cote
+    serveur -- ce champ sert de base pour le brancher plus tard, et permet
+    deja d'afficher l'offre reellement choisie dans Mon compte plutot que
+    de la perdre au moment de l'inscription."""
+
+    ESSENTIEL = "essentiel"
+    PRO = "pro"
+    CABINET = "cabinet"
+
+
 class Framework(str, enum.Enum):
     """Codes de referentiels supportes.
 

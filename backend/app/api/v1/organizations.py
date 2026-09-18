@@ -56,7 +56,7 @@ def list_my_organizations(
     return [
         OrganizationOut(
             id=org.id, name=org.name, slug=org.slug, siren=org.siren,
-            sector=org.sector, headcount=org.headcount, created_at=org.created_at,
+            sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
             my_role=role, member_count=counts.get(org.id, 1),
         )
         for org, role in rows
@@ -80,6 +80,7 @@ def create_organization(
         siren=payload.siren,
         sector=payload.sector,
         headcount=payload.headcount,
+        plan=payload.plan,
     )
     db.add(org)
     try:
@@ -105,7 +106,7 @@ def create_organization(
     db.flush()
     return OrganizationOut(
         id=org.id, name=org.name, slug=org.slug, siren=org.siren,
-        sector=org.sector, headcount=org.headcount, created_at=org.created_at,
+        sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
         my_role=OrgRole.OWNER, member_count=1,
     )
 
@@ -121,7 +122,7 @@ def get_organization(
     org = ctx.organization
     return OrganizationOut(
         id=org.id, name=org.name, slug=org.slug, siren=org.siren,
-        sector=org.sector, headcount=org.headcount, created_at=org.created_at,
+        sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
         my_role=ctx.role, member_count=count,
     )
 
