@@ -5,7 +5,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
-from app.models.enums import OrgRole
+from app.models.enums import OrgPlan, OrgRole
 
 
 class OrganizationCreate(BaseModel):
@@ -13,6 +13,7 @@ class OrganizationCreate(BaseModel):
     siren: str | None = Field(default=None, max_length=14)
     sector: str | None = Field(default=None, max_length=80)
     headcount: int | None = Field(default=None, ge=1, le=2_000_000)
+    plan: OrgPlan = OrgPlan.ESSENTIEL
 
 
 class OrganizationOut(BaseModel):
@@ -24,6 +25,7 @@ class OrganizationOut(BaseModel):
     siren: str | None
     sector: str | None
     headcount: int | None
+    plan: OrgPlan
     created_at: datetime
     # Role de l'appelant et effectif total : le frontend en a besoin pour
     # savoir s'il doit proposer "Supprimer" (owner seul) ou "Quitter"

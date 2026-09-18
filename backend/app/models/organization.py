@@ -8,7 +8,7 @@ from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, UUIDMixin
-from app.models.enums import OrgRole
+from app.models.enums import OrgPlan, OrgRole
 
 if TYPE_CHECKING:
     from app.models.audit import Audit
@@ -26,6 +26,11 @@ class Organization(UUIDMixin, TimestampMixin, Base):
     sector: Mapped[str | None] = mapped_column(String(80))
     headcount: Mapped[int | None] = mapped_column(Integer)
     country: Mapped[str] = mapped_column(String(2), default="FR", nullable=False)
+    plan: Mapped[OrgPlan] = mapped_column(
+        Enum(OrgPlan, name="org_plan", values_callable=lambda e: [m.value for m in e]),
+        default=OrgPlan.ESSENTIEL,
+        nullable=False,
+    )
 
     memberships: Mapped[list["Membership"]] = relationship(
         back_populates="organization", cascade="all, delete-orphan"

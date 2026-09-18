@@ -6,7 +6,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
-from app.models.enums import OrgRole
+from app.models.enums import OrgPlan, OrgRole
 
 # Politique de mot de passe (ANSSI / OWASP) : longueur d'abord, complexite ensuite.
 _PWD_MIN = 12
@@ -40,6 +40,10 @@ class RegisterRequest(BaseModel):
     full_name: str = Field(min_length=2, max_length=120)
     organization_name: str = Field(min_length=2, max_length=160)
     accept_terms: bool
+    # Offre choisie sur la page Tarifs avant d'arriver au formulaire
+    # d'inscription (voir OrgPlan) ; Essentiel si on arrive par un autre
+    # chemin (ex. "Creer un compte" depuis l'accueil, hors page Tarifs).
+    plan: OrgPlan = OrgPlan.ESSENTIEL
 
     @field_validator("password")
     @classmethod

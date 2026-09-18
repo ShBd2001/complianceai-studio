@@ -154,6 +154,9 @@ td.mono,th.mono{font-family:var(--mono);font-size:12.5px}
 
 label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--sourdine);margin-bottom:6px}
 .aide-mdp{font-size:12px;color:var(--sourdine);margin:5px 2px 0}
+.offre-choisie{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--primaire-clair);border:1px solid color-mix(in srgb, var(--primaire) 25%, transparent);border-radius:var(--rayon-sm);padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--primaire-fonce)}
+.offre-choisie b{font-weight:700}
+.offre-choisie button{font-size:12.5px}
 .case-cgu{display:flex;align-items:flex-start;gap:8px;font-family:var(--sans);font-size:13px;font-weight:400;text-transform:none;letter-spacing:normal;color:var(--encre-doux);margin:14px 0 0;cursor:pointer}
 .case-cgu input{width:auto;margin:2px 0 0;padding:0}
 .case-cgu .lien{font-size:13px;text-align:left}
@@ -701,6 +704,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     </div>
 
     <div id="p-inscription" hidden>
+      <div class="offre-choisie"><span>Offre <b id="offre-nom">Essentiel</b></span><button type="button" class="lien" onclick="afficherTarifs()">Changer</button></div>
       <div class="grille" style="grid-template-columns:1fr">
         <div><label for="i-nom">Nom complet</label><input id="i-nom" autocomplete="name"></div>
         <div><label for="i-org">Nom de l'organisation</label><input id="i-org"></div>
@@ -815,7 +819,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Rapports PDF</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Support par e-mail</span></li>
         </ul>
-        <button type="button" class="plan-cta" onclick="portail(true); masquerTarifs()">Choisir Essentiel</button>
+        <button type="button" class="plan-cta" onclick="choisirOffre('essentiel')">Choisir Essentiel</button>
       </div>
 
       <div class="plan-carte plan-vedette reveal">
@@ -833,7 +837,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Historique et export illimités</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Support prioritaire</span></li>
         </ul>
-        <button type="button" class="plan-cta" onclick="portail(true); masquerTarifs()">Choisir Pro</button>
+        <button type="button" class="plan-cta" onclick="choisirOffre('pro')">Choisir Pro</button>
       </div>
 
       <div class="plan-carte reveal">
@@ -850,7 +854,7 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>API et intégrations dédiées</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Accompagnement dédié et SLA contractuel</span></li>
         </ul>
-        <button type="button" class="plan-cta" onclick="portail(true); masquerTarifs()">Choisir Cabinet</button>
+        <button type="button" class="plan-cta" onclick="choisirOffre('cabinet')">Choisir Cabinet</button>
       </div>
     </div>
 
@@ -994,6 +998,11 @@ function basculerLangue() {
   // "3 terminees" / "3 completed") reste fige dans l'ancienne langue tant
   // que la vue n'est pas redessinee avec la valeur a jour de LANG.
   if (!$('appli').hidden) router();
+  // Meme raison : le nom d'offre affiche sur le formulaire d'inscription
+  // est ecrit directement en JS (majIndicateurOffre), pas via un noeud que
+  // traduireDOM() suivrait — sans cet appel, il resterait fige dans
+  // l'ancienne langue si on bascule pendant que le panneau est ouvert.
+  majIndicateurOffre();
 }
 
 // Dictionnaire cle en cle (texte francais exact -> anglais) applique par
@@ -1117,6 +1126,7 @@ const TRAD_EN = {
   'Aucune exigence.': 'No requirements.',
   // Mon compte
   'Organisations': 'Organizations', 'Nouvelle organisation': "New organization", 'Créer': 'Create',
+  'Offre': 'Plan', 'Changer': 'Change',
   'Organisation': 'Organization', 'Rôle': 'Role', 'Active': 'Active', 'Quitter': 'Leave',
   'Aucune organisation.': 'No organizations.',
   'Mot de passe actuel': 'Current password', 'Déconnecter tous les appareils': 'Sign out everywhere',
@@ -1394,7 +1404,10 @@ function montrerPanneau(id) {
   poser('msg-accueil', '');
 }
 
-function portail(inscription) { montrerPanneau(inscription ? 'p-inscription' : 'p-connexion'); }
+function portail(inscription) {
+  montrerPanneau(inscription ? 'p-inscription' : 'p-connexion');
+  if (inscription) majIndicateurOffre();
+}
 
 function afficherLancement() {
   $('accueil').hidden = true;
@@ -1404,7 +1417,29 @@ function afficherLancement() {
 function afficherConnexion(inscription) {
   $('lancement').hidden = true;
   $('accueil').hidden = false;
+  // Point d'entree generique (hero/nav, pas la page Tarifs) : on repart sur
+  // l'offre d'entree plutot que de laisser trainer un choix d'un aller-
+  // retour precedent sur les tarifs.
+  if (inscription) OFFRE_CHOISIE = 'essentiel';
   portail(inscription);
+}
+
+// Offre reellement cliquee sur la page Tarifs, transmise a l'inscription
+// (voir sInscrire()) au lieu d'etre perdue comme auparavant : les 3
+// boutons "Choisir X" menaient tous au meme formulaire generique.
+let OFFRE_CHOISIE = 'essentiel';
+const NOM_OFFRE = { essentiel: 'Essentiel', pro: 'Pro', cabinet: 'Cabinet' };
+const NOM_OFFRE_EN = { essentiel: 'Essential', pro: 'Pro', cabinet: 'Firm' };
+function majIndicateurOffre() {
+  const cible = $('offre-nom');
+  if (cible) cible.textContent = (LANG === 'en' ? NOM_OFFRE_EN : NOM_OFFRE)[OFFRE_CHOISIE];
+}
+function choisirOffre(offre) {
+  OFFRE_CHOISIE = offre;
+  $('tarifs').hidden = true;
+  $('lancement').hidden = true;
+  $('accueil').hidden = false;
+  portail(true);
 }
 
 let ECRAN_AVANT_TARIFS = 'lancement';
@@ -1544,6 +1579,7 @@ async function sInscrire(btn) {
   const charge = {
     full_name: $('i-nom').value.trim(), organization_name: $('i-org').value.trim(),
     email: $('i-mail').value.trim(), password: $('i-mdp').value, accept_terms: $('i-cgu').checked,
+    plan: OFFRE_CHOISIE,
   };
   if (!charge.accept_terms) return poser('msg-accueil', echoue({ message: LANG === 'en'
     ? 'You must accept the terms of use and privacy policy to create an account.'
@@ -2335,12 +2371,13 @@ async function vueCompte() {
 }
 
 function chargerMesOrganisations() {
-  poser('z-orgs', E.orgs.length ? `<table><thead><tr><th>Organisation</th><th>Rôle</th><th></th><th></th></tr></thead>
+  poser('z-orgs', E.orgs.length ? `<table><thead><tr><th>Organisation</th><th>Rôle</th><th>Offre</th><th></th><th></th></tr></thead>
     <tbody>${E.orgs.map(o => `<tr>
       <td>${h(o.name)}</td>
       <td>${h(etiquetteRole(o.my_role))} ${o.member_count > 1
         ? `· ${o.member_count} ${LANG === 'en' ? 'members' : 'membres'}`
         : (LANG === 'en' ? '· only you' : '· vous seul(e)')}</td>
+      <td>${h((LANG === 'en' ? NOM_OFFRE_EN : NOM_OFFRE)[o.plan] || o.plan)}</td>
       <td>${o.id === E.orgId ? '<span class="etiq e-ok">Active</span>' : ''}</td>
       <td>${o.my_role === 'owner' && o.member_count === 1
         ? `<button class="discret" style="border-color:var(--sceau);color:var(--sceau)" onclick="supprimerOrganisation('${o.id}')">Supprimer</button>`

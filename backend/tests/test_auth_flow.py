@@ -314,6 +314,35 @@ def test_list_organizations_reports_role_and_member_count(client):
     assert org["member_count"] == 1
 
 
+def test_register_stores_the_plan_chosen_on_the_pricing_page(client):
+    """Avant ce champ, cliquer "Choisir Pro" ou "Choisir Essentiel" menait
+    au meme formulaire d'inscription generique sans que l'offre choisie ne
+    soit jamais conservee nulle part."""
+    email = _email()
+    r = client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": email, "password": PWD, "full_name": "Sarah Test",
+            "organization_name": "Offre Pro SAS", "accept_terms": True, "plan": "pro",
+        },
+    )
+    assert r.status_code == 201, r.text
+    verify_email(client, email)
+    token = _login(client, email)
+    orgs = client.get("/api/v1/orgs", headers=_auth(token)).json()
+    assert orgs[0]["plan"] == "pro"
+
+
+def test_register_defaults_to_the_essentiel_plan(client):
+    """Arriver au formulaire d'inscription par un autre chemin que la page
+    Tarifs (ex. "Creer un compte" depuis l'accueil) ne doit pas echouer
+    faute de plan precise : repli sur l'offre d'entree."""
+    data = _register(client, _email(), "Sans offre choisie SAS")
+    token = _login(client, data["email"])
+    orgs = client.get("/api/v1/orgs", headers=_auth(token)).json()
+    assert orgs[0]["plan"] == "essentiel"
+
+
 def test_activity_log_records_login(client):
     email = _email()
     data = _register(client, email, "Sigma SAS")

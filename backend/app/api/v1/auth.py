@@ -143,6 +143,7 @@ def register(
     org = Organization(
         name=payload.organization_name.strip(),
         slug=_unique_slug(db, payload.organization_name),
+        plan=payload.plan,
     )
     db.add_all([user, org])
 
