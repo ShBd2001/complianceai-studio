@@ -52,7 +52,8 @@ de l'API (requêtes courtes).
 
 ```
 ┌─────────────────────────────────────────────────┐
-│  Présentation   React 18 + TypeScript + Vite    │
+│  Présentation   SPA JavaScript vanilla (un seul │
+│                 fichier statique, sans build)   │
 └───────────────────────┬─────────────────────────┘
                         │ HTTPS / JSON
 ┌───────────────────────▼─────────────────────────┐
@@ -146,6 +147,32 @@ confiance et le document source.
 être justifiable. C'est aussi une exigence anticipée du règlement européen sur
 l'IA pour les systèmes d'aide à la décision.
 
+### DA-06 — Frontend en JavaScript natif, sans framework ni étape de build
+
+*Décision.* Une page unique (`frontend/index.html`), sans dépendance ni
+bundler : le routage, l'état et le rendu sont gérés par du JavaScript natif.
+
+*Justification.* Le même raisonnement d'échelle que pour DA-03 (équipe d'une
+personne) s'applique côté client : un framework (React, Vue) et sa chaîne de
+build (Vite, npm) ajoutent une surface de maintenance — versions à faire
+évoluer, temps de build, dépendances transitives à auditer — sans bénéfice
+proportionné pour une application qui ne justifie pas de composants
+réutilisables à grande échelle ni de rendu complexe. Le fichier statique se
+déploie directement sur l'hébergement Render du frontend, sans pipeline de
+build séparé à maintenir.
+
+*Conséquences.* Positives : zéro dépendance à auditer côté client (voir DA-01
+sur la réduction de la surface d'attaque), démarrage instantané en
+développement (`python -m http.server`), aucun risque de dérive entre version
+de build et version servie. Négatives : pas de vérification de types
+statique côté client, découpage en composants moins strict qu'un framework ne
+l'imposerait — compensé par une convention de nommage stricte des fonctions
+et une seule personne au clavier.
+
+*Réversibilité.* Le frontend consomme l'API par HTTP/JSON standard, sans
+couplage à son implémentation : une réécriture en React resterait possible
+sans toucher au backend.
+
 ## 5. Vue de déploiement
 
 ```
@@ -168,15 +195,18 @@ le schéma est en retard.
 
 ## 6. Points de vigilance connus
 
-| Sujet | Situation | Traitement prévu |
+| Sujet | Situation | Traitement |
 |---|---|---|
-| Mise en veille de l'hébergement gratuit | 50 s de réveil après 15 min d'inactivité | Cron de maintien en éveil ; plan payant en production |
-| Envoi d'e-mails | Non branché, jetons affichés en console en développement | Intégration d'un service transactionnel |
-| Stockage des documents | Système de fichiers local | Migration vers un stockage objet compatible S3 |
-| Analyse synchrone | Un audit long bloque une requête HTTP | File de tâches en arrière-plan |
+| Stockage des documents | Système de fichiers local, éphémère sur l'hébergement (pas de disque persistant ni de stockage objet externe) | Migration vers un stockage compatible S3 |
+| Analyse synchrone | Le calcul tourne dans un thread dédié (FastAPI ne bloque pas les autres requêtes), mais l'appelant attend la fin complète de l'analyse | File de tâches en arrière-plan pour les audits longs |
+| Dépendances avec vulnérabilités connues | `pip-audit` (CI, rapport non bloquant) signale des CVE sur `pypdf`, `pillow` et `starlette` nécessitant chacune une montée de version majeure | Montée planifiée après validation de non-régression dédiée (génération de rapport notamment) |
+| Authentification unique (SSO/SAML) | Annoncée sur l'offre Cabinet (page Tarifs), non implémentée côté serveur | Chantier non engagé, pas de calendrier |
+| Limite de débit en mémoire | `slowapi` n'a pas de backend partagé (Redis) : passer à plusieurs processus applicatifs multiplierait silencieusement les seuils de protection | Ajout de Redis si une mise à l'échelle horizontale devient nécessaire |
+| Quotas par offre | Campagnes/mois et utilisateurs appliqués côté serveur ; nombre d'organisations par palier et restriction "1 référentiel" de l'offre Essentiel non appliqués (ambiguïté produit sur le cas d'un utilisateur déjà multi-organisations) | Décision produit à trancher avant application |
 
-Ces limites sont assumées à ce stade et documentées volontairement : elles
-constituent la feuille de route technique de la version suivante.
+Ces limites sont documentées volontairement plutôt que masquées : certaines
+sont des choix assumés pour l'échelle actuelle du projet, d'autres des
+chantiers identifiés mais non engagés faute de priorité.
 
 ## 7. Pour aller plus loin
 

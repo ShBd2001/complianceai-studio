@@ -206,7 +206,7 @@ def test_admin_cannot_remove_an_owner(client):
     owner = _register(client, owner_email, "Sigma3 SAS", plan="pro")
     org_id = owner["memberships"][0]["organization_id"]
     owner_token = _login(client, owner_email)
-    admin = _register(client, admin_email)
+    _register(client, admin_email)
 
     r = client.post(
         f"/api/v1/orgs/{org_id}/members",
@@ -223,7 +223,7 @@ def test_admin_cannot_remove_an_owner(client):
 
     # Un owner reste libre de se retirer lui-meme.
     second_owner_email = _email()
-    second_owner = _register(client, second_owner_email)
+    _register(client, second_owner_email)
     client.post(
         f"/api/v1/orgs/{org_id}/members",
         json={"email": second_owner_email, "role": "owner"},

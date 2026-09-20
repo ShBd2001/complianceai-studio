@@ -32,7 +32,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Callable, Iterable, Protocol, Sequence
+from typing import Callable, Iterable, Protocol
 
 
 class Verdict(str, Enum):

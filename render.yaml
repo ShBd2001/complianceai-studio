@@ -57,7 +57,7 @@ services:
       - key: EMBEDDING_BACKEND
         value: fastembed
       - key: EMAIL_FROM
-        value: sasarah482@gmail.com
+        value: sarahbelmiloud2001@gmail.com
       - key: BREVO_API_KEY
         sync: false
       - key: GROQ_API_KEY

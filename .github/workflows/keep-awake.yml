@@ -1,11 +1,13 @@
 name: Anti-veille backend
 
-# Le backend tourne sur le plan gratuit Render, qui met le service en veille
+# Cree a l'origine pour le plan gratuit Render, qui met le service en veille
 # apres 15 min d'inactivite (la requete suivante attend alors ~30-60s le
-# reveil du conteneur, voir render.yaml). Un ping regulier sur /health
-# suffit a le garder eveille en permanence, sans passer par un plan payant
-# ni un service tiers. Depot public : ce cron ne consomme aucun quota
-# Actions payant.
+# reveil du conteneur). complianceai-api tourne desormais sur le plan
+# Standard (voir render.yaml), qui ne s'endort pas : ce ping n'est plus une
+# necessite anti-veille, mais reste utile comme controle d'activite externe
+# minimal (une alerte apparait dans l'onglet Actions si /health cesse de
+# repondre 200). Depot public : ce cron ne consomme aucun quota Actions
+# payant.
 on:
   schedule:
     - cron: "*/10 * * * *"
