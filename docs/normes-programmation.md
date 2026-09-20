@@ -1,7 +1,7 @@
 # Document de référence des normes de programmation — ComplianceAI Studio
 
 **Livrable RNCP** — compétence CC1.1 (activité optionnelle 1)
-**Version** 2.0 · **Portée** backend Python et frontend TypeScript
+**Version** 2.1 · **Portée** backend Python et frontend JavaScript natif (sans framework ni étape de build — voir DA-06, docs/architecture.md)
 
 ---
 
@@ -23,17 +23,15 @@ Trois niveaux d'exigence :
 
 | Rôle | Outil | Niveau |
 |---|---|---|
-| Formatage Python | `ruff format` (ligne 100) | Bloquant |
-| Analyse statique Python | `ruff check` | Bloquant |
-| Typage Python | `mypy --strict` sur `app/` | Bloquant |
-| Tests | `pytest`, couverture ≥ 70 % | Bloquant |
-| Vulnérabilités des dépendances | `pip-audit` | Bloquant |
-| Secrets en clair | `gitleaks` | Bloquant |
-| Formatage TypeScript | `prettier` | Bloquant |
-| Analyse statique TypeScript | `eslint`, `tsc --noEmit` | Bloquant |
+| Analyse statique Python | `ruff check` (règles E9, F — erreurs et pyflakes) | Bloquant (CI : job `qualite-code`) |
+| Tests | `pytest` | Bloquant (CI : job `backend-tests`) |
+| Vulnérabilités des dépendances | `pip-audit` | Rapport, non bloquant (CI : job `qualite-code` — voir §9) |
+| Formatage Python | `ruff format` (ligne 100) | Non outillé en CI — 48 fichiers sur 80 ne le respectent pas encore à ce jour ; adopter l'outil suppose une passe de reformatage dédiée, pas mêlée à un changement de comportement (règle §8) |
+| Typage Python | `mypy --strict` sur `app/` | Non outillé — jamais exécuté sur ce dépôt, portée non évaluée |
+| Secrets en clair | `gitleaks` | Non outillé |
 
-Le formatage n'est pas discuté en revue : il est imposé par l'outil. La revue
-porte sur la conception, la sécurité et la lisibilité.
+Le formatage n'est pas encore un contrôle automatisé sur ce dépôt : en
+attendant, il reste sujet de revue de code, pas seulement de l'outil.
 
 ## 3. Nommage
 
@@ -48,8 +46,8 @@ porte sur la conception, la sécurité et la lisibilité.
 | Clé étrangère | `<singulier>_id` | `organization_id` |
 | Index | `ix_<table>_<colonnes>` | `ix_audits_org_created` |
 | Contrainte d'unicité | `uq_<sens>` | `uq_report_version` |
-| Composant React | `PascalCase.tsx` | `LoginForm.tsx` |
-| Hook React | préfixe `use` | `useAuth.ts` |
+| Fonction, variable JS | `camelCase`, verbe en français pour une fonction | `chargerReferentielDetail` |
+| Constante JS (module) | `UPPER_SNAKE_CASE` | `VIDEO_DEMO_URL` |
 
 Les identifiants sont en anglais dans le code, les messages destinés à
 l'utilisateur en français. Les commentaires expliquant une décision sont en
@@ -161,14 +159,19 @@ pas de la même manière.
 
 ## 9. Métriques de validation
 
-| Métrique | Seuil | Mesure |
+| Métrique | Cible | Mesure au 2026-09-20 |
 |---|---|---|
-| Couverture de tests | ≥ 70 % global, 100 % sur `core/security.py` | `pytest --cov` |
-| Complexité cyclomatique | ≤ 10 par fonction | `ruff` (règle C901) |
-| Erreurs de typage | 0 | `mypy --strict` |
-| Vulnérabilités haute ou critique | 0 | `pip-audit` |
-| Secrets détectés | 0 | `gitleaks` |
-| Durée de la CI | ≤ 5 min | GitHub Actions |
+| Couverture de tests globale | ≥ 70 % | 79 % (mesuré ponctuellement, `pytest --cov` — pas encore un seuil bloquant en CI) |
+| Couverture de `core/security.py` | 100 % | 91 % — 4 lignes non couvertes |
+| Complexité cyclomatique | ≤ 10 par fonction | Non bloquant en CI ; un dépassement connu (`audit_engine.py::run_audit`, complexité 18 — le point de convergence attendu de l'orchestration, pas un signe de dérive répandue) |
+| Erreurs de typage | — | `mypy` jamais exécuté sur ce dépôt, pas de cible fixée |
+| Vulnérabilités des dépendances | — | `pip-audit` en rapport (non bloquant) : 150 CVE relevées sur 6 paquets le 2026-09-20, 2 corrigées dans la foulée (`pyjwt`, `python-multipart`), 3 en attente de montée majeure planifiée (`pypdf`, `pillow`, `starlette`) |
+| Secrets détectés | — | `gitleaks` non outillé, aucun scan effectué |
+| Durée de la CI | — | Non mesurée comme cible ; les jobs tournent en parallèle sur GitHub Actions (`qualite-code`, `backend-tests`, `frontend-e2e` indépendants) |
+
+Ce tableau est un état des lieux daté, pas une liste de garanties : les
+cellules « — » signalent une métrique non instrumentée plutôt qu'un seuil
+atteint par défaut.
 
 ## 10. Cohérence des règles
 
