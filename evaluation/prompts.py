@@ -35,6 +35,15 @@ def prompt_applicabilite(art: ArticleRGPD, extraits: str) -> str:
 CONDITION D'APPLICABILITÉ DE L'ARTICLE :
 {art.condition_applicabilite}
 
+Si cette condition relie plusieurs branches par "OU" (ou "au moins une des
+N conditions"), chaque branche est indépendante et suffisante à elle seule :
+l'article est applicable dès qu'UNE branche est remplie, même si une autre ne
+l'est pas. Écarter une branche (ex. un effectif réduit) ne dispense jamais
+d'examiner les autres (ex. le traitement est-il occasionnel ? comporte-t-il
+un risque pour les droits et libertés ?) — ne conclus jamais "non applicable"
+sur la seule base d'une branche écartée quand la condition en comporte
+plusieurs.
+
 EXTRAITS DU DOCUMENT :
 \"\"\"
 {extraits}
@@ -42,30 +51,37 @@ EXTRAITS DU DOCUMENT :
 
 Procède en deux temps, sans sauter d'étape.
 
-ÉTAPE 1 — Recherche factuelle.
-Le document contient-il une phrase qui renseigne sur la condition ci-dessus ?
-Elle peut aller dans un sens comme dans l'autre. Exemples de phrases
-renseignantes : un effectif chiffré, la localisation des destinataires, la
-nature de l'activité, la présence ou l'absence d'une revue humaine, le type
-de données traitées. Recopie cette phrase mot pour mot dans "citation", ou
-mets null si le document ne dit rien sur le sujet.
+ÉTAPE 1 — Recherche factuelle, branche par branche s'il y en a plusieurs.
+Le document contient-il une phrase qui renseigne sur au moins une des
+branches de la condition ci-dessus ? Elle peut aller dans un sens comme dans
+l'autre. Exemples de phrases renseignantes : un effectif chiffré, la
+localisation des destinataires, la nature de l'activité, le caractère
+occasionnel ou régulier du traitement, la présence ou l'absence d'une revue
+humaine, le type de données traitées. Recopie la phrase la plus déterminante
+mot pour mot dans "citation", ou mets null si le document ne dit rien sur
+aucune branche.
 
 ÉTAPE 2 — Conclusion, à partir de l'étape 1 uniquement.
-- Si la citation montre que la condition EST remplie → "applicable": true
-- Si la citation montre que la condition N'EST PAS remplie → "applicable": false
+- Condition à une seule branche : la citation montre qu'elle EST remplie →
+  "applicable": true ; qu'elle N'EST PAS remplie → "applicable": false.
+- Condition à plusieurs branches ("OU") : "applicable": true dès qu'une
+  branche est remplie, OU que le document ne prouve pas que TOUTES les
+  branches sont écartées. "applicable": false seulement si le document
+  démontre explicitement qu'aucune branche ne s'applique.
 - Si "citation" est null → "applicable": true
 
 Cette dernière règle est importante : un document muet sur un sujet ne prouve
 rien, et une obligation légale ne disparaît pas parce qu'elle n'est pas
-mentionnée. Mais lorsque le document renseigne clairement la condition dans le
-sens négatif, conclure "false" est la bonne réponse, et non une prise de risque.
+mentionnée. Mais lorsque le document renseigne clairement une condition à une
+seule branche dans le sens négatif, conclure "false" est la bonne réponse, et
+non une prise de risque.
 
 Réponds uniquement par ce JSON :
 {{
-  "citation": "phrase littérale renseignant la condition, ou null",
+  "citation": "phrase littérale renseignant une branche de la condition, ou null",
   "condition_remplie": true,
   "applicable": true,
-  "justification": "une phrase"
+  "justification": "une phrase, qui mentionne chaque branche examinée si la condition en comporte plusieurs"
 }}"""
 
 
