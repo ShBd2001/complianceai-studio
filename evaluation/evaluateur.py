@@ -55,6 +55,15 @@ SEUIL_REVUE_HUMAINE = 0.70
 # jamais trancher seul. C'est une limite assumée, pas un défaut à corriger.
 ARTICLES_REVUE_SYSTEMATIQUE = frozenset({"37", "35", "22"})
 K_PASSAGES = 5
+# Le retrieval top-K a un cout (risque d'exclure le bon passage) qui ne se
+# justifie que pour limiter le contexte envoye au modele sur de gros
+# documents. En dessous de ce seuil, le document tient largement dans le
+# contexte du modele (~20 passages de ~700 caracteres = ~3500 tokens) :
+# autant tout montrer plutot que de risquer d'ecarter la section pertinente
+# avant meme que le modele ne la voie. Mesure sur le corpus de validation
+# (6 a 18 passages par document) : plusieurs faux positifs remontaient a une
+# section pertinente exclue du top-K, jamais vue par le modele.
+SEUIL_RETRIEVAL_COMPLET = 20
 
 
 # ---------------------------------------------------------------------------
@@ -325,21 +334,25 @@ class Evaluateur:
     def evaluer_article(
         self, art: ArticleRGPD, passages: Sequence[Passage], document: str
     ) -> VerdictArticle:
-        requete = f"{art.intitule} " + " ".join(
-            i for e in art.elements_attendus for i in e.indices
-        )
-        k = max(self.k_passages, min(12, 3 + len(art.elements_attendus)))
-        pertinents = self.retriever(requete, passages, k)
+        if len(passages) <= SEUIL_RETRIEVAL_COMPLET:
+            pertinents = list(passages)
+            contexte_applicabilite = list(passages)
+        else:
+            requete = f"{art.intitule} " + " ".join(
+                i for e in art.elements_attendus for i in e.indices
+            )
+            k = max(self.k_passages, min(12, 3 + len(art.elements_attendus)))
+            pertinents = self.retriever(requete, passages, k)
 
-        # L'applicabilité s'apprécie sur d'autres passages que les éléments
-        # probants : la condition parle de l'organisme, pas de ses procédures.
-        # Interroger avec les mauvais passages produit des exclusions abusives.
-        requete_condition = f"{art.intitule} {art.condition_applicabilite}"
-        pertinents_condition = self.retriever(requete_condition, passages, self.k_passages)
-        vus = {p.identifiant for p in pertinents}
-        contexte_applicabilite = list(pertinents) + [
-            p for p in pertinents_condition if p.identifiant not in vus
-        ]
+            # L'applicabilité s'apprécie sur d'autres passages que les éléments
+            # probants : la condition parle de l'organisme, pas de ses procédures.
+            # Interroger avec les mauvais passages produit des exclusions abusives.
+            requete_condition = f"{art.intitule} {art.condition_applicabilite}"
+            pertinents_condition = self.retriever(requete_condition, passages, self.k_passages)
+            vus = {p.identifiant for p in pertinents}
+            contexte_applicabilite = list(pertinents) + [
+                p for p in pertinents_condition if p.identifiant not in vus
+            ]
 
         extraits = _assembler(pertinents)
         extraits_applicabilite = _assembler(contexte_applicabilite)

@@ -505,14 +505,17 @@ REFERENTIEL: tuple[ArticleRGPD, ...] = (
         intitule="Désignation d'un délégué à la protection des données",
         criticite=Criticite.IMPORTANTE,
         # L'exigence de citation prouvant la non-applicabilité, protectrice
-        # ailleurs, est ici une impossibilité logique. Elle fonctionne pour les
-        # articles 44-49, qu'un document écarte par une affirmation positive
-        # (« aucune donnée n'est transférée hors de l'Union »). Aucun organisme
-        # n'écrit en revanche que ses activités de base n'impliquent pas de
-        # suivi à grande échelle : on lui demanderait de citer la preuve d'une
-        # absence. L'applicabilité se déduit ici des caractéristiques décrites
-        # (effectif, secteur, nature de l'activité), que le modèle lit dans le
-        # document sans avoir à en citer la négation.
+        # ailleurs, est ici une impossibilité logique. Aucun organisme n'écrit
+        # spontanément que ses activités de base n'impliquent pas de suivi à
+        # grande échelle : on lui demanderait de citer la preuve d'une absence.
+        # L'applicabilité se déduit ici des caractéristiques décrites (effectif,
+        # secteur, nature de l'activité), que le modèle lit dans le document
+        # sans avoir à en citer la négation. Même raisonnement retenu pour les
+        # articles 44-49 (voir plus bas) : l'hypothèse inverse — qu'un document
+        # écarterait un transfert hors UE par une affirmation positive — ne
+        # tenait pas non plus sur le corpus réel (mesuré : 5/5 documents sans
+        # aucun transfert international, tous maintenus à tort dans le
+        # périmètre faute de citation).
         exclusion_exige_preuve=False,
         condition_applicabilite=(
             "CE QUI REND L'ARTICLE APPLICABLE — au moins une des trois conditions : (1) organisme "
@@ -560,6 +563,17 @@ REFERENTIEL: tuple[ArticleRGPD, ...] = (
         numero="44-49",
         intitule="Transferts de données hors Union européenne",
         criticite=Criticite.CRITIQUE,
+        # Comme pour l'article 37 (voir son commentaire) : exiger une citation
+        # affirmant positivement l'absence de transfert hors UE est une
+        # impossibilité logique pour un document qui n'a simplement rien à en
+        # dire. L'applicabilité se déduit des éléments concrets que le modèle
+        # est instruit de chercher (prestataire, hébergement, sous-traitant
+        # nommé) via condition_applicabilite ci-dessous, pas d'une négation
+        # explicite. Le filet de sécurité reste la sévérité elle-même
+        # (CRITIQUE) et les indices d'"identification_transferts" ci-dessous,
+        # qui font remonter tout signal concret (nom de prestataire, pays,
+        # hébergement) si le document en contient un.
+        exclusion_exige_preuve=False,
         condition_applicabilite=(
             "Des données sont transférées, hébergées, accessibles ou traitées depuis un pays "
             "tiers à l'Union européenne, y compris via un prestataire américain ou un accès "
