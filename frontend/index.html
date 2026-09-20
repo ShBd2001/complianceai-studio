@@ -572,6 +572,17 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .atout-carte h3{font-family:var(--serif);font-size:17px;margin:14px 0 8px}
 .atout-carte p{margin:0;font-size:13.5px;color:var(--encre-doux);line-height:1.55}
 
+.video-cadre-wrap{max-width:820px;margin:0 auto}
+.video-cadre{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:linear-gradient(155deg,#161A33,#0B0D1F);box-shadow:var(--ombre-lg);border:1px solid var(--regle)}
+.video-cadre iframe,.video-cadre video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;background:var(--grad-marque);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 8px 30px -6px rgba(76,63,224,.55);cursor:pointer;transition:transform .2s ease}
+.video-play svg{width:24px;height:24px;margin-left:3px}
+.video-play:hover{transform:translate(-50%,-50%) scale(1.07)}
+.video-a-venir{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.video-play-inactif{position:static;transform:none;background:rgba(255,255,255,.12);cursor:default}
+.video-play-inactif:hover{transform:none}
+.video-a-venir p{margin:0;font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+
 .lance-tarifs-teaser{max-width:1180px;margin:96px auto 0;padding:0 48px}
 .teaser-carte{background:linear-gradient(150deg,#14162E 0%,#1B1E3D 55%,#232759 100%);border-radius:20px;padding:54px 48px;text-align:center;color:#fff;position:relative;overflow:hidden}
 .teaser-carte::before{content:"";position:absolute;width:380px;height:380px;top:-160px;left:50%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,rgba(109,107,245,.3),transparent 70%);filter:blur(60px);pointer-events:none}
@@ -667,6 +678,15 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
         <p>PDF et HTML générés en un clic, avec l'historique complet de chaque campagne pour suivre votre trajectoire de conformité.</p>
       </div>
     </div>
+  </div>
+
+  <div class="lance-section">
+    <div class="lance-section-tete reveal">
+      <div class="eyebrow" style="justify-content:center;display:flex">Démonstration</div>
+      <h2>Voir ComplianceAI Studio en action</h2>
+      <p>Deux minutes pour comprendre comment un document devient une preuve de conformité vérifiée.</p>
+    </div>
+    <div class="video-cadre-wrap reveal" id="video-cadre-wrap"></div>
   </div>
 
   <div class="lance-tarifs-teaser reveal">
@@ -1293,6 +1313,12 @@ const TRAD_EN = {
   'Rapports prêts à partager': 'Reports ready to share',
   "PDF et HTML générés en un clic, avec l'historique complet de chaque campagne pour suivre votre trajectoire de conformité.":
     'PDF and HTML generated in one click, with the full history of every campaign to track your compliance trajectory.',
+  'Démonstration': 'Demo',
+  'Voir ComplianceAI Studio en action': 'See ComplianceAI Studio in action',
+  'Deux minutes pour comprendre comment un document devient une preuve de conformité vérifiée.':
+    'Two minutes to see how a document becomes a verified compliance proof.',
+  'Vidéo de démonstration à venir': 'Demo video coming soon',
+  'Lancer la vidéo': 'Play the video',
   "Un tarif par volume d'audits, pas par surprise.": 'Priced by audit volume, not by surprise.',
   "De l'auditeur indépendant au cabinet, un palier adapté au nombre de campagnes que vous menez chaque mois.":
     'From the independent auditor to the firm, a tier matched to how many campaigns you run each month.',
@@ -1358,9 +1384,41 @@ function traduireDOM(racine) {
     });
   }
 }
+// Vidéo de démonstration sur la page d'accueil : vide tant qu'aucune vidéo
+// n'existe (place-holder honnête plutôt qu'un lecteur cassé). Une fois
+// enregistrée, coller ici soit une URL d'intégration YouTube/Vimeo
+// (ex. "https://www.youtube.com/embed/XXXXXXXXXXX" ou
+// "https://player.vimeo.com/video/XXXXXXXXX"), soit le chemin d'un fichier
+// .mp4 depose dans frontend/ (ex. "demo.mp4") — les deux sont geres sans
+// autre changement de code.
+const VIDEO_DEMO_URL = '';
+
+function rendreVideoDemo() {
+  if (!VIDEO_DEMO_URL) {
+    return `<div class="video-cadre video-a-venir">
+      <div class="video-play video-play-inactif"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+      <p>Vidéo de démonstration à venir</p>
+    </div>`;
+  }
+  return `<div class="video-cadre" id="video-cadre-demo">
+    <div class="video-play" onclick="lancerVideoDemo()" role="button" tabindex="0" aria-label="Lancer la vidéo" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();lancerVideoDemo()}">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    </div>
+  </div>`;
+}
+
+function lancerVideoDemo() {
+  const estMp4 = /\.mp4($|\?)/i.test(VIDEO_DEMO_URL);
+  const contenu = estMp4
+    ? `<video controls autoplay preload="metadata" src="${h(VIDEO_DEMO_URL)}"></video>`
+    : `<iframe src="${h(VIDEO_DEMO_URL)}${VIDEO_DEMO_URL.includes('?') ? '&' : '?'}autoplay=1" title="Démonstration ComplianceAI Studio" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>`;
+  poser('video-cadre-demo', contenu);
+}
+
 traduireDOM(document.body);
 appliquerTheme();
 appliquerLangue();
+poser('video-cadre-wrap', rendreVideoDemo());
 initReveal('#lancement');
 
 // Memes tracés que la sidebar (nav.rail), reutilises pour colorer le titre
