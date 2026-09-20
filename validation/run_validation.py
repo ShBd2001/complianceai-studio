@@ -66,6 +66,11 @@ def main() -> int:
     ap.add_argument("--corpus", required=True, help="dossier des documents de test")
     ap.add_argument("--verite", required=True, help="fichier JSON de vérité terrain")
     ap.add_argument("--repetitions", type=int, default=1, help="exécutions par document")
+    ap.add_argument(
+        "--vote", type=int, default=1,
+        help="vote majoritaire sur N exécutions par article (voir evaluer_article_vote) ; "
+             "1 = un seul appel par article, comportement historique",
+    )
     ap.add_argument("--sortie", default="rapport_validation.json")
     ap.add_argument("--ci", action="store_true", help="code de sortie 1 si seuil violé")
     ap.add_argument("--hors-ligne", action="store_true", help="client factice, sans appel API")
@@ -84,6 +89,8 @@ def main() -> int:
     print(f"VALIDATION — {len(cas_liste)} documents, {args.repetitions} exécution(s)")
     if args.repetitions > 1:
         print("Cache vidé entre chaque exécution.")
+    if args.vote > 1:
+        print(f"Vote majoritaire activé : {args.vote} exécutions par article.")
     print("=" * 74)
 
     for cas in cas_liste:
@@ -98,11 +105,18 @@ def main() -> int:
         for i in range(args.repetitions):
             if hasattr(client, "vider_cache"):
                 client.vider_cache()
-            rapports.append(
-                evaluateur.evaluer_document(
-                    texte, nom=cas.fichier, tenant_id="validation"
+            if args.vote > 1:
+                rapports.append(
+                    evaluateur.evaluer_document_vote(
+                        texte, nom=cas.fichier, tenant_id="validation", n_votes=args.vote
+                    )
                 )
-            )
+            else:
+                rapports.append(
+                    evaluateur.evaluer_document(
+                        texte, nom=cas.fichier, tenant_id="validation"
+                    )
+                )
 
         principal = rapports[0]
         tous_rapports[cas.fichier] = rapports
@@ -147,6 +161,7 @@ def main() -> int:
 
     sortie_json["configuration"] = {
         "repetitions": args.repetitions,
+        "vote": args.vote,
         "client": type(client).__name__,
         **(client.versions() if hasattr(client, "versions") else {}),
     }
