@@ -5,7 +5,7 @@ jamais dependre de la disponibilite d'un service externe.
 """
 
 import uuid
-from datetime import date, datetime, timezone
+from datetime import date
 
 import pytest
 from fastapi.testclient import TestClient

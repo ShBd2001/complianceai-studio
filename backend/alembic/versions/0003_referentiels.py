@@ -10,7 +10,6 @@ from alembic import op
 import sqlalchemy as sa
 import pgvector.sqlalchemy
 from sqlalchemy.dialects import postgresql
-from sqlalchemy.dialects import postgresql
 
 revision: str = '0003_referentiels'
 down_revision: str | None = '0002_schema_initial'

@@ -3,7 +3,6 @@ from __future__ import annotations
 import re
 import unicodedata
 import uuid
-from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import func, select

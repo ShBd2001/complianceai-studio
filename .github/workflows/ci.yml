@@ -20,6 +20,33 @@ jobs:
             --verite corpus_demo/verite_terrain.json \
             --hors-ligne
 
+  qualite-code:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Installer ruff et pip-audit
+        run: pip install ruff pip-audit
+      - name: Lint (ruff) — bloquant
+        # E9 (erreurs de syntaxe) + F (pyflakes : imports/variables inutilises,
+        # noms non definis). B008 (appel de fonction en argument par defaut)
+        # est le pattern FastAPI standard (Depends/Query/Path), pas un bug —
+        # jamais selectionne ici.
+        run: ruff check . --select E9,F
+      - name: Audit des dependances (pip-audit) — rapport, non bloquant
+        # 150 CVE relevees sur 6 paquets lors de l'introduction de cette
+        # etape (2026-09-20) : pyjwt et python-multipart corriges dans la
+        # foulee, pypdf/pillow/starlette necessitent une montee de version
+        # majeure planifiee separement (voir docs/architecture.md §6). Ne
+        # bloque pas la CI tant que cette dette n'est pas soldee : un audit
+        # rouge en permanence serait ignore, pas corrige.
+        run: pip-audit -r requirements.txt || true
+
   backend-tests:
     runs-on: ubuntu-latest
     # Sans limite explicite, le defaut GitHub est 360 min : un runner qui
@@ -123,7 +150,7 @@ jobs:
         run: |
           python -m validation.run_validation \
             --corpus ./corpus \
-            --verite ./verite_terrain.json \
+            --verite corpus/verite_terrain.json \
             --repetitions 3 \
             --ci
       - uses: actions/upload-artifact@v4
