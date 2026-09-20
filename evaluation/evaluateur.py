@@ -20,6 +20,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+from collections import Counter
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
@@ -464,6 +465,39 @@ class Evaluateur:
             base -= 0.05 * non_bloquants_absents
         return max(0.0, min(1.0, base))
 
+    def evaluer_article_vote(
+        self, art: ArticleRGPD, passages: Sequence[Passage], document: str, n_votes: int = 3
+    ) -> VerdictArticle:
+        """Comme evaluer_article, mais vote majoritaire sur n_votes evaluations
+        independantes du meme article.
+
+        Le non-determinisme d'une API LLM (mesure : 12,6 % de verdicts
+        instables sur le corpus de validation, meme cache vide) vient d'un
+        seul tirage faisant foi. Interroger le modele n_votes fois et retenir
+        le verdict majoritaire attenue les erreurs isolees d'un tirage
+        (citation fusionnee, nuance manquee) sans rien changer a la mecanique
+        de verification des citations. Cout : n_votes appels au modele au
+        lieu d'un seul, par article evalue.
+        """
+        resultats = [self.evaluer_article(art, passages, document) for _ in range(n_votes)]
+        compte = Counter(r.verdict for r in resultats)
+        majoritaire, n = compte.most_common(1)[0]
+
+        # Pluralite fragile (ex. 1-1-1 sur trois verdicts differents, ou 2-1
+        # sans majorite absolue) : retenir l'option la plus protectrice plutot
+        # que le hasard de l'ordre d'evaluation. Coherent avec le principe
+        # directeur du moteur (verdict par defaut = manquement).
+        if n * 2 <= n_votes and Verdict.MANQUEMENT in compte:
+            majoritaire = Verdict.MANQUEMENT
+
+        choisi = next(r for r in resultats if r.verdict == majoritaire)
+        if len(compte) > 1:
+            repartition = ", ".join(f"{v.value}={c}" for v, c in compte.most_common())
+            choisi.diagnostics.append(
+                f"vote majoritaire sur {n_votes} exécutions : {repartition} — retenu : {majoritaire.value}"
+            )
+        return choisi
+
     # -- orchestration document -------------------------------------------
 
     def evaluer_document(
@@ -495,5 +529,38 @@ class Evaluateur:
             "sections": len({p.section for p in passages}),
             "articles_evalues": len(cibles),
             "tokens_document": sum(p.tokens for p in passages),
+        }
+        return rapport
+
+    def evaluer_document_vote(
+        self,
+        texte: str,
+        *,
+        nom: str = "document",
+        tenant_id: str = "inconnu",
+        articles: Sequence[ArticleRGPD] | None = None,
+        n_votes: int = 3,
+    ) -> RapportAudit:
+        """Comme evaluer_document, mais chaque article est tranché par vote
+        majoritaire (voir evaluer_article_vote) plutôt qu'un seul appel."""
+        from evaluation.scoring import calculer_score
+
+        passages = decouper(texte)
+        if not passages:
+            raise ValueError("document vide : aucun passage exploitable")
+
+        cibles = list(articles or REFERENTIEL)
+        verdicts = [
+            self.evaluer_article_vote(a, passages, texte, n_votes=n_votes) for a in cibles
+        ]
+
+        rapport = RapportAudit(document=nom, tenant_id=tenant_id, verdicts=verdicts)
+        rapport.score, rapport.detail_score = calculer_score(verdicts)
+        rapport.metadonnees = {
+            "passages": len(passages),
+            "sections": len({p.section for p in passages}),
+            "articles_evalues": len(cibles),
+            "tokens_document": sum(p.tokens for p in passages),
+            "n_votes": n_votes,
         }
         return rapport

@@ -132,7 +132,10 @@ jobs:
 
   non-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # 3 repetitions x 15 documents x ~15 articles, avec reessais sur erreur
+    # Groq transitoire : constate en conditions reelles a plus de 20 min
+    # (job annule avant conclusion, --repetitions 3, 2026-09-20).
+    timeout-minutes: 40
     # Consomme du quota Groq : réservé à la branche principale.
     if: github.ref == 'refs/heads/main'
     env:
