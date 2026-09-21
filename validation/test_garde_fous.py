@@ -94,6 +94,14 @@ class ClientMenteur:
             ]})
         if self.mode == "reponse_invalide":
             return "je ne peux pas répondre en JSON désolé"
+        if self.mode == "reponse_tableau":
+            # Observé en CI (2026-09-21) : le modèle répond parfois par un
+            # tableau JSON brut au lieu de l'objet {"elements": [...]}
+            # attendu. Sans garde-fou, `.get(...)` sur cette liste plantait
+            # tout le run de validation (AttributeError non rattrapée).
+            return json.dumps([
+                {"cle": c, "satisfait": True, "citation": None} for c in cles
+            ])
         return json.dumps({"elements": []})
 
 
@@ -133,6 +141,7 @@ def main() -> int:
         ("sans_citation", "Conformité affirmée sans citation → manquement"),
         ("citation_trop_courte", "Citation trop courte → manquement"),
         ("reponse_invalide", "Réponse illisible du modèle → manquement, pas de plantage"),
+        ("reponse_tableau", "Tableau JSON brut au lieu d'un objet → manquement, pas de plantage"),
     ]:
         ev = Evaluateur(client=ClientMenteur(mode), reessais=0)
         from rag.chunking import decouper
