@@ -72,20 +72,33 @@ SEUIL_RETRIEVAL_COMPLET = 20
 # ---------------------------------------------------------------------------
 
 def extraire_json(brut: str) -> dict:
-    """Extrait un objet JSON d'une réponse de modèle, tolérant aux enrobages."""
+    """Extrait un objet JSON d'une réponse de modèle, tolérant aux enrobages.
+
+    Valide que le résultat est bien un objet (dict) : tous les prompts de ce
+    module attendent un objet JSON, jamais un tableau nu. Observé en CI
+    (2026-09-21) : le modèle répond parfois par un tableau JSON brut au lieu
+    de l'objet {"elements": [...]} attendu — sans ce contrôle, l'appelant
+    fait `.get(...)` sur une liste et plante (AttributeError non rattrapée,
+    tout le run de validation s'arrête). Une réponse mal formée doit être
+    traitée comme un échec d'étape (retenté puis dégradé), pas planter.
+    """
     if not brut:
         raise ValueError("réponse vide du modèle")
     texte = brut.strip()
     texte = re.sub(r"^```(?:json)?\s*", "", texte)
     texte = re.sub(r"\s*```$", "", texte)
     try:
-        return json.loads(texte)
+        resultat = json.loads(texte)
     except json.JSONDecodeError:
-        pass
-    debut, fin = texte.find("{"), texte.rfind("}")
-    if debut != -1 and fin > debut:
-        return json.loads(texte[debut : fin + 1])
-    raise ValueError(f"aucun JSON exploitable dans : {brut[:200]!r}")
+        debut, fin = texte.find("{"), texte.rfind("}")
+        if debut == -1 or fin <= debut:
+            raise ValueError(f"aucun JSON exploitable dans : {brut[:200]!r}") from None
+        resultat = json.loads(texte[debut : fin + 1])
+    if not isinstance(resultat, dict):
+        raise ValueError(
+            f"JSON valide mais pas un objet (type={type(resultat).__name__}) : {brut[:200]!r}"
+        )
+    return resultat
 
 
 def retriever_lexical(requete: str, passages: Sequence[Passage], k: int) -> list[Passage]:
