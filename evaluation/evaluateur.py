@@ -22,6 +22,7 @@ import logging
 import re
 from collections import Counter
 from collections.abc import Callable, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 
 from evaluation.prompts import (
@@ -65,6 +66,14 @@ K_PASSAGES = 5
 # (6 a 18 passages par document) : plusieurs faux positifs remontaient a une
 # section pertinente exclue du top-K, jamais vue par le modele.
 SEUIL_RETRIEVAL_COMPLET = 20
+# evaluer_document evaluait chaque article sequentiellement (un appel HTTP
+# apres l'autre) : sur 15 documents x ~15 articles, un run de validation
+# depassait 25 min en CI, meme a --repetitions 1 (deux annulations par
+# timeout constatees, 2026-09-21). Le moteur de production (audit_engine.py)
+# parallelise deja ses appels par exigence ; meme parallelisme ici, meme
+# valeur prudente (LLM_MAX_CONCURRENCY en production) pour rester sous la
+# limite de debit du fournisseur.
+WORKERS_ARTICLES = 3
 
 
 # ---------------------------------------------------------------------------
@@ -533,7 +542,13 @@ class Evaluateur:
             )
 
         cibles = list(articles or REFERENTIEL)
-        verdicts = [self.evaluer_article(a, passages, texte) for a in cibles]
+        workers = min(WORKERS_ARTICLES, max(1, len(cibles)))
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            # map preserve l'ordre d'entree : les verdicts restent alignes sur
+            # les articles cibles.
+            verdicts = list(
+                pool.map(lambda a: self.evaluer_article(a, passages, texte), cibles)
+            )
 
         rapport = RapportAudit(document=nom, tenant_id=tenant_id, verdicts=verdicts)
         rapport.score, rapport.detail_score = calculer_score(verdicts)
@@ -563,9 +578,14 @@ class Evaluateur:
             raise ValueError("document vide : aucun passage exploitable")
 
         cibles = list(articles or REFERENTIEL)
-        verdicts = [
-            self.evaluer_article_vote(a, passages, texte, n_votes=n_votes) for a in cibles
-        ]
+        workers = min(WORKERS_ARTICLES, max(1, len(cibles)))
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            verdicts = list(
+                pool.map(
+                    lambda a: self.evaluer_article_vote(a, passages, texte, n_votes=n_votes),
+                    cibles,
+                )
+            )
 
         rapport = RapportAudit(document=nom, tenant_id=tenant_id, verdicts=verdicts)
         rapport.score, rapport.detail_score = calculer_score(verdicts)
