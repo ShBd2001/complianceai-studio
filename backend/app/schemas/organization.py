@@ -6,6 +6,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 from app.models.enums import OrgPlan, OrgRole
+from app.services.retention import RETENTION_MIN_JOURS
 
 
 class OrganizationCreate(BaseModel):
@@ -32,6 +33,23 @@ class OrganizationOut(BaseModel):
     # (tout le reste) sans requete supplementaire par organisation.
     my_role: OrgRole
     member_count: int
+    # NULL = pas de purge automatique. Reserve a l'offre Cabinet, voir
+    # app/services/retention.py et PATCH /orgs/{org_id}/retention.
+    document_retention_days: int | None = None
+
+
+class RetentionUpdate(BaseModel):
+    document_retention_days: int | None = Field(default=None)
+
+    @field_validator("document_retention_days")
+    @classmethod
+    def _plancher(cls, value: int | None) -> int | None:
+        if value is not None and value < RETENTION_MIN_JOURS:
+            raise ValueError(
+                f"La retention doit etre desactivee (vide) ou d'au moins "
+                f"{RETENTION_MIN_JOURS} jours."
+            )
+        return value
 
 
 class MemberInvite(BaseModel):

@@ -1187,6 +1187,12 @@ const TRAD_EN = {
   'Conformément au RGPD, vous pouvez à tout moment récupérer une copie de vos données ou demander leur effacement.': 'In line with GDPR, you can retrieve a copy of your data or request its erasure at any time.',
   'Exporter mes données': 'Export my data', 'Supprimer mon compte': 'Delete my account',
   'Déconnecter tous les appareils, y compris celui-ci ?': 'Sign out of every device, including this one?',
+  'Rétention des documents': 'Document retention',
+  "Offre Cabinet : passé ce délai, le fichier déposé et son texte indexé sont supprimés automatiquement. Les constats et le rapport déjà produits restent conservés.": "Cabinet plan: past this delay, the uploaded file and its indexed text are deleted automatically. Findings and the report already produced stay in place.",
+  'Nombre de jours (minimum 30, laisser vide pour désactiver)': 'Number of days (minimum 30, leave blank to disable)',
+  'Désactivée': 'Disabled', 'Enregistrer': 'Save', 'Enregistrement': 'Saving',
+  'Rétention mise à jour.': 'Retention updated.',
+  'Indiquez au moins 30 jours, ou laissez vide pour désactiver.': 'Enter at least 30 days, or leave blank to disable.',
   'Supprimer définitivement votre compte ? Cette action est irréversible.': 'Permanently delete your account? This action is irreversible.',
   "Retirer cette personne de l'organisation ?": 'Remove this person from the organization?',
   // A propos
@@ -2503,6 +2509,8 @@ async function vueCompte() {
     <button id="btn-creer-org" onclick="creerOrganisation()">Créer</button>
     <div id="msg-org" aria-live="polite"></div>
 
+    ${rendreRetention()}
+
     <h2>Sécurité</h2>
     <div class="grille">
       <div><label for="cp-actuel">Mot de passe actuel</label><div class="champ-mdp"><input id="cp-actuel" type="password" autocomplete="current-password"><button type="button" class="oeil lien" onclick="togglerMdp('cp-actuel', this)" aria-label="Afficher le mot de passe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
@@ -2537,6 +2545,37 @@ function chargerMesOrganisations() {
         ? `<button class="discret" style="border-color:var(--sceau);color:var(--sceau)" onclick="supprimerOrganisation('${o.id}')">Supprimer</button>`
         : `<button class="discret" onclick="quitterOrganisation('${o.id}')">Quitter</button>`}</td>
     </tr>`).join('')}</tbody></table>` : `<p class="vide">Aucune organisation.</p>`);
+}
+
+function rendreRetention() {
+  const org = E.orgs.find(o => o.id === E.orgId);
+  if (!org || org.plan !== 'cabinet' || org.my_role !== 'owner') return '';
+  const active = org.document_retention_days != null;
+  return `<h2>Rétention des documents</h2>
+    <p class="chapeau">Offre Cabinet : passé ce délai, le fichier déposé et son texte indexé sont supprimés automatiquement. Les constats et le rapport déjà produits restent conservés.</p>
+    <div class="grille" style="max-width:360px">
+      <div><label for="co-retention">Nombre de jours (minimum 30, laisser vide pour désactiver)</label>
+        <input id="co-retention" type="number" min="30" step="1" value="${active ? org.document_retention_days : ''}" placeholder="Désactivée"></div>
+    </div>
+    <button id="btn-retention" onclick="modifierRetention('${org.id}')">Enregistrer</button>
+    <div id="msg-retention" aria-live="polite"></div>`;
+}
+
+async function modifierRetention(orgId) {
+  const brut = $('co-retention').value.trim();
+  const jours = brut === '' ? null : parseInt(brut, 10);
+  if (jours !== null && (!Number.isFinite(jours) || jours < 30)) {
+    return poser('msg-retention', echoue({ message: 'Indiquez au moins 30 jours, ou laissez vide pour désactiver.' }));
+  }
+  poser('msg-retention', attente('Enregistrement'));
+  try {
+    const org = await appel(`/api/v1/orgs/${orgId}/retention`, {
+      method: 'PATCH', body: JSON.stringify({ document_retention_days: jours }),
+    });
+    const idx = E.orgs.findIndex(o => o.id === orgId);
+    if (idx !== -1) E.orgs[idx] = org;
+    poser('msg-retention', `<div class="succes">Rétention mise à jour.</div>`);
+  } catch (e) { poser('msg-retention', echoue(e)); }
 }
 
 async function rafraichirOrganisations(orgIdRetiree) {

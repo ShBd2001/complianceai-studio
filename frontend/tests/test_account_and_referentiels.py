@@ -182,6 +182,70 @@ def test_delete_organization_then_delete_account(page, frontend_server, backend_
     page.wait_for_selector("#lancement:not([hidden])", timeout=15000)
 
 
+def _register_cabinet(page, frontend_server: str, backend_server, email: str) -> None:
+    """Comme _register(), mais en passant par la page Tarifs pour souscrire
+    a l'offre Cabinet -- seule offre sur laquelle la retention personnalisee
+    des documents est proposee (voir rendreRetention() dans index.html)."""
+    page.goto(frontend_server, wait_until="networkidle")
+    page.click(".lance-tarifs")
+    page.wait_for_selector("#tarifs:not([hidden])")
+    page.click("button.plan-cta:has-text('Choisir Cabinet')")
+    page.wait_for_selector("#p-inscription:not([hidden])")
+    page.fill("#i-nom", "Sarah Test")
+    page.fill("#i-org", "Cabinet Test SAS")
+    page.fill("#i-mail", email)
+    page.fill("#i-mdp", PWD)
+    page.check("#i-cgu")
+    page.click("#p-inscription button:not(.lien)")
+    page.wait_for_selector("#p-connexion:not([hidden])")
+
+    contenu = latest_email_for(backend_server["storage_dir"], email)
+    token = extract_link_token(contenu, "verify_email")
+    page.goto(f"{frontend_server}/?verify_email={token}", wait_until="networkidle")
+    page.wait_for_selector("#p-verification:not([hidden])")
+
+    page.goto(frontend_server, wait_until="networkidle")
+    page.click(".lance-connexion")
+    page.fill("#c-mail", email)
+    page.fill("#c-mdp", PWD)
+    page.click("#p-connexion button:not(.lien)")
+    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+
+
+def test_retention_control_visible_and_usable_for_cabinet_owner(page, frontend_server, backend_server):
+    email = f"retention-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register_cabinet(page, frontend_server, backend_server, email)
+
+    page.click("a[data-vue=\"compte\"]")
+    page.wait_for_selector("#z-orgs table", timeout=15000)
+    expect(page.locator("h2:has-text('Rétention des documents')")).to_be_visible()
+
+    # Sous le plancher de 30 jours : rejete cote client, avant tout appel serveur.
+    page.fill("#co-retention", "5")
+    page.click("#btn-retention")
+    expect(page.locator("#msg-retention .alerte")).to_be_visible()
+
+    page.fill("#co-retention", "90")
+    page.click("#btn-retention")
+    expect(page.locator("#msg-retention .succes")).to_be_visible()
+
+    # La valeur enregistree cote serveur doit survivre a un rechargement.
+    page.reload(wait_until="networkidle")
+    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.click("a[data-vue=\"compte\"]")
+    page.wait_for_selector("#z-orgs table", timeout=15000)
+    expect(page.locator("#co-retention")).to_have_value("90")
+
+
+def test_retention_control_hidden_for_non_cabinet_plan(page, frontend_server, backend_server):
+    email = f"noretention-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register(page, frontend_server, backend_server, email)  # offre Essentiel par defaut
+
+    page.click("a[data-vue=\"compte\"]")
+    page.wait_for_selector("#z-orgs table", timeout=15000)
+    expect(page.locator("h2:has-text('Rétention des documents')")).to_have_count(0)
+
+
 def test_about_page_has_content_and_contact_link(page, frontend_server, backend_server):
     email = f"apropos-{uuid.uuid4().hex[:8]}@exemple.fr"
     _register(page, frontend_server, backend_server, email)

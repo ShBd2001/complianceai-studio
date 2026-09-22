@@ -89,6 +89,10 @@ class Document(UUIDMixin, TimestampMixin, Base):
     sha256: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
     storage_key: Mapped[str] = mapped_column(String(500), nullable=False)
     page_count: Mapped[int | None] = mapped_column(Integer)
+    # Date de purge effective du contenu (fichier + texte extrait), selon la
+    # retention personnalisee de l'organisation. NULL tant que le contenu
+    # est encore present. Voir app/services/retention.py.
+    content_purged_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     audit: Mapped["Audit"] = relationship(back_populates="documents")
     chunks: Mapped[list["DocumentChunk"]] = relationship(

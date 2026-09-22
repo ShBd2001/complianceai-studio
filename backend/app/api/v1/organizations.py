@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import OrgContext, get_current_user, get_org_context, require_role
 from app.db.session import get_db
 from app.models.activity import ActivityLog
-from app.models.enums import OrgRole
+from app.models.enums import OrgPlan, OrgRole
 from app.models.organization import Membership, Organization
 from app.models.user import User
 from app.schemas.organization import (
@@ -21,6 +21,7 @@ from app.schemas.organization import (
     MemberOut,
     OrganizationCreate,
     OrganizationOut,
+    RetentionUpdate,
 )
 from app.services import activity
 from app.services.quotas import PLAN_LIMITS, member_quota_remaining
@@ -58,6 +59,7 @@ def list_my_organizations(
             id=org.id, name=org.name, slug=org.slug, siren=org.siren,
             sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
             my_role=role, member_count=counts.get(org.id, 1),
+            document_retention_days=org.document_retention_days,
         )
         for org, role in rows
     ]
@@ -108,6 +110,7 @@ def create_organization(
         id=org.id, name=org.name, slug=org.slug, siren=org.siren,
         sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
         my_role=OrgRole.OWNER, member_count=1,
+        document_retention_days=org.document_retention_days,
     )
 
 
@@ -124,6 +127,42 @@ def get_organization(
         id=org.id, name=org.name, slug=org.slug, siren=org.siren,
         sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
         my_role=ctx.role, member_count=count,
+        document_retention_days=org.document_retention_days,
+    )
+
+
+@router.patch("/{org_id}/retention", response_model=OrganizationOut)
+def update_retention(
+    payload: RetentionUpdate,
+    request: Request,
+    ctx: OrgContext = Depends(require_role(OrgRole.OWNER)),
+    db: Session = Depends(get_db),
+) -> OrganizationOut:
+    """Retention personnalisee des documents deposes -- reservee a l'offre
+    Cabinet (voir app/services/retention.py). Le plancher de jours est
+    valide par le schema RetentionUpdate ; ici on ne verifie que le plan."""
+    if ctx.organization.plan != OrgPlan.CABINET:
+        raise HTTPException(
+            status.HTTP_403_FORBIDDEN,
+            "La retention personnalisee des documents est reservee a l'offre Cabinet.",
+        )
+
+    ctx.organization.document_retention_days = payload.document_retention_days
+    activity.log(
+        db, action="org.retention_updated", actor_id=ctx.user.id, organization_id=ctx.org_id,
+        entity_type="organization", entity_id=ctx.org_id, request=request,
+        payload={"document_retention_days": payload.document_retention_days},
+    )
+    db.flush()
+    count = db.scalar(
+        select(func.count(Membership.id)).where(Membership.organization_id == ctx.org_id)
+    )
+    org = ctx.organization
+    return OrganizationOut(
+        id=org.id, name=org.name, slug=org.slug, siren=org.siren,
+        sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
+        my_role=ctx.role, member_count=count,
+        document_retention_days=org.document_retention_days,
     )
 
 
