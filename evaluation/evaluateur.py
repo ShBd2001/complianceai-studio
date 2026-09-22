@@ -501,7 +501,10 @@ class Evaluateur:
         de verification des citations. Cout : n_votes appels au modele au
         lieu d'un seul, par article evalue.
         """
-        resultats = [self.evaluer_article(art, passages, document) for _ in range(n_votes)]
+        with ThreadPoolExecutor(max_workers=n_votes) as pool:
+            resultats = list(
+                pool.map(lambda _: self.evaluer_article(art, passages, document), range(n_votes))
+            )
         compte = Counter(r.verdict for r in resultats)
         majoritaire, n = compte.most_common(1)[0]
 
