@@ -31,6 +31,10 @@ class Organization(UUIDMixin, TimestampMixin, Base):
         default=OrgPlan.ESSENTIEL,
         nullable=False,
     )
+    # Retention personnalisee des documents deposes (offre Cabinet
+    # uniquement, voir app/services/retention.py). NULL = pas de purge
+    # automatique -- comportement historique, inchange tant que non defini.
+    document_retention_days: Mapped[int | None] = mapped_column(Integer)
 
     memberships: Mapped[list["Membership"]] = relationship(
         back_populates="organization", cascade="all, delete-orphan"

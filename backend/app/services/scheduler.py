@@ -1,5 +1,5 @@
-"""Boucle de planification in-process : veille reglementaire + campagnes
-d'audit recurrentes.
+"""Boucle de planification in-process : veille reglementaire, campagnes
+d'audit recurrentes, purge de retention des documents (offre Cabinet).
 
 Choix delibere de ne pas ajouter de dependance (pas de Celery/APScheduler/
 Redis) : une simple boucle asyncio demarree dans le lifespan de FastAPI,
@@ -37,6 +37,7 @@ from app.models.audit import Audit
 from app.models.enums import Framework as FrameworkCode
 from app.models.framework import Framework
 from app.services.notifications import notify
+from app.services.retention import purge_expired_documents
 from app.services.scheduling import run_due_schedules
 
 logger = logging.getLogger("complianceai.scheduler")
@@ -67,6 +68,7 @@ def _run_due_jobs() -> None:
             return  # un autre worker tient deja le verrou pour ce tick
         _run_regulatory_watch(db)
         run_due_schedules(db)
+        purge_expired_documents(db)
         db.commit()
     except Exception:
         db.rollback()

@@ -144,7 +144,21 @@ class AuditOutcome:
 # Indexation des documents deposes
 # --------------------------------------------------------------------------
 def index_document(db: Session, document: Document) -> int:
-    """Extrait, decoupe et vectorise un document. Retourne le nombre de fragments."""
+    """Extrait, decoupe et vectorise un document. Retourne le nombre de fragments.
+
+    run_audit relit systematiquement le fichier stocke a chaque execution
+    (pas seulement au depot) : un document dont le contenu a ete purge par
+    la retention personnalisee (voir app/services/retention.py) n'a plus de
+    fichier a lire. Sans ce garde-fou, relancer l'analyse plantait
+    (FileNotFoundError non rattrapee) au lieu d'evaluer sans ce document,
+    comme le fait deja un document dont l'extraction ne donne aucun texte.
+    """
+    if document.content_purged_at is not None:
+        logger.warning(
+            "Document %s : contenu purge le %s (retention personnalisee), "
+            "exclu de cette analyse.", document.filename, document.content_purged_at,
+        )
+        return 0
     content = read_document(document.storage_key)
     text = extract_text(content, document.mime_type)
     fragments = chunk_text(text)
