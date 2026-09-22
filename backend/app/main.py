@@ -130,7 +130,7 @@ async def security_headers(
 async def validation_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
     """Messages de validation lisibles, sans fuite de structure interne."""
     return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
         content={
             "detail": "Donnees invalides.",
             "errors": [
