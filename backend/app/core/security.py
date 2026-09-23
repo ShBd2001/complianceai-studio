@@ -117,6 +117,57 @@ def decode_google_id_token(token: str) -> dict[str, Any] | None:
 
 
 # --------------------------------------------------------------------------
+# "Se connecter avec Microsoft" (Entra ID / Azure AD -- comptes
+# professionnels/scolaires uniquement, endpoint "organizations" : ce
+# produit s'adresse a des organisations dont l'identite est controlee par
+# leur propre annuaire, pas a des comptes Microsoft personnels
+# (outlook.com/hotmail.com/live.com), volontairement exclus).
+# --------------------------------------------------------------------------
+_microsoft_jwks_client: "jwt.PyJWKClient | None" = None
+
+
+def _get_microsoft_jwks_client() -> "jwt.PyJWKClient":
+    global _microsoft_jwks_client
+    if _microsoft_jwks_client is None:
+        # Jeu de cles commun a tous les tenants pour une application
+        # multi-tenant "organizations" -- pas besoin de resoudre le tenant
+        # de l'appelant avant de verifier sa signature.
+        _microsoft_jwks_client = jwt.PyJWKClient(
+            "https://login.microsoftonline.com/organizations/discovery/v2.0/keys"
+        )
+    return _microsoft_jwks_client
+
+
+def decode_microsoft_id_token(token: str) -> dict[str, Any] | None:
+    """Verifie un jeton d'identite emis par Microsoft Entra ID et renvoie ses
+    claims, ou None s'il est invalide.
+
+    A la difference de Google, l'emetteur (`iss`) n'est pas une valeur fixe :
+    chaque tenant (organisation) a le sien
+    (`https://login.microsoftonline.com/<tenant-id>/v2.0`). PyJWT ne verifie
+    donc pas ce champ automatiquement ici (parametre `issuer` omis) -- sa
+    forme est controlee a la main juste apres, comme documente par Microsoft
+    pour les applications multi-tenant.
+    """
+    if not settings.MICROSOFT_CLIENT_ID:
+        return None
+    try:
+        signing_key = _get_microsoft_jwks_client().get_signing_key_from_jwt(token)
+        claims = jwt.decode(
+            token,
+            signing_key.key,
+            algorithms=["RS256"],
+            audience=settings.MICROSOFT_CLIENT_ID,
+        )
+    except jwt.PyJWTError:
+        return None
+    iss = claims.get("iss", "")
+    if not (iss.startswith("https://login.microsoftonline.com/") and iss.endswith("/v2.0")):
+        return None
+    return claims
+
+
+# --------------------------------------------------------------------------
 # Jetons opaques (refresh, verification email, reset password)
 # --------------------------------------------------------------------------
 def generate_opaque_token(nbytes: int = 32) -> str:

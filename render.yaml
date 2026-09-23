@@ -69,6 +69,11 @@ services:
       # ce depot Google Cloud, donc saisi a la main plutot que versionne.
       - key: GOOGLE_CLIENT_ID
         sync: false
+      # "Se connecter avec Microsoft" -- meme raisonnement que
+      # GOOGLE_CLIENT_ID juste au-dessus (app/core/security.py::
+      # decode_microsoft_id_token, frontend/index.html::MICROSOFT_CLIENT_ID).
+      - key: MICROSOFT_CLIENT_ID
+        sync: false
       # Veille reglementaire (voir app/services/scheduler.py) : reingestion
       # periodique (repli sans risque si le texte source est inchange, voir
       # ingestion/runner.py::ingest ligne ~93) qui notifie les organisations
