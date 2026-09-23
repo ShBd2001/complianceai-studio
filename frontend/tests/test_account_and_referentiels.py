@@ -10,7 +10,7 @@ import uuid
 
 from playwright.sync_api import expect
 
-from conftest import extract_link_token, latest_email_for
+from conftest import extract_link_token, latest_email_for, passer_tour_si_present
 
 PWD = "Compliance!2026x"
 
@@ -38,6 +38,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    passer_tour_si_present(page)
 
 
 def test_referentiels_page_lists_articles_and_current_version(page, frontend_server, backend_server):
@@ -210,6 +211,7 @@ def _register_cabinet(page, frontend_server: str, backend_server, email: str) ->
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    passer_tour_si_present(page)
 
 
 def test_retention_control_visible_and_usable_for_cabinet_owner(page, frontend_server, backend_server):

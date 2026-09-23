@@ -9,7 +9,7 @@ import uuid
 
 from playwright.sync_api import expect
 
-from conftest import extract_link_token, latest_email_for
+from conftest import extract_link_token, latest_email_for, passer_tour_si_present
 
 PWD = "Compliance!2026x"
 
@@ -41,6 +41,7 @@ def _register(page, frontend_server: str, backend_server, email: str, org: str =
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    passer_tour_si_present(page)
 
 
 def test_theme_and_language_toggles_persist_across_reload(page, frontend_server, backend_server):
@@ -120,6 +121,7 @@ def test_register_then_verify_email_via_real_link(page, frontend_server, backend
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    passer_tour_si_present(page)
 
 
 def test_registration_requires_accepting_privacy_policy(page, frontend_server, backend_server):

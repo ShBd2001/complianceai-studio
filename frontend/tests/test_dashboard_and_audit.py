@@ -9,7 +9,7 @@ import uuid
 
 from playwright.sync_api import expect
 
-from conftest import extract_link_token, latest_email_for
+from conftest import extract_link_token, latest_email_for, passer_tour_si_present
 
 PWD = "Compliance!2026x"
 
@@ -22,7 +22,7 @@ POLICY = (
 )
 
 
-def _register(page, frontend_server: str, backend_server, email: str) -> None:
+def _register(page, frontend_server: str, backend_server, email: str, fermer_tour: bool = True) -> None:
     page.goto(frontend_server, wait_until="networkidle")
     page.click(".lance-inscription")
     page.wait_for_selector("#p-inscription:not([hidden])")
@@ -45,6 +45,13 @@ def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    # Le tour de premiers pas bloque l'interaction avec le reste du tableau
+    # de bord tant qu'il est ouvert : les tests du tour lui-meme (plus bas)
+    # ont besoin de le voir non ferme, d'ou ce parametre -- tous les autres
+    # tests de ce fichier veulent au contraire un tableau de bord utilisable
+    # immediatement.
+    if fermer_tour:
+        passer_tour_si_present(page)
 
 
 def test_dashboard_renders_empty_state(page, frontend_server, backend_server):
@@ -53,6 +60,58 @@ def test_dashboard_renders_empty_state(page, frontend_server, backend_server):
 
     expect(page.locator("h1")).to_have_text("Tableau de bord")
     expect(page.get_by_text("Aucune campagne pour l'instant.")).to_be_visible()
+
+
+# --------------------------------------------------------------------------
+# Tour guide (premiers pas) : remplace l'ancienne carte statique listant les
+# 3 etapes d'un coup (jugee trop envahissante en haut du tableau de bord)
+# par une visite guidee, une etape a la fois, avec halo autour de l'element
+# concerne (voir demarrerTour/rendreTour dans index.html).
+# --------------------------------------------------------------------------
+def test_getting_started_tour_guides_through_three_steps(page, frontend_server, backend_server):
+    email = f"tour-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register(page, frontend_server, backend_server, email, fermer_tour=False)
+    page.wait_for_selector(".tour-bulle")
+
+    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 1 sur 3")
+    expect(page.locator(".tour-bulle h3")).to_have_text("Lancer une première campagne")
+    expect(page.locator(".tour-bulle button:has-text(\"Précédent\")")).to_have_count(0)
+    expect(page.locator(".tour-anneau")).to_be_visible()
+
+    page.click(".tour-bulle button:has-text(\"Suivant\")")
+    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 2 sur 3")
+
+    # Precedent doit vraiment revenir en arriere, pas seulement avancer.
+    page.click(".tour-bulle button:has-text(\"Précédent\")")
+    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 1 sur 3")
+
+    page.click(".tour-bulle button:has-text(\"Suivant\")")
+    page.click(".tour-bulle button:has-text(\"Suivant\")")
+    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 3 sur 3")
+    expect(page.locator(".tour-bulle h3")).to_have_text("Inviter un membre de votre équipe")
+    expect(page.locator(".tour-bulle button:has-text(\"C'est parti\")")).to_be_visible()
+
+    # La derniere etape ferme la visite ET emmene vers la page concernee.
+    page.click(".tour-bulle button:has-text(\"C'est parti\")")
+    expect(page.locator(".tour-bulle")).to_have_count(0)
+    expect(page.locator(".tour-bande")).to_have_count(0)
+    assert page.evaluate("location.hash") == "#/equipe"
+
+
+def test_getting_started_tour_can_be_dismissed_permanently(page, frontend_server, backend_server):
+    email = f"tourskip-{uuid.uuid4().hex[:8]}@exemple.fr"
+    _register(page, frontend_server, backend_server, email, fermer_tour=False)
+    page.wait_for_selector(".tour-bulle")
+
+    page.click(".tour-bulle button:has-text(\"Passer\")")
+    expect(page.locator(".tour-bulle")).to_have_count(0)
+    assert page.evaluate("localStorage.getItem('cai_guide_masque')") == "1"
+
+    # Doit rester masque apres un rechargement, pas seulement en memoire JS.
+    page.reload(wait_until="networkidle")
+    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_timeout(500)
+    expect(page.locator(".tour-bulle")).to_have_count(0)
 
 
 def test_delete_campaign(page, frontend_server, backend_server):
