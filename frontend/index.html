@@ -1547,11 +1547,23 @@ function portail(inscription) {
     GOOGLE_ID_TOKEN_EN_ATTENTE = null;
     montrerFormulaireGoogle(false);
   }
+  initGoogleSignIn();
 }
 
 /* ---------- "Se connecter avec Google" ---------- */
 function initGoogleSignIn() {
   if (!GOOGLE_CLIENT_ID || !window.google?.accounts?.id) return;
+  // L'iframe Google (charge a la demande de renderButton, ci-dessous) fait
+  // son propre trafic reseau en continu tant qu'elle existe : la creer sans
+  // condition au chargement du script (comme avant ce garde-fou) la
+  // declenchait sur CHAQUE page, y compris la page d'atterrissage jamais
+  // liee a la connexion, ralentissant tout le monde (constate en CI : le
+  // reseau "occupe" par Google retardait le networkidle attendu par les
+  // tests bien apres la fin du vrai chargement de la page). On ne la cree
+  // donc que lorsque l'ecran de connexion est reellement affiche -- ce que
+  // cette fonction est appelee a verifier a chaque navigation vers lui
+  // (portail()) et a chaque bascule theme/langue pendant qu'il l'est deja.
+  if ($('accueil').hidden) return;
   google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: gererIdentifiantGoogle });
   const theme = THEME === 'dark' ? 'filled_black' : 'outline';
   const locale = LANG === 'en' ? 'en' : 'fr';
@@ -1762,6 +1774,7 @@ async function restaurerSession() {
     } catch {
       definirJeton(null);
       $('accueil').hidden = false;
+      initGoogleSignIn(); // session expiree -> retour sur l'ecran de connexion, bouton Google inclus
     }
   } finally {
     $('amorce').hidden = true;
