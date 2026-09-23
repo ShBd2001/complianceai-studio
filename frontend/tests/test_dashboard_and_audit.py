@@ -31,7 +31,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.fill("#i-mail", email)
     page.fill("#i-mdp", PWD)
     page.check("#i-cgu")
-    page.click("#btn-inscription")
+    page.click("#p-inscription button:not(.lien)")
     page.wait_for_selector("#p-connexion:not([hidden])")
 
     contenu = latest_email_for(backend_server["storage_dir"], email)
@@ -43,7 +43,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.click(".lance-connexion")
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
-    page.click("#btn-connexion")
+    page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
 
 

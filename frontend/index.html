@@ -185,11 +185,6 @@ button.lien:hover{text-decoration:underline;transform:none}
 button.petit{padding:6px 13px;font-size:13px}
 .grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:16px}
 .rangee{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.bloc-fournisseur{margin-bottom:12px}
-.bloc-fournisseur>div:first-child{display:flex;justify-content:center}
-.bouton-microsoft{width:100%}
-.separateur-ou{display:flex;align-items:center;gap:10px;margin:14px 0 0;font-size:11.5px;color:var(--sourdine)}
-.separateur-ou::before,.separateur-ou::after{content:"";flex:1;height:1px;background:var(--regle)}
 
 .depot{border:1.5px dashed var(--regle);border-radius:var(--rayon);padding:26px;text-align:center;background:var(--carte);cursor:pointer;transition:border-color .15s ease,background .15s ease}
 .depot:hover,.depot.survol{border-color:var(--primaire);background:var(--primaire-clair)}
@@ -750,17 +745,12 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <div class="marque-sous">Audit réglementaire — RGPD · NIS2 · DORA · AI Act</div>
 
     <div id="p-connexion">
-      <div id="bloc-fournisseurs-connexion" class="bloc-fournisseur" hidden>
-        <div id="bouton-google-connexion"></div>
-        <div id="bloc-microsoft-connexion" hidden><button type="button" class="discret bouton-microsoft" onclick="lancerConnexionMicrosoft()"><svg viewBox="0 0 21 21" width="18" height="18" aria-hidden="true"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg><span>Se connecter avec Microsoft</span></button></div>
-        <div class="separateur-ou"><span>ou par e-mail</span></div>
-      </div>
       <div class="grille" style="grid-template-columns:1fr">
         <div><label for="c-mail">Adresse e-mail</label><input id="c-mail" type="email" autocomplete="email"></div>
         <div><label for="c-mdp">Mot de passe</label><div class="champ-mdp"><input id="c-mdp" type="password" autocomplete="current-password"><button type="button" class="oeil lien" onclick="togglerMdp('c-mdp', this)" aria-label="Afficher le mot de passe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       </div>
       <div class="rangee">
-        <button id="btn-connexion" onclick="seConnecter(this)">Se connecter</button>
+        <button onclick="seConnecter(this)">Se connecter</button>
         <button class="lien" onclick="portail(true)">Créer un compte</button>
         <button class="lien" onclick="montrerPanneau('p-oubli')">Mot de passe oublié ?</button>
       </div>
@@ -768,23 +758,17 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 
     <div id="p-inscription" hidden>
       <div class="offre-choisie"><span>Offre <b id="offre-nom">Essentiel</b></span><button type="button" class="lien" onclick="afficherTarifs()">Changer</button></div>
-      <div id="bloc-fournisseurs-inscription" class="bloc-fournisseur" hidden>
-        <div id="bouton-google-inscription"></div>
-        <div id="bloc-microsoft-inscription" hidden><button type="button" class="discret bouton-microsoft" onclick="lancerConnexionMicrosoft()"><svg viewBox="0 0 21 21" width="18" height="18" aria-hidden="true"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg><span>S'inscrire avec Microsoft</span></button></div>
-        <div class="separateur-ou"><span>ou par e-mail</span></div>
-      </div>
-      <div id="msg-inscription-google" aria-live="polite"></div>
       <div class="grille" style="grid-template-columns:1fr">
         <div><label for="i-nom">Nom complet</label><input id="i-nom" autocomplete="name"></div>
         <div><label for="i-org">Nom de l'organisation</label><input id="i-org"></div>
         <div><label for="i-mail">Adresse e-mail</label><input id="i-mail" type="email" autocomplete="email"></div>
-        <div id="champ-mdp-inscription"><label for="i-mdp">Mot de passe</label><div class="champ-mdp"><input id="i-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('i-mdp', this)" aria-label="Afficher le mot de passe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button></div><p class="aide-mdp">12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.</p></div>
+        <div><label for="i-mdp">Mot de passe</label><div class="champ-mdp"><input id="i-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('i-mdp', this)" aria-label="Afficher le mot de passe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button></div><p class="aide-mdp">12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.</p></div>
       </div>
       <label class="case-cgu"><input type="checkbox" id="i-cgu">
         <span>J'accepte les <button type="button" class="lien" onclick="montrerPanneau('p-confidentialite')">conditions d'utilisation et la politique de confidentialité</button></span>
       </label>
       <div class="rangee">
-        <button id="btn-inscription" onclick="sInscrire(this)">Créer le compte</button>
+        <button onclick="sInscrire(this)">Créer le compte</button>
         <button class="lien" onclick="portail(false)">J'ai déjà un compte</button>
       </div>
     </div>
@@ -987,12 +971,6 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
   </footer>
 </div>
 
-<!-- "Se connecter avec Google" (OpenID Connect) : bibliotheque officielle,
-     chargee en async -- initGoogleSignIn() (voir plus bas) ne rend un
-     bouton que si GOOGLE_CLIENT_ID est renseigne, donc sans effet tant
-     qu'aucun identifiant n'a ete configure. -->
-<script src="https://accounts.google.com/gsi/client" async defer onload="initGoogleSignIn()"></script>
-
 <script>
 // location.origin ne convient que si frontend et API partagent un domaine
 // (ex. derriere un reverse proxy). Sur Render, ce sont deux services
@@ -1001,25 +979,6 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 const API = location.port === '5173' ? 'http://localhost:8000'
   : location.hostname === 'complianceai-web.onrender.com' ? 'https://complianceai-api-l51c.onrender.com'
   : location.origin;
-// ID client OAuth Google (Google Cloud Console > API et services >
-// Identifiants > ID client OAuth, type "Application Web"). Pas un secret :
-// c'est justement l'identifiant qu'un client public (ce frontend) doit
-// presenter. Vide par defaut -- voir initGoogleSignIn() : le bouton "Se
-// connecter avec Google" reste simplement absent tant qu'il ne l'est pas.
-const GOOGLE_CLIENT_ID = '768092410692-umt22cukqdajqmmacnbspuuh4lgc940b.apps.googleusercontent.com';
-// ID client Microsoft Entra ID (portail Azure > Inscriptions d'applications
-// > Authentification > cocher "Jetons ID" > Redirection > type "Application
-// a page unique" > URI = l'URL de ce site). Meme non-secret que
-// GOOGLE_CLIENT_ID ci-dessus. Vide par defaut -- voir initMicrosoftSignIn().
-const MICROSOFT_CLIENT_ID = '';
-// Fournisseur ('google' | 'microsoft') et jeton d'identite en attente de
-// finalisation : poses quand /auth/<fournisseur>/login repond "aucun
-// compte pour cette adresse" (voir gererIdentifiantFournisseur), le temps
-// que la personne choisisse un nom d'organisation et accepte les
-// conditions avant de creer reellement le compte
-// (finaliserInscriptionFournisseur).
-let FOURNISSEUR_EN_ATTENTE = null;
-let JETON_EN_ATTENTE = null;
 const E = { jeton:null, moi:null, orgId:null, orgs:[] };
 
 async function appel(chemin, options = {}) {
@@ -1070,7 +1029,6 @@ function basculerTheme() {
   document.documentElement.setAttribute('data-theme', THEME);
   localStorage.setItem('cai_theme', THEME);
   appliquerTheme();
-  initGoogleSignIn(); // le bouton Google a son propre theme clair/sombre a assortir
 }
 
 function appliquerLangue() {
@@ -1097,7 +1055,6 @@ function basculerLangue() {
   // traduireDOM() suivrait — sans cet appel, il resterait fige dans
   // l'ancienne langue si on bascule pendant que le panneau est ouvert.
   majIndicateurOffre();
-  initGoogleSignIn(); // le libelle du bouton Google (langue) suit le meme sort
 }
 
 // Dictionnaire cle en cle (texte francais exact -> anglais) applique par
@@ -1122,12 +1079,6 @@ const TRAD_EN = {
   '12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.': 'At least 12 characters, combining at least 3 of: lowercase, uppercase, digits, special characters.',
   "J'accepte les": 'I accept the', "conditions d'utilisation et la politique de confidentialité": 'terms of use and privacy policy',
   'Créer le compte': 'Create account', "J'ai déjà un compte": 'I already have an account',
-  'ou par e-mail': 'or by email',
-  'Se connecter avec Microsoft': 'Sign in with Microsoft', "S'inscrire avec Microsoft": 'Sign up with Microsoft',
-  "Pas encore de compte pour cette adresse Google — choisissez un nom d'organisation et acceptez les conditions pour le créer.":
-    "No account yet for this Google address — pick an organization name and accept the terms to create it.",
-  'Finaliser la création du compte': 'Finish creating the account',
-  "Indiquez un nom d'organisation.": 'Enter an organization name.',
   'Indiquez votre adresse : si un compte existe, un lien de réinitialisation est envoyé par e-mail.': "Enter your address: if an account exists, a reset link will be emailed to you.",
   'Envoyer le lien': 'Send link', 'Retour à la connexion': 'Back to sign in',
   'Choisissez un nouveau mot de passe.': 'Choose a new password.', 'Nouveau mot de passe': 'New password',
@@ -1551,157 +1502,7 @@ function montrerPanneau(id) {
 
 function portail(inscription) {
   montrerPanneau(inscription ? 'p-inscription' : 'p-connexion');
-  if (inscription) {
-    majIndicateurOffre();
-    // Repart sur un formulaire d'inscription normal : seul le chemin de
-    // secours de gererIdentifiantFournisseur() (compte externe sans
-    // organisation encore) doit rouvrir p-inscription en mode "finalisation".
-    FOURNISSEUR_EN_ATTENTE = null;
-    JETON_EN_ATTENTE = null;
-    montrerFormulaireFournisseur(false);
-  }
-  initGoogleSignIn();
-  initMicrosoftSignIn();
-}
-
-/* ---------- "Se connecter avec Google" / "Se connecter avec Microsoft" ----------
-   Meme logique de connexion/inscription cote serveur pour les deux (voir
-   gererIdentifiantFournisseur, appele avec 'google' ou 'microsoft') : seule
-   l'obtention du jeton differe. Google fournit un bouton pret a l'emploi
-   (bibliotheque Identity Services, iframe) ; Microsoft n'en fournit pas hors
-   MSAL.js (CDN officiel deprecie depuis sa v3, incompatible avec ce depot
-   sans etape de build) -- son bouton est donc construit a la main et
-   declenche une redirection pleine page vers login.microsoftonline.com,
-   traitee au retour par traiterRetourMicrosoft() plus bas. */
-function initGoogleSignIn() {
-  if (!GOOGLE_CLIENT_ID || !window.google?.accounts?.id) return;
-  // L'iframe Google (charge a la demande de renderButton, ci-dessous) fait
-  // son propre trafic reseau en continu tant qu'elle existe : la creer sans
-  // condition au chargement du script declenchait ce trafic sur CHAQUE
-  // page, y compris la page d'atterrissage jamais liee a la connexion,
-  // ralentissant tout le monde (constate en CI : le reseau "occupe" par
-  // Google retardait le networkidle attendu par les tests bien apres la
-  // fin du vrai chargement de la page). On ne la cree donc que lorsque
-  // l'ecran de connexion est reellement affiche -- ce que cette fonction
-  // est appelee a verifier a chaque navigation vers lui (portail()) et a
-  // chaque bascule theme/langue pendant qu'il l'est deja.
-  if ($('accueil').hidden) return;
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: r => gererIdentifiantFournisseur('google', r.credential),
-  });
-  const theme = THEME === 'dark' ? 'filled_black' : 'outline';
-  const locale = LANG === 'en' ? 'en' : 'fr';
-  const cibles = [
-    ['bouton-google-connexion', 'signin_with'],
-    ['bouton-google-inscription', 'signup_with'],
-  ];
-  for (const [id, texte] of cibles) {
-    const cible = $(id);
-    if (!cible) continue;
-    cible.innerHTML = '';
-    google.accounts.id.renderButton(cible, { theme, size: 'large', width: 300, locale, text: texte });
-  }
-  $('bloc-fournisseurs-connexion').hidden = false;
-  if (!FOURNISSEUR_EN_ATTENTE) $('bloc-fournisseurs-inscription').hidden = false;
-}
-
-function initMicrosoftSignIn() {
-  if (!MICROSOFT_CLIENT_ID || $('accueil').hidden) return;
-  $('bloc-fournisseurs-connexion').hidden = false;
-  $('bloc-microsoft-connexion').hidden = false;
-  if (!FOURNISSEUR_EN_ATTENTE) {
-    $('bloc-fournisseurs-inscription').hidden = false;
-    $('bloc-microsoft-inscription').hidden = false;
-  }
-}
-
-function lancerConnexionMicrosoft() {
-  if (!MICROSOFT_CLIENT_ID) return;
-  // "nonce" (integrite du jeton retourne) et "state" (anti-CSRF de la
-  // redirection elle-meme) : verifies tous les deux au retour
-  // (traiterRetourMicrosoft), avant meme d'envoyer quoi que ce soit au
-  // serveur -- qui revalide de toute facon la signature et l'audience,
-  // seule preuve qui compte vraiment, ce controle cote client n'est qu'une
-  // prudence supplementaire contre un jeton rejoue depuis un autre onglet.
-  const nonce = crypto.randomUUID(), state = crypto.randomUUID();
-  sessionStorage.setItem('ms_nonce', nonce);
-  sessionStorage.setItem('ms_state', state);
-  const params = new URLSearchParams({
-    client_id: MICROSOFT_CLIENT_ID,
-    response_type: 'id_token',
-    redirect_uri: location.origin + location.pathname,
-    scope: 'openid profile email',
-    response_mode: 'fragment',
-    nonce, state,
-    prompt: 'select_account',
-  });
-  location.href = `https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?${params}`;
-}
-
-function montrerFormulaireFournisseur(actif) {
-  $('champ-mdp-inscription').hidden = actif;
-  $('bloc-fournisseurs-inscription').hidden = actif || (!GOOGLE_CLIENT_ID && !MICROSOFT_CLIENT_ID);
-  $('bloc-microsoft-inscription').hidden = actif || !MICROSOFT_CLIENT_ID;
-  $('i-mail').readOnly = actif;
-  const bouton = $('btn-inscription');
-  if (bouton) bouton.textContent = actif ? tr('Finaliser la création du compte') : tr('Créer le compte');
-  if (!actif) poser('msg-inscription-google', '');
-}
-
-async function gererIdentifiantFournisseur(fournisseur, idToken) {
-  poser('msg-accueil', attente('Connexion'));
-  try {
-    const t = await appel(`/api/v1/auth/${fournisseur}/login`, {
-      method: 'POST', body: JSON.stringify({ id_token: idToken }),
-    });
-    definirJeton(t.access_token);
-    await demarrer();
-  } catch (e) {
-    if (/aucun compte/i.test(e.message || '')) {
-      // Decode uniquement pour pre-remplir l'affichage (nom, e-mail) : ce
-      // n'est jamais une preuve, /auth/<fournisseur>/register revalide le
-      // jeton cote serveur avant de creer quoi que ce soit.
-      let apercu = {};
-      try { apercu = JSON.parse(atob(idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); } catch {}
-      FOURNISSEUR_EN_ATTENTE = fournisseur;
-      JETON_EN_ATTENTE = idToken;
-      montrerPanneau('p-inscription');
-      $('i-nom').value = apercu.name || '';
-      $('i-mail').value = apercu.email || apercu.preferred_username || '';
-      $('i-org').value = '';
-      $('i-cgu').checked = false;
-      montrerFormulaireFournisseur(true);
-      poser('msg-inscription-google', `<div class="succes">Pas encore de compte pour cette adresse — choisissez un nom d'organisation et acceptez les conditions pour le créer.</div>`);
-    } else {
-      poser('msg-accueil', echoue(e));
-    }
-  }
-}
-
-async function finaliserInscriptionFournisseur(btn) {
-  const organization_name = $('i-org').value.trim();
-  const accept_terms = $('i-cgu').checked;
-  if (!organization_name) return poser('msg-accueil', echoue({ message: "Indiquez un nom d'organisation." }));
-  if (!accept_terms) return poser('msg-accueil', echoue({ message: LANG === 'en'
-    ? 'You must accept the terms of use and privacy policy to create an account.'
-    : "Vous devez accepter les conditions d'utilisation et la politique de confidentialité pour créer un compte." }));
-  poser('msg-accueil', ''); chargerBouton(btn, true);
-  try {
-    const t = await appel(`/api/v1/auth/${FOURNISSEUR_EN_ATTENTE}/register`, {
-      method: 'POST',
-      body: JSON.stringify({
-        id_token: JETON_EN_ATTENTE, organization_name, accept_terms, plan: OFFRE_CHOISIE,
-      }),
-    });
-    FOURNISSEUR_EN_ATTENTE = null;
-    JETON_EN_ATTENTE = null;
-    definirJeton(t.access_token);
-    await demarrer();
-  } catch (e) {
-    chargerBouton(btn, false);
-    poser('msg-accueil', echoue(e));
-  }
+  if (inscription) majIndicateurOffre();
 }
 
 function afficherLancement() {
@@ -1809,35 +1610,6 @@ async function verifierEmailDepuisLien(token) {
   }
 })();
 
-// Retour de la redirection Microsoft (voir lancerConnexionMicrosoft) : le
-// jeton arrive dans le FRAGMENT d'URL (#id_token=...), jamais envoye au
-// serveur par le navigateur lui-meme -- contrairement a un parametre de
-// requete, il ne peut donc pas finir dans un journal d'acces. Traite ici,
-// avant restaurerSession() plus bas, pour eviter que celle-ci ne tente
-// silencieusement de restaurer une ancienne session a la place.
-let MS_JETON_RETOUR = null;
-(function traiterRetourMicrosoft() {
-  if (!location.hash.includes('id_token=')) return;
-  const frag = new URLSearchParams(location.hash.slice(1));
-  const idToken = frag.get('id_token');
-  const stateRecu = frag.get('state');
-  history.replaceState(null, '', location.pathname + location.search);
-
-  const stateAttendu = sessionStorage.getItem('ms_state');
-  const nonceAttendu = sessionStorage.getItem('ms_nonce');
-  sessionStorage.removeItem('ms_state');
-  sessionStorage.removeItem('ms_nonce');
-  if (!idToken || !stateRecu || stateRecu !== stateAttendu) return;
-
-  let apercu = {};
-  try { apercu = JSON.parse(atob(idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); } catch {}
-  if (!apercu.nonce || apercu.nonce !== nonceAttendu) return;
-
-  $('lancement').hidden = true;
-  $('accueil').hidden = false;
-  MS_JETON_RETOUR = idToken;
-})();
-
 const CLE_JETON = 'cai_jeton';
 function definirJeton(valeur) {
   E.jeton = valeur;
@@ -1846,7 +1618,7 @@ function definirJeton(valeur) {
 
 async function restaurerSession() {
   const params = new URLSearchParams(location.search);
-  if (params.has('verify_email') || params.has('reset_password') || MS_JETON_RETOUR) return;
+  if (params.has('verify_email') || params.has('reset_password')) return;
   const jeton = localStorage.getItem(CLE_JETON);
   if (!jeton) return;
   $('lancement').hidden = true;
@@ -1863,15 +1635,12 @@ async function restaurerSession() {
     } catch {
       definirJeton(null);
       $('accueil').hidden = false;
-      initGoogleSignIn(); // session expiree -> retour sur l'ecran de connexion, boutons externes inclus
-      initMicrosoftSignIn();
     }
   } finally {
     $('amorce').hidden = true;
   }
 }
 restaurerSession();
-if (MS_JETON_RETOUR) gererIdentifiantFournisseur('microsoft', MS_JETON_RETOUR);
 
 async function seConnecter(btn) {
   const email = $('c-mail').value.trim(), password = $('c-mdp').value;
@@ -1903,7 +1672,6 @@ async function renvoyerVerification() {
 }
 
 async function sInscrire(btn) {
-  if (FOURNISSEUR_EN_ATTENTE) return finaliserInscriptionFournisseur(btn);
   const charge = {
     full_name: $('i-nom').value.trim(), organization_name: $('i-org').value.trim(),
     email: $('i-mail').value.trim(), password: $('i-mdp').value, accept_terms: $('i-cgu').checked,

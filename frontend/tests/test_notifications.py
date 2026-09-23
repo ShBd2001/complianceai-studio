@@ -26,7 +26,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> str:
     page.fill("#i-mail", email)
     page.fill("#i-mdp", PWD)
     page.check("#i-cgu")
-    page.click("#btn-inscription")
+    page.click("#p-inscription button:not(.lien)")
     page.wait_for_selector("#p-connexion:not([hidden])")
 
     contenu = latest_email_for(backend_server["storage_dir"], email)
@@ -38,7 +38,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> str:
     page.click(".lance-connexion")
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
-    page.click("#btn-connexion")
+    page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
     return page.locator("#ch-org-global option").first.get_attribute("value")
 
@@ -83,7 +83,7 @@ def test_notification_appears_with_badge(page, frontend_server, backend_server, 
     page.click(".lance-connexion")
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
-    page.click("#btn-connexion")
+    page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
 
     expect(page.locator("#badge-notifs")).to_be_visible()
