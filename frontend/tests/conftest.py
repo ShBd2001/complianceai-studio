@@ -27,6 +27,7 @@ from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
 import pytest
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from playwright.sync_api import sync_playwright
 
 
@@ -45,6 +46,28 @@ def latest_email_for(storage_dir: Path, address: str) -> str:
         time.sleep(0.1)
     assert fichiers, f"aucun e-mail trouve pour {address} dans {emails_dir}"
     return fichiers[-1].read_text(encoding="utf-8")
+
+
+def passer_tour_si_present(page) -> None:
+    """Ferme le tour guide de premiers pas s'il s'affiche (compte neuf, voir
+    demarrerTour dans index.html) -- ses bandes couvrent presque toute la
+    page et bloquent le clic sur ce qui n'est pas la cible en cours,
+    contrairement a l'ancienne carte statique qu'il remplace. A appeler
+    apres toute connexion menant au tableau de bord dans un test qui ne
+    porte pas sur le tour lui-meme (voir test_dashboard_and_audit.py pour
+    les tests qui l'exercent au contraire deliberement).
+
+    Le tour n'apparait qu'une fois les donnees du tableau de bord chargees
+    (vueTableau() les attend avant d'appeler demarrerTour()) : un simple
+    `.count()` juste apres que #appli devient visible arrive donc souvent
+    avant sa creation et conclut a tort qu'il n'y en a pas -- d'ou cette
+    attente bornee plutot qu'une verification instantanee."""
+    try:
+        page.wait_for_selector(".tour-bulle", timeout=3000)
+    except PlaywrightTimeoutError:
+        return
+    page.click(".tour-bulle button:has-text(\"Passer\")")
+    page.wait_for_selector(".tour-bulle", state="detached")
 
 
 def extract_link_token(contenu: str, param: str) -> str:

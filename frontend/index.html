@@ -294,25 +294,19 @@ tr.req-detail-ligne td{padding:0 16px 20px;border-bottom:1px solid var(--regle-f
 .contact-carte .fleche{width:16px;height:16px;flex:none;color:var(--sourdine);transition:transform .18s ease}
 .contact-carte:hover .fleche{transform:translateX(4px);color:var(--primaire)}
 
-/* ---------- Guide de demarrage (tableau de bord) ---------- */
-.guide-demarrage{position:relative;background:var(--carte);border:1px solid var(--regle);border-radius:16px;padding:26px 28px;margin-bottom:26px;box-shadow:var(--ombre-sm)}
-.guide-fermer{position:absolute;top:14px;right:14px;background:none;box-shadow:none;border:none;color:var(--sourdine);padding:7px;border-radius:var(--rayon-sm)}
-.guide-fermer:hover{background:var(--regle-fine);color:var(--encre);transform:none}
-.guide-fermer svg{width:16px;height:16px;display:block}
-.guide-tete h2{font-family:var(--serif);font-size:19px;margin:6px 0 12px}
-.guide-barre{height:6px;background:var(--regle-fine);border-radius:var(--rayon-pill);overflow:hidden;max-width:320px}
-.guide-barre span{display:block;height:100%;background:var(--grad-marque);border-radius:var(--rayon-pill);transition:width .4s ease}
-.guide-etapes{display:flex;flex-direction:column;margin-top:18px}
-.guide-etape{display:flex;align-items:center;gap:14px;padding:13px 4px;border-top:1px solid var(--regle-fine);flex-wrap:wrap}
-.guide-etape:first-child{border-top:none}
-.guide-puce{flex:none;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:600;background:var(--regle-fine);color:var(--sourdine)}
-.guide-etape.faite .guide-puce{background:var(--valide-t);color:var(--valide)}
-.guide-etape.faite .guide-puce svg{width:14px;height:14px}
-.guide-texte{flex:1;min-width:200px}
-.guide-texte b{display:block;font-size:14px;font-weight:600}
-.guide-etape.faite .guide-texte b{color:var(--sourdine);text-decoration:line-through;text-decoration-color:var(--regle)}
-.guide-texte span{display:block;font-size:12.5px;color:var(--sourdine);margin-top:2px}
-.guide-etape button{flex:none}
+/* ---------- Tour guide (premiers pas, tableau de bord) ----------
+   Bandes fixes autour de la cible (plutot que clip-path/mask, plus fiable
+   entre navigateurs) : assombries ET floutees, pour ne laisser net QUE la
+   cible elle-meme, jamais recouverte (aucune bande n'occupe cette zone) --
+   restant donc cliquable normalement en plus des boutons de la bulle. */
+.tour-bande{position:fixed;z-index:200;background:rgba(15,14,28,.6);backdrop-filter:blur(3px);animation:tour-app .18s ease}
+.tour-anneau{position:fixed;z-index:200;border-radius:10px;box-shadow:0 0 0 3px var(--primaire),0 0 22px 2px color-mix(in srgb, var(--primaire) 55%, transparent);pointer-events:none;animation:tour-app .18s ease}
+.tour-bulle{position:fixed;z-index:201;background:var(--carte);border:1px solid var(--regle);border-radius:14px;padding:20px 22px;width:300px;box-shadow:var(--ombre);animation:tour-app .18s ease}
+.tour-bulle h3{font-family:var(--serif);font-size:17px;margin:6px 0 8px}
+.tour-bulle p{font-size:13.5px;color:var(--encre-doux);line-height:1.5;margin:0 0 16px}
+.tour-actions{display:flex;justify-content:space-between;align-items:center;gap:10px}
+@keyframes tour-app{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion: reduce){.tour-bande,.tour-anneau,.tour-bulle{animation:none}}
 
 .courbe{background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:22px;box-shadow:var(--ombre-sm)}
 .courbe svg{width:100%;height:180px;display:block;overflow:visible}
@@ -1123,14 +1117,14 @@ const TRAD_EN = {
   'Action corrective': 'Corrective action', 'Aucun constat ne correspond aux filtres.': 'No finding matches the filters.',
   // Tableau de bord
   'Nouvelle campagne': 'New campaign', 'Score courant': 'Current score', 'Aucune campagne notée': 'No scored campaign yet',
-  // Guide de demarrage
-  'Guide de démarrage': 'Getting started', 'Masquer le guide': 'Hide the guide', 'Continuer': 'Continue',
+  // Tour guide (premiers pas)
   'Lancer une première campagne': 'Launch a first campaign',
   "Choisissez un référentiel et ouvrez votre première campagne d'audit.": 'Pick a framework and open your first audit campaign.',
   "Déposer une pièce et lancer l'analyse": 'Upload a file and run the analysis',
   'Versez un document et laissez le moteur confronter vos exigences au texte réel.': 'Upload a document and let the engine check your requirements against the real text.',
   'Inviter un membre de votre équipe': 'Invite a teammate',
   'Ajoutez un auditeur ou un lecteur pour partager le suivi de vos campagnes.': 'Add an auditor or a viewer to share the tracking of your campaigns.',
+  'Passer': 'Skip', 'Précédent': 'Previous', 'Suivant': 'Next', "C'est parti": "Let's go",
   'Évolution': 'Trend', 'Depuis la première campagne': 'Since the first campaign', 'Campagnes': 'Campaigns',
   'Points de mesure': 'Data points', 'Campagnes avec score publié': 'Campaigns with a published score',
   'Trajectoire de conformité': 'Compliance trajectory', 'La trajectoire apparaîtra dès la deuxième campagne notée.': 'The trajectory will appear once a second campaign has been scored.',
@@ -1790,16 +1784,18 @@ async function vueTableau() {
     const org = E.orgs.find(o => o.id === E.orgId);
     const etapes = [
       { fait: audits.length > 0, titre: 'Lancer une première campagne',
-        texte: "Choisissez un référentiel et ouvrez votre première campagne d'audit.", cible: '#/audits' },
+        texte: "Choisissez un référentiel et ouvrez votre première campagne d'audit.",
+        selecteur: 'a[data-vue="audits"]', page: '#/audits' },
       { fait: termines > 0, titre: "Déposer une pièce et lancer l'analyse",
         texte: 'Versez un document et laissez le moteur confronter vos exigences au texte réel.',
-        cible: audits.length ? `#/audit/${audits[0].id}` : '#/audits' },
+        selecteur: audits.length ? '#z table tbody tr:first-child' : 'a[data-vue="audits"]',
+        page: audits.length ? `#/audit/${audits[0].id}` : '#/audits' },
       { fait: (org?.member_count || 1) > 1, titre: 'Inviter un membre de votre équipe',
-        texte: 'Ajoutez un auditeur ou un lecteur pour partager le suivi de vos campagnes.', cible: '#/equipe' },
+        texte: 'Ajoutez un auditeur ou un lecteur pour partager le suivi de vos campagnes.',
+        selecteur: 'a[data-vue="equipe"]', page: '#/equipe' },
     ];
 
     poser('z', `
-      ${(etapes.some(e => !e.fait) && !localStorage.getItem('cai_guide_masque')) ? guideDemarrage(etapes) : ''}
       <div class="cartes">
         <div class="carte carte-score">
           <span class="carte-ic" style="${cScore ? `--bg:var(--${cScore}-t);--fg:var(--${cScore})` : ''}">${IC_CIBLE}</span>
@@ -1825,34 +1821,130 @@ async function vueTableau() {
       <h2>Dernières campagnes</h2>
       ${audits.length ? tableAudits(audits.slice(0, 6)) : `<div class="vide">Aucune campagne pour l'instant.
         <button class="discret" onclick="location.hash='#/audits'">Ouvrir une campagne</button></div>`}`);
+    // Apres le rendu (pas dans le gabarit ci-dessus) : le tour cible parfois
+    // une ligne du tableau des dernieres campagnes (etape 2), qui doit deja
+    // exister dans le DOM pour que le halo trouve sa position.
+    if (etapes.some(e => !e.fait) && !localStorage.getItem('cai_guide_masque')) demarrerTour(etapes);
   } catch (e) { poser('z', echoue(e)); }
 }
 
-const IC_COCHE_GUIDE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-function guideDemarrage(etapes) {
-  const faites = etapes.filter(e => e.fait).length;
-  const progres = LANG === 'en' ? `${faites} of ${etapes.length} steps completed` : `${faites} sur ${etapes.length} étapes complétées`;
-  return `<div class="guide-demarrage" id="guide-demarrage">
-    <button type="button" class="guide-fermer" onclick="masquerGuide()" aria-label="Masquer le guide" title="Masquer le guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    <div class="guide-tete">
-      <div class="eyebrow">Guide de démarrage</div>
-      <h2>${h(progres)}</h2>
-      <div class="guide-barre"><span style="width:${Math.round(faites / etapes.length * 100)}%"></span></div>
-    </div>
-    <div class="guide-etapes">
-      ${etapes.map((e, i) => `
-        <div class="guide-etape${e.fait ? ' faite' : ''}">
-          <span class="guide-puce">${e.fait ? IC_COCHE_GUIDE : i + 1}</span>
-          <div class="guide-texte"><b>${h(e.titre)}</b><span>${h(e.texte)}</span></div>
-          ${!e.fait ? `<button class="discret" onclick="location.hash='${e.cible}'">Continuer</button>` : ''}
-        </div>`).join('')}
-    </div>
-  </div>`;
+/* ---------- Tour guide (premiers pas, tableau de bord) ----------
+   Remplace l'ancienne carte statique listant les 3 etapes d'un coup (jugee
+   trop envahissante en haut du tableau de bord) par une visite guidee : une
+   etape a la fois, fond assombri/floute avec un halo net autour de
+   l'element concerne, navigation Suivant/Precedent, "Passer" pour ne plus
+   la revoir. Construit en DOM direct (document.body.appendChild), pas via
+   poser() : traduireDOM() ne l'atteint donc jamais, d'ou les tr() explicites
+   sur chaque texte, comme majIndicateurOffre() pour la meme raison. */
+let TOUR_ETAPES = [];
+let TOUR_INDEX = 0;
+
+function demarrerTour(etapes) {
+  TOUR_ETAPES = etapes.filter(e => !e.fait);
+  if (!TOUR_ETAPES.length) return;
+  TOUR_INDEX = 0;
+  rendreTour();
+  window.addEventListener('resize', rendreTour);
+  window.addEventListener('scroll', rendreTour, true);
 }
-function masquerGuide() {
+
+function fermerTour() {
+  window.removeEventListener('resize', rendreTour);
+  window.removeEventListener('scroll', rendreTour, true);
+  document.querySelectorAll('.tour-bande, .tour-anneau, .tour-bulle').forEach(el => el.remove());
+}
+
+function tourPasser() {
   localStorage.setItem('cai_guide_masque', '1');
-  const el = $('guide-demarrage');
-  if (el) el.remove();
+  fermerTour();
+}
+
+function tourSuivant() {
+  const etape = TOUR_ETAPES[TOUR_INDEX];
+  if (TOUR_INDEX >= TOUR_ETAPES.length - 1) {
+    fermerTour();
+    if (etape) location.hash = etape.page;
+    return;
+  }
+  TOUR_INDEX++;
+  rendreTour();
+}
+
+function tourPrecedent() {
+  if (TOUR_INDEX === 0) return;
+  TOUR_INDEX--;
+  rendreTour();
+}
+
+function rendreTour() {
+  const etape = TOUR_ETAPES[TOUR_INDEX];
+  document.querySelectorAll('.tour-bande, .tour-anneau, .tour-bulle').forEach(el => el.remove());
+  if (!etape) return fermerTour();
+
+  const cibleEl = document.querySelector(etape.selecteur);
+  const r = cibleEl ? cibleEl.getBoundingClientRect() : null;
+  // Cible hors-ecran (ex. menu replie sur petit viewport, voir initRail()) :
+  // pas de halo plutot qu'un halo fantome pointant vers du vide.
+  const valide = r && r.width > 0 && r.height > 0 && r.bottom > 0 && r.right > 0 && r.top < window.innerHeight && r.left < window.innerWidth;
+
+  if (valide) {
+    const m = 6;
+    const bandes = [
+      { top: 0, left: 0, width: '100vw', height: `${Math.max(0, r.top - m)}px` },
+      { top: `${r.bottom + m}px`, left: 0, width: '100vw', height: `calc(100vh - ${r.bottom + m}px)` },
+      { top: `${r.top - m}px`, left: 0, width: `${Math.max(0, r.left - m)}px`, height: `${r.height + m * 2}px` },
+      { top: `${r.top - m}px`, left: `${r.right + m}px`, width: `calc(100vw - ${r.right + m}px)`, height: `${r.height + m * 2}px` },
+    ];
+    bandes.forEach(z => {
+      const bande = document.createElement('div');
+      bande.className = 'tour-bande';
+      Object.assign(bande.style, { top: z.top, left: z.left, width: z.width, height: z.height });
+      document.body.appendChild(bande);
+    });
+    const anneau = document.createElement('div');
+    anneau.className = 'tour-anneau';
+    Object.assign(anneau.style, {
+      top: `${r.top - m}px`, left: `${r.left - m}px`,
+      width: `${r.width + m * 2}px`, height: `${r.height + m * 2}px`,
+    });
+    document.body.appendChild(anneau);
+  } else {
+    const bande = document.createElement('div');
+    bande.className = 'tour-bande';
+    bande.style.inset = '0';
+    document.body.appendChild(bande);
+  }
+
+  const dernier = TOUR_INDEX >= TOUR_ETAPES.length - 1;
+  const bulle = document.createElement('div');
+  bulle.className = 'tour-bulle';
+  bulle.innerHTML = `
+    <div class="eyebrow">${h(LANG === 'en' ? `Step ${TOUR_INDEX + 1} of ${TOUR_ETAPES.length}` : `Étape ${TOUR_INDEX + 1} sur ${TOUR_ETAPES.length}`)}</div>
+    <h3>${h(tr(etape.titre))}</h3>
+    <p>${h(tr(etape.texte))}</p>
+    <div class="tour-actions">
+      <button type="button" class="lien" onclick="tourPasser()">${tr('Passer')}</button>
+      <div class="rangee" style="gap:8px">
+        ${TOUR_INDEX > 0 ? `<button type="button" class="discret petit" onclick="tourPrecedent()">${tr('Précédent')}</button>` : ''}
+        <button type="button" class="petit" onclick="tourSuivant()">${dernier ? tr("C'est parti") : tr('Suivant')}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(bulle);
+  positionnerBulleTour(bulle, valide ? r : null);
+}
+
+function positionnerBulleTour(bulle, r) {
+  const m = 14;
+  if (!r) {
+    bulle.style.top = '50%'; bulle.style.left = '50%'; bulle.style.transform = 'translate(-50%,-50%)';
+    return;
+  }
+  bulle.style.transform = 'none';
+  let top = r.bottom + m, left = r.left;
+  if (top + bulle.offsetHeight > window.innerHeight) top = Math.max(m, r.top - bulle.offsetHeight - m);
+  if (left + bulle.offsetWidth > window.innerWidth - m) left = window.innerWidth - bulle.offsetWidth - m;
+  if (left < m) left = m;
+  bulle.style.top = `${top}px`; bulle.style.left = `${left}px`;
 }
 
 function courbe(points) {

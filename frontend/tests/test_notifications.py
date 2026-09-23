@@ -12,7 +12,7 @@ from pathlib import Path
 
 from playwright.sync_api import expect
 
-from conftest import extract_link_token, latest_email_for
+from conftest import extract_link_token, latest_email_for, passer_tour_si_present
 
 PWD = "Compliance!2026x"
 
@@ -40,6 +40,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> str:
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    passer_tour_si_present(page)
     return page.locator("#ch-org-global option").first.get_attribute("value")
 
 
@@ -85,6 +86,7 @@ def test_notification_appears_with_badge(page, frontend_server, backend_server, 
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    passer_tour_si_present(page)
 
     expect(page.locator("#badge-notifs")).to_be_visible()
 
