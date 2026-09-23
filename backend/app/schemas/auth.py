@@ -85,6 +85,28 @@ class GoogleRegisterRequest(GoogleIdTokenRequest):
         return v
 
 
+class MicrosoftIdTokenRequest(BaseModel):
+    """Jeton d'identite obtenu par redirection vers Microsoft Entra ID (voir
+    lancerConnexionMicrosoft() dans index.html) -- verifie server-side
+    (signature, audience, forme de l'emetteur) avant tout usage, voir
+    app/core/security.py::decode_microsoft_id_token."""
+
+    id_token: str = Field(min_length=10, max_length=4096)
+
+
+class MicrosoftRegisterRequest(MicrosoftIdTokenRequest):
+    organization_name: str = Field(min_length=2, max_length=160)
+    accept_terms: bool
+    plan: OrgPlan = OrgPlan.ESSENTIEL
+
+    @field_validator("accept_terms")
+    @classmethod
+    def must_accept(cls, v: bool) -> bool:
+        if not v:
+            raise ValueError("Les conditions d'utilisation doivent etre acceptees.")
+        return v
+
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"

@@ -24,6 +24,7 @@ from app.core.rate_limit import (
 from app.core.security import (
     create_access_token,
     decode_google_id_token,
+    decode_microsoft_id_token,
     generate_opaque_token,
     hash_password,
     hash_token,
@@ -39,6 +40,8 @@ from app.schemas.auth import (
     GoogleRegisterRequest,
     LoginRequest,
     MeResponse,
+    MicrosoftIdTokenRequest,
+    MicrosoftRegisterRequest,
     PasswordChange,
     PasswordResetConfirm,
     PasswordResetRequest,
@@ -413,6 +416,125 @@ def google_register(
     )
     activity.log(
         db, action="user.registered_google", actor_id=user.id, organization_id=org.id,
+        entity_type="user", entity_id=user.id, request=request,
+    )
+    db.flush()
+    db.refresh(user)
+
+    raw_refresh = _issue_refresh(db, user, request)
+    _set_refresh_cookie(response, raw_refresh)
+    return _token_response(user)
+
+
+# --------------------------------------------------------------------------
+# "Se connecter avec Microsoft" (Entra ID -- comptes professionnels ou
+# scolaires uniquement). Meme structure a deux endpoints que Google, pour
+# la meme raison, et meme comportement de connexion/inscription -- seule la
+# verification du jeton et l'extraction de l'adresse different (voir
+# decode_microsoft_id_token : pas de claim `email_verified` chez Microsoft,
+# l'adresse est prise sur `email` si presente, sinon `preferred_username`,
+# qui est le UPN du compte professionnel -- controle par l'annuaire de
+# l'organisation, pas par la personne elle-meme).
+# --------------------------------------------------------------------------
+def _extraire_email_microsoft(claims: dict) -> str | None:
+    valeur = claims.get("email") or claims.get("preferred_username")
+    if not valeur or "@" not in valeur:
+        return None
+    return valeur.lower().strip()
+
+
+@router.post("/microsoft/login", response_model=TokenResponse)
+@limiter.limit(LOGIN_LIMIT)
+def microsoft_login(
+    payload: MicrosoftIdTokenRequest,
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+) -> TokenResponse:
+    claims = decode_microsoft_id_token(payload.id_token)
+    email = _extraire_email_microsoft(claims) if claims else None
+    if email is None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Jeton Microsoft invalide.")
+
+    user = db.scalar(select(User).where(User.email == email))
+    if user is None:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            "Aucun compte pour cette adresse. Inscrivez-vous d'abord avec Microsoft.",
+        )
+    if not user.is_active or user.deleted_at is not None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Identifiants invalides.")
+
+    now = datetime.now(timezone.utc)
+    if user.email_verified_at is None:
+        user.email_verified_at = now
+
+    user.failed_login_count = 0
+    user.locked_until = None
+    user.last_login_at = now
+
+    raw_refresh = _issue_refresh(db, user, request)
+    _set_refresh_cookie(response, raw_refresh)
+    activity.log(
+        db, action="auth.microsoft_login", actor_id=user.id,
+        entity_type="user", entity_id=user.id, request=request,
+    )
+    return _token_response(user)
+
+
+@router.post("/microsoft/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
+@limiter.limit(REGISTER_LIMIT)
+def microsoft_register(
+    payload: MicrosoftRegisterRequest,
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+) -> TokenResponse:
+    claims = decode_microsoft_id_token(payload.id_token)
+    email = _extraire_email_microsoft(claims) if claims else None
+    if email is None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Jeton Microsoft invalide.")
+
+    if db.scalar(select(User.id).where(User.email == email)) is not None:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, "Un compte existe deja pour cette adresse."
+        )
+
+    now = datetime.now(timezone.utc)
+    user = User(
+        email=email,
+        password_hash=hash_password(secrets.token_urlsafe(32)),
+        full_name=(claims.get("name") or email.split("@")[0]).strip()[:120],
+        email_verified_at=now,
+    )
+    org = Organization(
+        name=payload.organization_name.strip(),
+        slug=_unique_slug(db, payload.organization_name),
+        plan=payload.plan,
+    )
+    db.add_all([user, org])
+    try:
+        db.flush()
+    except IntegrityError:
+        db.rollback()
+        if db.scalar(select(User.id).where(User.email == email)) is not None:
+            raise HTTPException(
+                status.HTTP_409_CONFLICT, "Un compte existe deja pour cette adresse."
+            ) from None
+        org.slug = f"{_slugify(payload.organization_name)}-{uuid.uuid4().hex[:6]}"
+        db.add_all([user, org])
+        db.flush()
+
+    db.add(Membership(user_id=user.id, organization_id=org.id, role=OrgRole.OWNER))
+    db.add(
+        Consent(
+            user_id=user.id,
+            purpose=ConsentPurpose.TOS,
+            ip_address=activity.client_ip(request),
+        )
+    )
+    activity.log(
+        db, action="user.registered_microsoft", actor_id=user.id, organization_id=org.id,
         entity_type="user", entity_id=user.id, request=request,
     )
     db.flush()

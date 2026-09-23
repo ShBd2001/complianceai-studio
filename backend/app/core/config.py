@@ -51,6 +51,10 @@ class Settings(BaseSettings):
     # secret (il est aussi embarque cote frontend) ; laisse vide, le bouton
     # ne s'affiche simplement pas.
     GOOGLE_CLIENT_ID: str | None = None
+    # "Se connecter avec Microsoft" (Entra ID / Azure AD), meme principe et
+    # meme non-secret que GOOGLE_CLIENT_ID -- voir
+    # app/core/security.py::decode_microsoft_id_token.
+    MICROSOFT_CLIENT_ID: str | None = None
 
     # Origine servant a construire les liens absolus dans les e-mails
     # (verification, reinitialisation) : une adresse relative n'a pas de sens
