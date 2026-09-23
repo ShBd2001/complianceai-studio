@@ -2,6 +2,7 @@
 # slowapi enveloppe les endpoints ; FastAPI resoudrait alors les annotations
 # differees dans les globals de slowapi et non les notres.
 import re
+import secrets
 import unicodedata
 import uuid
 from datetime import datetime, timedelta, timezone
@@ -22,6 +23,7 @@ from app.core.rate_limit import (
 )
 from app.core.security import (
     create_access_token,
+    decode_google_id_token,
     generate_opaque_token,
     hash_password,
     hash_token,
@@ -33,6 +35,8 @@ from app.models.enums import ConsentPurpose, OrgRole
 from app.models.organization import Membership, Organization
 from app.models.user import Consent, OneTimeToken, User, UserSession
 from app.schemas.auth import (
+    GoogleIdTokenRequest,
+    GoogleRegisterRequest,
     LoginRequest,
     MeResponse,
     PasswordChange,
@@ -288,6 +292,134 @@ def login(
         db, action="auth.login", actor_id=user.id,
         entity_type="user", entity_id=user.id, request=request,
     )
+    return _token_response(user)
+
+
+# --------------------------------------------------------------------------
+# "Se connecter avec Google" (OpenID Connect -- pas SAML : authentifie une
+# personne via son compte Google, pas un cabinet entier via son annuaire
+# d'entreprise). Deux endpoints comme /login et /register, pour la meme
+# raison : le comportement (creer ou non un compte) doit etre un choix
+# explicite du point d'appel, jamais devine.
+# --------------------------------------------------------------------------
+@router.post("/google/login", response_model=TokenResponse)
+@limiter.limit(LOGIN_LIMIT)
+def google_login(
+    payload: GoogleIdTokenRequest,
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+) -> TokenResponse:
+    claims = decode_google_id_token(payload.id_token)
+    if claims is None or not claims.get("email_verified"):
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Jeton Google invalide.")
+
+    email = claims["email"].lower().strip()
+    user = db.scalar(select(User).where(User.email == email))
+    if user is None:
+        # A la difference de /login, reveler l'absence de compte n'ouvre pas
+        # d'enumeration : Google vient deja de prouver que l'appelant
+        # controle reellement cette adresse, un tiers ne peut pas se servir
+        # de cette reponse pour sonder des adresses qu'il ne possede pas.
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            "Aucun compte pour cette adresse. Inscrivez-vous d'abord avec Google.",
+        )
+    if not user.is_active or user.deleted_at is not None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Identifiants invalides.")
+
+    now = datetime.now(timezone.utc)
+    if user.email_verified_at is None:
+        # Google vient de reprouver la propriete de l'adresse : inutile de
+        # laisser un compte cree par mot de passe rester bloque a la
+        # connexion faute d'avoir ouvert son lien de verification.
+        user.email_verified_at = now
+
+    # Pas de verification du verrou de force brute (locked_until) ici :
+    # c'est une protection contre le mot de passe, une preuve d'identite
+    # entierement distincte que des tentatives ratees sur l'une ne doivent
+    # pas bloquer l'autre.
+    user.failed_login_count = 0
+    user.locked_until = None
+    user.last_login_at = now
+
+    raw_refresh = _issue_refresh(db, user, request)
+    _set_refresh_cookie(response, raw_refresh)
+    activity.log(
+        db, action="auth.google_login", actor_id=user.id,
+        entity_type="user", entity_id=user.id, request=request,
+    )
+    return _token_response(user)
+
+
+@router.post("/google/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
+@limiter.limit(REGISTER_LIMIT)
+def google_register(
+    payload: GoogleRegisterRequest,
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+) -> TokenResponse:
+    claims = decode_google_id_token(payload.id_token)
+    if claims is None or not claims.get("email_verified"):
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Jeton Google invalide.")
+
+    email = claims["email"].lower().strip()
+    if db.scalar(select(User.id).where(User.email == email)) is not None:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT, "Un compte existe deja pour cette adresse."
+        )
+
+    now = datetime.now(timezone.utc)
+    user = User(
+        email=email,
+        # Aucun mot de passe pour un compte cree via Google : hachage d'une
+        # valeur aleatoire, imprevisible et jamais communiquee -- garantit
+        # qu'aucun mot de passe ne pourra jamais correspondre par coincidence.
+        # Un mot de passe utilisable peut etre defini ensuite via "mot de
+        # passe oublie", si la personne veut aussi pouvoir se connecter sans
+        # passer par Google.
+        password_hash=hash_password(secrets.token_urlsafe(32)),
+        full_name=(claims.get("name") or email.split("@")[0]).strip()[:120],
+        email_verified_at=now,
+    )
+    org = Organization(
+        name=payload.organization_name.strip(),
+        slug=_unique_slug(db, payload.organization_name),
+        plan=payload.plan,
+    )
+    db.add_all([user, org])
+    try:
+        db.flush()
+    except IntegrityError:
+        # Meme rattrapage que /register : l'email est deja exclu ci-dessus,
+        # seule une course sur le slug d'organisation peut encore echouer ici.
+        db.rollback()
+        if db.scalar(select(User.id).where(User.email == email)) is not None:
+            raise HTTPException(
+                status.HTTP_409_CONFLICT, "Un compte existe deja pour cette adresse."
+            ) from None
+        org.slug = f"{_slugify(payload.organization_name)}-{uuid.uuid4().hex[:6]}"
+        db.add_all([user, org])
+        db.flush()
+
+    db.add(Membership(user_id=user.id, organization_id=org.id, role=OrgRole.OWNER))
+    db.add(
+        Consent(
+            user_id=user.id,
+            purpose=ConsentPurpose.TOS,
+            ip_address=activity.client_ip(request),
+        )
+    )
+    activity.log(
+        db, action="user.registered_google", actor_id=user.id, organization_id=org.id,
+        entity_type="user", entity_id=user.id, request=request,
+    )
+    db.flush()
+    db.refresh(user)
+
+    raw_refresh = _issue_refresh(db, user, request)
+    _set_refresh_cookie(response, raw_refresh)
     return _token_response(user)
 
 

@@ -185,6 +185,10 @@ button.lien:hover{text-decoration:underline;transform:none}
 button.petit{padding:6px 13px;font-size:13px}
 .grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:16px}
 .rangee{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bloc-google{margin-bottom:16px}
+.bloc-google>div:first-child{display:flex;justify-content:center}
+.separateur-ou{display:flex;align-items:center;gap:10px;margin:14px 0 0;font-size:11.5px;color:var(--sourdine)}
+.separateur-ou::before,.separateur-ou::after{content:"";flex:1;height:1px;background:var(--regle)}
 
 .depot{border:1.5px dashed var(--regle);border-radius:var(--rayon);padding:26px;text-align:center;background:var(--carte);cursor:pointer;transition:border-color .15s ease,background .15s ease}
 .depot:hover,.depot.survol{border-color:var(--primaire);background:var(--primaire-clair)}
@@ -745,6 +749,10 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
     <div class="marque-sous">Audit réglementaire — RGPD · NIS2 · DORA · AI Act</div>
 
     <div id="p-connexion">
+      <div id="bloc-google-connexion" class="bloc-google" hidden>
+        <div id="bouton-google-connexion"></div>
+        <div class="separateur-ou"><span>ou par e-mail</span></div>
+      </div>
       <div class="grille" style="grid-template-columns:1fr">
         <div><label for="c-mail">Adresse e-mail</label><input id="c-mail" type="email" autocomplete="email"></div>
         <div><label for="c-mdp">Mot de passe</label><div class="champ-mdp"><input id="c-mdp" type="password" autocomplete="current-password"><button type="button" class="oeil lien" onclick="togglerMdp('c-mdp', this)" aria-label="Afficher le mot de passe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
@@ -758,17 +766,22 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 
     <div id="p-inscription" hidden>
       <div class="offre-choisie"><span>Offre <b id="offre-nom">Essentiel</b></span><button type="button" class="lien" onclick="afficherTarifs()">Changer</button></div>
+      <div id="bloc-google-inscription" class="bloc-google" hidden>
+        <div id="bouton-google-inscription"></div>
+        <div class="separateur-ou"><span>ou par e-mail</span></div>
+      </div>
+      <div id="msg-inscription-google" aria-live="polite"></div>
       <div class="grille" style="grid-template-columns:1fr">
         <div><label for="i-nom">Nom complet</label><input id="i-nom" autocomplete="name"></div>
         <div><label for="i-org">Nom de l'organisation</label><input id="i-org"></div>
         <div><label for="i-mail">Adresse e-mail</label><input id="i-mail" type="email" autocomplete="email"></div>
-        <div><label for="i-mdp">Mot de passe</label><div class="champ-mdp"><input id="i-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('i-mdp', this)" aria-label="Afficher le mot de passe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button></div><p class="aide-mdp">12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.</p></div>
+        <div id="champ-mdp-inscription"><label for="i-mdp">Mot de passe</label><div class="champ-mdp"><input id="i-mdp" type="password" autocomplete="new-password"><button type="button" class="oeil lien" onclick="togglerMdp('i-mdp', this)" aria-label="Afficher le mot de passe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg></button></div><p class="aide-mdp">12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.</p></div>
       </div>
       <label class="case-cgu"><input type="checkbox" id="i-cgu">
         <span>J'accepte les <button type="button" class="lien" onclick="montrerPanneau('p-confidentialite')">conditions d'utilisation et la politique de confidentialité</button></span>
       </label>
       <div class="rangee">
-        <button onclick="sInscrire(this)">Créer le compte</button>
+        <button id="btn-inscription" onclick="sInscrire(this)">Créer le compte</button>
         <button class="lien" onclick="portail(false)">J'ai déjà un compte</button>
       </div>
     </div>
@@ -902,7 +915,6 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Tout Pro</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>100 campagnes d'audit / mois</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Utilisateurs et organisations illimités</span></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>SSO / SAML</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Rétention des données personnalisée</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>API et intégrations dédiées</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Accompagnement dédié et SLA contractuel</span></li>
@@ -972,6 +984,12 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
   </footer>
 </div>
 
+<!-- "Se connecter avec Google" (OpenID Connect) : bibliotheque officielle,
+     chargee en async -- initGoogleSignIn() (voir plus bas) ne rend un
+     bouton que si GOOGLE_CLIENT_ID est renseigne, donc sans effet tant
+     qu'aucun identifiant n'a ete configure. -->
+<script src="https://accounts.google.com/gsi/client" async defer onload="initGoogleSignIn()"></script>
+
 <script>
 // location.origin ne convient que si frontend et API partagent un domaine
 // (ex. derriere un reverse proxy). Sur Render, ce sont deux services
@@ -980,6 +998,17 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 const API = location.port === '5173' ? 'http://localhost:8000'
   : location.hostname === 'complianceai-web.onrender.com' ? 'https://complianceai-api-l51c.onrender.com'
   : location.origin;
+// ID client OAuth Google (Google Cloud Console > API et services >
+// Identifiants > ID client OAuth, type "Application Web"). Pas un secret :
+// c'est justement l'identifiant qu'un client public (ce frontend) doit
+// presenter. Vide par defaut -- voir initGoogleSignIn() : le bouton "Se
+// connecter avec Google" reste simplement absent tant qu'il ne l'est pas.
+const GOOGLE_CLIENT_ID = '';
+// Jeton Google en attente de finalisation : pose quand /auth/google/login
+// repond "aucun compte pour cette adresse" (voir gererIdentifiantGoogle),
+// le temps que la personne choisisse un nom d'organisation et accepte les
+// conditions avant de creer reellement le compte (finaliserInscriptionGoogle).
+let GOOGLE_ID_TOKEN_EN_ATTENTE = null;
 const E = { jeton:null, moi:null, orgId:null, orgs:[] };
 
 async function appel(chemin, options = {}) {
@@ -1030,6 +1059,7 @@ function basculerTheme() {
   document.documentElement.setAttribute('data-theme', THEME);
   localStorage.setItem('cai_theme', THEME);
   appliquerTheme();
+  initGoogleSignIn(); // le bouton Google a son propre theme clair/sombre a assortir
 }
 
 function appliquerLangue() {
@@ -1056,6 +1086,7 @@ function basculerLangue() {
   // traduireDOM() suivrait — sans cet appel, il resterait fige dans
   // l'ancienne langue si on bascule pendant que le panneau est ouvert.
   majIndicateurOffre();
+  initGoogleSignIn(); // le libelle du bouton Google (langue) suit le meme sort
 }
 
 // Dictionnaire cle en cle (texte francais exact -> anglais) applique par
@@ -1080,6 +1111,11 @@ const TRAD_EN = {
   '12 caractères minimum, avec au moins 3 types parmi : minuscules, majuscules, chiffres, caractères spéciaux.': 'At least 12 characters, combining at least 3 of: lowercase, uppercase, digits, special characters.',
   "J'accepte les": 'I accept the', "conditions d'utilisation et la politique de confidentialité": 'terms of use and privacy policy',
   'Créer le compte': 'Create account', "J'ai déjà un compte": 'I already have an account',
+  'ou par e-mail': 'or by email',
+  "Pas encore de compte pour cette adresse Google — choisissez un nom d'organisation et acceptez les conditions pour le créer.":
+    "No account yet for this Google address — pick an organization name and accept the terms to create it.",
+  'Finaliser la création du compte': 'Finish creating the account',
+  "Indiquez un nom d'organisation.": 'Enter an organization name.',
   'Indiquez votre adresse : si un compte existe, un lien de réinitialisation est envoyé par e-mail.': "Enter your address: if an account exists, a reset link will be emailed to you.",
   'Envoyer le lien': 'Send link', 'Retour à la connexion': 'Back to sign in',
   'Choisissez un nouveau mot de passe.': 'Choose a new password.', 'Nouveau mot de passe': 'New password',
@@ -1503,7 +1539,97 @@ function montrerPanneau(id) {
 
 function portail(inscription) {
   montrerPanneau(inscription ? 'p-inscription' : 'p-connexion');
-  if (inscription) majIndicateurOffre();
+  if (inscription) {
+    majIndicateurOffre();
+    // Repart sur un formulaire d'inscription normal : seul le chemin de
+    // secours de gererIdentifiantGoogle() (compte Google sans organisation
+    // encore) doit rouvrir p-inscription en mode "finalisation".
+    GOOGLE_ID_TOKEN_EN_ATTENTE = null;
+    montrerFormulaireGoogle(false);
+  }
+}
+
+/* ---------- "Se connecter avec Google" ---------- */
+function initGoogleSignIn() {
+  if (!GOOGLE_CLIENT_ID || !window.google?.accounts?.id) return;
+  google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: gererIdentifiantGoogle });
+  const theme = THEME === 'dark' ? 'filled_black' : 'outline';
+  const locale = LANG === 'en' ? 'en' : 'fr';
+  const cibles = [
+    ['bouton-google-connexion', 'signin_with'],
+    ['bouton-google-inscription', 'signup_with'],
+  ];
+  for (const [id, texte] of cibles) {
+    const cible = $(id);
+    if (!cible) continue;
+    cible.innerHTML = '';
+    google.accounts.id.renderButton(cible, { theme, size: 'large', width: 300, locale, text: texte });
+  }
+  $('bloc-google-connexion').hidden = false;
+  if (!GOOGLE_ID_TOKEN_EN_ATTENTE) $('bloc-google-inscription').hidden = false;
+}
+
+function montrerFormulaireGoogle(actif) {
+  $('champ-mdp-inscription').hidden = actif;
+  $('bloc-google-inscription').hidden = actif || !GOOGLE_CLIENT_ID;
+  $('i-mail').readOnly = actif;
+  const bouton = $('btn-inscription');
+  if (bouton) bouton.textContent = actif ? tr('Finaliser la création du compte') : tr('Créer le compte');
+  if (!actif) poser('msg-inscription-google', '');
+}
+
+async function gererIdentifiantGoogle(reponse) {
+  const idToken = reponse.credential;
+  poser('msg-accueil', attente('Connexion'));
+  try {
+    const t = await appel('/api/v1/auth/google/login', {
+      method: 'POST', body: JSON.stringify({ id_token: idToken }),
+    });
+    definirJeton(t.access_token);
+    await demarrer();
+  } catch (e) {
+    if (/aucun compte/i.test(e.message || '')) {
+      // Decode uniquement pour pre-remplir l'affichage (nom, e-mail) : ce
+      // n'est jamais une preuve, /auth/google/register revalide le jeton
+      // cote serveur avant de creer quoi que ce soit.
+      let apercu = {};
+      try { apercu = JSON.parse(atob(idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); } catch {}
+      GOOGLE_ID_TOKEN_EN_ATTENTE = idToken;
+      montrerPanneau('p-inscription');
+      $('i-nom').value = apercu.name || '';
+      $('i-mail').value = apercu.email || '';
+      $('i-org').value = '';
+      $('i-cgu').checked = false;
+      montrerFormulaireGoogle(true);
+      poser('msg-inscription-google', `<div class="succes">Pas encore de compte pour cette adresse Google — choisissez un nom d'organisation et acceptez les conditions pour le créer.</div>`);
+    } else {
+      poser('msg-accueil', echoue(e));
+    }
+  }
+}
+
+async function finaliserInscriptionGoogle(btn) {
+  const organization_name = $('i-org').value.trim();
+  const accept_terms = $('i-cgu').checked;
+  if (!organization_name) return poser('msg-accueil', echoue({ message: "Indiquez un nom d'organisation." }));
+  if (!accept_terms) return poser('msg-accueil', echoue({ message: LANG === 'en'
+    ? 'You must accept the terms of use and privacy policy to create an account.'
+    : "Vous devez accepter les conditions d'utilisation et la politique de confidentialité pour créer un compte." }));
+  poser('msg-accueil', ''); chargerBouton(btn, true);
+  try {
+    const t = await appel('/api/v1/auth/google/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        id_token: GOOGLE_ID_TOKEN_EN_ATTENTE, organization_name, accept_terms, plan: OFFRE_CHOISIE,
+      }),
+    });
+    GOOGLE_ID_TOKEN_EN_ATTENTE = null;
+    definirJeton(t.access_token);
+    await demarrer();
+  } catch (e) {
+    chargerBouton(btn, false);
+    poser('msg-accueil', echoue(e));
+  }
 }
 
 function afficherLancement() {
@@ -1673,6 +1799,7 @@ async function renvoyerVerification() {
 }
 
 async function sInscrire(btn) {
+  if (GOOGLE_ID_TOKEN_EN_ATTENTE) return finaliserInscriptionGoogle(btn);
   const charge = {
     full_name: $('i-nom').value.trim(), organization_name: $('i-org').value.trim(),
     email: $('i-mail').value.trim(), password: $('i-mdp').value, accept_terms: $('i-cgu').checked,
