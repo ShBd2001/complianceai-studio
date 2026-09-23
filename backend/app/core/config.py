@@ -46,16 +46,6 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str] = ["http://localhost:5173"]
     RATE_LIMIT_ENABLED: bool = True
 
-    # "Se connecter avec Google" (OpenID Connect, pas SAML) : voir
-    # app/core/security.py::decode_google_id_token. Cet identifiant n'est pas
-    # secret (il est aussi embarque cote frontend) ; laisse vide, le bouton
-    # ne s'affiche simplement pas.
-    GOOGLE_CLIENT_ID: str | None = None
-    # "Se connecter avec Microsoft" (Entra ID / Azure AD), meme principe et
-    # meme non-secret que GOOGLE_CLIENT_ID -- voir
-    # app/core/security.py::decode_microsoft_id_token.
-    MICROSOFT_CLIENT_ID: str | None = None
-
     # Origine servant a construire les liens absolus dans les e-mails
     # (verification, reinitialisation) : une adresse relative n'a pas de sens
     # hors du contexte d'une page deja ouverte.
