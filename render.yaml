@@ -62,6 +62,13 @@ services:
         sync: false
       - key: GROQ_API_KEY
         sync: false
+      # "Se connecter avec Google" (voir app/core/security.py et
+      # app/api/v1/auth.py::google_login/google_register). Pas un secret a
+      # proprement parler (le meme identifiant est aussi embarque cote
+      # frontend, voir frontend/index.html::GOOGLE_CLIENT_ID) mais propre a
+      # ce depot Google Cloud, donc saisi a la main plutot que versionne.
+      - key: GOOGLE_CLIENT_ID
+        sync: false
       # Veille reglementaire (voir app/services/scheduler.py) : reingestion
       # periodique (repli sans risque si le texte source est inchange, voir
       # ingestion/runner.py::ingest ligne ~93) qui notifie les organisations

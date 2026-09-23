@@ -63,6 +63,28 @@ class LoginRequest(BaseModel):
     password: str = Field(min_length=1, max_length=128)
 
 
+class GoogleIdTokenRequest(BaseModel):
+    """Jeton d'identite renvoye par la bibliotheque JS "Google Identity
+    Services" (voir gererIdentifiantGoogle() dans index.html) -- verifie
+    server-side (signature, audience, emetteur) avant tout usage, voir
+    app/core/security.py::decode_google_id_token."""
+
+    id_token: str = Field(min_length=10, max_length=4096)
+
+
+class GoogleRegisterRequest(GoogleIdTokenRequest):
+    organization_name: str = Field(min_length=2, max_length=160)
+    accept_terms: bool
+    plan: OrgPlan = OrgPlan.ESSENTIEL
+
+    @field_validator("accept_terms")
+    @classmethod
+    def must_accept(cls, v: bool) -> bool:
+        if not v:
+            raise ValueError("Les conditions d'utilisation doivent etre acceptees.")
+        return v
+
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"

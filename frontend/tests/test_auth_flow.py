@@ -5,6 +5,8 @@ connexion, mot de passe oublie de bout en bout.
 
 from __future__ import annotations
 
+import base64
+import json
 import uuid
 
 from playwright.sync_api import expect
@@ -16,6 +18,20 @@ PWD = "Compliance!2026x"
 
 def _email(prefix: str) -> str:
     return f"{prefix}-{uuid.uuid4().hex[:10]}@exemple.fr"
+
+
+def _jwt_stub(payload: dict) -> str:
+    """Un jeton syntaxiquement conforme a un JWT mais non signe : suffisant
+    ici, le frontend ne fait que decoder le payload pour pre-remplir
+    l'affichage (voir gererIdentifiantGoogle dans index.html) -- il ne
+    verifie jamais la signature lui-meme, c'est le role exclusif du backend
+    (app/core/security.py::decode_google_id_token, deja couvert avec un
+    decodeur factice dans backend/tests/test_google_auth.py)."""
+    def _b64url(data: bytes) -> str:
+        return base64.urlsafe_b64encode(data).rstrip(b"=").decode()
+    entete = _b64url(json.dumps({"alg": "RS256", "typ": "JWT"}).encode())
+    corps = _b64url(json.dumps(payload).encode())
+    return f"{entete}.{corps}.signature-non-verifiee-cote-client"
 
 
 def _register(page, frontend_server: str, backend_server, email: str, org: str = "Acme SAS") -> None:
@@ -198,3 +214,75 @@ def test_password_reset_full_round_trip(page, frontend_server, backend_server):
     page.fill("#c-mdp", new_pwd)
     page.click("#p-connexion button:not(.lien)")
     page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+
+
+# --------------------------------------------------------------------------
+# "Se connecter avec Google" -- le vrai bouton Google (bibliotheque externe,
+# ID client OAuth reel, compte Google reel) n'est pas testable en CI : ces
+# tests invoquent directement le rappel qu'il declencherait (gererIdentifiant
+# Google) et interceptent les appels a l'API (page.route) pour isoler la
+# logique frontend -- la verification du jeton cote serveur est deja
+# couverte, avec un decodeur factice, dans backend/tests/test_google_auth.py.
+# --------------------------------------------------------------------------
+def test_google_signin_new_user_completes_onboarding(page, frontend_server, backend_server):
+    page.goto(frontend_server, wait_until="networkidle")
+    # Le bouton Google (et donc gererIdentifiantGoogle) ne vit que dans
+    # #accueil, qui n'est montre qu'apres ce clic depuis la page d'atterrissage.
+    page.click(".lance-connexion")
+    page.wait_for_selector("#p-connexion:not([hidden])")
+
+    page.route("**/api/v1/auth/google/login", lambda route: route.fulfill(
+        status=404, content_type="application/json",
+        body=json.dumps({"detail": "Aucun compte pour cette adresse. Inscrivez-vous d'abord avec Google."}),
+    ))
+
+    requetes_inscription = []
+
+    def repondre_inscription(route):
+        requetes_inscription.append(json.loads(route.request.post_data))
+        route.fulfill(status=409, content_type="application/json",
+                       body=json.dumps({"detail": "Un compte existe deja pour cette adresse."}))
+    page.route("**/api/v1/auth/google/register", repondre_inscription)
+
+    jeton = _jwt_stub({
+        "email": "nouvelle-personne@exemple.fr", "name": "Nouvelle Personne", "email_verified": True,
+    })
+    page.evaluate("jeton => gererIdentifiantGoogle({ credential: jeton })", jeton)
+
+    page.wait_for_selector("#p-inscription:not([hidden])")
+    expect(page.locator("#i-mail")).to_have_value("nouvelle-personne@exemple.fr")
+    expect(page.locator("#i-nom")).to_have_value("Nouvelle Personne")
+    expect(page.locator("#champ-mdp-inscription")).to_be_hidden()
+    expect(page.locator("#btn-inscription")).to_have_text("Finaliser la création du compte")
+
+    page.fill("#i-org", "Cabinet Playwright")
+    page.check("#i-cgu")
+    page.click("#btn-inscription")
+
+    expect(page.locator("#msg-accueil .alerte")).to_be_visible()
+    assert len(requetes_inscription) == 1
+    assert requetes_inscription[0]["organization_name"] == "Cabinet Playwright"
+    assert requetes_inscription[0]["accept_terms"] is True
+    assert requetes_inscription[0]["id_token"] == jeton
+
+
+def test_google_signin_existing_user_logs_in_directly(page, frontend_server, backend_server):
+    page.goto(frontend_server, wait_until="networkidle")
+    page.click(".lance-connexion")
+    page.wait_for_selector("#p-connexion:not([hidden])")
+
+    page.route("**/api/v1/auth/google/login", lambda route: route.fulfill(
+        status=200, content_type="application/json",
+        body=json.dumps({"access_token": "jeton-acces-factice", "token_type": "bearer", "expires_in": 900}),
+    ))
+
+    jeton = _jwt_stub({
+        "email": "deja-inscrite@exemple.fr", "name": "Deja Inscrite", "email_verified": True,
+    })
+    page.evaluate("jeton => gererIdentifiantGoogle({ credential: jeton })", jeton)
+
+    # definirJeton() persiste le jeton avant meme que demarrer() ne charge le
+    # profil : suffisant pour prouver que la reponse 200 a ete traitee comme
+    # une connexion reussie, sans dependre du reste du demarrage de
+    # l'application (deja couvert par les autres tests de ce fichier).
+    page.wait_for_function("localStorage.getItem('cai_jeton') === 'jeton-acces-factice'")
