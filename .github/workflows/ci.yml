@@ -3,6 +3,21 @@ name: Validation
 on: [push, pull_request]
 
 jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # gitleaks scanne l'historique complet, pas seulement le commit du
+          # push : un secret introduit puis retire dans un commit ulterieur
+          # reste lisible dans l'historique git tant qu'il n'est pas revoque.
+          fetch-depth: 0
+      - name: Recherche de secrets (gitleaks) — bloquant
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   garde-fous:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -88,10 +103,16 @@ jobs:
         run: pip install -r requirements.txt
       - name: Installer Chromium (génération PDF sous test)
         run: playwright install --with-deps chromium
-      - name: Suite de tests backend
+      - name: Installer pytest-cov
+        run: pip install pytest-cov
+      - name: Suite de tests backend, avec couverture — bloquant
         # tests/conftest.py migre la base _test et force LLM_ENABLED=false —
         # aucun quota Groq consomme, aucun reseau externe requis.
-        run: pytest -q
+        # --cov-fail-under=80 : couverture mesuree le 2026-09-24 (Taches 0 a
+        # 3), arrondie a l'entier inferieur (80,16 %). A remonter seulement
+        # si la couverture reelle progresse durablement — jamais abaisser ce
+        # seuil pour faire passer une regression.
+        run: pytest -q --cov=app --cov-report=term-missing --cov-fail-under=80
 
   frontend-e2e:
     runs-on: ubuntu-latest
