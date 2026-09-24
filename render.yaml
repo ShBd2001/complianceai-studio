@@ -56,6 +56,12 @@ services:
         value: https://complianceai-web.onrender.com
       - key: EMBEDDING_BACKEND
         value: fastembed
+      # Methode de recherche des passages pertinents (app/services/rag.py).
+      # "lexical" : mesure sur le corpus de validation superieure au
+      # semantique seul sur toutes les metriques, voir
+      # validation/comparaison_retrievers.json et DA-07 (docs/architecture.md).
+      - key: RAG_RETRIEVER
+        value: lexical
       - key: EMAIL_FROM
         value: sarahbelmiloud2001@gmail.com
       - key: BREVO_API_KEY

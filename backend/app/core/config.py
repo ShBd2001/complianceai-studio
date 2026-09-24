@@ -101,6 +101,21 @@ class Settings(BaseSettings):
     STORAGE_DIR: str = "./storage"
     MAX_UPLOAD_MB: int = 20
     RAG_TOP_K: int = 3
+    # Methode de recherche des passages pertinents (app/services/rag.py).
+    # "lexical" par defaut : mesure sur le corpus de validation superieure au
+    # semantique seul sur toutes les metriques (voir
+    # validation/comparaison_retrievers.json et docs/architecture.md, DA-07).
+    RAG_RETRIEVER: str = "lexical"  # "lexical" | "semantique" | "hybride"
+
+    @field_validator("RAG_RETRIEVER")
+    @classmethod
+    def _valider_rag_retriever(cls, v: str) -> str:
+        valeurs = {"lexical", "semantique", "hybride"}
+        if v not in valeurs:
+            raise ValueError(
+                f"RAG_RETRIEVER={v!r} invalide, attendu l'une de {sorted(valeurs)}."
+            )
+        return v
 
     # Bornes de taille du prompt d'evaluation, en caracteres.
     # Determinantes face a un fournisseur qui limite les jetons par minute :

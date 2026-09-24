@@ -170,15 +170,21 @@ def test_delete_organization_then_delete_account(page, frontend_server, backend_
     email = f"delcompte-{uuid.uuid4().hex[:8]}@exemple.fr"
     _register(page, frontend_server, backend_server, email)
 
+    # Gestionnaire permanent plutot que page.once() reenregistre entre les
+    # deux confirm() de ce test : deux "once" consecutifs laissent une
+    # fenetre ou le second clic peut survenir avant le reenregistrement,
+    # auto-rejetant alors sa boite de dialogue (comportement par defaut de
+    # Playwright sans gestionnaire arme) -- cause plausible du flake constate
+    # (organisation jamais supprimee, capture d'echec a l'appui).
+    page.on("dialog", lambda d: d.accept())
+
     page.click("a[data-vue=\"compte\"]")
     page.wait_for_selector("#z-orgs table", timeout=15000)
 
-    page.once("dialog", lambda d: d.accept())
     page.click("#z-orgs button:has-text(\"Supprimer\")")
     expect(page.locator("#msg-org .succes")).to_be_visible()
     expect(page.get_by_text("Aucune organisation.")).to_be_visible()
 
-    page.once("dialog", lambda d: d.accept())
     page.click("button:has-text(\"Supprimer mon compte\")")
     page.wait_for_selector("#lancement:not([hidden])", timeout=15000)
 
