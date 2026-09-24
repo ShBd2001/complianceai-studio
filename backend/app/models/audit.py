@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING, Any
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     BigInteger,
-    Computed,
     DateTime,
     Enum,
     Float,
@@ -18,7 +17,7 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR, UUID as PGUUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.config import settings
@@ -125,12 +124,6 @@ class DocumentChunk(UUIDMixin, Base):
     content: Mapped[str] = mapped_column(Text, nullable=False)
     embedding: Mapped[Any | None] = mapped_column(Vector(settings.EMBEDDING_DIM), nullable=True)
     meta: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict, nullable=False)
-    # Colonne generee par Postgres (jamais ecrite par l'ORM), voir la
-    # migration 0013 : recherche lexicale en complement du semantique
-    # (app/services/rag.py), pas en remplacement.
-    tsv: Mapped[Any] = mapped_column(
-        TSVECTOR, Computed("to_tsvector('french', content)", persisted=True), nullable=True
-    )
 
     document: Mapped["Document"] = relationship(back_populates="chunks")
 

@@ -1,31 +1,43 @@
-"""Recherche hybride (lexicale + semantique) sur les exigences et sur les
-documents du client.
+"""Recherche des passages pertinents sur les exigences et sur les documents
+du client, selon la methode choisie par `settings.RAG_RETRIEVER`.
 
 Le filtre par organisation est applique dans la requete SQL elle-meme, et non
 apres coup en Python : une fuite inter-locataires est ainsi structurellement
 impossible, meme en cas d'erreur applicative en aval.
 
-Hybride par fusion de rangs (Reciprocal Rank Fusion) entre deux classements
-independants -- semantique (pgvector, distance cosinus) et lexical (recherche
-plein texte Postgres, configuration 'french', colonnes generees `tsv` -- voir
-la migration 0013) -- plutot que le seul semantique utilise jusqu'ici.
+Trois methodes, mesurees sur le corpus de validation (voir
+validation/comparer_retrievers.py, resultats dans
+validation/comparaison_retrievers.json, ~210 articles evalues) :
 
-Mesure sur le corpus de validation (voir validation/comparer_retrievers.py,
-comparaison_retrievers.json) : sur des textes reglementaires, le lexical seul
-bat le semantique seul sur toutes les metriques (exactitude 91,9 % contre
-85,2 %, rappel parfait) -- la terminologie exacte ("article 30", "72 heures")
-y compte plus que la paraphrase. Mais un document client reel ne reprend pas
-toujours ce vocabulaire au mot pres, d'ou la fusion plutot que le lexical
-seul : l'ecart avec l'hybride mesure (90,5 %) n'est pas significatif sur ce
-corpus, et l'hybride recupere les reformulations que le lexical manquerait.
+    | Methode    | Exactitude | Precision | Rappel | Faux negatifs |
+    |------------|-----------:|----------:|-------:|--------------:|
+    | Lexicale   |      91,9 %|     82,1 %|  100 % |             0 |
+    | Semantique |      85,2 %|     73,3 %|  94,9 %|             4 |
+    | Hybride    |      90,5 %|     81,5 %|  96,2 %|             3 |
+
+Sur des textes reglementaires, la terminologie exacte ("article 30", "72
+heures") compte plus que la paraphrase : le lexical seul bat le semantique
+seul sur toutes les metriques mesurees, d'ou son choix par defaut
+(RAG_RETRIEVER="lexical"). Le mode "hybride" reste disponible : un document
+client reel ne reprend pas toujours le vocabulaire exact du texte de loi, et
+l'ecart mesure avec le lexical seul (1,4 point) n'est pas significatif sur ce
+corpus.
+
+_scores_lexicaux() est une copie adaptee de
+evaluation/evaluateur.py::retriever_lexical et de
+evaluation/verificateur.py::normaliser -- le backend n'importe jamais le
+paquet evaluation (deux paquets separes, voir docs/architecture.md) : toute
+correction de l'algorithme doit etre reportee manuellement des deux cotes.
 """
 
 from __future__ import annotations
 
+import re
+import unicodedata
 import uuid
 from dataclasses import dataclass
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -53,27 +65,84 @@ def _query_vector(text: str) -> list[float]:
     return embedder.embed_one(text)
 
 
-# Constante de la fusion de rangs (Reciprocal Rank Fusion) : amortit le poids
-# des tout premiers rangs. Valeur usuelle, deja retenue par le harnais de
-# validation (rag/retriever_semantique.py::RetrieverHybride) plutot
-# qu'inventee ici sans la mesurer independamment.
-RRF_CONSTANTE = 60
+# ---------------------------------------------------------------------------
+# Lexical -- copie adaptee de evaluation/evaluateur.py::retriever_lexical
+# ---------------------------------------------------------------------------
+def _normaliser(texte: str) -> str:
+    """Copie fidele de evaluation/verificateur.py::normaliser."""
+    texte = unicodedata.normalize("NFD", texte)
+    texte = "".join(c for c in texte if unicodedata.category(c) != "Mn")
+    texte = texte.lower()
+    texte = texte.replace("’", "'").replace("‘", "'")
+    texte = (
+        texte.replace("«", '"')
+        .replace("»", '"')
+        .replace("“", '"')
+        .replace("”", '"')
+    )
+    texte = re.sub(r"[^\w\s']", " ", texte)
+    texte = re.sub(r"\s+", " ", texte)
+    return texte.strip()
 
 
-def _fusionner(*classements: list[str], limit: int) -> list[str]:
-    """Fusion de rangs : combine plusieurs classements d'identifiants (le
-    premier de chaque liste compte le plus) en un seul. Ne compare jamais les
-    scores d'origine entre eux -- une distance cosinus et un ts_rank_cd ne
-    sont pas sur la meme echelle, seuls leurs RANGS le sont."""
+def _scores_lexicaux(requete: str, candidats: list[tuple[str, str]]) -> dict[str, float]:
+    """Recouvrement lexical pondere par occurrence et longueur du texte --
+    coeur de l'algorithme mesure dans comparaison_retrievers.json.
+
+    candidats : liste de (identifiant, texte). Renvoie un score par
+    identifiant (absent si aucun terme ne matche), jamais tronque : les
+    appelants decident de la limite et du repli "toujours renvoyer quelque
+    chose" (un article sans passage pertinent doit etre evalue -- et
+    conclure au manquement -- pas escamote).
+    """
+    termes = [t for t in _normaliser(requete).split() if len(t) > 3]
+    if not termes:
+        return {}
+    scores: dict[str, float] = {}
+    for identifiant, texte in candidats:
+        corps = _normaliser(texte)
+        score = sum(corps.count(t) for t in termes) / (1 + len(corps) / 800)
+        if score > 0:
+            scores[identifiant] = score
+    return scores
+
+
+def _classer_lexical(candidats: list[tuple[str, str]], scores: dict[str, float], limit: int) -> list[str]:
+    ordre = [i for i, _ in candidats]
+    retenus = sorted((i for i in ordre if i in scores), key=lambda i: scores[i], reverse=True)
+    return (retenus or ordre)[:limit]
+
+
+# Approximation d'une distance a partir du score lexical (sans unite propre,
+# a la difference d'une distance cosinus) : necessaire pour que le repli
+# heuristique de audit_engine.py (sans modele de langage, seuils 0.25/0.45
+# sur Passage.distance) reste au moins ORDONNE correctement en mode lexical
+# -- un score fort doit produire une distance faible, un score nul une
+# distance maximale. Monotone, mais les seuils existants n'ont ete calibres
+# que sur la distance cosinus : approximation assumee, pas une mesure.
+def _distance_depuis_score_lexical(score: float) -> float:
+    return 1.0 / (1.0 + score)
+
+
+# Constante de la fusion de rangs (Reciprocal Rank Fusion), mode hybride.
+# k = 60, meme valeur que le harnais de validation
+# (rag/retriever_semantique.py::RetrieverHybride) et que
+# validation/comparaison_retrievers.json : reprise a l'identique, pas
+# reinventee ici.
+RRF_K = 60
+
+
+def _fusionner_rrf(*classements: list[str], limit: int) -> list[str]:
     scores: dict[str, float] = {}
     for classement in classements:
         for rang, identifiant in enumerate(classement):
-            scores[identifiant] = scores.get(identifiant, 0.0) + 1.0 / (
-                RRF_CONSTANTE + rang + 1
-            )
+            scores[identifiant] = scores.get(identifiant, 0.0) + 1.0 / (RRF_K + rang + 1)
     return sorted(scores, key=lambda i: scores[i], reverse=True)[:limit]
 
 
+# ---------------------------------------------------------------------------
+# Exigences du referentiel
+# ---------------------------------------------------------------------------
 def search_requirements(
     db: Session,
     query: str,
@@ -82,62 +151,94 @@ def search_requirements(
 ) -> list[Passage]:
     """Retrouve les articles du referentiel les plus proches d'une question."""
     limit = limit or settings.RAG_TOP_K
-    # Bassin plus large que ce qui est rendu : chaque classement individuel
-    # doit pouvoir apporter ses propres candidats a la fusion, pas seulement
-    # ceux deja en tete de l'autre.
-    large = max(limit * 3, 10)
-    vector = _query_vector(query)
+    methode = settings.RAG_RETRIEVER
 
     base = (
-        select(Requirement.id)
+        select(Requirement)
         .join(FrameworkVersion, Requirement.version_id == FrameworkVersion.id)
         .join(Framework, FrameworkVersion.framework_id == Framework.id)
         .where(
             Framework.code == framework_code,
             FrameworkVersion.is_current.is_(True),
-            Requirement.embedding.isnot(None),
         )
     )
 
-    distance = Requirement.embedding.cosine_distance(vector)
-    semantiques = db.execute(base.order_by(distance).limit(large)).scalars().all()
+    if methode == "semantique":
+        return _requirements_semantique(db, query, base, limit)
+    if methode == "hybride":
+        return _requirements_hybride(db, query, base, limit)
+    return _requirements_lexical(db, query, base, limit)
 
-    tsquery = func.plainto_tsquery("french", query)
-    lexicaux = (
-        db.execute(
-            base.where(Requirement.tsv.op("@@")(tsquery))
-            .order_by(func.ts_rank_cd(Requirement.tsv, tsquery).desc())
-            .limit(large)
-        )
-        .scalars()
-        .all()
-    )
 
-    fusion = _fusionner(
-        [str(i) for i in semantiques], [str(i) for i in lexicaux], limit=limit
-    )
-    if not fusion:
-        return []
-
-    lignes = db.execute(
-        select(Requirement, distance.label("distance")).where(
-            Requirement.id.in_([uuid.UUID(i) for i in fusion])
-        )
+def _requirements_semantique(db: Session, query: str, base, limit: int) -> list[Passage]:
+    vector = _query_vector(query)
+    distance = Requirement.embedding.cosine_distance(vector).label("distance")
+    rows = db.execute(
+        base.where(Requirement.embedding.isnot(None))
+        .add_columns(distance)
+        .order_by(distance)
+        .limit(limit)
     ).all()
-    par_id = {str(r.id): (r, float(d)) for r, d in lignes}
+    return [_passage_requirement(r, float(d)) for r, d in rows]
 
+
+def _requirements_lexical(db: Session, query: str, base, limit: int) -> list[Passage]:
+    lignes = db.execute(base).scalars().all()
+    if not lignes:
+        return []
+    candidats = [(str(r.id), f"{r.title} {r.body}") for r in lignes]
+    scores = _scores_lexicaux(query, candidats)
+    par_id = {str(r.id): r for r in lignes}
+    classement = _classer_lexical(candidats, scores, limit)
     return [
-        Passage(
-            text=f"{par_id[i][0].reference} — {par_id[i][0].title}\n{par_id[i][0].body}",
-            reference=par_id[i][0].reference,
-            distance=par_id[i][1],
-            source=par_id[i][0].source_url or "",
-        )
+        _passage_requirement(par_id[i], _distance_depuis_score_lexical(scores.get(i, 0.0)))
+        for i in classement
+    ]
+
+
+def _requirements_hybride(db: Session, query: str, base, limit: int) -> list[Passage]:
+    lignes = db.execute(base).scalars().all()
+    if not lignes:
+        return []
+    candidats = [(str(r.id), f"{r.title} {r.body}") for r in lignes]
+    scores = _scores_lexicaux(query, candidats)
+    classement_lexical = _classer_lexical(candidats, scores, max(limit * 3, 10))
+
+    avec_embedding = [r for r in lignes if r.embedding is not None]
+    classement_semantique: list[str] = []
+    if avec_embedding:
+        vector = _query_vector(query)
+        distance = Requirement.embedding.cosine_distance(vector).label("distance")
+        large = max(limit * 3, 10)
+        rows = db.execute(
+            base.where(Requirement.embedding.isnot(None))
+            .add_columns(distance)
+            .order_by(distance)
+            .limit(large)
+        ).all()
+        classement_semantique = [str(r.id) for r, _ in rows]
+
+    fusion = _fusionner_rrf(classement_lexical, classement_semantique, limit=limit)
+    par_id = {str(r.id): r for r in lignes}
+    return [
+        _passage_requirement(par_id[i], _distance_depuis_score_lexical(scores.get(i, 0.0)))
         for i in fusion
         if i in par_id
     ]
 
 
+def _passage_requirement(r: Requirement, distance: float) -> Passage:
+    return Passage(
+        text=f"{r.reference} — {r.title}\n{r.body}",
+        reference=r.reference,
+        distance=distance,
+        source=r.source_url or "",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Documents du client
+# ---------------------------------------------------------------------------
 def search_client_documents(
     db: Session,
     query: str,
@@ -147,53 +248,88 @@ def search_client_documents(
 ) -> list[Passage]:
     """Retrouve les passages des documents deposes par le client."""
     limit = limit or settings.RAG_TOP_K
-    large = max(limit * 3, 10)
-    vector = _query_vector(query)
+    methode = settings.RAG_RETRIEVER
 
-    base = select(DocumentChunk.id).where(
-        DocumentChunk.organization_id == organization_id,  # cloisonnement SQL
-        DocumentChunk.embedding.isnot(None),
+    # Filtres identiques quelle que soit la methode : organization_id et
+    # audit_id restent dans la clause WHERE, jamais appliques apres coup.
+    base = (
+        select(DocumentChunk, Document.filename)
+        .join(Document, DocumentChunk.document_id == Document.id)
+        .where(DocumentChunk.organization_id == organization_id)
     )
     if audit_id is not None:
-        base = base.join(Document, DocumentChunk.document_id == Document.id).where(
-            Document.audit_id == audit_id
-        )
+        base = base.where(Document.audit_id == audit_id)
 
-    distance = DocumentChunk.embedding.cosine_distance(vector)
-    semantiques = db.execute(base.order_by(distance).limit(large)).scalars().all()
+    if methode == "semantique":
+        return _documents_semantique(db, query, base, limit)
+    if methode == "hybride":
+        return _documents_hybride(db, query, base, limit)
+    return _documents_lexical(db, query, base, limit)
 
-    tsquery = func.plainto_tsquery("french", query)
-    lexicaux = (
-        db.execute(
-            base.where(DocumentChunk.tsv.op("@@")(tsquery))
-            .order_by(func.ts_rank_cd(DocumentChunk.tsv, tsquery).desc())
-            .limit(large)
-        )
-        .scalars()
-        .all()
-    )
 
-    fusion = _fusionner(
-        [str(i) for i in semantiques], [str(i) for i in lexicaux], limit=limit
-    )
-    if not fusion:
-        return []
-
-    lignes = db.execute(
-        select(DocumentChunk, Document.filename, distance.label("distance"))
-        .join(Document, DocumentChunk.document_id == Document.id)
-        .where(DocumentChunk.id.in_([uuid.UUID(i) for i in fusion]))
+def _documents_semantique(db: Session, query: str, base, limit: int) -> list[Passage]:
+    vector = _query_vector(query)
+    distance = DocumentChunk.embedding.cosine_distance(vector).label("distance")
+    rows = db.execute(
+        base.where(DocumentChunk.embedding.isnot(None))
+        .add_columns(distance)
+        .order_by(distance)
+        .limit(limit)
     ).all()
-    par_id = {str(c.id): (c, filename, float(d)) for c, filename, d in lignes}
+    return [_passage_chunk(c, filename, float(d)) for c, filename, d in rows]
 
+
+def _documents_lexical(db: Session, query: str, base, limit: int) -> list[Passage]:
+    lignes = db.execute(base).all()
+    if not lignes:
+        return []
+    candidats = [(str(c.id), c.content) for c, _ in lignes]
+    scores = _scores_lexicaux(query, candidats)
+    par_id = {str(c.id): (c, filename) for c, filename in lignes}
+    classement = _classer_lexical(candidats, scores, limit)
     return [
-        Passage(
-            text=par_id[i][0].content,
-            reference=par_id[i][1],
-            distance=par_id[i][2],
-            source=par_id[i][1],
-            document_id=par_id[i][0].document_id,
+        _passage_chunk(
+            par_id[i][0], par_id[i][1], _distance_depuis_score_lexical(scores.get(i, 0.0))
+        )
+        for i in classement
+    ]
+
+
+def _documents_hybride(db: Session, query: str, base, limit: int) -> list[Passage]:
+    lignes = db.execute(base).all()
+    if not lignes:
+        return []
+    candidats = [(str(c.id), c.content) for c, _ in lignes]
+    scores = _scores_lexicaux(query, candidats)
+    classement_lexical = _classer_lexical(candidats, scores, max(limit * 3, 10))
+
+    avec_embedding = [(c, filename) for c, filename in lignes if c.embedding is not None]
+    classement_semantique: list[str] = []
+    if avec_embedding:
+        vector = _query_vector(query)
+        distance = DocumentChunk.embedding.cosine_distance(vector).label("distance")
+        large = max(limit * 3, 10)
+        rows = db.execute(
+            base.where(DocumentChunk.embedding.isnot(None))
+            .add_columns(distance)
+            .order_by(distance)
+            .limit(large)
+        ).all()
+        classement_semantique = [str(c.id) for c, _, _ in rows]
+
+    fusion = _fusionner_rrf(classement_lexical, classement_semantique, limit=limit)
+    par_id = {str(c.id): (c, filename) for c, filename in lignes}
+    return [
+        _passage_chunk(
+            par_id[i][0], par_id[i][1], _distance_depuis_score_lexical(scores.get(i, 0.0))
         )
         for i in fusion
         if i in par_id
     ]
+
+
+def _passage_chunk(chunk: DocumentChunk, filename: str, distance: float) -> Passage:
+    return Passage(
+        text=chunk.content, reference=filename, distance=distance,
+        source=filename, document_id=chunk.document_id,
+    )
