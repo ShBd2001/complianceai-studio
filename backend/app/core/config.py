@@ -122,6 +122,14 @@ class Settings(BaseSettings):
     # app/services/audit_engine.py, _verification_humaine).
     REVIEW_CONFIDENCE_THRESHOLD: float = 0.5
 
+    # Tarif Groq par million de jetons, utilise pour estimer le cout d'une
+    # analyse (AuditOut.estimated_llm_cost_usd, backend/scripts/cout_analyses.py).
+    # TODO equipe : reporter le tarif Groq officiel du modele (GROQ_MODEL) avant
+    # de citer ce chiffre dans le memoire ou le business plan -- jamais invente.
+    LLM_PRICE_INPUT_PER_MTOK_USD: float = 0.0
+    # TODO equipe : idem, tarif de sortie.
+    LLM_PRICE_OUTPUT_PER_MTOK_USD: float = 0.0
+
     # Bornes de taille du prompt d'evaluation, en caracteres.
     # Determinantes face a un fournisseur qui limite les jetons par minute :
     # diviser la taille du prompt par deux double le nombre d'evaluations

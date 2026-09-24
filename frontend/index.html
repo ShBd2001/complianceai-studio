@@ -197,6 +197,12 @@ button.petit{padding:6px 13px;font-size:13px}
 .jauge span{display:block;height:100%;background:var(--grad-marque);border-radius:var(--rayon-pill);transition:width .4s ease}
 .retenu{border-left:3px solid var(--ambre);padding-left:16px}
 .retenu .titre{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ambre);font-weight:600}
+
+.details-tech{margin-top:16px;border:1px solid var(--regle);border-radius:var(--rayon-sm);padding:12px 16px;background:var(--carte)}
+.details-tech summary{cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--sourdine);font-weight:600}
+.details-tech dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:12px 0 0;font-size:13px}
+.details-tech dt{color:var(--sourdine)}
+.details-tech dd{margin:0;font-family:var(--mono);font-size:12.5px}
 .retenu p{margin:7px 0 0;max-width:62ch;color:var(--encre-doux);font-size:14px}
 
 /* ---------- Reveal au defilement ---------- */
@@ -1122,6 +1128,10 @@ const TRAD_EN = {
   'Toutes gravités': 'All severities', 'Tous statuts': 'All statuses', 'Filtrer par article ou intitulé': 'Filter by article or title',
   'À revoir': 'To review', 'Citation vérifiée ✓': 'Citation verified ✓', 'Citation non retrouvée': 'Citation not found',
   'Indéterminé': 'Undetermined', 'Revue humaine requise': 'Human review required',
+  'Détails techniques de l’analyse': 'Technical details of the analysis', 'Durée': 'Duration',
+  'Méthode de recherche': 'Search method', 'Modèle': 'Model', 'Appels au modèle': 'Model calls',
+  'Jetons (prompt + réponse)': 'Tokens (prompt + completion)', 'Coût estimé': 'Estimated cost',
+  'Non renseigné (tarif à compléter)': 'Not available (pricing to be filled in)',
   'Action corrective': 'Corrective action', 'Aucun constat ne correspond aux filtres.': 'No finding matches the filters.',
   // Tableau de bord
   'Nouvelle campagne': 'New campaign', 'Score courant': 'Current score', 'Aucune campagne notée': 'No scored campaign yet',
@@ -2206,7 +2216,37 @@ function verdictCarte(audit, constats, rapports, auditId) {
       <div class="carte"><span class="n">${ouverts}</span><span class="l">À traiter</span></div>
       <div class="carte"><span class="n">${na}</span><span class="l">Hors périmètre</span></div>
       <div class="carte"><span class="n" style="font-size:17px">${jour(audit.completed_at)}</span><span class="l">Analysée le</span></div>
-    </div>`;
+    </div>
+    ${detailsTechniques(audit)}`;
+}
+
+const NOM_RETRIEVER = { lexical: 'Lexicale', semantique: 'Sémantique', hybride: 'Hybride' };
+const NOM_RETRIEVER_EN = { lexical: 'Lexical', semantique: 'Semantic', hybride: 'Hybrid' };
+
+function detailsTechniques(audit) {
+  if (audit.duration_seconds == null) return '';
+  const duree = audit.duration_seconds >= 60
+    ? `${Math.floor(audit.duration_seconds / 60)} min ${Math.round(audit.duration_seconds % 60)} s`
+    : `${audit.duration_seconds.toFixed(1)} s`;
+  const modele = audit.llm_model || (LANG === 'en' ? 'None (heuristic fallback)' : 'Aucun (repli heuristique)');
+  const methode = (LANG === 'en' ? NOM_RETRIEVER_EN : NOM_RETRIEVER)[audit.retriever] || audit.retriever || '—';
+  const jetons = (audit.llm_prompt_tokens != null && audit.llm_completion_tokens != null)
+    ? `${audit.llm_prompt_tokens + audit.llm_completion_tokens} (${audit.llm_prompt_tokens} + ${audit.llm_completion_tokens})`
+    : '—';
+  const cout = audit.estimated_llm_cost_usd != null
+    ? `$${audit.estimated_llm_cost_usd.toFixed(4)}`
+    : tr('Non renseigné (tarif à compléter)');
+  return `<details class="details-tech">
+    <summary>${tr('Détails techniques de l’analyse')}</summary>
+    <dl>
+      <dt>${tr('Durée')}</dt><dd>${duree}</dd>
+      <dt>${tr('Méthode de recherche')}</dt><dd>${h(methode)}</dd>
+      <dt>${tr('Modèle')}</dt><dd>${h(modele)}</dd>
+      <dt>${tr('Appels au modèle')}</dt><dd>${audit.llm_calls ?? '—'}</dd>
+      <dt>${tr('Jetons (prompt + réponse)')}</dt><dd>${jetons}</dd>
+      <dt>${tr('Coût estimé')}</dt><dd>${cout}</dd>
+    </dl>
+  </details>`;
 }
 
 function tablePieces(pieces) {

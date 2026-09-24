@@ -76,6 +76,35 @@ class AuditOut(BaseModel):
     completed_at: datetime | None
     error_message: str | None
     created_at: datetime
+    degraded: bool
+    llm_fallbacks: int | None
+    llm_calls: int | None
+    llm_prompt_tokens: int | None
+    llm_completion_tokens: int | None
+    llm_model: str | None
+    retriever: str | None
+    duration_seconds: float | None
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def estimated_llm_cost_usd(self) -> float | None:
+        """Estimation, jamais un montant facture reellement.
+
+        None tant que le tarif n'est pas renseigne (LLM_PRICE_* a 0.0 par
+        defaut, voir app/core/config.py) ou qu'aucun appel n'a ete effectue :
+        mieux vaut l'absence de chiffre qu'un cout invente.
+        """
+        from app.core.config import settings
+
+        if self.llm_prompt_tokens is None or self.llm_completion_tokens is None:
+            return None
+        if not settings.LLM_PRICE_INPUT_PER_MTOK_USD and not settings.LLM_PRICE_OUTPUT_PER_MTOK_USD:
+            return None
+        cout = (
+            self.llm_prompt_tokens / 1_000_000 * settings.LLM_PRICE_INPUT_PER_MTOK_USD
+            + self.llm_completion_tokens / 1_000_000 * settings.LLM_PRICE_OUTPUT_PER_MTOK_USD
+        )
+        return round(cout, 6)
 
 
 class DocumentOut(BaseModel):

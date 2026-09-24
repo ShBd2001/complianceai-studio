@@ -58,6 +58,20 @@ class Audit(UUIDMixin, TimestampMixin, Base):
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     error_message: Mapped[str | None] = mapped_column(Text)
 
+    # Metriques d'execution (voir app/services/audit_engine.py::run_audit).
+    # degraded : score retire car trop d'evaluations sont retombees sur
+    # l'heuristique (voir DEGRADED_THRESHOLD). llm_* : None si le modele n'a
+    # jamais ete appelable pour cette campagne (aucune donnee a agreger),
+    # sinon toujours renseignes, y compris a 0.
+    degraded: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    llm_fallbacks: Mapped[int | None] = mapped_column(Integer)
+    llm_calls: Mapped[int | None] = mapped_column(Integer)
+    llm_prompt_tokens: Mapped[int | None] = mapped_column(Integer)
+    llm_completion_tokens: Mapped[int | None] = mapped_column(Integer)
+    llm_model: Mapped[str | None] = mapped_column(String(80))
+    retriever: Mapped[str | None] = mapped_column(String(20))
+    duration_seconds: Mapped[float | None] = mapped_column(Float)
+
     organization: Mapped["Organization"] = relationship(back_populates="audits")
     documents: Mapped[list["Document"]] = relationship(
         back_populates="audit", cascade="all, delete-orphan"
