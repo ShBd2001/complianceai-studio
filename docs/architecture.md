@@ -173,38 +173,48 @@ et une seule personne au clavier.
 couplage à son implémentation : une réécriture en React resterait possible
 sans toucher au backend.
 
-### DA-07 — Recherche hybride (lexicale + sémantique) pour le RAG
+### DA-07 — Méthode de recherche configurable, lexicale par défaut
 
 *Décision.* La recherche des passages pertinents (`app/services/rag.py`)
-combine un classement sémantique (pgvector, distance cosinus) et un
-classement lexical (recherche plein texte PostgreSQL, configuration
-`french`, colonnes générées `tsv`), fusionnés par fusion de rangs
-(Reciprocal Rank Fusion) — plutôt que le seul sémantique utilisé jusqu'ici.
+propose trois méthodes, choisies par `RAG_RETRIEVER` (`"lexical"` |
+`"semantique"` | `"hybride"`, validé au démarrage) : un classement lexical
+(recouvrement pondéré par occurrence/longueur, calculé en Python — copie
+fidèle de l'algorithme mesuré dans le harnais de validation, pas une
+réimplémentation), un classement sémantique (pgvector, distance cosinus,
+code inchangé), et un mode hybride qui fusionne les deux par fusion de rangs
+(Reciprocal Rank Fusion, k = 60). Le défaut de production est `"lexical"`.
 
 *Justification.* Mesuré sur le corpus de validation
 (`validation/comparer_retrievers.py`, résultats dans
 `validation/comparaison_retrievers.json`, ~210 articles évalués) : sur des
-textes réglementaires, le lexical seul bat le
-sémantique seul sur toutes les métriques (exactitude 91,9 % contre 85,2 %,
-rappel parfait contre 4 faux négatifs) — la terminologie exacte compte plus
-que la paraphrase quand il s'agit de citer un article de loi. Mais un
-document client réel ne reprend pas toujours ce vocabulaire au mot près,
-d'où la fusion plutôt que le lexical seul : l'écart mesuré avec l'hybride
-(90,5 %, soit 1,4 point) n'est pas significatif sur ce corpus, et l'hybride
-récupère les reformulations que le lexical manquerait.
+textes réglementaires, le lexical seul bat le sémantique seul sur toutes les
+métriques (exactitude 91,9 % contre 85,2 %, rappel parfait contre 4 faux
+négatifs) — la terminologie exacte compte plus que la paraphrase quand il
+s'agit de citer un article de loi. C'est cet algorithme précis, copié depuis
+`evaluation/evaluateur.py::retriever_lexical` (le backend n'importe jamais le
+paquet `evaluation`, deux paquets séparés), qui est mesuré : une recherche
+plein texte PostgreSQL aurait un comportement différent, non mesuré
+indépendamment, et aurait rompu la fidélité à la mesure qui justifie le
+choix. Le mode hybride reste disponible et configurable : un document client
+réel ne reprend pas toujours le vocabulaire exact du texte de loi, et l'écart
+mesuré avec l'hybride (90,5 %, soit 1,4 point) n'est pas significatif sur ce
+corpus.
 
-*Conséquences.* Positives : améliore la complétude du retrieval sans
-dépendance supplémentaire (recherche plein texte native PostgreSQL, déjà en
-place). Négatives : deux requêtes au lieu d'une par exigence évaluée
-(latence légèrement accrue, non mesurée précisément en production) ; la
-fusion de rangs ne pondère pas explicitement un signal plus fort que
-l'autre — une pondération apprise sur davantage de données pourrait faire
-mieux, non tentée ici faute de corpus assez grand pour l'évaluer
-sérieusement.
+*Conséquences.* Positives : aucune dépendance ni migration de schéma
+nécessaire (le classement lexical travaille sur les colonnes déjà
+existantes) ; la méthode reste changeable par configuration seule, sans
+déploiement de code. Négatives : le classement lexical charge en mémoire
+l'ensemble des fragments du périmètre interrogé (organisation/campagne) pour
+les trier en Python, contre une requête indexée limitée en mode sémantique —
+acceptable au volume actuel (quelques documents par audit), à revoir si le
+volume par campagne grossit significativement ; `Passage.distance` (dont
+dépend le repli heuristique sans modèle de langage) est une distance cosinus
+réelle en mode sémantique/hybride, mais une approximation monotone non
+calibrée indépendamment du score lexical en mode lexical pur.
 
-*Réversibilité.* Les colonnes `tsv` sont générées, jamais écrites par
-l'application : revenir au sémantique seul consiste à ignorer le classement
-lexical dans la fusion, sans migration de retour nécessaire.
+*Réversibilité.* Changement de configuration seul (`RAG_RETRIEVER`), sans
+migration : revenir au sémantique (le comportement d'avant cette décision)
+ne demande qu'un redéploiement avec la variable modifiée.
 
 ## 5. Vue de déploiement
 
