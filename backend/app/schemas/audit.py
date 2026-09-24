@@ -160,6 +160,25 @@ class FindingUpdate(BaseModel):
     status: FindingStatus
 
 
+class ComparisonArticle(BaseModel):
+    article_ref: str
+    title: str
+    # nouveau | resolu | inchange | aggrave | ameliore -- voir
+    # app/services/comparison.py pour la regle exacte.
+    category: str
+    severity_before: Severity | None
+    severity_after: Severity | None
+
+
+class ComparisonOut(BaseModel):
+    audit_id: uuid.UUID
+    compared_with: uuid.UUID
+    score_before: float | None
+    score_after: float | None
+    score_delta: float | None
+    articles: list[ComparisonArticle]
+
+
 class ReportOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
