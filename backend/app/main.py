@@ -20,6 +20,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from app.api.v1 import api_router
 from app.core.config import settings
 from app.core.rate_limit import limiter
+from app.services.documents import storage_root
 from app.services.scheduler import scheduler_loop
 
 logging.basicConfig(
@@ -37,6 +38,22 @@ async def lifespan(app: FastAPI):
     logger.info("Demarrage de %s (env=%s)", settings.APP_NAME, settings.ENV)
     if settings.is_production and settings.JWT_SECRET in {"CHANGE_ME", ""}:
         raise RuntimeError("JWT_SECRET non configure en production.")
+
+    # Ne bloque pas le demarrage (auth, referentiels, etc. n'en dependent
+    # pas) mais doit etre immediatement visible dans les logs : sur Render,
+    # le disque persistant est monte cote infrastructure avant que le
+    # conteneur ne demarre, mais rien ne garantit qu'il soit deja accessible
+    # en ecriture a l'utilisateur non privilegie (appuser, uid 10001, voir
+    # Dockerfile) au moment precis ou ce code s'execute.
+    try:
+        storage_root()
+    except OSError as exc:
+        logger.error(
+            "STORAGE_DIR (%s) n'est pas accessible en ecriture : %s. Le depot "
+            "de documents et la generation de rapports echoueront jusqu'a "
+            "correction (verifier le montage du disque persistant et ses "
+            "permissions cote Render).", settings.STORAGE_DIR, exc,
+        )
 
     scheduler_task: asyncio.Task | None = None
     if settings.SCHEDULER_ENABLED:

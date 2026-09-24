@@ -14,11 +14,14 @@
 # depuis le tableau de bord Render, sans perte de donnees). Le plan payant
 # supprime ce risque de coupure recurrente.
 #
-# Stockage toujours ephemere (pas encore de disque persistant Render ni de
-# stockage objet externe) : STORAGE_DIR (pieces versees, rapports, repli
-# local des e-mails) vit sur le disque du conteneur et disparait a chaque
-# redeploiement/redemarrage. Suffisant pour une demonstration, pas pour une
-# mise en production reelle.
+# Stockage persistant (disque Render monte sur /var/data) depuis le
+# 2026-09-24 : STORAGE_DIR=/var/data/storage (pieces versees, rapports,
+# repli local des e-mails) survit desormais a un redeploiement/redemarrage.
+# storage_root() (app/services/documents.py) cree le sous-dossier au premier
+# usage ; app/main.py verifie l'ecriture au demarrage et journalise une
+# erreur claire si le montage n'est pas accessible en ecriture par appuser
+# (uid 10001, voir Dockerfile). Pas de stockage objet externe (S3) : hors
+# perimetre avant la soutenance.
 #
 # E-mail transactionnel via Brevo (API HTTP), pas SMTP : constate en
 # conditions reelles, Render bloque les ports sortants 25/465/587 sur son
@@ -34,7 +37,13 @@ services:
     dockerContext: .
     healthCheckPath: /health
     plan: standard
+    disk:
+      name: complianceai-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
+      - key: STORAGE_DIR
+        value: /var/data/storage
       - key: ENV
         value: production
       - key: DEBUG

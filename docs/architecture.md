@@ -240,7 +240,7 @@ le schéma est en retard.
 
 | Sujet | Situation | Traitement |
 |---|---|---|
-| Stockage des documents | Système de fichiers local, éphémère sur l'hébergement (pas de disque persistant ni de stockage objet externe) | Migration vers un stockage compatible S3 |
+| Stockage des documents | Système de fichiers local, sur un disque persistant Render (1 Go, monté sur `/var/data`, `STORAGE_DIR=/var/data/storage`) depuis le 2026-09-24 ; survit à un redéploiement/redémarrage, pas encore de stockage objet externe | Migration vers un stockage compatible S3 si le volume dépasse la capacité du disque |
 | Analyse synchrone | Le calcul tourne dans un thread dédié (FastAPI ne bloque pas les autres requêtes), mais l'appelant attend la fin complète de l'analyse | File de tâches en arrière-plan pour les audits longs |
 | Dépendances avec vulnérabilités connues | `pypdf` et `starlette` corrigés (montée de version validée par la suite de non-régression) ; `pillow` (dépendance transitive de `fastembed`, moteur d'embeddings) volontairement laissé en l'état : la version disponible change la stratégie de pooling (CLS → moyenne), un risque de corruption silencieuse de la recherche sémantique plus grave que la CVE elle-même | Montée de `fastembed`/`pillow` après audit de l'impact sur la qualité du RAG, pas seulement sur la compatibilité |
 | Authentification unique (SSO/SAML) | Non implémentée, non annoncée (retirée de la page Tarifs) | Chantier non engagé, pas de calendrier |
