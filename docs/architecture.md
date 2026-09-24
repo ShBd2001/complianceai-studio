@@ -38,7 +38,7 @@ Fonctions principales :
 
 **Monolithe modulaire en couches**, et non microservices.
 
-Justification : l'équipe compte une personne, le trafic attendu est de quelques
+Justification : l'équipe compte cinq personnes, le trafic attendu est de quelques
 dizaines d'organisations, et la cohérence transactionnelle entre un audit, ses
 documents et ses résultats est forte. Une découpe en microservices imposerait
 une complexité opérationnelle (orchestration, transactions distribuées,
@@ -118,16 +118,28 @@ l'utilisateur doit se reconnecter.
 ### DA-03 — Multi-locataire par colonne discriminante
 
 *Décision.* Une base unique ; chaque enregistrement métier porte un
-`organization_id`. L'accès passe obligatoirement par la dépendance
-`get_org_context`, qui vérifie l'appartenance avant toute exécution.
+`organization_id`. L'isolation est applicative : la dépendance
+`get_org_context` vérifie l'appartenance avant toute exécution, et
+`organization_id` figure explicitement dans la clause `WHERE` de chaque
+requête — y compris pour la recherche vectorielle/lexicale sur les documents
+client (`app/services/rag.py`), qui filtre par organisation et par campagne
+avant tout classement. Ce cloisonnement est couvert par des tests
+d'intégration (`backend/tests/test_scoping.py`, `test_rag_retrievers.py`)
+qui vérifient qu'un fragment d'une autre organisation, ou d'une autre
+campagne de la même organisation, n'est jamais retourné.
 
 *Alternative écartée.* Un schéma PostgreSQL par organisation isole mieux mais
 rend les migrations coûteuses (N schémas à faire évoluer) et sature le
 catalogue au-delà de quelques centaines de locataires.
 
-*Renforcement prévu.* Activation de Row Level Security sur les tables métier,
-en défense en profondeur : même une requête applicative fautive ne pourrait pas
-franchir la frontière du locataire.
+*Renforcement prévu, non activé.* Row Level Security sur les tables métier,
+en défense en profondeur (même une requête applicative fautive ne pourrait
+pas franchir la frontière du locataire). Non activée avant la soutenance :
+la table `findings` n'a pas de colonne `organization_id` propre (elle
+dérive d'`audits`), et le planificateur (`app/services/scheduler.py`)
+traite plusieurs organisations dans une même session applicative — activer
+RLS sans avoir traité ces deux points romprait silencieusement des chemins
+qui fonctionnent aujourd'hui. Chantier identifié, pas engagé.
 
 ### DA-04 — Journal d'activité en ajout seul
 
@@ -152,8 +164,8 @@ l'IA pour les systèmes d'aide à la décision.
 *Décision.* Une page unique (`frontend/index.html`), sans dépendance ni
 bundler : le routage, l'état et le rendu sont gérés par du JavaScript natif.
 
-*Justification.* Le même raisonnement d'échelle que pour DA-03 (équipe d'une
-personne) s'applique côté client : un framework (React, Vue) et sa chaîne de
+*Justification.* Le même raisonnement d'échelle qu'au §3 (style
+d'architecture) s'applique côté client : un framework (React, Vue) et sa chaîne de
 build (Vite, npm) ajoutent une surface de maintenance — versions à faire
 évoluer, temps de build, dépendances transitives à auditer — sans bénéfice
 proportionné pour une application qui ne justifie pas de composants
@@ -167,7 +179,7 @@ développement (`python -m http.server`), aucun risque de dérive entre version
 de build et version servie. Négatives : pas de vérification de types
 statique côté client, découpage en composants moins strict qu'un framework ne
 l'imposerait — compensé par une convention de nommage stricte des fonctions
-et une seule personne au clavier.
+et une revue de code systématique sur `frontend/index.html`.
 
 *Réversibilité.* Le frontend consomme l'API par HTTP/JSON standard, sans
 couplage à son implémentation : une réécriture en React resterait possible

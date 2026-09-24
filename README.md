@@ -75,7 +75,7 @@ voir [CHANGELOG.md](CHANGELOG.md) pour un exemple de diagnostic et correction
 mesurés (articles 30 et 37).
 
 ```bash
-python -m validation.test_garde_fous                          # 22 tests de sûreté, sans appel API
+python -m validation.test_garde_fous                          # 23 tests de sûreté, sans appel API
 python -m validation.run_validation --corpus corpus_demo \
        --verite corpus_demo/verite_terrain.json --hors-ligne   # plancher heuristique, sans LLM
 ```
@@ -84,12 +84,21 @@ Détail des métriques et du corpus : [validation/README.md](validation/README.m
 
 ## Tests et intégration continue
 
-- **Backend** : plus de 150 tests (`backend/tests`, `pytest`) — authentification,
+- **Backend** : 181 tests (`backend/tests`, `pytest`) — authentification,
   isolation multi-tenant, pipeline d'audit complet, quotas, veille
-  réglementaire, RGPD.
-- **Frontend** : 19 tests bout-en-bout (`frontend/tests`, Playwright) — un
+  réglementaire, RGPD. Couverture globale 80 % (`--cov-fail-under=80`,
+  bloquant en CI).
+- **Frontend** : 23 tests bout-en-bout (`frontend/tests`, Playwright) — un
   vrai navigateur pilote la vraie interface contre un vrai backend, aucun
   mock du DOM.
+- **Garde-fous du moteur** : 23 tests (`validation/test_garde_fous.py`,
+  sans appel API, exécutés sur chaque commit).
+
+La recherche des passages pertinents (`app/services/rag.py`) est lexicale
+par défaut (`RAG_RETRIEVER=lexical`) : mesuré sur le corpus de validation,
+le lexical seul bat le sémantique seul sur toutes les métriques — voir
+[validation/comparaison_retrievers.json](validation/comparaison_retrievers.json)
+et DA-07 dans [docs/architecture.md](docs/architecture.md).
 - **CI** (`.github/workflows/ci.yml`) : garde-fous du moteur (sans quota),
   suite backend, suite bout-en-bout, lint (`ruff`), audit de dépendances
   (`pip-audit`, non bloquant), et — sur `main` uniquement, car consommateur

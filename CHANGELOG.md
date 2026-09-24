@@ -111,3 +111,52 @@ Ajoute : `.gitignore` a la racine. Le seul existant se trouvait dans `backend/`
 et ne couvrait pas le reste du depot.
 
 `backend/.env` n'est pas inclus dans cette archive : conserver la version locale.
+
+---
+
+## Méthode de recherche configurable, lexicale par défaut
+
+La production utilisait la seule recherche sémantique, la moins bonne des
+trois méthodes mesurées sur le corpus de validation (exactitude 85,2 %
+contre 91,9 % pour le lexical). `RAG_RETRIEVER` (config + `render.yaml`)
+bascule désormais entre `"lexical"` (défaut), `"semantique"` et `"hybride"`
+(fusion de rangs, k = 60), validé au démarrage. Le classement lexical est
+une copie Python fidèle de l'algorithme mesuré dans le harnais de
+validation (`evaluation/evaluateur.py::retriever_lexical`), pas une
+réimplémentation — la fidélité à l'algorithme mesuré est ce qui rend le
+chiffre cité opposable. Détails et justification : DA-07 dans
+`docs/architecture.md`. Migration 0013/0014 (tentative par recherche plein
+texte PostgreSQL, revenue en arrière au profit de cette approche) et 0015
+(non liée) suivent dans l'historique Alembic.
+
+## Vérification de citation et revue humaine sur les constats
+
+Le moteur vérifiait déjà en interne si une citation avancée par le modèle
+existait réellement dans les documents, sans jamais l'afficher. Chaque
+constat porte désormais `verdict`, `citation_verified`, `needs_human_review`
+et `review_reason` (migration 0015), remplis par une règle explicite
+(exclusion d'éligibilité, non-applicable par heuristique, citation
+vérifiée/introuvable, verdict indéterminé, repli heuristique, confiance
+sous `REVIEW_CONFIDENCE_THRESHOLD`). Badges correspondants dans les
+rapports HTML/PDF et sur les constats du frontend (liste de campagne et
+plan de remédiation), avec un filtre « À revoir ».
+
+## Métriques d'exécution : mode dégradé, appels et jetons
+
+`audits` porte désormais `degraded`, `llm_fallbacks`, `llm_calls`,
+`llm_prompt_tokens`, `llm_completion_tokens`, `llm_model`, `retriever` et
+`duration_seconds` (migration 0016), remplis à chaque exécution et exposés
+dans `AuditOut` avec un coût estimé dérivé (jamais stocké, `None` tant que
+`LLM_PRICE_INPUT_PER_MTOK_USD` / `LLM_PRICE_OUTPUT_PER_MTOK_USD` ne sont
+pas renseignés — jamais de tarif inventé). Panneau « Détails techniques de
+l'analyse » sur la page de campagne. Nouveau script
+`backend/scripts/cout_analyses.py` pour un relevé moyenne/max par
+référentiel sur une base de production.
+
+## Stockage persistant sur Render
+
+Un redéploiement effaçait jusqu'ici les documents déposés et les rapports
+générés (disque éphémère du conteneur). `render.yaml` ajoute un disque
+persistant de 1 Go monté sur `/var/data` (`STORAGE_DIR=/var/data/storage`)
+pour `complianceai-api` ; `app/main.py` vérifie l'accès en écriture au
+démarrage et journalise une erreur claire sinon, sans bloquer le démarrage.
