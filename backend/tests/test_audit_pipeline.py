@@ -665,6 +665,87 @@ def test_verified_citation_is_kept_and_traces_its_source_document(monkeypatch):
     assert verdict["_passage_verifie"].document_id == doc_id
 
 
+def test_citation_with_extract_reference_suffix_is_still_verified(monkeypatch):
+    """Constate en conditions reelles (conversation utilisateur, 2026-09-24) :
+    le modele reprend parfois l'etiquette "[Extrait N -- ...]" du prompt et
+    l'accole a sa citation ("...en France. (Extrait 3)"). La citation
+    elle-meme est pourtant exacte : ce suffixe ne doit ni faire echouer la
+    verification, ni rester affiche dans la preuve stockee."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: {
+        "conforme": "oui", "severite": "info", "confiance": 0.9,
+        "constat": "Chiffrement en place.",
+        "preuve": "Les données sont chiffrées au repos et en transit. (Extrait 3)",
+        "recommandation": None,
+    })
+
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "oui"
+    assert verdict["_passage_verifie"] is passage
+    assert verdict["preuve"] == "Les données sont chiffrées au repos et en transit."
+
+
+def test_citation_assembled_from_several_real_sentences_is_still_verified(monkeypatch):
+    """Constate en conditions reelles : le modele assemble parfois plusieurs
+    phrases realement presentes dans le document (mais non contigues, ou
+    issues de passages differents) en une seule citation fluide. Aucun
+    passage pris seul ne contient alors la citation complete, bien que
+    chaque phrase soit individuellement exacte -- la citation doit rester
+    opposable, verifiee phrase par phrase."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text=(
+            "Le traitement des données clients repose sur l'exécution du "
+            "contrat de travaux. Un paragraphe sans rapport separe les deux "
+            "phrases dans le document source. Les données salariés sont "
+            "traitées pour la gestion de la paie."
+        ),
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: {
+        "conforme": "oui", "severite": "info", "confiance": 0.9,
+        "constat": "Base legale documentee.",
+        "preuve": (
+            "Le traitement des données clients repose sur l'exécution du "
+            "contrat de travaux. Les données salariés sont traitées pour "
+            "la gestion de la paie."
+        ),
+        "recommandation": None,
+    })
+
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "oui"
+    assert verdict["_passage_verifie"] is passage
+
+
+def test_citation_with_one_fabricated_sentence_among_real_ones_is_not_verified():
+    """A l'inverse : si une seule des phrases assemblees est absente du
+    document, l'ensemble ne doit pas etre valide -- une phrase inventee ne
+    devient pas vraie parce qu'elle est entouree de phrases exactes."""
+    from app.services import audit_engine, rag
+
+    passage = rag.Passage(
+        text="Le traitement des données clients repose sur l'exécution du contrat de travaux.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    preuve = (
+        "Le traitement des données clients repose sur l'exécution du "
+        "contrat de travaux. Une phrase entièrement inventée et absente du document."
+    )
+
+    assert audit_engine._passage_correspondant(preuve, [passage]) is None
+
+
 def test_unverifiable_citation_downgrades_compliance_to_indetermine(monkeypatch):
     """Le point precis que ce correctif impose : le modele ne peut pas faire
     passer une conformite pour acquise sur une citation qu'il invente. Avant

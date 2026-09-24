@@ -86,7 +86,11 @@ Format de reponse attendu :
   "confiance": 0.0 a 1.0,
   "severite": "critical" | "major" | "minor" | "info",
   "constat": "ce qui a ete observe dans les documents, en 2 a 4 phrases",
-  "preuve": "citation textuelle courte extraite des documents, ou null",
+  "preuve": "citation textuelle courte extraite des documents, ou null. "
+            "Uniquement le texte cite lui-meme, sans le numero d'extrait "
+            "ni aucune mention du type (Extrait 3) : cette etiquette sert "
+            "a te reperer dans les extraits fournis, elle ne fait pas "
+            "partie du document du client.",
   "recommandation": "action corrective concrete et actionnable"
 }"""
 
@@ -356,6 +360,41 @@ def _meilleure_similarite(aiguille: str, botte: str) -> float:
     return meilleure
 
 
+# Le prompt presente chaque extrait sous la forme "[Extrait N -- reference]"
+# (voir excerpts dans evaluate_requirement). Le modele reprend parfois cette
+# etiquette a la fin de sa citation, comme une note de bas de page ("...tous
+# etablis en France. (Extrait 3)") -- constate en conditions reelles : la
+# citation elle-meme est exacte, mais ce suffixe n'existe evidemment pas dans
+# le document source, ce qui fait echouer la verification a tort et degrade
+# en cascade des constats par ailleurs corrects vers "indetermine". Retire
+# systematiquement avant toute comparaison ET avant tout affichage -- la
+# citation stockee ne doit jamais porter la marque du prompt qui l'a produite.
+# Pas d'ancrage de fin ($) : une citation composee de plusieurs passages
+# (separes par " ; ") porte une etiquette apres CHACUN d'eux, pas seulement
+# a la toute fin de la chaine -- egalement constate en conditions reelles.
+_REFERENCE_EXTRAIT_RE = re.compile(r"\s*[\(\[]\s*extrait\s*\d+[^)\]]*[\)\]]", re.IGNORECASE)
+
+
+def _sans_reference_extrait(preuve: str) -> str:
+    return re.sub(r"\s+", " ", _REFERENCE_EXTRAIT_RE.sub("", preuve)).strip()
+
+
+def _correspondance_simple(cible_brute: str, passages: list[rag.Passage]) -> rag.Passage | None:
+    """Un seul passage contient-il cette citation (apres normalisation, exacte
+    puis approchee) ? Isole du decoupage multi-phrases ci-dessous pour rester
+    testable independamment."""
+    cible = _normaliser_pour_comparaison(cible_brute)
+    if len(cible) < 15:
+        return None
+    for passage in passages:
+        texte_n = _normaliser_pour_comparaison(passage.text)
+        if cible in texte_n:
+            return passage
+        if _meilleure_similarite(cible, texte_n) >= _SEUIL_SIMILARITE_CITATION:
+            return passage
+    return None
+
+
 def _passage_correspondant(preuve: str | None, passages: list[rag.Passage]) -> rag.Passage | None:
     """Retrouve, parmi les passages fournis au modele, celui qui contient
     reellement la citation qu'il avance — plutot que de faire confiance a son
@@ -369,19 +408,32 @@ def _passage_correspondant(preuve: str | None, passages: list[rag.Passage]) -> r
     difference de mise en forme, jamais une acceptation d'un texte different.
     Une longueur minimale est imposee : une citation de quelques mots ne
     prouve rien et correspondrait presque toujours par hasard.
+
+    Repli phrase par phrase : constate en conditions reelles, le modele
+    assemble parfois plusieurs phrases realement presentes dans le document
+    (mais issues de passages differents, ou non contigues) en une seule
+    citation fluide, qui ne correspond alors a aucun passage pris seul. Si la
+    citation complete ne correspond a rien mais que CHACUNE de ses phrases
+    (au-dela du meme seuil minimal) est individuellement retrouvee, la
+    citation reste opposable — elle cite reellement le document, juste pas
+    d'un seul bloc contigu.
     """
     if not preuve:
         return None
-    cible = _normaliser_pour_comparaison(preuve)
-    if len(cible) < 15:
+    direct = _correspondance_simple(preuve, passages)
+    if direct is not None:
+        return direct
+
+    phrases = [p.strip() for p in re.split(r"(?<=[.!?])\s+", preuve) if len(p.strip()) >= 15]
+    if len(phrases) < 2:
         return None
-    for passage in passages:
-        texte_n = _normaliser_pour_comparaison(passage.text)
-        if cible in texte_n:
-            return passage
-        if _meilleure_similarite(cible, texte_n) >= _SEUIL_SIMILARITE_CITATION:
-            return passage
-    return None
+    premiere_correspondance: rag.Passage | None = None
+    for phrase in phrases:
+        trouvee = _correspondance_simple(phrase, passages)
+        if trouvee is None:
+            return None
+        premiere_correspondance = premiere_correspondance or trouvee
+    return premiere_correspondance
 
 
 def evaluate_requirement(
@@ -412,6 +464,8 @@ def evaluate_requirement(
     try:
         verdict = llm.complete_json(SYSTEM_PROMPT, user_prompt)
         verdict["_source"] = SOURCE_LLM
+        if verdict.get("preuve"):
+            verdict["preuve"] = _sans_reference_extrait(str(verdict["preuve"])) or None
 
         # Le modele ne repond jamais de memoire (voir docstring du module) :
         # une citation qu'on ne retrouve pas telle quelle dans les extraits
