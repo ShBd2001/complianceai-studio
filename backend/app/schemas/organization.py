@@ -36,6 +36,37 @@ class OrganizationOut(BaseModel):
     # NULL = pas de purge automatique. Reserve a l'offre Cabinet, voir
     # app/services/retention.py et PATCH /orgs/{org_id}/retention.
     document_retention_days: int | None = None
+    # Profil pour le filtre d'eligibilite -- voir OrganizationProfileUpdate.
+    organisme_public: bool | None = None
+    donnees_sensibles: bool | None = None
+    donnees_penales: bool | None = None
+    activite_de_base_traitement: bool | None = None
+    suivi_regulier_systematique: bool | None = None
+    grande_echelle: bool | None = None
+    professionnel_liberal_isole: bool | None = None
+    traitement_occasionnel: bool | None = None
+    risque_droits_libertes: bool | None = None
+    collecte_directe: bool | None = None
+    collecte_indirecte: bool | None = None
+
+
+class OrganizationProfileUpdate(BaseModel):
+    """Chaque champ omis du corps de la requete reste inchange ; envoye avec
+    la valeur `null`, il repasse explicitement a "non renseigne". Voir
+    PATCH /orgs/{org_id}/profile, qui ne lit que les champs presents
+    (`exclude_unset`)."""
+
+    organisme_public: bool | None = None
+    donnees_sensibles: bool | None = None
+    donnees_penales: bool | None = None
+    activite_de_base_traitement: bool | None = None
+    suivi_regulier_systematique: bool | None = None
+    grande_echelle: bool | None = None
+    professionnel_liberal_isole: bool | None = None
+    traitement_occasionnel: bool | None = None
+    risque_droits_libertes: bool | None = None
+    collecte_directe: bool | None = None
+    collecte_indirecte: bool | None = None
 
 
 class RetentionUpdate(BaseModel):

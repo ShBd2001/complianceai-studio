@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Enum, ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import Boolean, Enum, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -35,6 +35,22 @@ class Organization(UUIDMixin, TimestampMixin, Base):
     # uniquement, voir app/services/retention.py). NULL = pas de purge
     # automatique -- comportement historique, inchange tant que non defini.
     document_retention_days: Mapped[int | None] = mapped_column(Integer)
+
+    # Profil pour le filtre d'eligibilite (app/services/eligibilite.py,
+    # depuis_organisation). NULL = non renseigne, jamais converti en False :
+    # une information manquante laisse l'exigence suivre le parcours normal
+    # d'evaluation ("a verifier"), elle ne produit jamais une exemption a tort.
+    organisme_public: Mapped[bool | None] = mapped_column(Boolean)
+    donnees_sensibles: Mapped[bool | None] = mapped_column(Boolean)
+    donnees_penales: Mapped[bool | None] = mapped_column(Boolean)
+    activite_de_base_traitement: Mapped[bool | None] = mapped_column(Boolean)
+    suivi_regulier_systematique: Mapped[bool | None] = mapped_column(Boolean)
+    grande_echelle: Mapped[bool | None] = mapped_column(Boolean)
+    professionnel_liberal_isole: Mapped[bool | None] = mapped_column(Boolean)
+    traitement_occasionnel: Mapped[bool | None] = mapped_column(Boolean)
+    risque_droits_libertes: Mapped[bool | None] = mapped_column(Boolean)
+    collecte_directe: Mapped[bool | None] = mapped_column(Boolean)
+    collecte_indirecte: Mapped[bool | None] = mapped_column(Boolean)
 
     memberships: Mapped[list["Membership"]] = relationship(
         back_populates="organization", cascade="all, delete-orphan"

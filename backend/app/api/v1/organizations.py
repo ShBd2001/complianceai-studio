@@ -21,6 +21,7 @@ from app.schemas.organization import (
     MemberOut,
     OrganizationCreate,
     OrganizationOut,
+    OrganizationProfileUpdate,
     RetentionUpdate,
 )
 from app.services import activity
@@ -28,10 +29,29 @@ from app.services.quotas import PLAN_LIMITS, member_quota_remaining
 
 router = APIRouter(prefix="/orgs", tags=["Organisations"])
 
+# Champs du profil d'eligibilite (Tache 8) : memes noms cote modele, schema
+# et route, pour ne construire la liste qu'une seule fois.
+PROFIL_CHAMPS = [
+    "organisme_public", "donnees_sensibles", "donnees_penales",
+    "activite_de_base_traitement", "suivi_regulier_systematique",
+    "grande_echelle", "professionnel_liberal_isole", "traitement_occasionnel",
+    "risque_droits_libertes", "collecte_directe", "collecte_indirecte",
+]
+
 
 def _slugify(value: str) -> str:
     value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode()
     return (re.sub(r"[^a-zA-Z0-9]+", "-", value).strip("-").lower() or "org")[:60]
+
+
+def _org_out(org: Organization, role: OrgRole, member_count: int) -> OrganizationOut:
+    return OrganizationOut(
+        id=org.id, name=org.name, slug=org.slug, siren=org.siren,
+        sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
+        my_role=role, member_count=member_count,
+        document_retention_days=org.document_retention_days,
+        **{champ: getattr(org, champ) for champ in PROFIL_CHAMPS},
+    )
 
 
 @router.get("", response_model=list[OrganizationOut])
@@ -54,15 +74,7 @@ def list_my_organizations(
             .group_by(Membership.organization_id)
         ).all()
     )
-    return [
-        OrganizationOut(
-            id=org.id, name=org.name, slug=org.slug, siren=org.siren,
-            sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
-            my_role=role, member_count=counts.get(org.id, 1),
-            document_retention_days=org.document_retention_days,
-        )
-        for org, role in rows
-    ]
+    return [_org_out(org, role, counts.get(org.id, 1)) for org, role in rows]
 
 
 @router.post("", response_model=OrganizationOut, status_code=status.HTTP_201_CREATED)
@@ -106,12 +118,7 @@ def create_organization(
         payload={"name": org.name},
     )
     db.flush()
-    return OrganizationOut(
-        id=org.id, name=org.name, slug=org.slug, siren=org.siren,
-        sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
-        my_role=OrgRole.OWNER, member_count=1,
-        document_retention_days=org.document_retention_days,
-    )
+    return _org_out(org, OrgRole.OWNER, 1)
 
 
 @router.get("/{org_id}", response_model=OrganizationOut)
@@ -122,13 +129,7 @@ def get_organization(
     count = db.scalar(
         select(func.count(Membership.id)).where(Membership.organization_id == ctx.org_id)
     )
-    org = ctx.organization
-    return OrganizationOut(
-        id=org.id, name=org.name, slug=org.slug, siren=org.siren,
-        sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
-        my_role=ctx.role, member_count=count,
-        document_retention_days=org.document_retention_days,
-    )
+    return _org_out(ctx.organization, ctx.role, count)
 
 
 @router.patch("/{org_id}/retention", response_model=OrganizationOut)
@@ -157,13 +158,35 @@ def update_retention(
     count = db.scalar(
         select(func.count(Membership.id)).where(Membership.organization_id == ctx.org_id)
     )
-    org = ctx.organization
-    return OrganizationOut(
-        id=org.id, name=org.name, slug=org.slug, siren=org.siren,
-        sector=org.sector, headcount=org.headcount, plan=org.plan, created_at=org.created_at,
-        my_role=ctx.role, member_count=count,
-        document_retention_days=org.document_retention_days,
+    return _org_out(ctx.organization, ctx.role, count)
+
+
+@router.patch("/{org_id}/profile", response_model=OrganizationOut)
+def update_profile(
+    payload: OrganizationProfileUpdate,
+    request: Request,
+    ctx: OrgContext = Depends(require_role(OrgRole.ADMIN)),
+    db: Session = Depends(get_db),
+) -> OrganizationOut:
+    """Profil de l'organisation pour le filtre d'eligibilite (Tache 8, voir
+    app/services/eligibilite.py). Seuls les champs presents dans le corps de
+    la requete sont modifies (`exclude_unset`) : omettre un champ le laisse
+    inchange, l'envoyer a `null` le repasse explicitement a "non renseigne"."""
+    changements = payload.model_dump(exclude_unset=True)
+    for champ, valeur in changements.items():
+        setattr(ctx.organization, champ, valeur)
+
+    if changements:
+        activity.log(
+            db, action="organization.profile_updated", actor_id=ctx.user.id,
+            organization_id=ctx.org_id, entity_type="organization",
+            entity_id=ctx.org_id, request=request, payload=changements,
+        )
+    db.flush()
+    count = db.scalar(
+        select(func.count(Membership.id)).where(Membership.organization_id == ctx.org_id)
     )
+    return _org_out(ctx.organization, ctx.role, count)
 
 
 @router.delete("/{org_id}", status_code=status.HTTP_204_NO_CONTENT, response_model=None)

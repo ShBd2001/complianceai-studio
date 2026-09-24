@@ -1132,6 +1132,33 @@ const TRAD_EN = {
   'Méthode de recherche': 'Search method', 'Modèle': 'Model', 'Appels au modèle': 'Model calls',
   'Jetons (prompt + réponse)': 'Tokens (prompt + completion)', 'Coût estimé': 'Estimated cost',
   'Non renseigné (tarif à compléter)': 'Not available (pricing to be filled in)',
+  "Profil de l'organisation": "Organization profile",
+  "Ces réponses affinent le filtre d'éligibilité : une obligation qui ne concerne pas votre organisation peut être écartée automatiquement, avec justification. Une question laissée sur « Je ne sais pas » n'exempte jamais à tort — l'exigence suit alors le parcours normal d'évaluation.":
+    "These answers refine the eligibility filter: an obligation that doesn't concern your organization can be excluded automatically, with justification. A question left on \"Don't know\" never exempts by mistake — the requirement then follows the normal evaluation path.",
+  'Je ne sais pas': "Don't know", 'Oui': 'Yes', 'Non': 'No', 'Profil mis à jour.': 'Profile updated.',
+  'Organisme public': 'Public body',
+  'Autorité publique, ou organisme exerçant une mission de service public.': 'Public authority, or a body carrying out a public-service mission.',
+  'Données sensibles (art. 9)': 'Sensitive data (art. 9)',
+  'Origine raciale ou ethnique, opinions politiques, religion, syndicat, génétique, biométrie, santé, vie sexuelle.':
+    'Racial or ethnic origin, political opinions, religion, trade union membership, genetic data, biometric data, health, sex life.',
+  'Données pénales (art. 10)': 'Criminal data (art. 10)',
+  'Condamnations et infractions pénales.': 'Criminal convictions and offences.',
+  "Le traitement est l'activité principale": 'Processing is the core activity',
+  'Le traitement de données constitue le cœur de métier, pas une activité annexe.': "Data processing is the core business, not a side activity.",
+  'Suivi régulier et systématique': 'Regular and systematic monitoring',
+  'Profilage, géolocalisation continue, vidéosurveillance permanente, par exemple.': 'Profiling, continuous geolocation, permanent video surveillance, for example.',
+  'Traitement à grande échelle': 'Large-scale processing',
+  'Nombre important de personnes concernées, volume ou étendue géographique significatifs.': 'A large number of data subjects, or significant volume or geographic extent.',
+  'Professionnel libéral exerçant seul': 'Self-employed professional working alone',
+  'Médecin, avocat, etc. exerçant à titre individuel (considérant 91 du RGPD).': 'Physician, lawyer, etc. practising individually (GDPR recital 91).',
+  'Traitement occasionnel': 'Occasional processing',
+  'Ponctuel, pas une activité récurrente comme la paie ou la gestion des clients.': 'One-off, not a recurring activity such as payroll or customer management.',
+  'Risque pour les droits et libertés': 'Risk to rights and freedoms',
+  'Le traitement est susceptible de comporter un risque pour les personnes concernées.': 'The processing is likely to carry a risk for data subjects.',
+  'Collecte directe auprès des personnes': 'Direct collection from data subjects',
+  'Les données sont recueillies directement auprès de la personne concernée.': 'The data is collected directly from the data subject.',
+  'Collecte indirecte (tiers)': 'Indirect collection (third party)',
+  "Les données proviennent d'un tiers, pas de la personne concernée elle-même.": "The data comes from a third party, not from the data subject.",
   'Action corrective': 'Corrective action', 'Aucun constat ne correspond aux filtres.': 'No finding matches the filters.',
   // Tableau de bord
   'Nouvelle campagne': 'New campaign', 'Score courant': 'Current score', 'Aucune campagne notée': 'No scored campaign yet',
@@ -2707,6 +2734,7 @@ async function vueCompte() {
     <div id="msg-org" aria-live="polite"></div>
 
     ${rendreRetention()}
+    ${rendreProfilEligibilite()}
 
     <h2>Sécurité</h2>
     <div class="grille">
@@ -2773,6 +2801,63 @@ async function modifierRetention(orgId) {
     if (idx !== -1) E.orgs[idx] = org;
     poser('msg-retention', `<div class="succes">Rétention mise à jour.</div>`);
   } catch (e) { poser('msg-retention', echoue(e)); }
+}
+
+// Profil de l'organisation pour le filtre d'eligibilite (Tache 8, voir
+// app/services/eligibilite.py). Une question manquante repond "a verifier",
+// jamais une exemption a tort -- l'option "Je ne sais pas" (valeur null)
+// est donc un choix de premiere classe, pas un simple placeholder vide.
+const CHAMPS_PROFIL = [
+  ['organisme_public', 'Organisme public', "Autorité publique, ou organisme exerçant une mission de service public."],
+  ['donnees_sensibles', 'Données sensibles (art. 9)', "Origine raciale ou ethnique, opinions politiques, religion, syndicat, génétique, biométrie, santé, vie sexuelle."],
+  ['donnees_penales', 'Données pénales (art. 10)', "Condamnations et infractions pénales."],
+  ['activite_de_base_traitement', "Le traitement est l'activité principale", "Le traitement de données constitue le cœur de métier, pas une activité annexe."],
+  ['suivi_regulier_systematique', 'Suivi régulier et systématique', "Profilage, géolocalisation continue, vidéosurveillance permanente, par exemple."],
+  ['grande_echelle', 'Traitement à grande échelle', "Nombre important de personnes concernées, volume ou étendue géographique significatifs."],
+  ['professionnel_liberal_isole', 'Professionnel libéral exerçant seul', "Médecin, avocat, etc. exerçant à titre individuel (considérant 91 du RGPD)."],
+  ['traitement_occasionnel', 'Traitement occasionnel', "Ponctuel, pas une activité récurrente comme la paie ou la gestion des clients."],
+  ['risque_droits_libertes', 'Risque pour les droits et libertés', "Le traitement est susceptible de comporter un risque pour les personnes concernées."],
+  ['collecte_directe', 'Collecte directe auprès des personnes', "Les données sont recueillies directement auprès de la personne concernée."],
+  ['collecte_indirecte', 'Collecte indirecte (tiers)', "Les données proviennent d'un tiers, pas de la personne concernée elle-même."],
+];
+
+function rendreProfilEligibilite() {
+  const org = E.orgs.find(o => o.id === E.orgId);
+  if (!org || (org.my_role !== 'owner' && org.my_role !== 'admin')) return '';
+  const val = v => v === true ? 'oui' : v === false ? 'non' : '';
+  return `<h2>${tr("Profil de l'organisation")}</h2>
+    <p class="chapeau">${tr("Ces réponses affinent le filtre d'éligibilité : une obligation qui ne concerne pas votre organisation peut être écartée automatiquement, avec justification. Une question laissée sur « Je ne sais pas » n'exempte jamais à tort — l'exigence suit alors le parcours normal d'évaluation.")}</p>
+    <div class="grille" style="max-width:640px">
+      ${CHAMPS_PROFIL.map(([champ, libelle, aide]) => `
+        <div>
+          <label for="pf-${champ}">${tr(libelle)}</label>
+          <select id="pf-${champ}" class="compact">
+            <option value=""${val(org[champ]) === '' ? ' selected' : ''}>${tr('Je ne sais pas')}</option>
+            <option value="oui"${val(org[champ]) === 'oui' ? ' selected' : ''}>${tr('Oui')}</option>
+            <option value="non"${val(org[champ]) === 'non' ? ' selected' : ''}>${tr('Non')}</option>
+          </select>
+          <p class="aide-mdp">${tr(aide)}</p>
+        </div>`).join('')}
+    </div>
+    <button id="btn-profil" onclick="modifierProfil('${org.id}')">${tr('Enregistrer')}</button>
+    <div id="msg-profil" aria-live="polite"></div>`;
+}
+
+async function modifierProfil(orgId) {
+  const corps = {};
+  for (const [champ] of CHAMPS_PROFIL) {
+    const brut = $(`pf-${champ}`).value;
+    corps[champ] = brut === '' ? null : brut === 'oui';
+  }
+  poser('msg-profil', attente('Enregistrement'));
+  try {
+    const org = await appel(`/api/v1/orgs/${orgId}/profile`, {
+      method: 'PATCH', body: JSON.stringify(corps),
+    });
+    const idx = E.orgs.findIndex(o => o.id === orgId);
+    if (idx !== -1) E.orgs[idx] = org;
+    poser('msg-profil', `<div class="succes">${tr('Profil mis à jour.')}</div>`);
+  } catch (e) { poser('msg-profil', echoue(e)); }
 }
 
 async function rafraichirOrganisations(orgIdRetiree) {
