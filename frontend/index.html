@@ -1125,6 +1125,7 @@ const TRAD_EN = {
   'Inviter un membre de votre équipe': 'Invite a teammate',
   'Ajoutez un auditeur ou un lecteur pour partager le suivi de vos campagnes.': 'Add an auditor or a viewer to share the tracking of your campaigns.',
   'Passer': 'Skip', 'Précédent': 'Previous', 'Suivant': 'Next', "C'est parti": "Let's go",
+  'Revoir la visite guidée': 'Replay the guided tour',
   'Évolution': 'Trend', 'Depuis la première campagne': 'Since the first campaign', 'Campagnes': 'Campaigns',
   'Points de mesure': 'Data points', 'Campagnes avec score publié': 'Campaigns with a published score',
   'Trajectoire de conformité': 'Compliance trajectory', 'La trajectoire apparaîtra dès la deuxième campagne notée.': 'The trajectory will appear once a second campaign has been scored.',
@@ -1702,8 +1703,14 @@ async function demarrer() {
   initRail();
   poser('qui', h(E.moi.email));
   $('ch-org-global').innerHTML = E.orgs.map(o => `<option value="${o.id}">${h(o.name)}</option>`).join('');
-  if (!location.hash) location.hash = '#/tableau';
-  router();
+  // Poser un hash vide declenche hashchange (donc router()) de facon
+  // asynchrone : l'appeler aussi explicitement ici faisait tourner la vue
+  // initiale deux fois (double appel API, et pour le tableau de bord,
+  // double insertion du bouton "Revoir la visite guidee" -- trouve en
+  // verifiant ce dernier). Explicite seulement quand aucun changement de
+  // hash n'aura lieu pour le declencher tout seul.
+  if (location.hash) router();
+  else location.hash = '#/tableau';
   verifierNotifs();
 }
 
@@ -1741,6 +1748,15 @@ const ROUTES = {
 };
 
 function router() {
+  // Cliquer directement le lien mis en valeur par le tour guide (au lieu
+  // d'utiliser ses propres boutons Suivant/Passer) est un chemin normal,
+  // pas une erreur d'utilisation -- mais ses bandes/bulle vivent hors de
+  // #vue (appendChild sur document.body), donc jamais nettoyees par le
+  // remplacement de #vue ci-dessous. Sans cet appel, elles restaient
+  // affichees indefiniment par-dessus la page suivante, et reapparaissaient
+  // en double a chaque retour sur le tableau de bord tant que les etapes
+  // n'etaient pas terminees.
+  fermerTour();
   const [, nom, arg] = (location.hash || '#/tableau').split('/');
   const vue = ROUTES[nom] || vueTableau;
   document.querySelectorAll('.rail a').forEach(a =>
@@ -1768,7 +1784,7 @@ const codeCadre = code => {
 
 async function vueTableau() {
   poser('vue', `<div class="tete"><div><div class="eyebrow">Pilotage</div>${titreIcone('tableau', 'Tableau de bord')}</div>
-    <button onclick="location.hash='#/audits'">Nouvelle campagne</button></div><div id="z">${attente('Chargement')}</div>`);
+    <div class="rangee" id="tete-actions"><button onclick="location.hash='#/audits'">Nouvelle campagne</button></div></div><div id="z">${attente('Chargement')}</div>`);
   try {
     const [historique, audits] = await Promise.all([
       appel(`/api/v1/orgs/${E.orgId}/audits/history`).catch(() => []),
@@ -1824,7 +1840,19 @@ async function vueTableau() {
     // Apres le rendu (pas dans le gabarit ci-dessus) : le tour cible parfois
     // une ligne du tableau des dernieres campagnes (etape 2), qui doit deja
     // exister dans le DOM pour que le halo trouve sa position.
-    if (etapes.some(e => !e.fait) && !localStorage.getItem('cai_guide_masque')) demarrerTour(etapes);
+    if (etapes.some(e => !e.fait)) {
+      DERNIERES_ETAPES_TOUR = etapes;
+      const zoneActions = $('tete-actions');
+      // insertAdjacentHTML n'est pas idempotent : garde defensive si jamais
+      // cette vue est rendue deux fois de suite (c'etait le cas, voir le
+      // correctif sur demarrer() plus haut -- gardee au cas ou une autre
+      // cause produirait le meme double rendu).
+      if (zoneActions && !zoneActions.querySelector('.btn-revoir-tour')) {
+        zoneActions.insertAdjacentHTML('afterbegin',
+          `<button type="button" class="discret btn-revoir-tour" onclick="rejouerTour()">${tr('Revoir la visite guidée')}</button>`);
+      }
+      if (!localStorage.getItem('cai_guide_masque')) demarrerTour(etapes);
+    }
   } catch (e) { poser('z', echoue(e)); }
 }
 
@@ -1835,17 +1863,29 @@ async function vueTableau() {
    l'element concerne, navigation Suivant/Precedent, "Passer" pour ne plus
    la revoir. Construit en DOM direct (document.body.appendChild), pas via
    poser() : traduireDOM() ne l'atteint donc jamais, d'ou les tr() explicites
-   sur chaque texte, comme majIndicateurOffre() pour la meme raison. */
+   sur chaque texte, comme majIndicateurOffre() pour la meme raison.
+
+   Ne se declenche seul qu'une fois (cai_guide_masque pose des le premier
+   affichage, pas seulement sur "Passer" -- voir demarrerTour) : revenir sur
+   le tableau de bord tant que les etapes ne sont pas terminees ne la
+   relance plus a chaque fois. Le bouton "Revoir la visite guidee" (pose
+   dans #tete-actions par vueTableau) permet de la rejouer volontairement. */
 let TOUR_ETAPES = [];
 let TOUR_INDEX = 0;
+let DERNIERES_ETAPES_TOUR = [];
 
 function demarrerTour(etapes) {
   TOUR_ETAPES = etapes.filter(e => !e.fait);
   if (!TOUR_ETAPES.length) return;
+  localStorage.setItem('cai_guide_masque', '1');
   TOUR_INDEX = 0;
   rendreTour();
   window.addEventListener('resize', rendreTour);
   window.addEventListener('scroll', rendreTour, true);
+}
+
+function rejouerTour() {
+  if (DERNIERES_ETAPES_TOUR.length) demarrerTour(DERNIERES_ETAPES_TOUR);
 }
 
 function fermerTour() {
