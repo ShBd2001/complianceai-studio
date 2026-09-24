@@ -125,8 +125,22 @@ def complete_json(
                     f"Groq a repondu {response.status_code} : {response.text[:200]}"
                 )
 
-            content = response.json()["choices"][0]["message"]["content"]
-            return _extract_json(content)
+            body = response.json()
+            content = body["choices"][0]["message"]["content"]
+            result = _extract_json(content)
+
+            # Jetons consommes par cet appel, pour le suivi du cout (voir
+            # app/services/audit_engine.py, qui les agrege puis les retire du
+            # verdict avant toute persistance -- ce champ ne doit jamais finir
+            # stocke sur un Finding). Absent chez certains fournisseurs ou
+            # variantes d'API : ne casse rien si le champ manque.
+            usage = body.get("usage")
+            if isinstance(result, dict) and isinstance(usage, dict):
+                result["_usage"] = {
+                    "prompt_tokens": usage.get("prompt_tokens"),
+                    "completion_tokens": usage.get("completion_tokens"),
+                }
+            return result
 
     raise LLMUnavailable(last_error or "Appel au modele impossible.")
 

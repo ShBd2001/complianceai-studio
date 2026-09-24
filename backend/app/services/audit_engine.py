@@ -752,6 +752,18 @@ def run_audit(
         deadline = time.monotonic() + settings.AUDIT_MAX_SECONDS
         verdicts_evalues = _evaluate_all(retrieved, deadline=deadline)
 
+        # Jetons consommes, agreges puis retires des verdicts avant toute
+        # persistance : _usage ne doit jamais atterrir sur un Finding (voir
+        # app/services/llm.py::complete_json, qui l'attache au verdict brut).
+        llm_calls = sum(1 for v in verdicts_evalues if v.get("_source") == SOURCE_LLM)
+        llm_prompt_tokens = 0
+        llm_completion_tokens = 0
+        for v in verdicts_evalues:
+            usage = v.pop("_usage", None)
+            if usage:
+                llm_prompt_tokens += usage.get("prompt_tokens") or 0
+                llm_completion_tokens += usage.get("completion_tokens") or 0
+
         # Recomposition dans l'ordre d'origine : `verdicts` recouvre a nouveau
         # l'integralite de `requirements`, ce dont dependent les
         # zip(..., strict=True) en aval.
@@ -897,13 +909,27 @@ def run_audit(
         audit.status = AuditStatus.COMPLETED
         audit.completed_at = datetime.now(timezone.utc)
         audit.error_message = warning
+
+        audit.degraded = degraded
+        audit.llm_fallbacks = fallbacks
+        audit.llm_calls = llm_calls
+        audit.llm_prompt_tokens = llm_prompt_tokens
+        audit.llm_completion_tokens = llm_completion_tokens
+        audit.llm_model = settings.GROQ_MODEL if llm.is_available() else None
+        audit.retriever = settings.RAG_RETRIEVER
+        audit.duration_seconds = (
+            (audit.completed_at - audit.started_at).total_seconds()
+            if audit.started_at else None
+        )
         db.flush()
 
         logger.info(
             "Audit %s : %d exigences, %d hors perimetre par eligibilite, "
-            "%d non applicables au total, %d constats, score %s",
+            "%d non applicables au total, %d constats, score %s, "
+            "%d appels modele (%d/%d jetons prompt/completion), %.1fs, retriever=%s",
             audit.id, len(requirements), len(exemptees), not_applicable,
-            len(findings), score,
+            len(findings), score, llm_calls, llm_prompt_tokens,
+            llm_completion_tokens, audit.duration_seconds or 0.0, audit.retriever,
         )
 
         return AuditOutcome(
