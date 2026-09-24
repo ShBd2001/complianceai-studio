@@ -155,8 +155,12 @@ def test_full_audit_pipeline_and_findings_filter(page, frontend_server, backend_
     assert constats_avant > 0
 
     # Les tests tournent sans cle LLM : chaque constat vient de l'heuristique
-    # et doit donc afficher le badge de revue humaine (Tache 2).
-    expect(page.locator("#z-constats .badge-verif.revue").first).to_be_visible()
+    # et doit donc afficher le badge de revue humaine (Tache 2). Scope a
+    # .verifs : le badge reutilise la classe .etiq de la gravite (Tache 2 bis,
+    # homogeneite visuelle), qui existe aussi ailleurs sur la carte.
+    expect(
+        page.locator("#z-constats .verifs .etiq", has_text="Revue humaine requise").first
+    ).to_be_visible()
 
     page.select_option("#constats-f-gravite", "critical")
     page.wait_for_timeout(400)

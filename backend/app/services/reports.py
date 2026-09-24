@@ -37,22 +37,42 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
     score = f"{audit.compliance_score:.1f}" if publie else "—"
     a_revoir = sum(1 for f in findings if f.needs_human_review)
 
+    # Memes teintes que SEVERITY_LABEL ci-dessus, pour que ces badges lisent
+    # comme faisant partie du meme systeme visuel que la gravite -- pas un
+    # composant separe. "Verifiee" n'a pas d'equivalent parmi les gravites :
+    # seule couleur propre a ce jeu de badges.
+    _VERT = ("#178A4C", "#E7F8EE")
+
     def verification_badges(f: Finding) -> str:
         parts = []
         if f.citation_verified is True:
-            parts.append('<span class="badge-verif ok">Citation vérifiée ✓</span>')
+            c, bg = _VERT
+            parts.append(f'<span class="badge" style="color:{c};background:{bg}">Citation vérifiée ✓</span>')
         elif f.citation_verified is False:
-            parts.append('<span class="badge-verif alerte">Citation non retrouvée</span>')
+            c, bg = SEVERITY_LABEL[Severity.MAJOR][1:]
+            parts.append(f'<span class="badge" style="color:{c};background:{bg}">Citation non retrouvée</span>')
         if f.verdict == "indetermine":
-            parts.append('<span class="badge-verif indet">Indéterminé</span>')
+            c, bg = SEVERITY_LABEL[Severity.INFO][1:]
+            parts.append(f'<span class="badge" style="color:{c};background:{bg}">Indéterminé</span>')
         if f.needs_human_review:
             titre = html.escape(f.review_reason) if f.review_reason else "Revue humaine requise"
-            parts.append(f'<span class="badge-verif revue" title="{titre}">Revue humaine requise</span>')
+            c, bg = SEVERITY_LABEL[Severity.CRITICAL][1:]
+            parts.append(
+                f'<span class="badge" style="color:{c};background:{bg}" title="{titre}">Revue humaine requise</span>'
+            )
         return " ".join(parts)
 
     def finding_card(f: Finding) -> str:
         label, color, bg = SEVERITY_LABEL[f.severity]
         title = (f.title or "").strip()
+        doute = f.citation_verified is False
+        citation = ""
+        if f.evidence:
+            etiquette = (
+                '<span class="doute-label">Citation avancée par le modèle — non confirmée</span>'
+                if doute else ""
+            )
+            citation = f'<blockquote{" class=\"doute\"" if doute else ""}>{etiquette}{html.escape(f.evidence[:400])}</blockquote>'
         return f"""<article class="carte-constat">
   <div class="dos">
     <span class="ref">{html.escape(f.article_ref)}</span>
@@ -61,7 +81,7 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
   <div class="corps">
     <h3>{html.escape(title)}</h3>
     <p>{html.escape(f.description)}</p>
-    {f'<blockquote>{html.escape(f.evidence[:400])}</blockquote>' if f.evidence else ''}
+    {citation}
     {f'<div class="reco"><strong>Action corrective</strong>{html.escape(f.recommendation)}</div>' if f.recommendation else ''}
     {f'<div class="verifs">{verification_badges(f)}</div>' if verification_badges(f) else ''}
   </div>
@@ -142,12 +162,9 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
   .vide {{ color: #8A8EA6; font-size: 12.5px; font-style: italic; }}
 
   .verifs {{ margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }}
-  .badge-verif {{ font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: .02em;
-                   padding: 2px 8px; border-radius: 999px; display: inline-block; }}
-  .badge-verif.ok {{ color: #178A4C; background: #E7F8EE; }}
-  .badge-verif.alerte {{ color: #B4720C; background: #FDF2DD; }}
-  .badge-verif.indet {{ color: #565A73; background: #EFF1F7; }}
-  .badge-verif.revue {{ color: #C0342A; background: #FDECEA; }}
+  blockquote.doute {{ border-left-color: #B4720C; }}
+  .doute-label {{ display: block; font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600;
+                   letter-spacing: .04em; text-transform: uppercase; font-style: normal; color: #B4720C; margin-bottom: 3px; }}
 
   table {{ width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 12px; }}
   th {{ text-align: left; background: #F5F6FB; padding: 8px 10px; font-family: 'IBM Plex Mono', monospace;

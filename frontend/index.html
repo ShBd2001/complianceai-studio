@@ -366,11 +366,9 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .remede strong{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--valide);display:block;margin-bottom:3px}
 .provenance{font-family:var(--mono);font-size:10px;color:var(--sourdine);margin-top:9px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .verifs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.badge-verif{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;font-weight:600;padding:3px 9px;border-radius:var(--rayon-pill);white-space:nowrap;display:inline-block}
-.badge-verif.ok{color:var(--valide);background:var(--valide-t)}
-.badge-verif.alerte{color:var(--ambre);background:var(--ambre-t)}
-.badge-verif.indet{color:var(--sourdine);background:var(--regle-fine)}
-.badge-verif.revue{color:var(--sceau);background:var(--sceau-t);cursor:help}
+.verifs .etiq[title]{cursor:help}
+blockquote.doute{border-left-color:var(--ambre)}
+blockquote.doute .doute-label{display:block;font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;font-style:normal;color:var(--ambre);margin-bottom:4px}
 
 .journal{border-left:2px solid var(--regle);margin-left:7px}
 .entree{position:relative;padding:0 0 20px 26px}
@@ -1127,6 +1125,7 @@ const TRAD_EN = {
   'Propriétaire': 'Owner', 'Administrateur': 'Admin', 'Auditeur': 'Auditor', 'Lecture seule': 'Viewer',
   'Toutes gravités': 'All severities', 'Tous statuts': 'All statuses', 'Filtrer par article ou intitulé': 'Filter by article or title',
   'À revoir': 'To review', 'Citation vérifiée ✓': 'Citation verified ✓', 'Citation non retrouvée': 'Citation not found',
+  'Citation avancée par le modèle — non confirmée': 'Citation claimed by the model — unconfirmed',
   'Indéterminé': 'Undetermined', 'Revue humaine requise': 'Human review required',
   'Détails techniques de l’analyse': 'Technical details of the analysis', 'Durée': 'Duration',
   'Méthode de recherche': 'Search method', 'Modèle': 'Model', 'Appels au modèle': 'Model calls',
@@ -2536,12 +2535,12 @@ function appliquerFiltre(prefix) {
 
 function badgesVerification(c) {
   const parts = [];
-  if (c.citation_verified === true) parts.push(`<span class="badge-verif ok">${tr('Citation vérifiée ✓')}</span>`);
-  else if (c.citation_verified === false) parts.push(`<span class="badge-verif alerte">${tr('Citation non retrouvée')}</span>`);
-  if (c.verdict === 'indetermine') parts.push(`<span class="badge-verif indet">${tr('Indéterminé')}</span>`);
+  if (c.citation_verified === true) parts.push(`<span class="etiq e-ok">${tr('Citation vérifiée ✓')}</span>`);
+  else if (c.citation_verified === false) parts.push(`<span class="etiq e-major">${tr('Citation non retrouvée')}</span>`);
+  if (c.verdict === 'indetermine') parts.push(`<span class="etiq e-neutre">${tr('Indéterminé')}</span>`);
   if (c.needs_human_review) {
     const titre = c.review_reason ? ` title="${h(c.review_reason)}"` : '';
-    parts.push(`<span class="badge-verif revue"${titre}>${tr('Revue humaine requise')}</span>`);
+    parts.push(`<span class="etiq e-critical"${titre}>${tr('Revue humaine requise')}</span>`);
   }
   return parts.length ? `<div class="verifs">${parts.join(' ')}</div>` : '';
 }
@@ -2554,6 +2553,13 @@ function carte(c, auditId, campagne) {
       ${['open','in_progress','resolved','accepted_risk','false_positive']
         .map(v => `<option value="${v}"${c.status === v ? ' selected' : ''}>${SUIVI[v]}</option>`).join('')}
     </select>`;
+  // Une citation non confirmee reste affichee (l'IA l'a bien avancee comme
+  // preuve) mais visuellement marquee comme telle, plutot que presentee
+  // comme un extrait fiable au meme titre qu'une citation verifiee.
+  const doute = c.citation_verified === false;
+  const citation = c.evidence
+    ? `<blockquote${doute ? ' class="doute"' : ''}>${doute ? `<span class="doute-label">${tr('Citation avancée par le modèle — non confirmée')}</span>` : ''}${h(c.evidence)}</blockquote>`
+    : '';
   return `<article class="constat">
     <div class="dos d-${g}">
       <span class="art">${h(c.article_ref)}</span>
@@ -2562,7 +2568,7 @@ function carte(c, auditId, campagne) {
     <div class="corps">
       <h3>${h(intitule)}</h3>
       <p>${h(c.description)}</p>
-      ${c.evidence ? `<blockquote>${h(c.evidence)}</blockquote>` : ''}
+      ${citation}
       ${c.recommendation ? `<div class="remede"><strong>Action corrective</strong>${h(c.recommendation)}</div>` : ''}
       ${badgesVerification(c)}
       <div class="provenance">
