@@ -114,19 +114,61 @@ lancée** (consommerait ~700 appels Groq pour 3 passages × 15 documents).
   tourne de bout en bout sans erreur. Résultat non valide pour le mémoire,
   uniquement une preuve que le script fonctionne.
 
+## Tâche 8 — Profil de l'organisation pour le filtre d'éligibilité
+
+**Commit** `b7ce7c7`.
+
+- Fichiers modifiés : `backend/app/models/organization.py`,
+  `backend/app/schemas/organization.py`, `backend/app/api/v1/organizations.py`,
+  `frontend/index.html`.
+- Migration : `0017_profil_organisation` (11 colonnes `Boolean` nullable sur
+  `organizations`, les mêmes que celles lues par
+  `eligibilite.py::depuis_organisation` — vérifiées dans le fichier, pas
+  seulement supposées ; réversible, testée).
+- `PATCH /orgs/{org_id}/profile` (admin et au-dessus), sémantique
+  `exclude_unset` : un champ omis reste inchangé, envoyé à `null` il repasse
+  explicitement à « non renseigné ».
+- Frontend : formulaire « Profil de l'organisation » dans les paramètres du
+  compte (Oui / Non / Je ne sais pas par question, avec une phrase d'aide) ;
+  vérifié visuellement (Playwright, capture d'écran) avec un aller-retour
+  complet enregistrement → rechargement → persistance.
+- Tests ajoutés : `backend/tests/test_organization_profile.py` (4 tests —
+  permissions, sémantique `exclude_unset`, un profil complet de petite
+  structure exempte l'article 30 avec justification citant l'art. 30(5), un
+  profil inconnu laisse l'article suivre l'évaluation normale).
+
+## Tâche 9 — Comparaison de deux campagnes
+
+**Commit** `823a929`.
+
+- Fichiers modifiés : `backend/app/api/v1/audits.py`,
+  `backend/app/schemas/audit.py`, `frontend/index.html`.
+- Nouveau fichier : `backend/app/services/comparison.py`.
+- `GET /orgs/{org_id}/audits/{audit_id}/compare?with={other_id}` : compare les
+  constats dans le périmètre (hors non-applicable) de deux campagnes du même
+  référentiel, catégorise chaque article (nouveau, résolu, inchangé, aggravé,
+  amélioré) et calcule le delta de score. Refuse entre deux organisations
+  (404, via le filtrage déjà en place) ou deux référentiels différents (409).
+- Frontend : bouton « Comparer avec… » depuis une campagne terminée, nouvelle
+  vue `#/comparer/{id}` ; vérifié visuellement (Playwright, capture d'écran)
+  avec deux campagnes réelles.
+- Tests ajoutés : `backend/tests/test_comparison.py` (3 tests — les cinq
+  catégories, refus inter-organisations, refus inter-référentiels).
+
 ---
 
 ## Chiffres à reporter dans le mémoire
 
 | Métrique | Valeur |
 |---|---|
-| Tests backend | 181 (`backend/tests`, `pytest`) |
+| Tests backend | 188 (`backend/tests`, `pytest`) |
 | Tests frontend bout-en-bout | 23 (`frontend/tests`, Playwright) |
 | Tests garde-fous du moteur | 23 (`validation/test_garde_fous.py`) |
-| Couverture de tests backend | 80,16 % (bloquant en CI, `--cov-fail-under=80`) |
+| Couverture de tests backend | ~80,8 % (bloquant en CI, `--cov-fail-under=80`) |
 | Méthode de recherche par défaut | Lexicale (`RAG_RETRIEVER=lexical`) — voir `validation/comparaison_retrievers.json` et DA-07 |
 | Champs affichés par constat | `verdict`, `citation_verified` (badge « Citation vérifiée ✓ » / « Citation non retrouvée »), `needs_human_review` (badge « Revue humaine requise », motif en infobulle), `review_reason` |
 | Secrets détectés dans l'historique | 0 (gitleaks, 125 commits scannés) |
+| Profil d'organisation | 11 champs (`PATCH /orgs/{id}/profile`), tous nullable, jamais convertis en False |
 
 ---
 
@@ -176,12 +218,10 @@ l'analyse en arrière-plan (file de tâches), le stockage S3, le SSO, d'autres
 grilles de validation au-delà du RGPD. Chacun documenté comme « prévu, non
 engagé » dans `docs/architecture.md` §6, pas comme un oubli.
 
-## Tâches non traitées (priorité 3, conditionnelles)
+## État final
 
-- **Tâche 8** — Profil de l'organisation pour le filtre d'éligibilité
-  (`organisme_public`, `donnees_sensibles`, etc.) : non traitée dans cette
-  session. `app/services/eligibilite.py::depuis_organisation` ne peut
-  aujourd'hui s'appuyer que sur `headcount` (seul champ existant en base) —
-  voir sa docstring, qui documente déjà précisément ce manque.
-- **Tâche 9** — Comparaison de deux campagnes : non traitée (optionnelle,
-  conditionnée à la Tâche 8).
+Les dix tâches du plan (0 à 9) sont traitées, committées et vérifiées vertes
+en CI. Rien n'a été volontairement laissé de côté à ce stade — les seuls
+éléments restants sont les actions que seule l'équipe peut accomplir
+elle-même (voir la section ci-dessus : tarifs Groq, vérification du disque
+Render, mesure réelle de la Tâche 7, `cout_analyses.py` sur la production).

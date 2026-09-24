@@ -84,7 +84,7 @@ Détail des métriques et du corpus : [validation/README.md](validation/README.m
 
 ## Tests et intégration continue
 
-- **Backend** : 181 tests (`backend/tests`, `pytest`) — authentification,
+- **Backend** : 188 tests (`backend/tests`, `pytest`) — authentification,
   isolation multi-tenant, pipeline d'audit complet, quotas, veille
   réglementaire, RGPD. Couverture globale 80 % (`--cov-fail-under=80`,
   bloquant en CI).

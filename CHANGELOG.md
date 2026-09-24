@@ -160,3 +160,21 @@ générés (disque éphémère du conteneur). `render.yaml` ajoute un disque
 persistant de 1 Go monté sur `/var/data` (`STORAGE_DIR=/var/data/storage`)
 pour `complianceai-api` ; `app/main.py` vérifie l'accès en écriture au
 démarrage et journalise une erreur claire sinon, sans bloquer le démarrage.
+
+## Profil de l'organisation pour le filtre d'éligibilité
+
+`eligibilite.py::depuis_organisation` ne pouvait s'appuyer que sur
+`headcount` (seul champ existant en base) : le filtre répondait donc presque
+toujours « à vérifier », même quand l'information est en réalité connue.
+`organizations` porte désormais 11 colonnes booléennes nullables (migration
+0017), modifiables via `PATCH /orgs/{org_id}/profile` (admin et au-dessus,
+sémantique `exclude_unset`) et un formulaire dédié dans les paramètres du
+compte. Un champ non renseigné reste `null`, jamais converti en `False`.
+
+## Comparaison de deux campagnes
+
+Nouvelle route `GET /orgs/{org_id}/audits/{audit_id}/compare?with={other_id}` :
+catégorise chaque article entre deux campagnes du même référentiel (nouveau,
+résolu, inchangé, aggravé, amélioré) et calcule le delta de score. Vue
+« Comparer avec… » dans le frontend, accessible depuis une campagne
+terminée.
