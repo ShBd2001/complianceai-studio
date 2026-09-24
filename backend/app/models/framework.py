@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Any
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     Boolean,
+    Computed,
     Date,
     DateTime,
     Enum,
@@ -25,7 +26,7 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID as PGUUID
+from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR, UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.config import settings
@@ -140,6 +141,13 @@ class Requirement(UUIDMixin, TimestampMixin, Base):
     # Couper a N tokens detruirait l'unite semantique de l'article.
     embedding: Mapped[Any | None] = mapped_column(
         Vector(settings.EMBEDDING_DIM), nullable=True
+    )
+    # Colonne generee par Postgres (jamais ecrite par l'ORM), voir la
+    # migration 0013 : recherche lexicale en complement du semantique
+    # (app/services/rag.py), pas en remplacement.
+    tsv: Mapped[Any] = mapped_column(
+        TSVECTOR, Computed("to_tsvector('french', title || ' ' || body)", persisted=True),
+        nullable=True,
     )
 
     version: Mapped["FrameworkVersion"] = relationship(back_populates="requirements")

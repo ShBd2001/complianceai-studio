@@ -173,6 +173,39 @@ et une seule personne au clavier.
 couplage à son implémentation : une réécriture en React resterait possible
 sans toucher au backend.
 
+### DA-07 — Recherche hybride (lexicale + sémantique) pour le RAG
+
+*Décision.* La recherche des passages pertinents (`app/services/rag.py`)
+combine un classement sémantique (pgvector, distance cosinus) et un
+classement lexical (recherche plein texte PostgreSQL, configuration
+`french`, colonnes générées `tsv`), fusionnés par fusion de rangs
+(Reciprocal Rank Fusion) — plutôt que le seul sémantique utilisé jusqu'ici.
+
+*Justification.* Mesuré sur le corpus de validation
+(`validation/comparer_retrievers.py`, résultats dans
+`validation/comparaison_retrievers.json`, ~210 articles évalués) : sur des
+textes réglementaires, le lexical seul bat le
+sémantique seul sur toutes les métriques (exactitude 91,9 % contre 85,2 %,
+rappel parfait contre 4 faux négatifs) — la terminologie exacte compte plus
+que la paraphrase quand il s'agit de citer un article de loi. Mais un
+document client réel ne reprend pas toujours ce vocabulaire au mot près,
+d'où la fusion plutôt que le lexical seul : l'écart mesuré avec l'hybride
+(90,5 %, soit 1,4 point) n'est pas significatif sur ce corpus, et l'hybride
+récupère les reformulations que le lexical manquerait.
+
+*Conséquences.* Positives : améliore la complétude du retrieval sans
+dépendance supplémentaire (recherche plein texte native PostgreSQL, déjà en
+place). Négatives : deux requêtes au lieu d'une par exigence évaluée
+(latence légèrement accrue, non mesurée précisément en production) ; la
+fusion de rangs ne pondère pas explicitement un signal plus fort que
+l'autre — une pondération apprise sur davantage de données pourrait faire
+mieux, non tentée ici faute de corpus assez grand pour l'évaluer
+sérieusement.
+
+*Réversibilité.* Les colonnes `tsv` sont générées, jamais écrites par
+l'application : revenir au sémantique seul consiste à ignorer le classement
+lexical dans la fusion, sans migration de retour nécessaire.
+
 ## 5. Vue de déploiement
 
 ```
