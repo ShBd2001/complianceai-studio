@@ -94,7 +94,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--corpus", required=True)
     ap.add_argument("--verite", required=True)
-    ap.add_argument("--sortie", default="comparaison_retrievers.json")
+    ap.add_argument("--sortie", default=str(Path(__file__).parent / "comparaison_retrievers.json"))
     ap.add_argument("--lexical-seul", action="store_true",
                     help="n'exécute que le lexical (pas besoin de torch)")
     ap.add_argument("--hors-ligne", action="store_true")

@@ -4,14 +4,14 @@ Deux implementations derriere une interface commune :
 
 - FastEmbedEmbedder : modele multilingue ONNX execute localement. Gratuit,
   sans appel reseau apres le telechargement initial, adapte au francais.
+  C'est le backend reellement utilise en production (EMBEDDING_BACKEND=
+  fastembed dans render.yaml) depuis le passage de complianceai-api sur
+  une instance Standard (assez de RAM pour le charger en plus du reste du
+  processus, voir le commentaire en tete de render.yaml).
 - HashingEmbedder : repli deterministe sans dependance. La qualite semantique
   est nulle, mais il permet de faire tourner l'application et les tests sans
-  telecharger de modele. C'est en fait le backend utilise en production
-  aujourd'hui (EMBEDDING_BACKEND=hashing dans render.yaml) : le plan gratuit
-  Render (512 Mo de RAM) ne suffit pas a charger fastembed en plus du reste
-  du processus. La recherche "semantique" en production n'est donc pas
-  semantique — compromis assume, documente dans render.yaml, a lever des que
-  l'hebergement dispose de plus de RAM.
+  telecharger de modele (EMBEDDING_BACKEND=hashing, utilise par la suite de
+  tests -- voir backend/tests/conftest.py -- pas par la production).
 
 Le choix est fait au demarrage selon la configuration et la disponibilite du
 paquet, jamais au milieu d'un traitement.
