@@ -154,6 +154,10 @@ def test_full_audit_pipeline_and_findings_filter(page, frontend_server, backend_
     constats_avant = page.locator("#z-constats article.constat").count()
     assert constats_avant > 0
 
+    # Les tests tournent sans cle LLM : chaque constat vient de l'heuristique
+    # et doit donc afficher le badge de revue humaine (Tache 2).
+    expect(page.locator("#z-constats .badge-verif.revue").first).to_be_visible()
+
     page.select_option("#constats-f-gravite", "critical")
     page.wait_for_timeout(400)
     constats_apres = page.locator("#z-constats article.constat").count()

@@ -551,6 +551,65 @@ def _to_severity(value: str | None) -> Severity:
         return Severity.MAJOR
 
 
+# Raisons de revue humaine, dans l'ordre ou les regles ci-dessous les emettent.
+_RAISON_CITATION_INTROUVABLE = "Citation proposee par le modele introuvable dans les documents"
+_RAISON_INDETERMINE = "Les extraits ne permettent pas de conclure"
+_RAISON_HEURISTIQUE = "Evaluation de repli sans modele de langage"
+_RAISON_CONFIANCE_FAIBLE = "Confiance du modele faible"
+
+
+def _verification_humaine(verdict: dict, conformity: str) -> tuple[bool | None, bool, str | None]:
+    """Determine si un constat doit etre signale a la revue humaine.
+
+    Deux cas terminaux d'abord (non applicable), puis une serie de regles
+    cumulatives pour les constats restants — plusieurs peuvent s'appliquer a
+    la fois, auquel cas leurs raisons sont concatenees. L'ordre des regles
+    est celui de la specification et n'affecte pas le resultat (needs_review
+    est un OU logique), seule la concatenation des raisons en depend.
+
+    Retourne (citation_verified, needs_human_review, review_reason).
+    """
+    source = verdict.get("_source")
+
+    if conformity == NOT_APPLICABLE:
+        if source == SOURCE_ELIGIBILITY:
+            # Exclusion deterministe fondee sur le profil de l'organisation :
+            # rien a verifier, rien a revoir.
+            return None, False, None
+        # Non applicable pour une autre raison (dependance a un article hors
+        # perimetre, ou le modele lui-meme) : a revoir seulement si c'est
+        # l'heuristique, sans modele, qui l'a decide.
+        return None, source == SOURCE_HEURISTIC, None
+
+    citation_verified: bool | None = None
+    needs_review = False
+    raisons: list[str] = []
+
+    if source == SOURCE_LLM and verdict.get("preuve"):
+        if verdict.get("_passage_verifie") is not None:
+            citation_verified = True
+        else:
+            citation_verified = False
+            needs_review = True
+            raisons.append(_RAISON_CITATION_INTROUVABLE)
+
+    if conformity == "indetermine":
+        needs_review = True
+        raisons.append(_RAISON_INDETERMINE)
+
+    if source == SOURCE_HEURISTIC:
+        needs_review = True
+        raisons.append(_RAISON_HEURISTIQUE)
+
+    confiance = float(verdict.get("confiance") or 0.0)
+    if confiance < settings.REVIEW_CONFIDENCE_THRESHOLD:
+        needs_review = True
+        raisons.append(_RAISON_CONFIANCE_FAIBLE)
+
+    review_reason = " ; ".join(raisons)[:300] if raisons else None
+    return citation_verified, needs_review, review_reason
+
+
 def _model_label(verdict: dict) -> str:
     """Origine du verdict, telle qu'inscrite au rapport.
 
@@ -721,6 +780,9 @@ def run_audit(
             # concernent pas fausse le score et decredibilise le rapport.
             if conformity == NOT_APPLICABLE:
                 not_applicable += 1
+                citation_verified, needs_review, review_reason = _verification_humaine(
+                    verdict, conformity
+                )
                 # Conserve comme trace d'audit : l'exclusion doit etre
                 # justifiee et verifiable, pas silencieuse.
                 findings.append(
@@ -736,6 +798,10 @@ def run_audit(
                         model_used=_model_label(verdict),
                         confidence=float(verdict.get("confiance") or 0.0),
                         source_document_id=None,
+                        verdict=conformity,
+                        citation_verified=citation_verified,
+                        needs_human_review=needs_review,
+                        review_reason=review_reason,
                     )
                 )
                 continue
@@ -767,6 +833,9 @@ def run_audit(
             else:
                 source_id = None
 
+            citation_verified, needs_review, review_reason = _verification_humaine(
+                verdict, conformity
+            )
             findings.append(
                 Finding(
                     audit_id=audit.id,
@@ -780,6 +849,10 @@ def run_audit(
                     model_used=_model_label(verdict),
                     confidence=float(verdict.get("confiance") or 0.0),
                     source_document_id=source_id,
+                    verdict=conformity,
+                    citation_verified=citation_verified,
+                    needs_human_review=needs_review,
+                    review_reason=review_reason,
                 )
             )
 

@@ -117,6 +117,11 @@ class Settings(BaseSettings):
             )
         return v
 
+    # En-dessous de ce seuil, un constat est marque a revoir manuellement
+    # meme si aucune autre regle de prudence ne s'applique (voir
+    # app/services/audit_engine.py, _verification_humaine).
+    REVIEW_CONFIDENCE_THRESHOLD: float = 0.5
+
     # Bornes de taille du prompt d'evaluation, en caracteres.
     # Determinantes face a un fournisseur qui limite les jetons par minute :
     # diviser la taille du prompt par deux double le nombre d'evaluations

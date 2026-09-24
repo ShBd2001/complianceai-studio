@@ -35,6 +35,20 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
     generated = datetime.now(timezone.utc).strftime("%d/%m/%Y à %H:%M UTC")
     publie = audit.compliance_score is not None
     score = f"{audit.compliance_score:.1f}" if publie else "—"
+    a_revoir = sum(1 for f in findings if f.needs_human_review)
+
+    def verification_badges(f: Finding) -> str:
+        parts = []
+        if f.citation_verified is True:
+            parts.append('<span class="badge-verif ok">Citation vérifiée ✓</span>')
+        elif f.citation_verified is False:
+            parts.append('<span class="badge-verif alerte">Citation non retrouvée</span>')
+        if f.verdict == "indetermine":
+            parts.append('<span class="badge-verif indet">Indéterminé</span>')
+        if f.needs_human_review:
+            titre = html.escape(f.review_reason) if f.review_reason else "Revue humaine requise"
+            parts.append(f'<span class="badge-verif revue" title="{titre}">Revue humaine requise</span>')
+        return " ".join(parts)
 
     def finding_card(f: Finding) -> str:
         label, color, bg = SEVERITY_LABEL[f.severity]
@@ -49,6 +63,7 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
     <p>{html.escape(f.description)}</p>
     {f'<blockquote>{html.escape(f.evidence[:400])}</blockquote>' if f.evidence else ''}
     {f'<div class="reco"><strong>Action corrective</strong>{html.escape(f.recommendation)}</div>' if f.recommendation else ''}
+    {f'<div class="verifs">{verification_badges(f)}</div>' if verification_badges(f) else ''}
   </div>
 </article>"""
 
@@ -101,6 +116,7 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
             background-clip: text; color: transparent; white-space: nowrap; }}
   .score .unite {{ font-size: 16px; color: #8A8EA6; -webkit-text-fill-color: #8A8EA6; font-family: 'Inter', sans-serif }}
   .verdict-corps {{ flex: 1 }}
+  .a-revoir {{ margin-top: 8px; font-size: 11.5px; font-weight: 600; color: #B4720C; }}
   .pill {{ padding: 3px 10px; border-radius: 999px; font-size: 10.5px; font-weight: 600;
            font-family: 'IBM Plex Mono', monospace; letter-spacing: .02em; display: inline-block;
            margin: 2px 4px 2px 0; }}
@@ -124,6 +140,14 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
                   text-transform: uppercase; color: #178A4C; display: block; margin-bottom: 2px; }}
   .provenance {{ font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: #8A8EA6; margin-top: 6px; }}
   .vide {{ color: #8A8EA6; font-size: 12.5px; font-style: italic; }}
+
+  .verifs {{ margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }}
+  .badge-verif {{ font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: .02em;
+                   padding: 2px 8px; border-radius: 999px; display: inline-block; }}
+  .badge-verif.ok {{ color: #178A4C; background: #E7F8EE; }}
+  .badge-verif.alerte {{ color: #B4720C; background: #FDF2DD; }}
+  .badge-verif.indet {{ color: #565A73; background: #EFF1F7; }}
+  .badge-verif.revue {{ color: #C0342A; background: #FDECEA; }}
 
   table {{ width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 12px; }}
   th {{ text-align: left; background: #F5F6FB; padding: 8px 10px; font-family: 'IBM Plex Mono', monospace;
@@ -149,7 +173,9 @@ def _render_html(audit: Audit, findings: list[Finding], version: int) -> str:
 
 <div class="verdict">
   <div class="score">{score}<span class="unite">/100</span></div>
-  <div class="verdict-corps">{summary}</div>
+  <div class="verdict-corps">{summary}
+    {f'<div class="a-revoir">{a_revoir} constat{"s" if a_revoir != 1 else ""} à revoir manuellement</div>' if a_revoir else ''}
+  </div>
 </div>
 
 <h2>Non-conformités ({len(non_conformities)})</h2>

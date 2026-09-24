@@ -102,6 +102,10 @@ class FindingOut(BaseModel):
     status: FindingStatus
     model_used: str | None
     confidence: float | None
+    verdict: str | None
+    citation_verified: bool | None
+    needs_human_review: bool
+    review_reason: str | None
 
     @computed_field  # type: ignore[prop-decorator]
     @property

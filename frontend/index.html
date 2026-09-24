@@ -359,6 +359,12 @@ blockquote{margin:10px 0;padding:2px 0 2px 15px;border-left:2px solid var(--regl
 .remede{background:var(--valide-t);border-left:2px solid var(--valide);border-radius:0 var(--rayon-sm) var(--rayon-sm) 0;padding:11px 14px;font-size:13.5px;margin-top:10px}
 .remede strong{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--valide);display:block;margin-bottom:3px}
 .provenance{font-family:var(--mono);font-size:10px;color:var(--sourdine);margin-top:9px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.verifs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.badge-verif{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;font-weight:600;padding:3px 9px;border-radius:var(--rayon-pill);white-space:nowrap;display:inline-block}
+.badge-verif.ok{color:var(--valide);background:var(--valide-t)}
+.badge-verif.alerte{color:var(--ambre);background:var(--ambre-t)}
+.badge-verif.indet{color:var(--sourdine);background:var(--regle-fine)}
+.badge-verif.revue{color:var(--sceau);background:var(--sceau-t);cursor:help}
 
 .journal{border-left:2px solid var(--regle);margin-left:7px}
 .entree{position:relative;padding:0 0 20px 26px}
@@ -1114,6 +1120,8 @@ const TRAD_EN = {
   'Brouillon': 'Draft', 'Terminé': 'Completed', 'Échec': 'Failed', 'Archivé': 'Archived',
   'Propriétaire': 'Owner', 'Administrateur': 'Admin', 'Auditeur': 'Auditor', 'Lecture seule': 'Viewer',
   'Toutes gravités': 'All severities', 'Tous statuts': 'All statuses', 'Filtrer par article ou intitulé': 'Filter by article or title',
+  'À revoir': 'To review', 'Citation vérifiée ✓': 'Citation verified ✓', 'Citation non retrouvée': 'Citation not found',
+  'Indéterminé': 'Undetermined', 'Revue humaine requise': 'Human review required',
   'Action corrective': 'Corrective action', 'Aucun constat ne correspond aux filtres.': 'No finding matches the filters.',
   // Tableau de bord
   'Nouvelle campagne': 'New campaign', 'Score courant': 'Current score', 'Aucune campagne notée': 'No scored campaign yet',
@@ -2348,6 +2356,9 @@ function barreFiltres(prefix) {
       <option value="">Tous statuts</option>
       ${Object.entries(SUIVI).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
     </select>
+    <label class="compact" style="display:flex;align-items:center;gap:6px;white-space:nowrap">
+      <input type="checkbox" id="${prefix}-f-revoir" onchange="declencherFiltre('${prefix}')">${tr('À revoir')}
+    </label>
   </div>`;
 }
 
@@ -2367,13 +2378,27 @@ function appliquerFiltre(prefix) {
   const texte = ($(`${prefix}-f-texte`)?.value || '').toLowerCase().trim();
   const gravite = $(`${prefix}-f-gravite`)?.value || '';
   const statut = $(`${prefix}-f-statut`)?.value || '';
+  const revoirSeul = $(`${prefix}-f-revoir`)?.checked || false;
   const liste = etat.brut.filter(c => {
     if (gravite && c.severity !== gravite) return false;
     if (statut && c.status !== statut) return false;
+    if (revoirSeul && !c.needs_human_review) return false;
     if (texte && !((c.article_ref || '').toLowerCase().includes(texte) || (c.title || '').toLowerCase().includes(texte))) return false;
     return true;
   });
   etat.rendre(liste);
+}
+
+function badgesVerification(c) {
+  const parts = [];
+  if (c.citation_verified === true) parts.push(`<span class="badge-verif ok">${tr('Citation vérifiée ✓')}</span>`);
+  else if (c.citation_verified === false) parts.push(`<span class="badge-verif alerte">${tr('Citation non retrouvée')}</span>`);
+  if (c.verdict === 'indetermine') parts.push(`<span class="badge-verif indet">${tr('Indéterminé')}</span>`);
+  if (c.needs_human_review) {
+    const titre = c.review_reason ? ` title="${h(c.review_reason)}"` : '';
+    parts.push(`<span class="badge-verif revue"${titre}>${tr('Revue humaine requise')}</span>`);
+  }
+  return parts.length ? `<div class="verifs">${parts.join(' ')}</div>` : '';
 }
 
 function carte(c, auditId, campagne) {
@@ -2394,6 +2419,7 @@ function carte(c, auditId, campagne) {
       <p>${h(c.description)}</p>
       ${c.evidence ? `<blockquote>${h(c.evidence)}</blockquote>` : ''}
       ${c.recommendation ? `<div class="remede"><strong>Action corrective</strong>${h(c.recommendation)}</div>` : ''}
+      ${badgesVerification(c)}
       <div class="provenance">
         ${campagne ? `<span class="mono">${h(campagne)}</span>` : ''}
         ${suivi}

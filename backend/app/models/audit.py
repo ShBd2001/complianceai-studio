@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     BigInteger,
+    Boolean,
     DateTime,
     Enum,
     Float,
@@ -159,6 +160,19 @@ class Finding(UUIDMixin, TimestampMixin, Base):
     source_document_id: Mapped[uuid.UUID | None] = mapped_column(
         PGUUID(as_uuid=True), ForeignKey("documents.id", ondelete="SET NULL")
     )
+
+    # Verdict brut du moteur ("oui" / "partiel" / "non" / "indetermine" /
+    # "non_applicable"), distinct de `status` (le suivi de traitement cote
+    # utilisatrice) et de `severity` (deduite du verdict pour le calcul du
+    # score). Sans ce champ, un constat "indetermine" est indiscernable d'un
+    # constat ouvert ordinaire cote API et interface.
+    verdict: Mapped[str | None] = mapped_column(String(20))
+    # None : aucune citation a verifier (pas de preuve avancee, ou source non
+    # LLM). True/False : citation avancee par le modele retrouvee ou non dans
+    # les documents deposes (voir _passage_correspondant).
+    citation_verified: Mapped[bool | None] = mapped_column(Boolean)
+    needs_human_review: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    review_reason: Mapped[str | None] = mapped_column(String(300))
 
     audit: Mapped["Audit"] = relationship(back_populates="findings")
 
