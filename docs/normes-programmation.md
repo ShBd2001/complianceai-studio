@@ -25,10 +25,11 @@ Trois niveaux d'exigence :
 |---|---|---|
 | Analyse statique Python | `ruff check` (règles E9, F — erreurs et pyflakes) | Bloquant (CI : job `qualite-code`) |
 | Tests | `pytest` | Bloquant (CI : job `backend-tests`) |
+| Couverture de tests | `pytest-cov`, `--cov-fail-under=80` | Bloquant (CI : job `backend-tests`, depuis le 2026-09-24 — voir §9) |
 | Vulnérabilités des dépendances | `pip-audit` | Rapport, non bloquant (CI : job `qualite-code` — voir §9) |
-| Formatage Python | `ruff format` (ligne 100) | Non outillé en CI — 48 fichiers sur 80 ne le respectent pas encore à ce jour ; adopter l'outil suppose une passe de reformatage dédiée, pas mêlée à un changement de comportement (règle §8) |
-| Typage Python | `mypy --strict` sur `app/` | Non outillé — jamais exécuté sur ce dépôt, portée non évaluée |
-| Secrets en clair | `gitleaks` | Non outillé |
+| Formatage Python | `ruff format` (ligne 100) | Non outillé en CI — 60 fichiers sur 92 ne le respectent pas encore à ce jour ; adopter l'outil suppose une passe de reformatage dédiée, pas mêlée à un changement de comportement (règle §8) |
+| Typage Python | `mypy --strict` sur `app/` | Non outillé — jamais exécuté sur ce dépôt, portée non évaluée ; décision délibérée de ne pas l'activer avant la soutenance (risque de bruit non trié dans les derniers jours) |
+| Secrets en clair | `gitleaks` (historique complet, `fetch-depth: 0`) | Bloquant (CI : job `secrets`, depuis le 2026-09-24) |
 
 Le formatage n'est pas encore un contrôle automatisé sur ce dépôt : en
 attendant, il reste sujet de revue de code, pas seulement de l'outil.
@@ -159,15 +160,15 @@ pas de la même manière.
 
 ## 9. Métriques de validation
 
-| Métrique | Cible | Mesure au 2026-09-20 |
+| Métrique | Cible | Mesure au 2026-09-24 |
 |---|---|---|
-| Couverture de tests globale | ≥ 70 % | 79 % (mesuré ponctuellement, `pytest --cov` — pas encore un seuil bloquant en CI) |
+| Couverture de tests globale | ≥ 80 % (bloquant, `--cov-fail-under=80`) | 80,16 % (3186 instructions, 632 non couvertes) — module le plus bas : `llm.py` (32 %, le client réel du fournisseur n'est délibérément pas exercé en test, voir §7 T-04 et le principe général de ne jamais dépendre d'un service externe en test) |
 | Couverture de `core/security.py` | 100 % | 91 % — 4 lignes non couvertes |
 | Complexité cyclomatique | ≤ 10 par fonction | Non bloquant en CI ; un dépassement connu (`audit_engine.py::run_audit`, complexité 18 — le point de convergence attendu de l'orchestration, pas un signe de dérive répandue) |
 | Erreurs de typage | — | `mypy` jamais exécuté sur ce dépôt, pas de cible fixée |
 | Vulnérabilités des dépendances | — | `pip-audit` en rapport (non bloquant) : 150 CVE relevées sur 6 paquets le 2026-09-20, 2 corrigées dans la foulée (`pyjwt`, `python-multipart`), 3 en attente de montée majeure planifiée (`pypdf`, `pillow`, `starlette`) |
-| Secrets détectés | — | `gitleaks` non outillé, aucun scan effectué |
-| Durée de la CI | — | Non mesurée comme cible ; les jobs tournent en parallèle sur GitHub Actions (`qualite-code`, `backend-tests`, `frontend-e2e` indépendants) |
+| Secrets détectés | 0 (bloquant, job `secrets`) | 0 — scan `gitleaks` de l'historique complet (125 commits) le 2026-09-24, aucune détection |
+| Durée de la CI | — | Non mesurée comme cible ; les jobs tournent en parallèle sur GitHub Actions (`secrets`, `qualite-code`, `backend-tests`, `frontend-e2e` indépendants ; `non-regression` réservé à `main`, consomme du quota Groq) |
 
 Ce tableau est un état des lieux daté, pas une liste de garanties : les
 cellules « — » signalent une métrique non instrumentée plutôt qu'un seuil
