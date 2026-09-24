@@ -1159,6 +1159,10 @@ const TRAD_EN = {
   'Les données sont recueillies directement auprès de la personne concernée.': 'The data is collected directly from the data subject.',
   'Collecte indirecte (tiers)': 'Indirect collection (third party)',
   "Les données proviennent d'un tiers, pas de la personne concernée elle-même.": "The data comes from a third party, not from the data subject.",
+  'Comparer avec…': 'Compare with…', 'Comparer': 'Compare', 'Retour à la campagne': 'Back to campaign',
+  'Aucune autre campagne terminée sur ce même référentiel à comparer.': 'No other completed campaign on this same framework to compare with.',
+  'Avant': 'Before', 'Après': 'After', 'Écart': 'Change', 'Articles comparés': 'Articles compared',
+  'Article': 'Article',
   'Action corrective': 'Corrective action', 'Aucun constat ne correspond aux filtres.': 'No finding matches the filters.',
   // Tableau de bord
   'Nouvelle campagne': 'New campaign', 'Score courant': 'Current score', 'Aucune campagne notée': 'No scored campaign yet',
@@ -1785,7 +1789,7 @@ function changerOrganisation() {
 }
 
 const ROUTES = {
-  tableau: vueTableau, audits: vueAudits, audit: vueAudit,
+  tableau: vueTableau, audits: vueAudits, audit: vueAudit, comparer: vueComparer,
   remediation: vueRemediation, correspondances: vueCrosswalks,
   referentiels: vueReferentiels,
   equipe: vueEquipe, notifications: vueNotifications, journal: vueJournal,
@@ -2143,6 +2147,7 @@ async function vueAudit(auditId) {
           ${titreIcone('audits', audit.title)}</div>
         <div class="rangee">
           <button class="discret" onclick="location.hash='#/audits'">Toutes les campagnes</button>
+          ${audit.status === 'completed' ? `<button class="discret" onclick="location.hash='#/comparer/${auditId}'">${tr('Comparer avec…')}</button>` : ''}
           <button class="discret" onclick="supprimerCampagne('${auditId}')">Supprimer</button>
         </div>
       </div>
@@ -2274,6 +2279,79 @@ function detailsTechniques(audit) {
       <dt>${tr('Coût estimé')}</dt><dd>${cout}</dd>
     </dl>
   </details>`;
+}
+
+/* ---------- Comparaison de deux campagnes (Tache 9) ---------- */
+const CATEGORIE_COMPARAISON = {
+  nouveau: ['Nouveau', 'e-critical'], resolu: ['Résolu', 'e-ok'],
+  inchange: ['Inchangé', 'e-neutre'], aggrave: ['Aggravé', 'e-major'],
+  ameliore: ['Amélioré', 'e-ok'],
+};
+const CATEGORIE_COMPARAISON_EN = {
+  nouveau: ['New', 'e-critical'], resolu: ['Resolved', 'e-ok'],
+  inchange: ['Unchanged', 'e-neutre'], aggrave: ['Worsened', 'e-major'],
+  ameliore: ['Improved', 'e-ok'],
+};
+const GRAVITE_COURTE = { critical: 'Crit.', major: 'Maj.', minor: 'Min.', info: 'Info' };
+
+async function vueComparer(auditId) {
+  if (!auditId) return (location.hash = '#/audits');
+  poser('vue', `<div id="z">${attente('Chargement')}</div>`);
+  try {
+    const [audit, tous] = await Promise.all([
+      appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}`),
+      appel(`/api/v1/orgs/${E.orgId}/audits`),
+    ]);
+    const candidats = tous.filter(a =>
+      a.id !== auditId && a.framework === audit.framework && a.status === 'completed');
+
+    poser('vue', `<div class="tete"><div><div class="eyebrow">${h(codeCadre(audit.framework))}</div>
+        ${titreIcone('audits', tr('Comparer') + ' « ' + audit.title + ' »')}</div>
+      <div class="rangee"><button class="discret" onclick="location.hash='#/audit/${auditId}'">${tr('Retour à la campagne')}</button></div></div>
+      ${candidats.length ? `
+        <div class="rangee" style="margin:10px 0 18px">
+          <select class="compact" id="cmp-avec">
+            ${candidats.map(a => `<option value="${a.id}">${h(a.title)} · ${jour(a.completed_at)}</option>`).join('')}
+          </select>
+          <button onclick="lancerComparaison('${auditId}')">${tr('Comparer')}</button>
+        </div>
+        <div id="z-cmp"></div>`
+        : `<p class="vide">${tr("Aucune autre campagne terminée sur ce même référentiel à comparer.")}</p>`}`);
+  } catch (e) { poser('vue', echoue(e)); }
+}
+
+async function lancerComparaison(auditId) {
+  const avecId = $('cmp-avec').value;
+  poser('z-cmp', attente('Chargement'));
+  try {
+    const c = await appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}/compare?with=${avecId}`);
+    const cats = LANG === 'en' ? CATEGORIE_COMPARAISON_EN : CATEGORIE_COMPARAISON;
+    const grav = v => v ? `<span class="etiq e-${v === 'critical' ? 'critical' : v === 'major' ? 'major' : v === 'minor' ? 'minor' : 'neutre'}">${GRAVITE_COURTE[v] || v}</span>` : '—';
+    const delta = c.score_delta;
+    const deltaTxt = delta == null ? '—' : `${delta > 0 ? '+' : ''}${delta.toFixed(1)}`;
+    const deltaCouleur = delta == null ? '' : delta > 0 ? 'var(--valide)' : delta < 0 ? 'var(--sceau)' : 'var(--sourdine)';
+
+    poser('z-cmp', `
+      <div class="cartes">
+        <div class="carte"><span class="n">${c.score_before ?? '—'}</span><span class="l">${tr('Avant')}</span></div>
+        <div class="carte"><span class="n">${c.score_after ?? '—'}</span><span class="l">${tr('Après')}</span></div>
+        <div class="carte"><span class="n" style="color:${deltaCouleur}">${deltaTxt}</span><span class="l">${tr('Écart')}</span></div>
+        <div class="carte"><span class="n">${c.articles.length}</span><span class="l">${tr('Articles comparés')}</span></div>
+      </div>
+      <table style="margin-top:16px">
+        <thead><tr><th>${tr('Article')}</th><th>${tr('Intitulé')}</th><th>${tr('Avant')}</th><th>${tr('Après')}</th><th>${tr('Évolution')}</th></tr></thead>
+        <tbody>${c.articles.map(a => {
+          const [libelle, classe] = cats[a.category] || [a.category, 'e-neutre'];
+          return `<tr>
+            <td class="mono">${h(a.article_ref)}</td>
+            <td>${h(a.title)}</td>
+            <td>${grav(a.severity_before)}</td>
+            <td>${grav(a.severity_after)}</td>
+            <td><span class="etiq ${classe}">${tr(libelle)}</span></td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>`);
+  } catch (e) { poser('z-cmp', echoue(e)); }
 }
 
 function tablePieces(pieces) {

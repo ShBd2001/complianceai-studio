@@ -35,6 +35,8 @@ from app.schemas.audit import (
     AuditCreate,
     AuditOut,
     AuditRunOut,
+    ComparisonArticle,
+    ComparisonOut,
     DocumentOut,
     FindingOut,
     FindingUpdate,
@@ -42,8 +44,13 @@ from app.schemas.audit import (
     ScoreHistoryPoint,
 )
 from app.schemas.scheduling import ScheduleCreate, ScheduleOut
-from app.services import activity, audit_engine, pdf, reports
-from app.services.documents import ALLOWED_MIME, read_document, save_document, storage_root
+from app.services import activity, audit_engine, comparison, pdf, reports
+from app.services.documents import (
+    ALLOWED_MIME,
+    read_document,
+    save_document,
+    storage_root,
+)
 from app.services.quotas import PLAN_LIMITS, campaign_quota_remaining
 from app.services.scheduling import compute_next_run
 
@@ -310,6 +317,41 @@ def list_findings(
             .where(Finding.audit_id == audit_id)
             .order_by(Finding.severity, Finding.article_ref)
         )
+    )
+
+
+@router.get("/{audit_id}/compare", response_model=ComparisonOut)
+def compare_audits(
+    audit_id: uuid.UUID,
+    with_: uuid.UUID = Query(..., alias="with"),
+    ctx: OrgContext = Depends(get_org_context),
+    db: Session = Depends(get_db),
+) -> ComparisonOut:
+    """Compare cette campagne a une autre de la meme organisation, sur le
+    meme referentiel. `_get_audit` filtre deja par organization_id : les
+    deux campagnes appartiennent necessairement a la meme organisation, ou
+    l'une des deux (404) n'est simplement pas trouvee."""
+    apres = _get_audit(db, ctx, audit_id)
+    avant = _get_audit(db, ctx, with_)
+
+    if avant.framework != apres.framework:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            "Les deux campagnes ne portent pas sur le meme referentiel.",
+        )
+
+    score_delta, articles = comparison.compare(db, avant, apres)
+    return ComparisonOut(
+        audit_id=apres.id, compared_with=avant.id,
+        score_before=avant.compliance_score, score_after=apres.compliance_score,
+        score_delta=score_delta,
+        articles=[
+            ComparisonArticle(
+                article_ref=a.article_ref, title=a.title, category=a.category,
+                severity_before=a.severity_before, severity_after=a.severity_after,
+            )
+            for a in articles
+        ],
     )
 
 
