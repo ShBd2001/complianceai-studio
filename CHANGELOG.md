@@ -243,3 +243,67 @@ de vérité terrain (clés d'article, vocabulaire des verdicts, cohérence de
 le fond. Dossiers `corpus_nis2/`, `corpus_dora/`, `corpus_ai_act/` créés à
 la racine (squelettes vides + README) — composer les documents et leur
 vérité terrain reste le travail de l'équipe, jamais celui de l'outillage.
+
+## Gravité et recommandation d'un constat rétrogradé en indéterminé
+
+Quand une conformité affirmée par le modèle ("oui"/"partiel") est ramenée à
+"indéterminé" faute de citation vérifiable, la gravité et la recommandation
+restaient celles du verdict d'origine — "info" (imposée par le prompt à
+tout "oui") et une recommandation du type "poursuivre la pratique
+actuelle", laissant croire à tort à une simple observation sans suite. La
+gravité est désormais forcée à "minor" et la recommandation remplacée par
+un texte qui reflète ce qui reste réellement à vérifier.
+
+## Mise à jour des statuts après changement (plan de remédiation et constats)
+
+`changerSuivi()` enregistrait le nouveau statut côté serveur mais ne
+rafraîchissait jamais l'affichage : un constat marqué résolu restait
+visible dans la liste "à traiter" jusqu'au rechargement manuel de la page.
+Sur le plan de remédiation (qui ne liste que l'ouvert/en cours), un
+changement de statut refait désormais tourner la vue à partir des données
+serveur ; sur la page détail d'une campagne (où tous les statuts restent
+affichés), la donnée locale est mise à jour et le filtre courant réappliqué.
+
+## Correctif d'exemption — article 49 de l'AI Act (enregistrement)
+
+Classé à tort dans le groupe "fournisseur uniquement" : son paragraphe 3
+impose aussi aux déployeurs autorités publiques de s'enregistrer, pas
+seulement au fournisseur des paragraphes 1 et 2. Nouvelle règle dédiée,
+exemption seulement si l'organisation n'est ni fournisseur ni déployeur
+d'un système à haut risque.
+
+## Avertissement de périmètre affiché à la création d'une campagne
+
+`scope_warning` (Tâche F1) était renvoyé par l'API mais jamais affiché.
+Retenu le temps de la navigation vers la campagne fraîchement créée puis
+affiché une seule fois (bannière `.retenu`), associé à l'identifiant de
+campagne pour ne jamais s'afficher à tort sur une autre visite.
+
+## Page dédiée par organisation pour le profil d'éligibilité
+
+Le formulaire de profil, embarqué dans "Mon compte", modifiait
+silencieusement l'organisation "active" du commutateur global sans jamais
+afficher son nom — avec plusieurs organisations, rien ne distinguait
+laquelle on renseignait. Nouvelle page dédiée (`#/organisation/{id}`), nom
+de l'organisation en titre, un onglet par référentiel avec décompte de
+progression ; une organisation nouvellement créée y redirige
+automatiquement. Refonte visuelle au passage : un vrai contrôle segmenté
+par question (rail continu, pastille active) plutôt que trois boutons
+bordés séparés, barre de progression globale mise à jour en direct.
+Corrige au passage un bug latent de `creerOrganisation()` (l'organisation
+active en mémoire ne suivait pas la nouvelle organisation créée).
+
+## Visite guidée, page « À propos » et champ effectif
+
+Nouvelle première étape de la visite guidée : renseigner le profil
+d'éligibilité avant de lancer une analyse, puisque c'est le seul rappel
+fiable pour un compte qui vient de s'inscrire (l'organisation créée à
+l'inscription ne passe pas par la redirection automatique réservée à la
+création depuis "Mon compte"). Texte de l'étape « Applicabilité » de la
+page « À propos » mis à jour (le profil couvre désormais NIS2/DORA/AI Act,
+pas seulement le RGPD) et bug de traduction corrigé au passage (`tr()`
+n'était jamais appelé sur ces textes). Le formulaire de profil manquait
+aussi l'effectif : seule information chiffrée dont dépend la dispense de
+registre de l'article 30(5) du RGPD, jusqu'ici une colonne existante mais
+non modifiable après la création de l'organisation (aucune route ne
+l'exposait) — ajouté comme champ numérique dédié, avec sa propre carte.

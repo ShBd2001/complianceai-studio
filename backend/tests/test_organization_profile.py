@@ -149,6 +149,27 @@ def test_admin_can_modify_profile(client, org):
     assert r.json()["grande_echelle"] is False  # inchange par le patch precedent
 
 
+def test_headcount_modifiable_via_profile(client, org):
+    """L'effectif est deja une colonne d'Organization (utilisee par
+    OrganizationCreate et par l'article 30 du filtre d'eligibilite), mais
+    jusqu'ici aucune route ne permettait de le modifier apres la creation."""
+    org_id, headers = org
+
+    r = client.patch(f"/api/v1/orgs/{org_id}/profile", json={"headcount": 12}, headers=headers)
+    assert r.status_code == 200, r.text
+    assert r.json()["headcount"] == 12
+
+    r = client.patch(f"/api/v1/orgs/{org_id}/profile", json={"headcount": None}, headers=headers)
+    assert r.status_code == 200, r.text
+    assert r.json()["headcount"] is None
+
+
+def test_headcount_hors_bornes_rejete(client, org):
+    org_id, headers = org
+    r = client.patch(f"/api/v1/orgs/{org_id}/profile", json={"headcount": 0}, headers=headers)
+    assert r.status_code == 422
+
+
 # --------------------------------------------------------------------------
 # Effet bout-en-bout sur le filtre d'eligibilite (article 30)
 # --------------------------------------------------------------------------

@@ -1192,6 +1192,9 @@ const TRAD_EN = {
   // Tableau de bord
   'Nouvelle campagne': 'New campaign', 'Score courant': 'Current score', 'Aucune campagne notée': 'No scored campaign yet',
   // Tour guide (premiers pas)
+  "Renseigner le profil de l'organisation": "Fill in the organization's profile",
+  "Avant de lancer une analyse, répondez aux quelques questions d'éligibilité : une obligation qui ne concerne pas votre organisation peut alors être écartée automatiquement, sans consommer d'appel au modèle.":
+    "Before running an analysis, answer the few eligibility questions: an obligation that doesn't apply to your organization can then be ruled out automatically, without using a model call.",
   'Lancer une première campagne': 'Launch a first campaign',
   "Choisissez un référentiel et ouvrez votre première campagne d'audit.": 'Pick a framework and open your first audit campaign.',
   "Déposer une pièce et lancer l'analyse": 'Upload a file and run the analysis',
@@ -1212,6 +1215,9 @@ const TRAD_EN = {
   'Toutes les campagnes': 'All campaigns', 'Supprimer': 'Delete', 'Pièces versées': 'Uploaded files',
   'Le référentiel pourrait ne pas s’appliquer': 'This framework may not apply',
   'Retour à Mon compte': 'Back to my account', "Profil d'éligibilité": 'Eligibility profile',
+  'Effectif de l’organisation': "Organization's headcount",
+  "Nombre de salariés. Seule information chiffrée du profil : la dispense de registre de l'article 30(5) du RGPD dépend d'un seuil précis (250 salariés), pas d'un simple oui/non.":
+    "Number of employees. The only numeric field in the profile: the registry exemption under GDPR art. 30(5) depends on a precise threshold (250 employees), not a simple yes/no.",
   'Déposez vos fichiers ici, ou cliquez pour les choisir': 'Drop your files here, or click to choose them',
   "Lancer l'analyse": 'Run analysis', 'Au moins une pièce est nécessaire.': 'At least one file is required.',
   'Constats': 'Findings', 'Rapports': 'Reports', 'Produire une nouvelle version': 'Produce a new version',
@@ -1273,7 +1279,7 @@ const TRAD_EN = {
   'Comment ça marche': 'How it works', 'Cinq étapes, une par exigence — cliquez pour voir le détail.': 'Five steps, one per requirement — click to see the detail.',
   'Découpage': 'Chunking', 'Applicabilité': 'Applicability', 'Extraction': 'Extraction', 'Score': 'Score',
   "Le document est segmenté en fragments d'environ 700 caractères par regroupement de paragraphes, avec 150 caractères de recouvrement pour ne pas perdre le sens à la frontière de deux fragments.": "The document is split into fragments of roughly 700 characters by grouping paragraphs, with 150 characters of overlap so meaning is not lost at the boundary between two fragments.",
-  "Un filtre déterministe, fondé sur le profil de l'organisation (effectif, secteur, nature des données), écarte en amont les exigences dont l'applicabilité dépend de faits absents du document — jamais une exemption par défaut : une information manquante déclenche une vérification humaine, pas une dispense.": "A deterministic filter, based on the organization's profile (headcount, sector, nature of the data), rules out upfront the requirements whose applicability depends on facts the document cannot reveal — never a default exemption: missing information triggers a human check, not a waiver.",
+  "Un filtre déterministe, fondé sur le profil déclaratif de l'organisation (effectif, statut au regard de NIS2/DORA, usage de l'IA…), écarte en amont les exigences dont l'applicabilité dépend de faits absents du document — jamais une exemption par défaut : une information manquante laisse l'exigence suivre son parcours normal d'évaluation, elle ne dispense jamais à tort. Renseigné depuis Mon compte, avant de lancer une analyse, pour en tirer parti.": "A deterministic filter, based on the organization's declared profile (headcount, status under NIS2/DORA, AI usage…), rules out upfront the requirements whose applicability depends on facts the document cannot reveal — never a default exemption: missing information simply leaves the requirement on its normal evaluation path, it never waives it by mistake. Filled in from My account, before running an analysis, to make the most of it.",
   "Le modèle extrait des preuves depuis les passages retrouvés par recherche sémantique — un appel par article, jamais un appel global sur tout le référentiel.": "The model extracts evidence from passages found through semantic search — one call per article, never a single call across the whole framework.",
   "Le code — pas le modèle — vérifie mécaniquement que chaque citation existe réellement dans le texte source, avant de laisser rendre le verdict.": "The code — not the model — mechanically verifies that every citation genuinely exists in the source text, before letting a verdict be rendered.",
   "Formule pondérée et explicable ligne par ligne, avec propagation des dépendances entre exigences et retenue du score si l'analyse n'a pas les garanties suffisantes.": "A weighted formula, explainable line by line, with dependency propagation between requirements and score withholding when the analysis lacks sufficient guarantees.",
@@ -1876,7 +1882,14 @@ async function vueTableau() {
     const cScore = dernier ? couleurScore(dernier.score) : null;
     const sensDelta = delta > 0 ? 'hausse' : delta < 0 ? 'baisse' : null;
     const org = E.orgs.find(o => o.id === E.orgId);
+    // A au moins une reponse dans un referentiel : un profil partiel compte
+    // deja (le principe de prudence du filtre d'eligibilite n'exige pas
+    // l'exhaustivite pour etre utile), inutile d'attendre les 16 champs.
+    const profilRempli = PANNEAUX_PROFIL.some(code => progressionProfilCadre(code, org || {}) > 0);
     const etapes = [
+      { fait: profilRempli, titre: "Renseigner le profil de l'organisation",
+        texte: "Avant de lancer une analyse, répondez aux quelques questions d'éligibilité : une obligation qui ne concerne pas votre organisation peut alors être écartée automatiquement, sans consommer d'appel au modèle.",
+        selecteur: 'a[data-vue="compte"]', page: '#/compte' },
       { fait: audits.length > 0, titre: 'Lancer une première campagne',
         texte: "Choisissez un référentiel et ouvrez votre première campagne d'audit.",
         selecteur: 'a[data-vue="audits"]', page: '#/audits' },
@@ -3008,6 +3021,18 @@ function champBooleen(champ, libelle, aide, valeur) {
     [['oui', tr('Oui')], ['non', tr('Non')], ['', tr('Je ne sais pas')]], val(valeur));
 }
 
+// Seul champ numerique du profil (les autres sont a choix segmente) : une
+// dispense de registre de l'article 30(5) du RGPD depend d'un seuil precis
+// (250 salaries), pas d'un simple oui/non.
+function carteEffectif(org) {
+  return `<fieldset class="q-carte">
+    <legend class="q-titre">${tr('Effectif de l’organisation')}</legend>
+    <p class="q-aide">${tr("Nombre de salariés. Seule information chiffrée du profil : la dispense de registre de l'article 30(5) du RGPD dépend d'un seuil précis (250 salariés), pas d'un simple oui/non.")}</p>
+    <input type="number" id="pf-headcount" min="1" max="2000000" step="1"
+      value="${org.headcount ?? ''}" placeholder="${tr('Je ne sais pas')}" oninput="rafraichirProgressionProfil()">
+  </fieldset>`;
+}
+
 // Page dediee par organisation (#/organisation/{id}) plutot qu'un formulaire
 // unique lie a l'organisation "active" du commutateur global : avec
 // plusieurs organisations, rien ne distinguait laquelle on modifiait. Un
@@ -3020,13 +3045,17 @@ function champsProfilCadre(code) {
 }
 
 function totalProfilCadre(code) {
-  return code === 'nis2' ? 1 : champsProfilCadre(code).length;
+  if (code === 'nis2') return 1;
+  // +1 pour l'effectif (carteEffectif), seul champ RGPD hors de
+  // CHAMPS_PROFIL_RGPD (numerique, pas a choix segmente).
+  return champsProfilCadre(code).length + (code === 'rgpd' ? 1 : 0);
 }
 
 // A partir des donnees serveur (rendu initial, avant toute interaction).
 function progressionProfilCadre(code, org) {
   if (code === 'nis2') return org.entite_nis2 ? 1 : 0;
-  return champsProfilCadre(code).filter(([c]) => org[c] !== null && org[c] !== undefined).length;
+  const base = champsProfilCadre(code).filter(([c]) => org[c] !== null && org[c] !== undefined).length;
+  return base + (code === 'rgpd' && org.headcount !== null && org.headcount !== undefined ? 1 : 0);
 }
 
 // A partir de l'etat courant du formulaire (apres interaction, avant tout
@@ -3034,10 +3063,11 @@ function progressionProfilCadre(code, org) {
 // onglets de reagir immediatement, pas seulement apres un aller-retour serveur.
 function progressionProfilCadreDom(code) {
   if (code === 'nis2') return document.querySelector(`input[name="pf-entite_nis2"]:checked`)?.value ? 1 : 0;
-  return champsProfilCadre(code).filter(([c]) => {
+  const base = champsProfilCadre(code).filter(([c]) => {
     const v = document.querySelector(`input[name="pf-${c}"]:checked`)?.value;
     return v !== undefined && v !== '';
   }).length;
+  return base + (code === 'rgpd' && $('pf-headcount')?.value.trim() ? 1 : 0);
 }
 
 function rafraichirProgressionProfil() {
@@ -3064,6 +3094,7 @@ function panneauProfilCadre(code, org) {
     </div>`;
   }
   return `<div class="q-grille">
+    ${code === 'rgpd' ? carteEffectif(org) : ''}
     ${champsProfilCadre(code).map(([champ, libelle, aide]) => champBooleen(champ, libelle, aide, org[champ])).join('')}
   </div>`;
 }
@@ -3129,6 +3160,8 @@ async function modifierProfil(orgId) {
   }
   const nis2 = valeurChoix('entite_nis2');
   corps.entite_nis2 = nis2 === '' ? null : nis2;
+  const brutEffectif = $('pf-headcount')?.value.trim();
+  corps.headcount = brutEffectif ? parseInt(brutEffectif, 10) : null;
   poser('msg-profil', attente('Enregistrement'));
   try {
     const org = await appel(`/api/v1/orgs/${orgId}/profile`, {
@@ -3253,7 +3286,7 @@ async function supprimerMonCompte() {
 /* ---------- À propos ---------- */
 const ETAPES_MOTEUR = [
   { t:"Découpage", d:"Le document est segmenté en fragments d'environ 700 caractères par regroupement de paragraphes, avec 150 caractères de recouvrement pour ne pas perdre le sens à la frontière de deux fragments." },
-  { t:"Applicabilité", d:"Un filtre déterministe, fondé sur le profil de l'organisation (effectif, secteur, nature des données), écarte en amont les exigences dont l'applicabilité dépend de faits absents du document — jamais une exemption par défaut : une information manquante déclenche une vérification humaine, pas une dispense." },
+  { t:"Applicabilité", d:"Un filtre déterministe, fondé sur le profil déclaratif de l'organisation (effectif, statut au regard de NIS2/DORA, usage de l'IA…), écarte en amont les exigences dont l'applicabilité dépend de faits absents du document — jamais une exemption par défaut : une information manquante laisse l'exigence suivre son parcours normal d'évaluation, elle ne dispense jamais à tort. Renseigné depuis Mon compte, avant de lancer une analyse, pour en tirer parti." },
   { t:"Extraction", d:"Le modèle extrait des preuves depuis les passages retrouvés par recherche sémantique — un appel par article, jamais un appel global sur tout le référentiel." },
   { t:"Vérification", d:"Le code — pas le modèle — vérifie mécaniquement que chaque citation existe réellement dans le texte source, avant de laisser rendre le verdict." },
   { t:"Score", d:"Formule pondérée et explicable ligne par ligne, avec propagation des dépendances entre exigences et retenue du score si l'analyse n'a pas les garanties suffisantes." },
@@ -3370,9 +3403,9 @@ function initEtapes(actif = 0) {
   poser('z-etapes', `
     <div class="etapes-nav">${ETAPES_MOTEUR.map((e, i) => `
       <button class="etape-btn${i === actif ? ' actif' : ''}" onclick="initEtapes(${i})">
-        <span class="etape-num">${String(i + 1).padStart(2, '0')}</span><span class="etape-label">${h(e.t)}</span>
+        <span class="etape-num">${String(i + 1).padStart(2, '0')}</span><span class="etape-label">${h(tr(e.t))}</span>
       </button>`).join('')}</div>
-    <div class="etape-detail"><p>${h(ETAPES_MOTEUR[actif].d)}</p></div>`);
+    <div class="etape-detail"><p>${h(tr(ETAPES_MOTEUR[actif].d))}</p></div>`);
 }
 
 function initReveal(racine = '#vue') {

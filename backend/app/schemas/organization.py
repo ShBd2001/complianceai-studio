@@ -65,6 +65,13 @@ class OrganizationProfileUpdate(BaseModel):
     PATCH /orgs/{org_id}/profile, qui ne lit que les champs presents
     (`exclude_unset`)."""
 
+    # Seul champ non booleen/enum de ce schema : l'effectif est la seule
+    # information dont depend la dispense de registre de l'art. 30(5) du
+    # RGPD (seuil de 250 salaries, voir app/services/eligibilite.py). Deja
+    # une colonne d'Organization (utilisee par OrganizationCreate), mais
+    # jusqu'ici jamais modifiable apres la creation -- aucune interface ne
+    # l'exposait.
+    headcount: int | None = Field(default=None, ge=1, le=2_000_000)
     organisme_public: bool | None = None
     donnees_sensibles: bool | None = None
     donnees_penales: bool | None = None
