@@ -107,6 +107,16 @@ class AuditOut(BaseModel):
         return round(cout, 6)
 
 
+class AuditCreateOut(AuditOut):
+    """Reponse de POST /orgs/{org_id}/audits. `scope_warning` n'est jamais
+    stocke (pas une colonne d'Audit) : calcule a la creation a partir du
+    profil de l'organisation (voir app/services/eligibilite.py,
+    referentiel_hors_champ), attache a l'objet le temps de la reponse.
+    Avertit sans jamais bloquer la creation de la campagne."""
+
+    scope_warning: str | None = None
+
+
 class DocumentOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

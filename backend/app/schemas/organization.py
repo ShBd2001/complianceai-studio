@@ -2,11 +2,15 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 from app.models.enums import OrgPlan, OrgRole
 from app.services.retention import RETENTION_MIN_JOURS
+
+# Voir app/services/eligibilite.py pour le tableau de correspondance complet.
+EntiteNis2 = Literal["essentielle", "importante", "non_concernee"]
 
 
 class OrganizationCreate(BaseModel):
@@ -48,6 +52,11 @@ class OrganizationOut(BaseModel):
     risque_droits_libertes: bool | None = None
     collecte_directe: bool | None = None
     collecte_indirecte: bool | None = None
+    entite_nis2: EntiteNis2 | None = None
+    entite_financiere_dora: bool | None = None
+    ia_fournisseur_haut_risque: bool | None = None
+    ia_deployeur_haut_risque: bool | None = None
+    ia_utilisee: bool | None = None
 
 
 class OrganizationProfileUpdate(BaseModel):
@@ -67,6 +76,11 @@ class OrganizationProfileUpdate(BaseModel):
     risque_droits_libertes: bool | None = None
     collecte_directe: bool | None = None
     collecte_indirecte: bool | None = None
+    entite_nis2: EntiteNis2 | None = None
+    entite_financiere_dora: bool | None = None
+    ia_fournisseur_haut_risque: bool | None = None
+    ia_deployeur_haut_risque: bool | None = None
+    ia_utilisee: bool | None = None
 
 
 class RetentionUpdate(BaseModel):

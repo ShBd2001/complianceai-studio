@@ -154,17 +154,39 @@ def test_art13_source_inconnue_ne_supprime_pas():
 # Isolation entre referentiels
 # --------------------------------------------------------------------------
 
-@pytest.mark.parametrize("framework", ["nis2", "csrd"])
-def test_regles_rgpd_ne_fuient_pas_sur_les_autres_referentiels(framework):
-    """L'article 30 de NIS2 ou CSRD n'a rien a voir avec le registre RGPD."""
+def test_regles_rgpd_ne_fuient_pas_sur_csrd():
+    """CSRD n'a aucune regle d'eligibilite : tout reste APPLICABLE, y
+    compris les numeros d'article qui coincident avec des regles RGPD."""
     profil = ProfilOrganisme(
         effectif=3,
         traitement_occasionnel=True,
         risque_droits_libertes=False,
         donnees_sensibles_art9=False,
     )
-    assert evaluer(framework, 30, profil).verdict is Verdict.APPLICABLE
-    assert evaluer(framework, 37, profil).verdict is Verdict.APPLICABLE
+    assert evaluer("csrd", 30, profil).verdict is Verdict.APPLICABLE
+    assert evaluer("csrd", 37, profil).verdict is Verdict.APPLICABLE
+
+
+def test_regles_rgpd_ne_fuient_pas_sur_nis2():
+    """L'article 30 de NIS2 (notification volontaire) a sa propre regle,
+    sans rapport avec le registre RGPD art. 30(5) : un profil RGPD complet
+    (petite structure, dispense de registre certaine) ne doit produire
+    aucune exemption NIS2, la logique de dispense RGPD ne doit pas fuiter.
+    L'article 37 de NIS2 n'a pas de regle du tout (pas de DPO en NIS2) :
+    reste APPLICABLE par defaut, meme avec un profil RGPD qui exempterait
+    l'article 37 du RGPD."""
+    profil = ProfilOrganisme(
+        effectif=3,
+        traitement_occasionnel=True,
+        risque_droits_libertes=False,
+        donnees_sensibles_art9=False,
+        organisme_public=False,
+        grande_echelle=False,
+    )
+    decision_30 = evaluer("nis2", 30, profil)
+    assert decision_30.reference != "RGPD art. 30(5)"
+    assert decision_30.verdict is Verdict.A_VERIFIER  # statut NIS2 non renseigne, jamais exempte a tort
+    assert evaluer("nis2", 37, profil).verdict is Verdict.APPLICABLE
 
 
 def test_code_framework_insensible_a_la_casse():

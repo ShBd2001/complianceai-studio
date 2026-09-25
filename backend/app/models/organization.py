@@ -52,6 +52,14 @@ class Organization(UUIDMixin, TimestampMixin, Base):
     collecte_directe: Mapped[bool | None] = mapped_column(Boolean)
     collecte_indirecte: Mapped[bool | None] = mapped_column(Boolean)
 
+    # Profil NIS2 / DORA / AI Act (voir eligibilite.py pour le tableau de
+    # correspondance complet). Meme regle de prudence : NULL n'exempte jamais.
+    entite_nis2: Mapped[str | None] = mapped_column(String(20))
+    entite_financiere_dora: Mapped[bool | None] = mapped_column(Boolean)
+    ia_fournisseur_haut_risque: Mapped[bool | None] = mapped_column(Boolean)
+    ia_deployeur_haut_risque: Mapped[bool | None] = mapped_column(Boolean)
+    ia_utilisee: Mapped[bool | None] = mapped_column(Boolean)
+
     memberships: Mapped[list["Membership"]] = relationship(
         back_populates="organization", cascade="all, delete-orphan"
     )

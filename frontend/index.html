@@ -1149,6 +1149,22 @@ const TRAD_EN = {
   'Les données sont recueillies directement auprès de la personne concernée.': 'The data is collected directly from the data subject.',
   'Collecte indirecte (tiers)': 'Indirect collection (third party)',
   "Les données proviennent d'un tiers, pas de la personne concernée elle-même.": "The data comes from a third party, not from the data subject.",
+  'RGPD': 'GDPR',
+  'Statut au regard de NIS2': 'Status under NIS2',
+  "Entité essentielle ou importante au sens des articles 2 et 3 de la directive NIS2 — secteurs critiques (énergie, santé, numérique, etc.) et seuils de taille.":
+    'Essential or important entity within the meaning of articles 2 and 3 of the NIS2 directive — critical sectors (energy, health, digital, etc.) and size thresholds.',
+  'Entité financière au sens de DORA': 'Financial entity under DORA',
+  "Banque, établissement de paiement, entreprise d'investissement, assurance, etc. (DORA, art. 2).":
+    'Bank, payment institution, investment firm, insurance company, etc. (DORA, art. 2).',
+  "Utilisation d'un système d'IA": 'Use of an AI system',
+  "Votre organisation fournit ou déploie un système d'intelligence artificielle, quel qu'il soit.":
+    'Your organization provides or deploys an artificial intelligence system, of any kind.',
+  "Fournisseur d'un système d'IA à haut risque": 'Provider of a high-risk AI system',
+  "Vous développez ou faites développer pour votre compte un système d'IA à haut risque (AI Act, annexe III).":
+    "You develop, or have developed on your behalf, a high-risk AI system (AI Act, annex III).",
+  "Déployeur d'un système d'IA à haut risque": 'Deployer of a high-risk AI system',
+  "Vous utilisez, sans le développer vous-même, un système d'IA à haut risque fourni par un tiers.":
+    'You use, without developing it yourself, a high-risk AI system provided by a third party.',
   'Comparer avec…': 'Compare with…', 'Comparer': 'Compare', 'Retour à la campagne': 'Back to campaign',
   'Aucune autre campagne terminée sur ce même référentiel à comparer.': 'No other completed campaign on this same framework to compare with.',
   'Avant': 'Before', 'Après': 'After', 'Écart': 'Change', 'Articles comparés': 'Articles compared',
@@ -2848,11 +2864,12 @@ async function modifierRetention(orgId) {
   } catch (e) { poser('msg-retention', echoue(e)); }
 }
 
-// Profil de l'organisation pour le filtre d'eligibilite (Tache 8, voir
-// app/services/eligibilite.py). Une question manquante repond "a verifier",
-// jamais une exemption a tort -- l'option "Je ne sais pas" (valeur null)
-// est donc un choix de premiere classe, pas un simple placeholder vide.
-const CHAMPS_PROFIL = [
+// Profil de l'organisation pour le filtre d'eligibilite (Tache 8, puis F1
+// pour NIS2/DORA/AI Act -- voir app/services/eligibilite.py). Une question
+// manquante repond "a verifier", jamais une exemption a tort -- l'option
+// "Je ne sais pas" (valeur null) est donc un choix de premiere classe, pas
+// un simple placeholder vide.
+const CHAMPS_PROFIL_RGPD = [
   ['organisme_public', 'Organisme public', "Autorité publique, ou organisme exerçant une mission de service public."],
   ['donnees_sensibles', 'Données sensibles (art. 9)', "Origine raciale ou ethnique, opinions politiques, religion, syndicat, génétique, biométrie, santé, vie sexuelle."],
   ['donnees_penales', 'Données pénales (art. 10)', "Condamnations et infractions pénales."],
@@ -2865,25 +2882,74 @@ const CHAMPS_PROFIL = [
   ['collecte_directe', 'Collecte directe auprès des personnes', "Les données sont recueillies directement auprès de la personne concernée."],
   ['collecte_indirecte', 'Collecte indirecte (tiers)', "Les données proviennent d'un tiers, pas de la personne concernée elle-même."],
 ];
+const CHAMPS_PROFIL_DORA = [
+  ['entite_financiere_dora', 'Entité financière au sens de DORA', "Banque, établissement de paiement, entreprise d'investissement, assurance, etc. (DORA, art. 2)."],
+];
+const CHAMPS_PROFIL_AI_ACT = [
+  ['ia_utilisee', "Utilisation d'un système d'IA", "Votre organisation fournit ou déploie un système d'intelligence artificielle, quel qu'il soit."],
+  ['ia_fournisseur_haut_risque', "Fournisseur d'un système d'IA à haut risque", "Vous développez ou faites développer pour votre compte un système d'IA à haut risque (AI Act, annexe III)."],
+  ['ia_deployeur_haut_risque', "Déployeur d'un système d'IA à haut risque", "Vous utilisez, sans le développer vous-même, un système d'IA à haut risque fourni par un tiers."],
+];
+// Champs booleens simples ; entite_nis2 est traite a part (trois valeurs).
+const CHAMPS_PROFIL = [
+  ...CHAMPS_PROFIL_RGPD, ...CHAMPS_PROFIL_DORA, ...CHAMPS_PROFIL_AI_ACT,
+];
+const ENTITE_NIS2_LIBELLES = {
+  '': 'Je ne sais pas', essentielle: 'Entité essentielle', importante: 'Entité importante',
+  non_concernee: 'Ni l’une ni l’autre',
+};
+const ENTITE_NIS2_LIBELLES_EN = {
+  '': "Don't know", essentielle: 'Essential entity', importante: 'Important entity',
+  non_concernee: 'Neither',
+};
+
+function champBooleen(champ, libelle, aide, valeur) {
+  const val = v => v === true ? 'oui' : v === false ? 'non' : '';
+  return `<div>
+    <label for="pf-${champ}">${tr(libelle)}</label>
+    <select id="pf-${champ}" class="compact">
+      <option value=""${val(valeur) === '' ? ' selected' : ''}>${tr('Je ne sais pas')}</option>
+      <option value="oui"${val(valeur) === 'oui' ? ' selected' : ''}>${tr('Oui')}</option>
+      <option value="non"${val(valeur) === 'non' ? ' selected' : ''}>${tr('Non')}</option>
+    </select>
+    <p class="aide-mdp">${tr(aide)}</p>
+  </div>`;
+}
 
 function rendreProfilEligibilite() {
   const org = E.orgs.find(o => o.id === E.orgId);
   if (!org || (org.my_role !== 'owner' && org.my_role !== 'admin')) return '';
-  const val = v => v === true ? 'oui' : v === false ? 'non' : '';
+  const libellesNis2 = LANG === 'en' ? ENTITE_NIS2_LIBELLES_EN : ENTITE_NIS2_LIBELLES;
   return `<h2>${tr("Profil de l'organisation")}</h2>
     <p class="chapeau">${tr("Ces réponses affinent le filtre d'éligibilité : une obligation qui ne concerne pas votre organisation peut être écartée automatiquement, avec justification. Une question laissée sur « Je ne sais pas » n'exempte jamais à tort — l'exigence suit alors le parcours normal d'évaluation.")}</p>
+
+    <h3>${tr('RGPD')}</h3>
     <div class="grille" style="max-width:640px">
-      ${CHAMPS_PROFIL.map(([champ, libelle, aide]) => `
-        <div>
-          <label for="pf-${champ}">${tr(libelle)}</label>
-          <select id="pf-${champ}" class="compact">
-            <option value=""${val(org[champ]) === '' ? ' selected' : ''}>${tr('Je ne sais pas')}</option>
-            <option value="oui"${val(org[champ]) === 'oui' ? ' selected' : ''}>${tr('Oui')}</option>
-            <option value="non"${val(org[champ]) === 'non' ? ' selected' : ''}>${tr('Non')}</option>
-          </select>
-          <p class="aide-mdp">${tr(aide)}</p>
-        </div>`).join('')}
+      ${CHAMPS_PROFIL_RGPD.map(([champ, libelle, aide]) => champBooleen(champ, libelle, aide, org[champ])).join('')}
     </div>
+
+    <h3>NIS2</h3>
+    <div class="grille" style="max-width:640px">
+      <div>
+        <label for="pf-entite_nis2">${tr('Statut au regard de NIS2')}</label>
+        <select id="pf-entite_nis2" class="compact">
+          ${Object.entries(libellesNis2).map(([v, l]) =>
+            `<option value="${v}"${(org.entite_nis2 || '') === v ? ' selected' : ''}>${l}</option>`).join('')}
+        </select>
+        <p class="aide-mdp">${tr("Entité essentielle ou importante au sens des articles 2 et 3 de la directive NIS2 — secteurs critiques (énergie, santé, numérique, etc.) et seuils de taille.")}</p>
+      </div>
+    </div>
+
+    <h3>DORA</h3>
+    <div class="grille" style="max-width:640px">
+      ${CHAMPS_PROFIL_DORA.map(([champ, libelle, aide]) => champBooleen(champ, libelle, aide, org[champ])).join('')}
+    </div>
+
+    <h3>AI Act</h3>
+    <div class="grille" style="max-width:640px">
+      ${CHAMPS_PROFIL_AI_ACT.map(([champ, libelle, aide]) => champBooleen(champ, libelle, aide, org[champ])).join('')}
+    </div>
+
     <button id="btn-profil" onclick="modifierProfil('${org.id}')">${tr('Enregistrer')}</button>
     <div id="msg-profil" aria-live="polite"></div>`;
 }
@@ -2894,6 +2960,8 @@ async function modifierProfil(orgId) {
     const brut = $(`pf-${champ}`).value;
     corps[champ] = brut === '' ? null : brut === 'oui';
   }
+  const nis2 = $('pf-entite_nis2').value;
+  corps.entite_nis2 = nis2 === '' ? null : nis2;
   poser('msg-profil', attente('Enregistrement'));
   try {
     const org = await appel(`/api/v1/orgs/${orgId}/profile`, {
