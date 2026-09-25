@@ -240,6 +240,8 @@ button.petit{padding:6px 13px;font-size:13px}
 .cadre-btn svg{width:16px;height:16px;flex:none}
 .cadre-btn:hover{border-color:var(--primaire);color:var(--encre);transform:translateY(-1px)}
 .cadre-btn.actif{background:var(--grad-marque);border-color:transparent;color:#fff;box-shadow:0 4px 14px -2px rgba(76,63,224,.5)}
+.compte-onglet{font-size:11px;font-weight:700;opacity:.6;font-variant-numeric:tabular-nums}
+.cadre-btn.actif .compte-onglet{opacity:.85}
 .ref-resume{display:flex;gap:16px;align-items:center;background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:16px 20px;margin-bottom:20px;box-shadow:var(--ombre-sm);animation:carte-entree .3s cubic-bezier(.2,.7,.3,1)}
 .ref-resume-ic{flex:none;width:38px;height:38px;border-radius:10px;background:var(--primaire-clair);color:var(--primaire);display:flex;align-items:center;justify-content:center}
 .ref-resume-ic svg{width:19px;height:19px}
@@ -1192,6 +1194,7 @@ const TRAD_EN = {
   // Detail campagne
   'Toutes les campagnes': 'All campaigns', 'Supprimer': 'Delete', 'Pièces versées': 'Uploaded files',
   'Le référentiel pourrait ne pas s’appliquer': 'This framework may not apply',
+  'Retour à Mon compte': 'Back to my account', "Profil d'éligibilité": 'Eligibility profile',
   'Déposez vos fichiers ici, ou cliquez pour les choisir': 'Drop your files here, or click to choose them',
   "Lancer l'analyse": 'Run analysis', 'Au moins une pièce est nécessaire.': 'At least one file is required.',
   'Constats': 'Findings', 'Rapports': 'Reports', 'Produire une nouvelle version': 'Produce a new version',
@@ -1800,7 +1803,7 @@ const ROUTES = {
   remediation: vueRemediation, correspondances: vueCrosswalks,
   referentiels: vueReferentiels,
   equipe: vueEquipe, notifications: vueNotifications, journal: vueJournal,
-  compte: vueCompte, apropos: vueApropos,
+  compte: vueCompte, apropos: vueApropos, organisation: vueProfilOrganisation,
 };
 
 function router() {
@@ -1816,7 +1819,9 @@ function router() {
   const [, nom, arg] = (location.hash || '#/tableau').split('/');
   const vue = ROUTES[nom] || vueTableau;
   document.querySelectorAll('.rail a').forEach(a =>
-    a.classList.toggle('actif', a.dataset.vue === (nom === 'audit' ? 'audits' : nom)));
+    a.classList.toggle('actif', a.dataset.vue === (
+      nom === 'audit' ? 'audits' : nom === 'organisation' ? 'compte' : nom
+    )));
   window.scrollTo(0, 0);
   vue(arg);
 }
@@ -2843,7 +2848,6 @@ async function vueCompte() {
     <div id="msg-org" aria-live="polite"></div>
 
     ${rendreRetention()}
-    ${rendreProfilEligibilite()}
 
     <h2>Sécurité</h2>
     <div class="grille">
@@ -2875,9 +2879,12 @@ function chargerMesOrganisations() {
         : (LANG === 'en' ? '· only you' : '· vous seul(e)')}</td>
       <td>${h((LANG === 'en' ? NOM_OFFRE_EN : NOM_OFFRE)[o.plan] || o.plan)}</td>
       <td>${o.id === E.orgId ? '<span class="etiq e-ok">Active</span>' : ''}</td>
-      <td>${o.my_role === 'owner' && o.member_count === 1
-        ? `<button class="discret" style="border-color:var(--sceau);color:var(--sceau)" onclick="supprimerOrganisation('${o.id}')">Supprimer</button>`
-        : `<button class="discret" onclick="quitterOrganisation('${o.id}')">Quitter</button>`}</td>
+      <td class="rangee">
+        ${o.my_role === 'owner' || o.my_role === 'admin'
+          ? `<button class="discret" onclick="location.hash='#/organisation/${o.id}'">${tr("Profil d'éligibilité")}</button>` : ''}
+        ${o.my_role === 'owner' && o.member_count === 1
+          ? `<button class="discret" style="border-color:var(--sceau);color:var(--sceau)" onclick="supprimerOrganisation('${o.id}')">Supprimer</button>`
+          : `<button class="discret" onclick="quitterOrganisation('${o.id}')">Quitter</button>`}</td>
     </tr>`).join('')}</tbody></table>` : `<p class="vide">Aucune organisation.</p>`);
 }
 
@@ -2964,20 +2971,28 @@ function champBooleen(champ, libelle, aide, valeur) {
   </div>`;
 }
 
-function rendreProfilEligibilite() {
-  const org = E.orgs.find(o => o.id === E.orgId);
-  if (!org || (org.my_role !== 'owner' && org.my_role !== 'admin')) return '';
-  const libellesNis2 = LANG === 'en' ? ENTITE_NIS2_LIBELLES_EN : ENTITE_NIS2_LIBELLES;
-  return `<h2>${tr("Profil de l'organisation")}</h2>
-    <p class="chapeau">${tr("Ces réponses affinent le filtre d'éligibilité : une obligation qui ne concerne pas votre organisation peut être écartée automatiquement, avec justification. Une question laissée sur « Je ne sais pas » n'exempte jamais à tort — l'exigence suit alors le parcours normal d'évaluation.")}</p>
+// Page dediee par organisation (#/organisation/{id}) plutot qu'un formulaire
+// unique lie a l'organisation "active" du commutateur global : avec
+// plusieurs organisations, rien ne distinguait laquelle on modifiait. Un
+// onglet par referentiel, avec un decompte de progression, plutot que les
+// quatre sections empilees d'origine.
+const PANNEAUX_PROFIL = ['rgpd', 'nis2', 'dora', 'ai_act'];
 
-    <h3>${tr('RGPD')}</h3>
-    <div class="grille" style="max-width:640px">
-      ${CHAMPS_PROFIL_RGPD.map(([champ, libelle, aide]) => champBooleen(champ, libelle, aide, org[champ])).join('')}
-    </div>
+function champsProfilCadre(code) {
+  return { rgpd: CHAMPS_PROFIL_RGPD, dora: CHAMPS_PROFIL_DORA, ai_act: CHAMPS_PROFIL_AI_ACT }[code] || [];
+}
 
-    <h3>NIS2</h3>
-    <div class="grille" style="max-width:640px">
+function progressionProfilCadre(code, org) {
+  if (code === 'nis2') return org.entite_nis2 ? '1/1' : '0/1';
+  const champs = champsProfilCadre(code);
+  const renseignes = champs.filter(([c]) => org[c] !== null && org[c] !== undefined).length;
+  return `${renseignes}/${champs.length}`;
+}
+
+function panneauProfilCadre(code, org) {
+  if (code === 'nis2') {
+    const libellesNis2 = LANG === 'en' ? ENTITE_NIS2_LIBELLES_EN : ENTITE_NIS2_LIBELLES;
+    return `<div class="grille" style="max-width:640px">
       <div>
         <label for="pf-entite_nis2">${tr('Statut au regard de NIS2')}</label>
         <select id="pf-entite_nis2" class="compact">
@@ -2986,20 +3001,52 @@ function rendreProfilEligibilite() {
         </select>
         <p class="aide-mdp">${tr("Entité essentielle ou importante au sens des articles 2 et 3 de la directive NIS2 — secteurs critiques (énergie, santé, numérique, etc.) et seuils de taille.")}</p>
       </div>
-    </div>
+    </div>`;
+  }
+  return `<div class="grille" style="max-width:640px">
+    ${champsProfilCadre(code).map(([champ, libelle, aide]) => champBooleen(champ, libelle, aide, org[champ])).join('')}
+  </div>`;
+}
 
-    <h3>DORA</h3>
-    <div class="grille" style="max-width:640px">
-      ${CHAMPS_PROFIL_DORA.map(([champ, libelle, aide]) => champBooleen(champ, libelle, aide, org[champ])).join('')}
-    </div>
+function construireOngletsProfil(org) {
+  return PANNEAUX_PROFIL.map((code, i) => `
+    <button type="button" class="cadre-btn${i === 0 ? ' actif' : ''}" data-code="${code}" onclick="afficherPanneauProfil('${code}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconeCadre(code)}</svg>
+      ${h(codeCadre(code))}<span class="compte-onglet">${progressionProfilCadre(code, org)}</span>
+    </button>`).join('');
+}
 
-    <h3>AI Act</h3>
-    <div class="grille" style="max-width:640px">
-      ${CHAMPS_PROFIL_AI_ACT.map(([champ, libelle, aide]) => champBooleen(champ, libelle, aide, org[champ])).join('')}
-    </div>
+function afficherPanneauProfil(code) {
+  document.querySelectorAll('#profil-onglets .cadre-btn').forEach(b => b.classList.toggle('actif', b.dataset.code === code));
+  PANNEAUX_PROFIL.forEach(c => { const p = $(`panneau-profil-${c}`); if (p) p.hidden = c !== code; });
+}
 
-    <button id="btn-profil" onclick="modifierProfil('${org.id}')">${tr('Enregistrer')}</button>
-    <div id="msg-profil" aria-live="polite"></div>`;
+async function vueProfilOrganisation(orgId) {
+  if (!orgId) return (location.hash = '#/compte');
+  poser('vue', `<div id="z">${attente('Chargement')}</div>`);
+  try {
+    const org = await appel(`/api/v1/orgs/${orgId}`);
+    if (org.my_role !== 'owner' && org.my_role !== 'admin') return (location.hash = '#/compte');
+
+    E.orgId = orgId;
+    const idx = E.orgs.findIndex(o => o.id === orgId);
+    if (idx !== -1) E.orgs[idx] = org; else E.orgs.push(org);
+    if ($('ch-org-global')) {
+      $('ch-org-global').innerHTML = E.orgs.map(o => `<option value="${o.id}">${h(o.name)}</option>`).join('');
+      $('ch-org-global').value = orgId;
+    }
+
+    poser('vue', `
+      <div class="tete">
+        <div><div class="eyebrow">${tr('Organisation')}</div>${titreIcone('compte', org.name)}</div>
+        <div class="rangee"><button class="discret" onclick="location.hash='#/compte'">${tr('Retour à Mon compte')}</button></div>
+      </div>
+      <p class="chapeau">${tr("Ces réponses affinent le filtre d'éligibilité : une obligation qui ne concerne pas votre organisation peut être écartée automatiquement, avec justification. Une question laissée sur « Je ne sais pas » n'exempte jamais à tort — l'exigence suit alors le parcours normal d'évaluation.")}</p>
+      <div class="cadre-switch" id="profil-onglets">${construireOngletsProfil(org)}</div>
+      ${PANNEAUX_PROFIL.map((code, i) => `<div id="panneau-profil-${code}"${i === 0 ? '' : ' hidden'}>${panneauProfilCadre(code, org)}</div>`).join('')}
+      <button id="btn-profil" onclick="modifierProfil('${orgId}')">${tr('Enregistrer')}</button>
+      <div id="msg-profil" aria-live="polite"></div>`);
+  } catch (e) { poser('vue', echoue(e)); }
 }
 
 async function modifierProfil(orgId) {
@@ -3017,6 +3064,14 @@ async function modifierProfil(orgId) {
     });
     const idx = E.orgs.findIndex(o => o.id === orgId);
     if (idx !== -1) E.orgs[idx] = org;
+    // Rafraichit les decomptes de progression des onglets, sans reconstruire
+    // toute la page (garde le message de succes visible).
+    if ($('profil-onglets')) {
+      PANNEAUX_PROFIL.forEach(code => {
+        const badge = document.querySelector(`#profil-onglets .cadre-btn[data-code="${code}"] .compte-onglet`);
+        if (badge) badge.textContent = progressionProfilCadre(code, org);
+      });
+    }
     poser('msg-profil', `<div class="succes">${tr('Profil mis à jour.')}</div>`);
   } catch (e) { poser('msg-profil', echoue(e)); }
 }
@@ -3070,11 +3125,18 @@ async function creerOrganisation() {
   try {
     const org = await appel('/api/v1/orgs', { method:'POST', body: JSON.stringify({ name: nom }) });
     E.orgs.push(org);
+    // E.orgId (pas seulement la valeur affichee du commutateur, qui ne
+    // declenche pas son onchange quand on la fixe par script) : sans cela,
+    // l'organisation nouvellement creee semblait active a l'oeil sans
+    // vraiment l'etre tant qu'on ne rechangeait pas manuellement de
+    // selection.
+    E.orgId = org.id;
     $('ch-org-global').innerHTML = E.orgs.map(o => `<option value="${o.id}">${h(o.name)}</option>`).join('');
     $('ch-org-global').value = org.id;
-    $('co-nom').value = '';
-    poser('msg-org', `<div class="succes">Organisation créée.</div>`);
-    chargerMesOrganisations();
+    // Direction la page de profil dediee plutot qu'un message inline : une
+    // organisation fraichement creee n'a encore aucune reponse, autant
+    // guider tout de suite vers le formulaire qui les recueille.
+    location.hash = '#/organisation/' + org.id;
   } catch (e) { poser('msg-org', echoue(e)); }
 }
 

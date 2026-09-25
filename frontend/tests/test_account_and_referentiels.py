@@ -90,6 +90,11 @@ def test_referentiel_article_expands_to_show_full_text_and_is_searchable(page, f
 
 
 def test_create_organization_from_account_page(page, frontend_server, backend_server):
+    """Une organisation fraichement creee redirige directement vers sa page
+    de profil d'eligibilite dediee (#/organisation/{id}), plutot que de
+    rester sur "Mon compte" avec un simple message de succes -- elle n'a
+    encore aucune reponse, autant guider tout de suite vers le formulaire
+    qui les recueille."""
     email = f"acc-{uuid.uuid4().hex[:8]}@exemple.fr"
     _register(page, frontend_server, backend_server, email)
 
@@ -99,8 +104,21 @@ def test_create_organization_from_account_page(page, frontend_server, backend_se
     avant = page.locator("#ch-org-global option").count()
     page.fill("#co-nom", "Deuxième organisation")
     page.click("#btn-creer-org")
-    expect(page.locator("#msg-org .succes")).to_be_visible()
+
+    page.wait_for_selector("#profil-onglets", timeout=15000)
+    expect(page.locator("h1")).to_have_text("Deuxième organisation")
+    assert "#/organisation/" in page.url
     assert page.locator("#ch-org-global option").count() == avant + 1
+    # La nouvelle organisation devient l'organisation active (pas seulement
+    # affichee dans le commutateur).
+    expect(page.locator("#ch-org-global")).to_have_value(page.url.rsplit("/", 1)[-1])
+
+    # Depuis "Mon compte", chaque organisation propose son propre lien vers
+    # cette page -- verifie qu'on peut y revenir plus tard, pas seulement a
+    # la creation.
+    page.click("text=Retour à Mon compte")
+    page.wait_for_selector("#z-orgs table", timeout=15000)
+    expect(page.locator("#z-orgs table")).to_contain_text("Profil d'éligibilité")
 
 
 def test_change_password_from_account_page(page, frontend_server, backend_server):
