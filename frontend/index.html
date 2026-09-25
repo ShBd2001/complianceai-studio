@@ -1191,6 +1191,7 @@ const TRAD_EN = {
   'Ouvrir une campagne': 'Open a campaign', 'Intitulé': 'Title', 'Ouvrir la campagne': 'Open campaign', 'Historique': 'History',
   // Detail campagne
   'Toutes les campagnes': 'All campaigns', 'Supprimer': 'Delete', 'Pièces versées': 'Uploaded files',
+  'Le référentiel pourrait ne pas s’appliquer': 'This framework may not apply',
   'Déposez vos fichiers ici, ou cliquez pour les choisir': 'Drop your files here, or click to choose them',
   "Lancer l'analyse": 'Run analysis', 'Au moins une pièce est nécessaire.': 'At least one file is required.',
   'Constats': 'Findings', 'Rapports': 'Reports', 'Produire une nouvelle version': 'Produce a new version',
@@ -2124,6 +2125,13 @@ async function chargerReferentiels(id) {
   poser(id, liste.map(([c, n]) => `<option value="${c}">${h(n)}</option>`).join(''));
 }
 
+// Avertissement non bloquant renvoye par POST /audits (`scope_warning`) si le
+// profil de l'organisation indique que le referentiel entier ne s'applique
+// pas. Jamais stocke cote serveur (pas une colonne d'Audit, voir
+// AuditCreateOut) : a retenir ici le temps de naviguer vers la page de la
+// campagne fraichement creee, puis a afficher une seule fois.
+let avertissementCampagne = null;
+
 async function creerCampagne() {
   poser('msg-n', attente('Ouverture'));
   try {
@@ -2131,6 +2139,7 @@ async function creerCampagne() {
       method:'POST',
       body: JSON.stringify({ title: $('n-titre').value.trim(), framework: $('n-ref').value }),
     });
+    avertissementCampagne = a.scope_warning ? { auditId: a.id, message: a.scope_warning } : null;
     location.hash = '#/audit/' + a.id;
   } catch (e) { poser('msg-n', echoue(e)); }
 }
@@ -2147,6 +2156,12 @@ async function vueAudit(auditId) {
       appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}/reports`).catch(() => []),
     ]);
 
+    let avertissement = null;
+    if (avertissementCampagne && avertissementCampagne.auditId === auditId) {
+      avertissement = avertissementCampagne.message;
+      avertissementCampagne = null;
+    }
+
     poser('vue', `
       <div class="tete">
         <div><div class="eyebrow">${h(codeCadre(audit.framework))} · ${h(etatAudit(audit.status))}</div>
@@ -2157,6 +2172,8 @@ async function vueAudit(auditId) {
           <button class="discret" onclick="supprimerCampagne('${auditId}')">Supprimer</button>
         </div>
       </div>
+      ${avertissement ? `<div class="retenu"><div class="titre">${tr('Le référentiel pourrait ne pas s’appliquer')}</div>
+        <p>${h(avertissement)}</p></div>` : ''}
       ${audit.status === 'completed' ? verdictCarte(audit, constats, rapports, auditId) : ''}
 
       <h2>Pièces versées</h2>
