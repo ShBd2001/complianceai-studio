@@ -17,10 +17,24 @@ voir corpus/verite_terrain.json) :
     python -m validation.evaluate --corpus corpus \
         --verite corpus/verite_terrain.json --runs 3 --output rapport.json
 
+Meme mesure sur un autre referentiel (Tache F1) une fois son corpus compose
+par l'equipe -- voir corpus_nis2/README.md, corpus_dora/README.md,
+corpus_ai_act/README.md pour le format attendu et la responsabilite de
+chacun :
+
+    python -m validation.evaluate --referentiel nis2 --runs 3 --output rapport_nis2.json
+
+--referentiel fixe seul les valeurs par defaut de --corpus/--verite (ex.
+nis2 -> corpus_nis2/ a la racine du depot) ; les passer explicitement reste
+possible et prioritaire. Le RGPD n'est pas concerne : ses defauts historiques
+(validation/corpus, validation/annotations.json) restent inchanges tant que
+--corpus/--verite ne sont pas passes.
+
 Necessite GROQ_API_KEY (le harnais refuse de mesurer l'heuristique de repli,
 sans interet) -- environ 700 appels au modele pour 3 passages sur 15
-documents x ~45 obligations RGPD. NE PAS lancer cette mesure sans avoir
-budgete le quota Groq correspondant.
+documents x ~45 obligations RGPD (un autre referentiel a un nombre
+d'obligations different -- voir app/ingestion/scoping.py::WHITELISTS).
+NE PAS lancer cette mesure sans avoir budgete le quota Groq correspondant.
 
 Le harnais appelle le moteur directement, sans passer par l'API : il n'a besoin
 ni d'un serveur lance, ni d'un compte utilisateur.
@@ -79,8 +93,25 @@ from typing import Any
 from validation.harnais import CasDeTest, charger_verite_terrain, wilson
 
 VALIDATION_DIR = pathlib.Path(__file__).resolve().parent
+REPO_ROOT = VALIDATION_DIR.parent
 CORPUS_DIR = VALIDATION_DIR / "corpus"
 ANNOTATIONS = VALIDATION_DIR / "annotations.json"
+
+# Un referentiel non-RGPD = un corpus de documents .txt + une verite terrain
+# au meme format que corpus/verite_terrain.json (Tache 7), a la racine du
+# depot, comme le corpus RGPD existant. Composer les documents et leur verite
+# terrain reste le travail de l'equipe (voir corpus_nis2/README.md etc.) --
+# ce module se contente de savoir OU les chercher et quel Framework utiliser.
+# Le RGPD n'y figure pas : ses valeurs par defaut historiques (CORPUS_DIR,
+# ANNOTATIONS ci-dessus -- le corpus reduit de validation/corpus/, pas celui
+# de 15 documents de la Tache 7) restent inchangees pour ne rien casser des
+# commandes deja documentees plus haut dans ce module.
+REFERENTIELS_NON_RGPD: dict[str, tuple[pathlib.Path, pathlib.Path]] = {
+    "nis2": (REPO_ROOT / "corpus_nis2", REPO_ROOT / "corpus_nis2" / "verite_terrain.json"),
+    "dora": (REPO_ROOT / "corpus_dora", REPO_ROOT / "corpus_dora" / "verite_terrain.json"),
+    "ai_act": (REPO_ROOT / "corpus_ai_act", REPO_ROOT / "corpus_ai_act" / "verite_terrain.json"),
+}
+REFERENTIELS = {"rgpd", *REFERENTIELS_NON_RGPD}
 
 _EFFECTIF_RE = re.compile(r"(\d[\d\s]{0,6}\d|\d)\s*salari[ée]s?", re.IGNORECASE)
 
@@ -235,7 +266,7 @@ class DocumentReport:
 # Execution
 # --------------------------------------------------------------------------
 def run_document(
-    db, org_id, user_id, path: pathlib.Path, index: int
+    db, org_id, user_id, path: pathlib.Path, index: int, referentiel: str = "rgpd"
 ) -> DocumentRun:
     """Cree un audit, depose le document, lance l'analyse, releve les verdicts."""
     from app.models.audit import Audit, Document, Finding
@@ -248,7 +279,7 @@ def run_document(
         organization_id=org_id,
         created_by_id=user_id,
         title=f"[validation] {path.stem} #{index}",
-        framework=Framework.RGPD,
+        framework=Framework(referentiel),
     )
     db.add(audit)
     db.flush()
@@ -300,6 +331,7 @@ def evaluate(
     only: list[str] | None,
     corpus_dir: pathlib.Path = CORPUS_DIR,
     verite_path: pathlib.Path | None = None,
+    referentiel: str = "rgpd",
 ) -> list[DocumentReport]:
     from app.db.session import SessionLocal
     from app.models.enums import OrgRole
@@ -346,7 +378,14 @@ def evaluate(
             # Effectif pose sur l'organisation de test quand la description le
             # mentionne (voir _effectif_depuis_description dans le docstring
             # du module) : le filtre d'eligibilite (article 30) doit disposer
-            # de la meme information qu'un auditeur lisant le document.
+            # de la meme information qu'un auditeur lisant le document. Ne
+            # couvre que le RGPD : les champs de profil NIS2/DORA/AI Act
+            # (entite_nis2, entite_financiere_dora, ia_*, voir
+            # app/services/eligibilite.py, Tache F1) restent a None ici, faute
+            # d'un motif d'extraction equivalent -- sans consequence sur la
+            # validite d'une mesure (le principe de prudence du filtre repond
+            # alors "a verifier", jamais une exemption a tort), mais a
+            # completer si l'equipe le juge utile en redigeant le corpus.
             org.headcount = _effectif_depuis_description(spec.get("profil", ""))
             db.flush()
 
@@ -359,7 +398,9 @@ def evaluate(
 
             for index in range(1, runs_per_document + 1):
                 print(f"  {path.name} — passage {index}/{runs_per_document}…", flush=True)
-                report.runs.append(run_document(db, org.id, user.id, path, index))
+                report.runs.append(
+                    run_document(db, org.id, user.id, path, index, referentiel=referentiel)
+                )
                 db.commit()
 
             # Comparaison au premier passage, celui de reference.
@@ -520,11 +561,18 @@ def main() -> int:
                         help="passages par document (>= 2 pour mesurer la variance)")
     parser.add_argument("--only", nargs="*", help="prefixes de documents, ex. 01 05")
     parser.add_argument("--output", help="fichier JSON de sortie")
-    parser.add_argument("--corpus", type=pathlib.Path, default=CORPUS_DIR,
-                        help="dossier de documents .txt (defaut : validation/corpus)")
+    parser.add_argument(
+        "--referentiel", choices=sorted(REFERENTIELS), default="rgpd",
+        help="referentiel mesure (defaut : rgpd). Fixe aussi les valeurs par "
+             "defaut de --corpus et --verite (ex. nis2 -> corpus_nis2/ et "
+             "corpus_nis2/verite_terrain.json a la racine du depot) ; "
+             "--corpus/--verite explicites restent prioritaires.",
+    )
+    parser.add_argument("--corpus", type=pathlib.Path, default=None,
+                        help="dossier de documents .txt (defaut : selon --referentiel)")
     parser.add_argument("--verite", type=pathlib.Path, default=None,
                         help="verite terrain au format corpus/verite_terrain.json "
-                             "(defaut : validation/annotations.json)")
+                             "(defaut : selon --referentiel)")
     parser.add_argument(
         "--sans-modele", action="store_true",
         help="AUTORISE une execution sans GROQ_API_KEY (heuristique de repli "
@@ -546,11 +594,23 @@ def main() -> int:
         print("--sans-modele : execution sans LLM, verification uniquement, "
               "resultats NON valides pour le memoire.\n")
 
-    print(f"Corpus : {args.corpus}")
-    print(f"Verite terrain : {args.verite or ANNOTATIONS}")
+    if args.referentiel == "rgpd":
+        corpus_dir = args.corpus if args.corpus is not None else CORPUS_DIR
+        verite_path = args.verite
+    else:
+        defaut_corpus, defaut_verite = REFERENTIELS_NON_RGPD[args.referentiel]
+        corpus_dir = args.corpus if args.corpus is not None else defaut_corpus
+        verite_path = args.verite if args.verite is not None else defaut_verite
+
+    print(f"Referentiel : {args.referentiel}")
+    print(f"Corpus : {corpus_dir}")
+    print(f"Verite terrain : {verite_path or ANNOTATIONS}")
     print(f"Passages par document : {args.runs}\n")
 
-    reports = evaluate(args.runs, args.only, corpus_dir=args.corpus, verite_path=args.verite)
+    reports = evaluate(
+        args.runs, args.only, corpus_dir=corpus_dir, verite_path=verite_path,
+        referentiel=args.referentiel,
+    )
     if not reports:
         return 1
 
@@ -560,9 +620,10 @@ def main() -> int:
     if args.output:
         payload = {
             "date": datetime.now(timezone.utc).isoformat(),
+            "referentiel": args.referentiel,
             "passages_par_document": args.runs,
-            "corpus": str(args.corpus),
-            "verite_terrain": str(args.verite or ANNOTATIONS),
+            "corpus": str(corpus_dir),
+            "verite_terrain": str(verite_path or ANNOTATIONS),
             "sans_modele": args.sans_modele,
             "metriques": metrics,
             "documents": [
