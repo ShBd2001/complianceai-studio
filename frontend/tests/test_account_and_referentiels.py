@@ -105,7 +105,10 @@ def test_create_organization_from_account_page(page, frontend_server, backend_se
     page.fill("#co-nom", "Deuxième organisation")
     page.click("#btn-creer-org")
 
-    page.wait_for_selector("#profil-onglets", timeout=15000)
+    # 20s plutot que les 15s habituels : la redirection enchaine deux allers-
+    # retours reseau (creation, puis GET du profil de la nouvelle organisation)
+    # au lieu d'un rendu local immediat.
+    page.wait_for_selector("#profil-onglets", timeout=20000)
     expect(page.locator("h1")).to_have_text("Deuxième organisation")
     assert "#/organisation/" in page.url
     assert page.locator("#ch-org-global option").count() == avant + 1
