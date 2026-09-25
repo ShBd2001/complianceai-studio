@@ -123,6 +123,34 @@ def test_ai_act_fournisseur_exempte_sans_ia_a_haut_risque_fournie():
         assert evaluer("ai_act", article, profil).verdict is Verdict.EXEMPTE, article
 
 
+def test_ai_act_art49_enregistrement_exige_ni_fournisseur_ni_deployeur():
+    """Correction 6 : l'art. 49(3) vise aussi certains deployeurs (autorites
+    publiques), pas seulement le fournisseur des par. 1 et 2 -- ne pas
+    exempter un deployeur a haut risque sous le seul pretexte qu'il n'est
+    pas fournisseur."""
+    # Ni l'un ni l'autre : exemption certaine.
+    profil_aucun = ProfilOrganisme(ia_fournisseur_haut_risque=False, ia_deployeur_haut_risque=False)
+    assert evaluer("ai_act", 49, profil_aucun).verdict is Verdict.EXEMPTE
+
+    # Fournisseur seul, deployeur seul, ou les deux : applicable dans tous les cas.
+    assert evaluer("ai_act", 49, ProfilOrganisme(ia_fournisseur_haut_risque=True)).verdict is Verdict.APPLICABLE
+    assert evaluer(
+        "ai_act", 49, ProfilOrganisme(ia_fournisseur_haut_risque=False, ia_deployeur_haut_risque=True)
+    ).verdict is Verdict.APPLICABLE
+    assert evaluer(
+        "ai_act", 49, ProfilOrganisme(ia_fournisseur_haut_risque=True, ia_deployeur_haut_risque=True)
+    ).verdict is Verdict.APPLICABLE
+
+    # Un seul champ renseigne a False, l'autre inconnu : ne pas exempter.
+    assert evaluer(
+        "ai_act", 49, ProfilOrganisme(ia_fournisseur_haut_risque=False)
+    ).verdict is Verdict.A_VERIFIER
+    assert evaluer(
+        "ai_act", 49, ProfilOrganisme(ia_deployeur_haut_risque=False)
+    ).verdict is Verdict.A_VERIFIER
+    assert evaluer("ai_act", 49, ProfilOrganisme()).verdict is Verdict.A_VERIFIER
+
+
 def test_ai_act_deployeur_general_suit_ia_deployeur_haut_risque():
     assert evaluer("ai_act", 26, ProfilOrganisme(ia_deployeur_haut_risque=False)).verdict is Verdict.EXEMPTE
     assert evaluer("ai_act", 26, ProfilOrganisme(ia_deployeur_haut_risque=True)).verdict is Verdict.APPLICABLE
