@@ -43,10 +43,11 @@ apportees a la proposition initiale :
 | DORA | 23 | idem 5-30, MAIS `entite_financiere_dora=True` ne suffit pas (voir correction) | DORA, art. 23 |
 | AI Act | 5 | jamais exempte | AI Act, art. 5 |
 | AI Act | 50 | `ia_utilisee is False` | AI Act, art. 50 |
-| AI Act | 8-22, 25, 47-49, 72, 73 | `ia_fournisseur_haut_risque is False` | AI Act, art. 6 et 16 |
+| AI Act | 8-22, 25, 47, 48, 72, 73 | `ia_fournisseur_haut_risque is False` | AI Act, art. 6 et 16 |
 | AI Act | 23, 24 | aucune regle (voir correction ci-dessous) | -- |
 | AI Act | 26 | `ia_deployeur_haut_risque is False` | AI Act, art. 26 |
 | AI Act | 27, 86 | idem 26, MAIS `True` ne suffit pas (voir correction) | AI Act, art. 27 et 86 |
+| AI Act | 49 | ni fournisseur ni deployeur a haut risque (voir correction ci-dessous) | AI Act, art. 49 |
 
 Corrections apportees a la proposition initiale, chacune verifiee en lisant
 le corps de l'article (pas seulement son intitule) :
@@ -98,6 +99,23 @@ le corps de l'article (pas seulement son intitule) :
    role precis (en ajouter un sortirait du perimetre des cinq colonnes
    prevues pour cette tache) : ces deux articles ne recoivent aucune regle
    et restent APPLICABLE par defaut, comme tout article hors de cette table.
+
+6. **AI Act art. 49** (enregistrement) ne se limite pas au fournisseur : le
+   paragraphe 1 vise "le fournisseur ou, selon le cas, le mandataire", le
+   paragraphe 2 de meme, MAIS le paragraphe 3 impose aussi aux "deployeurs
+   qui sont des autorites publiques, des institutions organes ou organismes
+   de l'Union ou des personnes agissant en leur nom" de s'enregistrer avant
+   d'utiliser un systeme a haut risque. Classer cet article dans le seul
+   groupe `_ai_act_fournisseur` exempterait a tort un deployeur a haut
+   risque qui n'est pas lui-meme fournisseur -- contraire au principe de
+   prudence de ce module. Regle dediee (`_ai_act_enregistrement`) :
+   exemption seulement si l'organisation n'est NI fournisseur NI deployeur
+   d'un systeme a haut risque ; l'un des deux statuts a `True` suffit a
+   rendre l'article applicable, sans distinguer le cas restreint du
+   paragraphe 3 (organisme public) faute de champ de profil dedie -- un
+   deployeur prive se voit donc aussi signale A_VERIFIER, jamais exempte a
+   tort, ce qui reste le sens de la prudence meme si un peu plus large que
+   le texte exact.
 """
 
 from __future__ import annotations
@@ -491,6 +509,46 @@ def _ai_act_deployeur(p: ProfilOrganisme) -> Decision:
     )
 
 
+def _ai_act_enregistrement(p: ProfilOrganisme) -> Decision:
+    """Article 49 : l'obligation d'enregistrement ne vise pas que le
+    fournisseur (par. 1 et 2) -- le par. 3 impose aussi aux deployeurs
+    autorites publiques ou institutions de l'Union de s'enregistrer avant
+    d'utiliser un systeme a haut risque (voir correction 6 en tete de
+    module). Etre certain de n'etre ni fournisseur ni deployeur a haut
+    risque est donc necessaire pour exempter ; l'un des deux a `True`
+    suffit a rendre l'article applicable."""
+    ref = "AI Act, art. 49"
+    fournisseur = p.ia_fournisseur_haut_risque
+    deployeur = p.ia_deployeur_haut_risque
+
+    if fournisseur or deployeur:
+        return Decision(
+            Verdict.APPLICABLE,
+            "Fournisseur ou deployeur d'un systeme d'IA a haut risque : "
+            "obligation d'enregistrement applicable (art. 49, par. 1 a 3).",
+            ref,
+        )
+    if fournisseur is False and deployeur is False:
+        return Decision(
+            Verdict.EXEMPTE,
+            "Organisation ni fournisseur ni deployeur d'un systeme d'IA a haut risque : "
+            "aucune des hypotheses d'enregistrement de l'article 49 n'est constituee.",
+            ref,
+        )
+    manquants = [
+        libelle for libelle, valeur in (
+            ("statut de fournisseur a haut risque", fournisseur),
+            ("statut de deployeur a haut risque", deployeur),
+        ) if valeur is None
+    ]
+    return Decision(
+        Verdict.A_VERIFIER,
+        f"Information manquante pour statuer sur l'obligation d'enregistrement : "
+        f"{', '.join(manquants)}.",
+        ref,
+    )
+
+
 def _ai_act_deployeur_restreint(p: ProfilOrganisme) -> Decision:
     """Articles 27 et 86 : ne visent qu'un sous-ensemble des deployeurs de
     systemes a haut risque (voir correction 4 en tete de module). Etre
@@ -582,7 +640,7 @@ REGLES: dict[tuple[str, int], Callable[[ProfilOrganisme], Decision]] = {
     ("ai_act", 27): _ai_act_deployeur_restreint,
     ("ai_act", 47): _ai_act_fournisseur,
     ("ai_act", 48): _ai_act_fournisseur,
-    ("ai_act", 49): _ai_act_fournisseur,
+    ("ai_act", 49): _ai_act_enregistrement,
     ("ai_act", 50): _ai_act_transparence,
     ("ai_act", 72): _ai_act_fournisseur,
     ("ai_act", 73): _ai_act_fournisseur,
