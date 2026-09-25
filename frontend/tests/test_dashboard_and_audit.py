@@ -68,26 +68,30 @@ def test_dashboard_renders_empty_state(page, frontend_server, backend_server):
 # par une visite guidee, une etape a la fois, avec halo autour de l'element
 # concerne (voir demarrerTour/rendreTour dans index.html).
 # --------------------------------------------------------------------------
-def test_getting_started_tour_guides_through_three_steps(page, frontend_server, backend_server):
+def test_getting_started_tour_guides_through_four_steps(page, frontend_server, backend_server):
     email = f"tour-{uuid.uuid4().hex[:8]}@exemple.fr"
     _register(page, frontend_server, backend_server, email, fermer_tour=False)
     page.wait_for_selector(".tour-bulle")
 
-    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 1 sur 3")
-    expect(page.locator(".tour-bulle h3")).to_have_text("Lancer une première campagne")
+    # Repondre au profil d'eligibilite avant de lancer une analyse est le
+    # premier reflexe attendu, avant meme d'ouvrir une campagne.
+    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 1 sur 4")
+    expect(page.locator(".tour-bulle h3")).to_have_text("Renseigner le profil de l'organisation")
     expect(page.locator(".tour-bulle button:has-text(\"Précédent\")")).to_have_count(0)
     expect(page.locator(".tour-anneau")).to_be_visible()
 
     page.click(".tour-bulle button:has-text(\"Suivant\")")
-    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 2 sur 3")
+    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 2 sur 4")
+    expect(page.locator(".tour-bulle h3")).to_have_text("Lancer une première campagne")
 
     # Precedent doit vraiment revenir en arriere, pas seulement avancer.
     page.click(".tour-bulle button:has-text(\"Précédent\")")
-    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 1 sur 3")
+    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 1 sur 4")
 
     page.click(".tour-bulle button:has-text(\"Suivant\")")
     page.click(".tour-bulle button:has-text(\"Suivant\")")
-    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 3 sur 3")
+    page.click(".tour-bulle button:has-text(\"Suivant\")")
+    expect(page.locator(".tour-bulle .eyebrow")).to_have_text("Étape 4 sur 4")
     expect(page.locator(".tour-bulle h3")).to_have_text("Inviter un membre de votre équipe")
     expect(page.locator(".tour-bulle button:has-text(\"C'est parti\")")).to_be_visible()
 
