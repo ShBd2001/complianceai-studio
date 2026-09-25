@@ -242,6 +242,23 @@ button.petit{padding:6px 13px;font-size:13px}
 .cadre-btn.actif{background:var(--grad-marque);border-color:transparent;color:#fff;box-shadow:0 4px 14px -2px rgba(76,63,224,.5)}
 .compte-onglet{font-size:11px;font-weight:700;opacity:.6;font-variant-numeric:tabular-nums}
 .cadre-btn.actif .compte-onglet{opacity:.85}
+
+/* Profil d'eligibilite : cartes-questions a choix segmente. */
+.q-progres-tete{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--sourdine)}
+#profil-compte{font-weight:700;color:var(--primaire);font-variant-numeric:tabular-nums}
+.q-progres{height:6px;border-radius:var(--rayon-pill);background:var(--regle-fine);overflow:hidden;margin:6px 0 22px}
+.q-progres>span{display:block;height:100%;width:0;background:var(--grad-marque);border-radius:var(--rayon-pill);transition:width .3s cubic-bezier(.2,.7,.3,1)}
+.q-grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:22px}
+.q-carte{all:unset;display:block;box-sizing:border-box;background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:16px 18px;box-shadow:var(--ombre-sm);transition:border-color .18s ease,box-shadow .18s ease}
+.q-carte:focus-within{border-color:var(--primaire);box-shadow:var(--ombre)}
+.q-titre{all:unset;display:block;font-family:var(--sans);font-size:14px;font-weight:700;color:var(--encre);line-height:1.4}
+.q-aide{font-size:12.5px;color:var(--sourdine);line-height:1.5;margin:5px 0 14px}
+.q-choix{display:flex;gap:6px}
+.q-opt{position:relative;flex:1;text-align:center;padding:9px 6px;border:1px solid var(--regle);border-radius:var(--rayon-sm);font-size:12.5px;font-weight:600;color:var(--encre-doux);cursor:pointer;background:var(--papier);transition:border-color .15s ease,color .15s ease,background .15s ease,box-shadow .15s ease}
+.q-opt input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.q-opt:hover{border-color:var(--primaire);color:var(--encre)}
+.q-opt:focus-within{outline:2px solid var(--primaire);outline-offset:2px}
+.q-opt.actif{background:var(--grad-marque);border-color:transparent;color:#fff;box-shadow:0 3px 10px -2px rgba(76,63,224,.45)}
 .ref-resume{display:flex;gap:16px;align-items:center;background:var(--carte);border:1px solid var(--regle);border-radius:var(--rayon);padding:16px 20px;margin-bottom:20px;box-shadow:var(--ombre-sm);animation:carte-entree .3s cubic-bezier(.2,.7,.3,1)}
 .ref-resume-ic{flex:none;width:38px;height:38px;border-radius:10px;background:var(--primaire-clair);color:var(--primaire);display:flex;align-items:center;justify-content:center}
 .ref-resume-ic svg{width:19px;height:19px}
@@ -2958,17 +2975,37 @@ const ENTITE_NIS2_LIBELLES_EN = {
   non_concernee: 'Neither',
 };
 
+// Carte-question : un intitule, une aide, un choix segmente a trois (ou
+// quatre, pour NIS2) options en boutons-pilules plutot qu'un menu deroulant
+// -- l'etat de chaque question se lit d'un coup d'oeil sur toute la page,
+// pas seulement une fois le menu ouvert. Le <input type="radio"> reel reste
+// la source de verite (accessible, navigable au clavier) ; le style ne fait
+// que l'habiller.
+function carteQuestion(champ, libelle, aide, options, valeurActuelle) {
+  return `<fieldset class="q-carte">
+    <legend class="q-titre">${tr(libelle)}</legend>
+    <p class="q-aide">${tr(aide)}</p>
+    <div class="q-choix">
+      ${options.map(([v, l]) => `
+        <label class="q-opt${valeurActuelle === v ? ' actif' : ''}">
+          <input type="radio" name="pf-${champ}" value="${v}"${valeurActuelle === v ? ' checked' : ''} onchange="marquerChoix('${champ}')">
+          ${l}
+        </label>`).join('')}
+    </div>
+  </fieldset>`;
+}
+
+function marquerChoix(champ) {
+  document.querySelectorAll(`input[name="pf-${champ}"]`).forEach(entree => {
+    entree.closest('.q-opt').classList.toggle('actif', entree.checked);
+  });
+  rafraichirProgressionProfil();
+}
+
 function champBooleen(champ, libelle, aide, valeur) {
   const val = v => v === true ? 'oui' : v === false ? 'non' : '';
-  return `<div>
-    <label for="pf-${champ}">${tr(libelle)}</label>
-    <select id="pf-${champ}" class="compact">
-      <option value=""${val(valeur) === '' ? ' selected' : ''}>${tr('Je ne sais pas')}</option>
-      <option value="oui"${val(valeur) === 'oui' ? ' selected' : ''}>${tr('Oui')}</option>
-      <option value="non"${val(valeur) === 'non' ? ' selected' : ''}>${tr('Non')}</option>
-    </select>
-    <p class="aide-mdp">${tr(aide)}</p>
-  </div>`;
+  return carteQuestion(champ, libelle, aide,
+    [['oui', tr('Oui')], ['non', tr('Non')], ['', tr('Je ne sais pas')]], val(valeur));
 }
 
 // Page dediee par organisation (#/organisation/{id}) plutot qu'un formulaire
@@ -2982,28 +3019,51 @@ function champsProfilCadre(code) {
   return { rgpd: CHAMPS_PROFIL_RGPD, dora: CHAMPS_PROFIL_DORA, ai_act: CHAMPS_PROFIL_AI_ACT }[code] || [];
 }
 
+function totalProfilCadre(code) {
+  return code === 'nis2' ? 1 : champsProfilCadre(code).length;
+}
+
+// A partir des donnees serveur (rendu initial, avant toute interaction).
 function progressionProfilCadre(code, org) {
-  if (code === 'nis2') return org.entite_nis2 ? '1/1' : '0/1';
-  const champs = champsProfilCadre(code);
-  const renseignes = champs.filter(([c]) => org[c] !== null && org[c] !== undefined).length;
-  return `${renseignes}/${champs.length}`;
+  if (code === 'nis2') return org.entite_nis2 ? 1 : 0;
+  return champsProfilCadre(code).filter(([c]) => org[c] !== null && org[c] !== undefined).length;
+}
+
+// A partir de l'etat courant du formulaire (apres interaction, avant tout
+// enregistrement) : permet a la barre de progression et aux pastilles des
+// onglets de reagir immediatement, pas seulement apres un aller-retour serveur.
+function progressionProfilCadreDom(code) {
+  if (code === 'nis2') return document.querySelector(`input[name="pf-entite_nis2"]:checked`)?.value ? 1 : 0;
+  return champsProfilCadre(code).filter(([c]) => {
+    const v = document.querySelector(`input[name="pf-${c}"]:checked`)?.value;
+    return v !== undefined && v !== '';
+  }).length;
+}
+
+function rafraichirProgressionProfil() {
+  let renseignes = 0, total = 0;
+  PANNEAUX_PROFIL.forEach(code => {
+    const r = progressionProfilCadreDom(code), t = totalProfilCadre(code);
+    renseignes += r; total += t;
+    const pastille = document.querySelector(`#profil-onglets .cadre-btn[data-code="${code}"] .compte-onglet`);
+    if (pastille) pastille.textContent = `${r}/${t}`;
+  });
+  const barre = $('profil-barre');
+  if (barre) barre.style.width = total ? `${Math.round(100 * renseignes / total)}%` : '0%';
+  const compte = $('profil-compte');
+  if (compte) compte.textContent = `${renseignes}/${total}`;
 }
 
 function panneauProfilCadre(code, org) {
   if (code === 'nis2') {
     const libellesNis2 = LANG === 'en' ? ENTITE_NIS2_LIBELLES_EN : ENTITE_NIS2_LIBELLES;
-    return `<div class="grille" style="max-width:640px">
-      <div>
-        <label for="pf-entite_nis2">${tr('Statut au regard de NIS2')}</label>
-        <select id="pf-entite_nis2" class="compact">
-          ${Object.entries(libellesNis2).map(([v, l]) =>
-            `<option value="${v}"${(org.entite_nis2 || '') === v ? ' selected' : ''}>${l}</option>`).join('')}
-        </select>
-        <p class="aide-mdp">${tr("Entité essentielle ou importante au sens des articles 2 et 3 de la directive NIS2 — secteurs critiques (énergie, santé, numérique, etc.) et seuils de taille.")}</p>
-      </div>
+    return `<div class="q-grille">
+      ${carteQuestion('entite_nis2', 'Statut au regard de NIS2',
+        "Entité essentielle ou importante au sens des articles 2 et 3 de la directive NIS2 — secteurs critiques (énergie, santé, numérique, etc.) et seuils de taille.",
+        Object.entries(libellesNis2), org.entite_nis2 || '')}
     </div>`;
   }
-  return `<div class="grille" style="max-width:640px">
+  return `<div class="q-grille">
     ${champsProfilCadre(code).map(([champ, libelle, aide]) => champBooleen(champ, libelle, aide, org[champ])).join('')}
   </div>`;
 }
@@ -3012,7 +3072,7 @@ function construireOngletsProfil(org) {
   return PANNEAUX_PROFIL.map((code, i) => `
     <button type="button" class="cadre-btn${i === 0 ? ' actif' : ''}" data-code="${code}" onclick="afficherPanneauProfil('${code}')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconeCadre(code)}</svg>
-      ${h(codeCadre(code))}<span class="compte-onglet">${progressionProfilCadre(code, org)}</span>
+      ${h(codeCadre(code))}<span class="compte-onglet">${progressionProfilCadre(code, org)}/${totalProfilCadre(code)}</span>
     </button>`).join('');
 }
 
@@ -3042,20 +3102,32 @@ async function vueProfilOrganisation(orgId) {
         <div class="rangee"><button class="discret" onclick="location.hash='#/compte'">${tr('Retour à Mon compte')}</button></div>
       </div>
       <p class="chapeau">${tr("Ces réponses affinent le filtre d'éligibilité : une obligation qui ne concerne pas votre organisation peut être écartée automatiquement, avec justification. Une question laissée sur « Je ne sais pas » n'exempte jamais à tort — l'exigence suit alors le parcours normal d'évaluation.")}</p>
+
+      <div class="q-progres-tete">
+        <span>${tr('Profil renseigné')}</span>
+        <span id="profil-compte"></span>
+      </div>
+      <div class="q-progres"><span id="profil-barre"></span></div>
+
       <div class="cadre-switch" id="profil-onglets">${construireOngletsProfil(org)}</div>
       ${PANNEAUX_PROFIL.map((code, i) => `<div id="panneau-profil-${code}"${i === 0 ? '' : ' hidden'}>${panneauProfilCadre(code, org)}</div>`).join('')}
       <button id="btn-profil" onclick="modifierProfil('${orgId}')">${tr('Enregistrer')}</button>
       <div id="msg-profil" aria-live="polite"></div>`);
+    rafraichirProgressionProfil();
   } catch (e) { poser('vue', echoue(e)); }
+}
+
+function valeurChoix(champ) {
+  return document.querySelector(`input[name="pf-${champ}"]:checked`)?.value ?? '';
 }
 
 async function modifierProfil(orgId) {
   const corps = {};
   for (const [champ] of CHAMPS_PROFIL) {
-    const brut = $(`pf-${champ}`).value;
+    const brut = valeurChoix(champ);
     corps[champ] = brut === '' ? null : brut === 'oui';
   }
-  const nis2 = $('pf-entite_nis2').value;
+  const nis2 = valeurChoix('entite_nis2');
   corps.entite_nis2 = nis2 === '' ? null : nis2;
   poser('msg-profil', attente('Enregistrement'));
   try {
@@ -3064,14 +3136,6 @@ async function modifierProfil(orgId) {
     });
     const idx = E.orgs.findIndex(o => o.id === orgId);
     if (idx !== -1) E.orgs[idx] = org;
-    // Rafraichit les decomptes de progression des onglets, sans reconstruire
-    // toute la page (garde le message de succes visible).
-    if ($('profil-onglets')) {
-      PANNEAUX_PROFIL.forEach(code => {
-        const badge = document.querySelector(`#profil-onglets .cadre-btn[data-code="${code}"] .compte-onglet`);
-        if (badge) badge.textContent = progressionProfilCadre(code, org);
-      });
-    }
     poser('msg-profil', `<div class="succes">${tr('Profil mis à jour.')}</div>`);
   } catch (e) { poser('msg-profil', echoue(e)); }
 }
