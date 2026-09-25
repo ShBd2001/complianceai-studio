@@ -2466,7 +2466,14 @@ function rendreConstats(constats, auditId) {
 const FILTRES = {};
 let minuteurFiltre = null;
 
-function barreFiltres(prefix) {
+function barreFiltres(prefix, statuts) {
+  // `statuts` restreint les options du filtre de statut aux valeurs
+  // reellement presentes dans la liste filtree (ex. le plan de remediation
+  // ne charge que 'open'/'in_progress' : proposer "Resolu" y afficherait
+  // toujours une liste vide, ce qui ressemble a un filtre casse).
+  const entreesStatut = statuts
+    ? statuts.map(v => [v, SUIVI[v]])
+    : Object.entries(SUIVI);
   return `<div class="rangee" style="margin:2px 0 4px">
     <input type="text" id="${prefix}-f-texte" placeholder="Filtrer par article ou intitulé" style="max-width:240px" oninput="declencherFiltre('${prefix}')">
     <select class="compact" id="${prefix}-f-gravite" onchange="declencherFiltre('${prefix}')">
@@ -2475,7 +2482,7 @@ function barreFiltres(prefix) {
     </select>
     <select class="compact" id="${prefix}-f-statut" onchange="declencherFiltre('${prefix}')">
       <option value="">Tous statuts</option>
-      ${Object.entries(SUIVI).map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
+      ${entreesStatut.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}
     </select>
     <label class="compact" style="display:flex;align-items:center;gap:6px;white-space:nowrap">
       <input type="checkbox" id="${prefix}-f-revoir" onchange="declencherFiltre('${prefix}')">${tr('À revoir')}
@@ -2607,7 +2614,7 @@ async function vueRemediation() {
         <div class="carte"><span class="n">${parEtat('accepted_risk')}</span><span class="l">Risques acceptés</span></div>
       </div>
       <h2>${plusieurs ? `${terminees.length} <span>campagnes terminées</span>` : `Campagne « ${h(terminees[0].title)} »`}</h2>
-      ${aTraiter.length ? `${barreFiltres('remed')}<div id="z-remed"></div>`
+      ${aTraiter.length ? `${barreFiltres('remed', ['open', 'in_progress'])}<div id="z-remed"></div>`
         : `<div class="succes">Aucun constat en attente : tous ont été traités ou écartés.</div>`}`);
     if (aTraiter.length) initFiltre('remed', aTraiter, liste => poser('z-remed',
       liste.length ? liste.map(c => carte(c, c._auditId, plusieurs ? c._campagne : null)).join('')
