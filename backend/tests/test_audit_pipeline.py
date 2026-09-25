@@ -772,6 +772,13 @@ def test_unverifiable_citation_downgrades_compliance_to_indetermine(monkeypatch)
     assert verdict["_passage_verifie"] is None
     assert verdict["confiance"] <= 0.3
     assert "n'a pas pu etre retrouvee" in verdict["constat"]
+    # La gravite et la recommandation du verdict "oui" d'origine (toujours
+    # "info" par consigne du prompt) ne doivent pas survivre au reclassement :
+    # elles laisseraient croire a tort qu'il ne s'agit que d'une observation
+    # sans suite a donner.
+    assert verdict["severite"] != "info"
+    assert "poursuivre" not in (verdict["recommandation"] or "").lower()
+    assert "verifier" in verdict["recommandation"].lower()
 
 
 def test_compliance_claim_with_no_passages_is_downgraded(monkeypatch):
