@@ -228,6 +228,51 @@ calibrée indépendamment du score lexical en mode lexical pur.
 migration : revenir au sémantique (le comportement d'avant cette décision)
 ne demande qu'un redéploiement avec la variable modifiée.
 
+### DA-08 — Filtre d'éligibilité multi-référentiel, jamais au bénéfice du doute
+
+*Décision.* `app/services/eligibilite.py` tranche en amont l'applicabilité
+de certaines obligations à partir du profil déclaratif de l'organisation
+(`organizations`, colonnes nullables), sans appel au modèle : RGPD
+(art. 13, 14, 30, 37) depuis la Tâche 8, étendu par la Tâche F1 à NIS2,
+DORA et AI Act (~40 règles supplémentaires, 5 nouveaux champs de profil).
+Trois verdicts — `APPLICABLE`, `EXEMPTE`, `A_VERIFIER` — indexés sur
+`(référentiel, numéro d'article)` : l'article 30 du RGPD (registre des
+traitements) et celui de NIS2 (notification volontaire) n'ont aucun
+rapport, malgré le même numéro. Une information non renseignée ne produit
+**jamais** une exemption : `A_VERIFIER` fait suivre à l'obligation le
+parcours normal d'évaluation par le modèle, exactement comme si le filtre
+n'existait pas.
+
+*Justification.* Le coût d'un faux négatif (obligation réellement due,
+écartée à tort) est sans commune mesure avec celui d'un faux positif
+(obligation non due, évaluée pour rien par le modèle) — un outil d'audit
+qui exempte à tort perd toute valeur probante. Certains référentiels ont
+des règles plus étroites que leur statut général ne le laisse supposer :
+un article NIS2 peut cibler spécifiquement les fournisseurs de DNS/registre
+(art. 27/28) au sein des seules entités essentielles/importantes, un
+article DORA peut être réservé aux autorités européennes de surveillance
+et donc toujours hors périmètre pour une organisation cliente (art. 15,
+20, 21), un article AI Act peut ne jamais être exemptable (art. 5,
+pratiques interdites) quel que soit le profil. Ces distinctions sont
+posées article par article en lisant le texte ingéré, pas déduites d'un
+principe général par référentiel.
+
+*Conséquences.* Positives : les obligations manifestement hors champ
+n'occupent plus de temps de calcul ni de quota modèle, avec une
+justification tracée sur le constat. Un avertissement non bloquant
+(`scope_warning`) est renvoyé à la création d'une campagne si le profil
+indique que le référentiel entier ne s'applique pas. Négatives : le filtre
+ne vaut que ce que vaut le profil déclaré — un profil erroné ou non
+renseigné ne fait courir aucun risque d'exemption abusive (prudence
+systématique), mais ne fait pas non plus gagner le temps de calcul qu'un
+profil correctement renseigné permettrait. Portée : ce filtre concerne le
+backend FastAPI, pas le harnais du laboratoire (`evaluation/`), pipeline
+distinct.
+
+*Réversibilité.* Purement additive : retirer une règle de `REGLES` fait
+retomber l'article concerné sur le parcours normal d'évaluation par le
+modèle, sans migration ni effet de bord.
+
 ## 5. Vue de déploiement
 
 ```
@@ -258,6 +303,7 @@ le schéma est en retard.
 | Authentification unique (SSO/SAML) | Non implémentée, non annoncée (retirée de la page Tarifs) | Chantier non engagé, pas de calendrier |
 | Limite de débit en mémoire | `slowapi` n'a pas de backend partagé (Redis) : passer à plusieurs processus applicatifs multiplierait silencieusement les seuils de protection | Ajout de Redis si une mise à l'échelle horizontale devient nécessaire |
 | Quotas par offre | Campagnes/mois et utilisateurs appliqués côté serveur ; nombre d'organisations par palier et restriction "1 référentiel" de l'offre Essentiel non appliqués (ambiguïté produit sur le cas d'un utilisateur déjà multi-organisations) | Décision produit à trancher avant application |
+| Mesure de précision hors RGPD | Seul le RGPD dispose d'un corpus de validation mesuré (`corpus/`, 15 documents, 210 verdicts) ; `corpus_nis2/`, `corpus_dora/`, `corpus_ai_act/` sont des squelettes vides (Tâche F2) — le filtre d'éligibilité (DA-08) et le moteur d'audit tournent sur ces référentiels sans qu'aucune métrique de précision n'ait encore été mesurée dessus | Composition du corpus et de sa vérité terrain par l'équipe, puis `python -m validation.evaluate --referentiel {nis2,dora,ai_act}` |
 
 Ces limites sont documentées volontairement plutôt que masquées : certaines
 sont des choix assumés pour l'échelle actuelle du projet, d'autres des
