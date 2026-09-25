@@ -856,6 +856,17 @@ def run_audit(
         for requirement, verdict in zip(requirements, verdicts, strict=True):
             conformity = str(verdict.get("conforme", "indetermine")).lower()
             severity = _to_severity(verdict.get("severite"))
+            # Un verdict "indetermine" declenche toujours needs_human_review
+            # (voir _verification_humaine) : afficher malgre tout la gravite
+            # "info" -- que le modele l'ait choisie lui-meme pour un
+            # indetermine natif, ou qu'elle survive d'un "oui" retrograde --
+            # affiche cote a cote un badge "Information" et un badge "Revue
+            # humaine requise", contradictoires a l'oeil. "info" est donc
+            # exclue pour tout indetermine, jamais relevee au-dela de "minor"
+            # (aucun manquement n'est prouve, la retrogradation ne doit pas
+            # non plus alarmer a tort).
+            if conformity == "indetermine" and severity is Severity.INFO:
+                severity = Severity.MINOR
             weight = SEVERITY_WEIGHT[severity]
 
             # Une exigence non applicable sort du calcul, numerateur comme

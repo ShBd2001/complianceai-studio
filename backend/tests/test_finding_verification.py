@@ -220,6 +220,36 @@ def test_citation_fabriquee_ramene_a_indetermine_et_signale_la_revue(monkeypatch
     assert finding["recommendation"]
 
 
+def test_indetermine_natif_avec_citation_verifiee_n_affiche_jamais_info(
+    monkeypatch, client, org, framework_ready
+):
+    """Cas distinct du precedent : ici le modele repond "indetermine" de
+    lui-meme (pas de retrogradation), en citant un passage reel du document
+    a l'appui de son raisonnement -- la citation est donc verifiee. Le
+    prompt n'impose une gravite qu'au "oui" ("info") ; rien n'empeche le
+    modele de choisir "info" pour un "indetermine" natif aussi, ce qui
+    affiche alors un badge "Information" a cote de "Revue humaine requise",
+    contradictoire a l'oeil (needs_human_review est toujours vrai sur un
+    indetermine, quelle qu'en soit l'origine)."""
+    from app.services import llm
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: {
+        "conforme": "indetermine", "severite": "info", "confiance": 0.4,
+        "constat": "Le chiffrement est decrit mais rien n'indique s'il couvre tous les cas requis.",
+        "preuve": "Les donnees sont chiffrees au repos et en transit.",
+        "recommandation": "Verifier la couverture exacte du chiffrement.",
+    })
+
+    findings = _lancer_audit(client, org, framework_ready)
+    assert len(findings) == 1
+    finding = findings[0]
+    assert finding["verdict"] == "indetermine"
+    assert finding["citation_verified"] is True
+    assert finding["needs_human_review"] is True
+    assert finding["severity"] != "info"
+
+
 def test_citation_reelle_sur_verdict_non_est_verifiee(monkeypatch, client, org, framework_ready):
     from app.services import llm
 
