@@ -1,0 +1,5 @@
+{
+  "version": "0.1",
+  "note": "Squelette vide, a completer par l'equipe. Voir README.md de ce dossier pour le format et corpus/verite_terrain.json (RGPD) pour un exemple rempli. Toute annotation doit etre justifiee : c'est la reference contre laquelle le moteur est mesure, une erreur ici invalide toutes les metriques.",
+  "cas": []
+}
