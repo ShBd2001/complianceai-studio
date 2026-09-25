@@ -2448,17 +2448,17 @@ async function telechargerPDF(auditId, version, bouton) {
 const RANGS = [['critical','Non-conformités critiques'],['major','Non-conformités majeures'],
                ['minor','Axes d’amélioration'],['info','Observations']];
 
-function rendreConstats(constats, auditId) {
+function rendreConstats(constats, auditId, prefix = 'constats') {
   const na = constats.filter(c => c.status === 'not_applicable');
   const actifs = constats.filter(c => c.status !== 'not_applicable');
   let s = '';
   for (const [g, titre] of RANGS) {
     const lot = actifs.filter(c => c.severity === g);
     if (!lot.length) continue;
-    s += `<div class="famille"><span>${titre}</span><span>${lot.length}</span></div>` + lot.map(c => carte(c, auditId)).join('');
+    s += `<div class="famille"><span>${titre}</span><span>${lot.length}</span></div>` + lot.map(c => carte(c, auditId, null, prefix)).join('');
   }
   if (na.length) s += `<div class="famille"><span>Écartées du périmètre</span><span>${na.length}</span></div>`
-    + na.map(c => carte(c, auditId)).join('');
+    + na.map(c => carte(c, auditId, null, prefix)).join('');
   return s || `<p class="vide">Aucun constat ne correspond aux filtres.</p>`;
 }
 
@@ -2529,11 +2529,11 @@ function badgesVerification(c) {
   return parts.length ? `<div class="verifs">${parts.join(' ')}</div>` : '';
 }
 
-function carte(c, auditId, campagne) {
+function carte(c, auditId, campagne, prefix = 'constats') {
   const g = c.status === 'not_applicable' ? 'info' : (c.severity || 'info');
   const intitule = (c.title || '').replace(/^Article\s+[\d\-]+\s*[—–-]\s*/i, '');
   const suivi = c.status === 'not_applicable' ? '' : `
-    <select class="compact" onchange="changerSuivi('${auditId}','${c.id}',this.value,this)">
+    <select class="compact" onchange="changerSuivi('${auditId}','${c.id}',this.value,this,'${prefix}')">
       ${['open','in_progress','resolved','accepted_risk','false_positive']
         .map(v => `<option value="${v}"${c.status === v ? ' selected' : ''}>${SUIVI[v]}</option>`).join('')}
     </select>`;
@@ -2563,13 +2563,37 @@ function carte(c, auditId, campagne) {
   </article>`;
 }
 
-async function changerSuivi(auditId, findingId, statut, champ) {
+async function changerSuivi(auditId, findingId, statut, champ, prefix) {
   champ.disabled = true;
   try {
     await appel(`/api/v1/orgs/${E.orgId}/audits/${auditId}/findings/${findingId}`,
       { method:'PATCH', body: JSON.stringify({ status: statut }) });
-  } catch (e) { alert(tr(e.message)); }
-  champ.disabled = false;
+  } catch (e) {
+    alert(tr(e.message));
+    champ.disabled = false;
+    return;
+  }
+  if (prefix === 'remed') {
+    // Cette vue ne liste que les constats ouverts/en cours : un changement
+    // de statut peut faire sortir l'element de la liste et modifie les
+    // compteurs recapitulatifs (cartes en tete de page). Recalculer tout
+    // cela localement dupliquerait la logique de vueRemediation() ; la
+    // refaire tourner a partir des donnees serveur est plus simple et
+    // garantit l'exactitude.
+    if (location.hash === '#/remediation') await vueRemediation();
+    return;
+  }
+  // Sur les autres vues (constats d'une campagne), le statut change sans que
+  // l'element ne quitte la liste : mettre a jour la donnee locale suffit,
+  // pour que le filtre par statut reste exact au prochain declenchement.
+  const etat = FILTRES[prefix];
+  if (etat) {
+    const item = etat.brut.find(x => x.id === findingId);
+    if (item) item.status = statut;
+    appliquerFiltre(prefix);
+  } else {
+    champ.disabled = false;
+  }
 }
 
 /* ---------- Plan de remédiation ---------- */
@@ -2617,7 +2641,7 @@ async function vueRemediation() {
       ${aTraiter.length ? `${barreFiltres('remed', ['open', 'in_progress'])}<div id="z-remed"></div>`
         : `<div class="succes">Aucun constat en attente : tous ont été traités ou écartés.</div>`}`);
     if (aTraiter.length) initFiltre('remed', aTraiter, liste => poser('z-remed',
-      liste.length ? liste.map(c => carte(c, c._auditId, plusieurs ? c._campagne : null)).join('')
+      liste.length ? liste.map(c => carte(c, c._auditId, plusieurs ? c._campagne : null, 'remed')).join('')
         : `<p class="vide">Aucun constat ne correspond aux filtres.</p>`));
   } catch (e) { poser('z', echoue(e)); }
 }
