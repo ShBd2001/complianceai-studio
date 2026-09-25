@@ -212,6 +212,12 @@ def test_citation_fabriquee_ramene_a_indetermine_et_signale_la_revue(monkeypatch
     assert finding["citation_verified"] is False
     assert finding["needs_human_review"] is True
     assert finding["review_reason"]
+    # Le modele avait repondu "oui" (severite "info", pas de recommandation
+    # necessaire) avant reclassement : ces deux champs du verdict d'origine
+    # ne doivent pas survivre tels quels, sous peine d'afficher un constat
+    # "indetermine" avec un badge "Information" et sans action suggeree.
+    assert finding["severity"] != "info"
+    assert finding["recommendation"]
 
 
 def test_citation_reelle_sur_verdict_non_est_verifiee(monkeypatch, client, org, framework_ready):

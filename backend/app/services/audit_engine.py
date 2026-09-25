@@ -492,6 +492,23 @@ def evaluate_requirement(
                 "verdict ramene a indetermine par prudence, une verification "
                 "manuelle est necessaire. " + str(verdict.get("constat") or "")
             ).strip()
+            # La gravite et la recommandation venaient du verdict d'origine
+            # ("oui" -> toujours gravite "info" par consigne du prompt,
+            # "partiel" -> gravite du point secondaire manquant) : les garder
+            # affichait un badge "Information" et une recommandation du type
+            # "poursuivre la pratique actuelle" sur un constat dont la
+            # conformite n'est plus établie, ce qui laissait croire a tort que
+            # rien n'appelait d'attention. Un indetermine n'est ni un
+            # manquement prouve (critical/major) ni une simple observation
+            # (info) : il releve du meme palier que les axes d'amelioration
+            # (NON_CONFORMITY_SEVERITIES ne l'inclut pas), avec une
+            # recommandation qui reflete ce qui reste reellement a faire.
+            verdict["severite"] = "minor"
+            verdict["recommandation"] = (
+                "Verifier manuellement le respect de cette exigence : la "
+                "conformite annoncee par le modele n'a pas pu etre confirmee "
+                "par une citation verifiable dans les documents verses."
+            )
 
         if breaker is not None:
             breaker.record_success()
