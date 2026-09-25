@@ -12,6 +12,12 @@ séparé, jamais câblé dans l'application déployée. Les tâches ci-dessous p
 sur l'application réelle, sauf la Tâche 7 (préparation d'une mesure du moteur
 de production, toujours sans lien avec le laboratoire).
 
+Un second document de cadrage (« Fiabiliser les quatre référentiels ») a été
+transmis après la Tâche 9, pour étendre le filtre d'éligibilité (Tâche 8) aux
+trois référentiels non-RGPD : Tâches F1 à F3 ci-dessous, mêmes règles de
+méthode (un commit par tâche, `ruff`/`pytest` après chaque tâche, jamais de
+vérité terrain ni de grille détaillée rédigée pour NIS2/DORA/AI Act).
+
 ---
 
 ## Tâche 0 — État des lieux
@@ -155,20 +161,111 @@ lancée** (consommerait ~700 appels Groq pour 3 passages × 15 documents).
 - Tests ajoutés : `backend/tests/test_comparison.py` (3 tests — les cinq
   catégories, refus inter-organisations, refus inter-référentiels).
 
+## Corrections hors plan de tâches
+
+Remontées par l'utilisatrice en cours d'usage réel, traitées au fil de l'eau
+entre la Tâche 9 et la Tâche F1 :
+
+- **Commit `4ac1f8a`** — Faux échecs de vérification de citation : le modèle
+  recopiait parfois l'étiquette de son propre prompt (`[Extrait N —
+  référence]`) dans la citation renvoyée, faisant échouer la comparaison
+  littérale ; et une citation authentique assemblée à partir de plusieurs
+  phrases réelles non contiguës ne correspondait à aucun passage unique.
+  Diagnostiqué avec des appels réels à Groq (clé présente en local), pas
+  supposé. 3 tests ajoutés à `backend/tests/test_audit_pipeline.py`.
+- **Commit `8b38427`** — Harmonisation visuelle des badges de vérification :
+  remplacement d'un système CSS parallèle (`.badge-verif`, collision de
+  spécificité avec `.alerte`) par les composants déjà existants (`.etiq`
+  frontend, `.badge` + couleurs `SEVERITY_LABEL` dans les rapports).
+- **Commit `6f588ec`** — Retrait du panneau « Détails techniques de
+  l'analyse » (frontend), à la demande explicite.
+- **Commit `562dc30`** — Le filtre de statut du plan de remédiation
+  proposait 6 statuts alors que cette page ne charge que les constats
+  ouverts/en cours : choisir « Résolu » ou « Risque accepté » affichait
+  toujours une liste vide. `barreFiltres()` accepte désormais une liste de
+  statuts restreinte au contexte.
+
+## Tâche F1 — Filtre d'éligibilité pour NIS2, DORA et AI Act
+
+**Commit** `a18706f`.
+
+- Étend `eligibilite.py` (Tâche 8, jusqu'ici RGPD uniquement) aux trois
+  autres référentiels. Avant d'écrire une règle, relecture du texte intégral
+  de chaque article auditable ingéré (pas seulement les titres) : 5
+  corrections apportées à la grille proposée par le document de cadrage
+  (détaillées et justifiées dans le docstring du module), notamment des
+  articles NIS2/DORA plus étroits que leur statut général ne le laisse
+  supposer, des articles DORA institutionnels toujours hors périmètre pour
+  une organisation cliente, et l'article 5 de l'AI Act jamais exemptable.
+- Migration : `0018_profil_referentiels` (5 colonnes nullables sur
+  `organizations` : `entite_nis2`, `entite_financiere_dora`,
+  `ia_fournisseur_haut_risque`, `ia_deployeur_haut_risque`, `ia_utilisee` ;
+  réversible, testée upgrade/downgrade/upgrade).
+- `POST /orgs/{org_id}/audits` renvoie désormais `scope_warning` (non
+  bloquant) si le profil indique que le référentiel entier ne s'applique
+  pas à l'organisation.
+- Frontend : formulaire « Profil de l'organisation » restructuré par
+  référentiel (RGPD/NIS2/DORA/AI Act) ; vérifié visuellement (Playwright,
+  capture d'écran) avec un aller-retour complet enregistrement →
+  rechargement → persistance.
+- Tests ajoutés : `backend/tests/test_eligibilite_multi_referentiel.py` (18
+  tests — chaque règle/correction, `referentiel_hors_champ()`, un test
+  d'intégration bout-en-bout avec un connecteur factice prouvant zéro appel
+  au modèle sur des articles exemptés) ; `backend/tests/test_eligibilite.py`
+  corrigé (un test supposait l'absence de toute règle NIS2, devenue fausse
+  une fois la Tâche F1 posée — réécrit pour vérifier la vraie propriété
+  visée : l'absence de fuite des règles RGPD vers NIS2).
+
+## Tâche F2 — Préparation de la mesure sur NIS2, DORA et AI Act
+
+**Commit** `01b2569`. Préparation uniquement — **aucune vérité terrain
+rédigée, aucune mesure réelle lancée** (interdit par le document de
+cadrage).
+
+- `validation/evaluate.py --referentiel {rgpd,nis2,dora,ai_act}` : fixe les
+  valeurs par défaut de `--corpus`/`--verite` selon le référentiel, sans
+  rien changer au comportement RGPD existant (défauts historiques
+  inchangés tant que `--corpus`/`--verite` ne sont pas passés
+  explicitement).
+- Nouveau `validation/verifier_verite_terrain.py` : vérifie la structure
+  d'un fichier de vérité terrain (clés d'article valides, vocabulaire des
+  verdicts, cohérence de `jamais_exclure`, fichiers présents dans le
+  corpus) — jamais le contenu sur le fond. Vérifié à la fois sur un cas
+  volontairement cassé (erreurs bien détectées) et sur le vrai corpus RGPD
+  de 210 verdicts (aucun faux positif).
+- Dossiers `corpus_nis2/`, `corpus_dora/`, `corpus_ai_act/` créés à la
+  racine (squelettes vides + `README.md` par référentiel expliquant le
+  format et les particularités de son filtre d'éligibilité) : composer les
+  documents et leur vérité terrain reste le travail de l'équipe.
+- Pipeline `--referentiel` vérifié de bout en bout avec un document et une
+  vérité terrain jetables, non commités (confirme que le Framework, le
+  filtrage par article et la comparaison à la vérité terrain fonctionnent
+  réellement pour un référentiel non-RGPD) avant d'écrire cette tâche comme
+  terminée.
+
+## Tâche F3 — Documentation
+
+Ce document, plus `README.md` (nombre de tests à jour, mention de
+`--referentiel`), `CHANGELOG.md` (une entrée par commit depuis la Tâche 9)
+et `docs/architecture.md` (DA-08, ligne « Mesure de précision hors RGPD »
+dans les points de vigilance connus).
+
 ---
 
 ## Chiffres à reporter dans le mémoire
 
 | Métrique | Valeur |
 |---|---|
-| Tests backend | 188 (`backend/tests`, `pytest`) |
+| Tests backend | 209 (`backend/tests`, `pytest`) |
 | Tests frontend bout-en-bout | 23 (`frontend/tests`, Playwright) |
 | Tests garde-fous du moteur | 23 (`validation/test_garde_fous.py`) |
-| Couverture de tests backend | ~80,8 % (bloquant en CI, `--cov-fail-under=80`) |
+| Couverture de tests backend | ~81,3 % (bloquant en CI, `--cov-fail-under=80`) |
 | Méthode de recherche par défaut | Lexicale (`RAG_RETRIEVER=lexical`) — voir `validation/comparaison_retrievers.json` et DA-07 |
 | Champs affichés par constat | `verdict`, `citation_verified` (badge « Citation vérifiée ✓ » / « Citation non retrouvée »), `needs_human_review` (badge « Revue humaine requise », motif en infobulle), `review_reason` |
-| Secrets détectés dans l'historique | 0 (gitleaks, 125 commits scannés) |
-| Profil d'organisation | 11 champs (`PATCH /orgs/{id}/profile`), tous nullable, jamais convertis en False |
+| Secrets détectés dans l'historique | 0 (gitleaks, scanné à chaque push) |
+| Profil d'organisation | 16 champs (`PATCH /orgs/{id}/profile`), tous nullable, jamais convertis en False — 11 RGPD (Tâche 8) + 5 NIS2/DORA/AI Act (Tâche F1) |
+| Règles d'éligibilité | RGPD (Tâche 8) + ~40 nouvelles pour NIS2/DORA/AI Act (Tâche F1) |
+| Corpus de validation mesuré | RGPD uniquement (15 documents, 210 verdicts) ; NIS2/DORA/AI Act : squelettes prêts, composition par l'équipe (Tâche F2) |
 
 ---
 
@@ -210,6 +307,21 @@ lancée** (consommerait ~700 appels Groq pour 3 passages × 15 documents).
    l'application déployée.** Si l'analyse dépasse 60 secondes, préparer une
    campagne déjà analysée pour la démonstration plutôt que de lancer
    l'analyse en direct devant le jury.
+7. **Composer les corpus NIS2/DORA/AI Act** (Tâche F2) — documents `.txt` et
+   vérité terrain article par article dans `corpus_nis2/`, `corpus_dora/`,
+   `corpus_ai_act/` (voir le `README.md` de chaque dossier pour le format et
+   les particularités du filtre d'éligibilité de ce référentiel). Vérifier
+   la structure avant toute mesure :
+   ```
+   python -m validation.verifier_verite_terrain --referentiel nis2
+   ```
+   puis lancer la mesure réelle (même avertissement de quota Groq que la
+   Tâche 7) :
+   ```
+   python -m validation.evaluate --referentiel nis2 --runs 3 --output rapport_nis2.json
+   ```
+   Ne jamais ajuster une règle d'éligibilité ou de comparaison après avoir
+   vu les résultats.
 
 ## Ce qui reste volontairement hors périmètre
 
@@ -220,8 +332,11 @@ engagé » dans `docs/architecture.md` §6, pas comme un oubli.
 
 ## État final
 
-Les dix tâches du plan (0 à 9) sont traitées, committées et vérifiées vertes
-en CI. Rien n'a été volontairement laissé de côté à ce stade — les seuls
-éléments restants sont les actions que seule l'équipe peut accomplir
-elle-même (voir la section ci-dessus : tarifs Groq, vérification du disque
-Render, mesure réelle de la Tâche 7, `cout_analyses.py` sur la production).
+Les dix tâches du plan initial (0 à 9), les quatre corrections hors plan
+remontées en usage réel, et les tâches F1 à F3 du second document de
+cadrage sont traitées, committées et vérifiées vertes en CI. Rien n'a été
+volontairement laissé de côté à ce stade — les seuls éléments restants sont
+les actions que seule l'équipe peut accomplir elle-même (voir la section
+ci-dessus : tarifs Groq, vérification du disque Render, mesure réelle de la
+Tâche 7, `cout_analyses.py` sur la production, composition des corpus
+NIS2/DORA/AI Act et leur mesure réelle pour la Tâche F2).

@@ -178,3 +178,68 @@ catégorise chaque article entre deux campagnes du même référentiel (nouveau,
 résolu, inchangé, aggravé, amélioré) et calcule le delta de score. Vue
 « Comparer avec… » dans le frontend, accessible depuis une campagne
 terminée.
+
+## Correctif de vérification de citation — étiquettes d'extrait et citations assemblées
+
+Le modèle recopiait parfois l'étiquette de mise en forme de son propre
+prompt (`[Extrait N — référence]`) au sein même de la citation renvoyée
+dans `preuve`, ce qui faisait systématiquement échouer la comparaison
+littérale au document source (`citation_verified=False` à tort). Ces
+étiquettes sont désormais retirées avant comparaison. Deuxième cas
+distinct : une citation authentique mais assemblée à partir de plusieurs
+phrases réelles (parfois de passages non contigus) ne correspondait à
+aucun passage unique — `_passage_correspondant` retente désormais phrase
+par phrase, en exigeant que **chacune** corresponde réellement à un
+passage (sinon la citation reste non vérifiée, y compris si une seule
+phrase sur plusieurs est fabriquée).
+
+## Harmonisation des badges de vérification
+
+Les badges « Citation vérifiée / non retrouvée », « Indéterminé » et
+« Revue humaine requise » utilisaient un système CSS parallèle
+(`.badge-verif`) sujet à collision de spécificité avec la classe générique
+`.alerte`, d'où un rendu visuel incohérent avec le reste de l'application.
+Remplacé par les composants déjà existants (`.etiq`/`.e-*` côté frontend,
+`.badge` avec couleurs `SEVERITY_LABEL` côté rapports PDF/HTML). Une
+citation non confirmée par le modèle est désormais explicitement étiquetée
+comme telle directement sur le bloc de citation (« Citation avancée par le
+modèle — non confirmée »), pour ne plus laisser croire à un extrait fiable.
+
+## Retrait du panneau « Détails techniques de l'analyse »
+
+Retiré de la page de campagne (frontend) : la fonction `detailsTechniques()`,
+son CSS et les entrées de traduction associées, devenues inutiles.
+
+## Tâche F1 : filtre d'éligibilité pour NIS2, DORA et AI Act
+
+Étend le mécanisme d'éligibilité (`eligibilite.py`, jusqu'ici RGPD
+uniquement) aux trois autres référentiels : 5 nouveaux champs de profil
+(`entite_nis2`, `entite_financiere_dora`, `ia_utilisee`,
+`ia_fournisseur_haut_risque`, `ia_deployeur_haut_risque`, migration 0018),
+~40 nouvelles règles indexées sur `(référentiel, article)`. Même principe
+de prudence que pour le RGPD : une information manquante ne produit jamais
+une exemption. Un avertissement non bloquant est renvoyé à la création
+d'une campagne (`scope_warning`) si le profil indique que le référentiel
+entier ne s'applique pas à l'organisation.
+
+## Correctif du filtre de statut sur le plan de remédiation
+
+Cette page ne charge que les constats encore ouverts (`open`/`in_progress`),
+mais son filtre de statut proposait les 6 statuts possibles : choisir
+« Résolu », « Risque accepté » ou « Faux positif » affichait toujours une
+liste vide, alors que les cartes récapitulatives juste au-dessus montrent
+bien des constats dans ces statuts. `barreFiltres()` accepte désormais une
+liste de statuts à proposer, restreinte à ceux réellement présents dans les
+données affichées.
+
+## Tâche F2 : préparation de la mesure sur NIS2, DORA et AI Act
+
+`validation/evaluate.py` accepte `--referentiel {rgpd,nis2,dora,ai_act}`
+(fixe les valeurs par défaut de `--corpus`/`--verite`, sans rien changer au
+comportement RGPD existant). Nouveau
+`validation/verifier_verite_terrain.py` : vérifie la structure d'un fichier
+de vérité terrain (clés d'article, vocabulaire des verdicts, cohérence de
+`jamais_exclure`, présence des fichiers) sans jamais juger le contenu sur
+le fond. Dossiers `corpus_nis2/`, `corpus_dora/`, `corpus_ai_act/` créés à
+la racine (squelettes vides + README) — composer les documents et leur
+vérité terrain reste le travail de l'équipe, jamais celui de l'outillage.

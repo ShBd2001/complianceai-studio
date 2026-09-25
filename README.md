@@ -82,12 +82,18 @@ python -m validation.run_validation --corpus corpus_demo \
 
 Détail des métriques et du corpus : [validation/README.md](validation/README.md).
 
+`validation/evaluate.py --referentiel {rgpd,nis2,dora,ai_act}` mesure le
+moteur de production sur un référentiel donné (défaut RGPD, inchangé). Seul
+le RGPD dispose aujourd'hui d'un corpus mesuré ; `corpus_nis2/`,
+`corpus_dora/`, `corpus_ai_act/` sont des squelettes prêts à l'emploi
+(README + `python -m validation.verifier_verite_terrain`) pour l'équipe.
+
 ## Tests et intégration continue
 
-- **Backend** : 188 tests (`backend/tests`, `pytest`) — authentification,
+- **Backend** : 209 tests (`backend/tests`, `pytest`) — authentification,
   isolation multi-tenant, pipeline d'audit complet, quotas, veille
-  réglementaire, RGPD. Couverture globale 80 % (`--cov-fail-under=80`,
-  bloquant en CI).
+  réglementaire, RGPD, filtre d'éligibilité RGPD/NIS2/DORA/AI Act.
+  Couverture globale 80 % (`--cov-fail-under=80`, bloquant en CI).
 - **Frontend** : 23 tests bout-en-bout (`frontend/tests`, Playwright) — un
   vrai navigateur pilote la vraie interface contre un vrai backend, aucun
   mock du DOM.
