@@ -26,6 +26,78 @@ Les regles sont clees sur (framework, numero d'article). L'article 30 du RGPD
 est le registre des traitements ; l'article 30 de NIS2 ou de la CSRD n'a aucun
 rapport. Une regle non indexee par referentiel produirait des exemptions
 absurdes des le premier audit multi-referentiel.
+
+Tableau de correspondance -- NIS2, DORA, AI Act (verifie article par article
+sur le texte reellement ingere, pas seulement sur les intitules)
+------------------------------------------------------------------
+Verifie en relisant le corps de chaque article auditable (voir
+app/ingestion/scoping.py pour la liste). Plusieurs corrections ont ete
+apportees a la proposition initiale :
+
+| Referentiel | Articles | Condition d'exemption | Fondement |
+|---|---|---|---|
+| NIS2 | 20, 21, 23, 24, 29, 30 | `entite_nis2 == "non_concernee"` | NIS2, art. 2 et 3 |
+| NIS2 | 27, 28 | idem, MAIS `entite_nis2` essentielle/importante ne suffit PAS a conclure a l'applicabilite (voir correction ci-dessous) | NIS2, art. 27 et 28 |
+| DORA | 5-14, 16-19, 22, 24-30 | `entite_financiere_dora is False` | DORA, art. 2 |
+| DORA | 15, 20, 21 | toujours exempte (voir correction ci-dessous) | -- |
+| DORA | 23 | idem 5-30, MAIS `entite_financiere_dora=True` ne suffit pas (voir correction) | DORA, art. 23 |
+| AI Act | 5 | jamais exempte | AI Act, art. 5 |
+| AI Act | 50 | `ia_utilisee is False` | AI Act, art. 50 |
+| AI Act | 8-22, 25, 47-49, 72, 73 | `ia_fournisseur_haut_risque is False` | AI Act, art. 6 et 16 |
+| AI Act | 23, 24 | aucune regle (voir correction ci-dessous) | -- |
+| AI Act | 26 | `ia_deployeur_haut_risque is False` | AI Act, art. 26 |
+| AI Act | 27, 86 | idem 26, MAIS `True` ne suffit pas (voir correction) | AI Act, art. 27 et 86 |
+
+Corrections apportees a la proposition initiale, chacune verifiee en lisant
+le corps de l'article (pas seulement son intitule) :
+
+1. **NIS2 art. 27 et 28** ne visent pas "toute entite essentielle ou
+   importante" : l'art. 27 charge l'ENISA de tenir un registre "des
+   fournisseurs de services DNS, des registres des noms de domaine de
+   premier niveau, des entites qui fournissent des services d'enregistrement
+   de noms de domaine..." et l'art. 28 impose des obligations aux "registres
+   des noms de domaine de premier niveau et aux entites fournissant des
+   services d'enregistrement de noms de domaine" -- un role beaucoup plus
+   etroit que le statut general d'entite essentielle/importante. Aucun champ
+   de profil ne capture ce role precis : `entite_nis2` en essentielle ou
+   importante ne suffit donc pas a conclure a l'applicabilite (A_VERIFIER),
+   seule l'absence de tout statut NIS2 exempte avec certitude.
+
+2. **DORA art. 23** ne vise que "les etablissements de credit, les
+   etablissements de paiement, les prestataires de services d'information
+   sur les comptes et les etablissements de monnaie electronique" -- pas
+   toute entite financiere au sens large de l'art. 2 (qui couvre aussi les
+   assurances, entreprises d'investissement, prestataires de services sur
+   crypto-actifs, etc.). Meme traitement de prudence que NIS2 27/28.
+
+3. **DORA art. 15, 20 et 21** sont en realite des obligations des AES
+   (autorites europeennes de surveillance) -- "Les AES elaborent, par
+   l'intermediaire du comite mixte..." -- pas de l'entite financiere
+   elle-meme. Comparable aux articles institutionnels deja exclus du
+   perimetre auditable du RGPD (51-99) : toujours exemptes, quel que soit le
+   profil. Ce sont des articles de la liste blanche `DORA_AUDITABLE`
+   (app/ingestion/scoping.py) qui, a la lecture, n'auraient pas du y figurer ;
+   corrige ici par le filtre d'eligibilite plutot qu'en modifiant la liste
+   blanche, hors perimetre de cette tache.
+
+4. **AI Act art. 27** (analyse d'impact sur les droits fondamentaux) et
+   **art. 86** (droit a l'explication) ne visent qu'un sous-ensemble des
+   deployeurs de systemes a haut risque : l'art. 27 se limite aux
+   "organismes de droit public", aux "entites privees fournissant des
+   services publics" et aux deployeurs de systemes d'evaluation de la
+   solvabilite/du risque d'assurance (annexe III, points 5 b et c) ; l'art. 86
+   ne s'applique qu'aux decisions "produisant des effets juridiques" ou
+   affectant significativement une personne. `ia_deployeur_haut_risque=True`
+   ne suffit donc pas a conclure a l'applicabilite (A_VERIFIER) ; seul `False`
+   exempte avec certitude.
+
+5. **AI Act art. 23 et 24** (obligations des importateurs et des
+   distributeurs) relevent d'un role distinct de celui du fournisseur --
+   un importateur ou distributeur n'est pas necessairement le fournisseur
+   (developpeur) du systeme. Aucun champ de profil dedie n'existe pour ce
+   role precis (en ajouter un sortirait du perimetre des cinq colonnes
+   prevues pour cette tache) : ces deux articles ne recoivent aucune regle
+   et restent APPLICABLE par defaut, comme tout article hors de cette table.
 """
 
 from __future__ import annotations
@@ -89,6 +161,21 @@ class ProfilOrganisme:
     # ou indirecte, aupres d'un tiers (14).
     collecte_directe: bool | None = None
     collecte_indirecte: bool | None = None
+
+    # NIS2 : statut au sens des art. 2 et 3. "essentielle" | "importante" |
+    # "non_concernee" | None (non renseigne -> A_VERIFIER).
+    entite_nis2: str | None = None
+
+    # DORA : entite financiere au sens de l'art. 2.
+    entite_financiere_dora: bool | None = None
+
+    # AI Act : fournisseur ou deployeur d'un systeme d'IA a haut risque
+    # (art. 6 et 16 pour le premier, art. 26 pour le second), et usage d'un
+    # systeme d'IA quelconque (art. 50, transparence -- independant du
+    # niveau de risque).
+    ia_fournisseur_haut_risque: bool | None = None
+    ia_deployeur_haut_risque: bool | None = None
+    ia_utilisee: bool | None = None
 
 
 class ExigenceLike(Protocol):
@@ -241,6 +328,191 @@ def _rgpd_art14(p: ProfilOrganisme) -> Decision:
     return Decision(Verdict.A_VERIFIER, "Source de collecte non renseignee.", ref)
 
 
+# --------------------------------------------------------------------------
+# Regles NIS2
+# --------------------------------------------------------------------------
+
+def _nis2_entite(p: ProfilOrganisme) -> Decision:
+    """Obligations generales pesant sur toute entite essentielle ou
+    importante (NIS2, art. 2 et 3). Le statut suffit a trancher : ces
+    articles ne visent aucun sous-ensemble plus etroit."""
+    ref = "NIS2, art. 2 et 3"
+    if p.entite_nis2 is None:
+        return Decision(Verdict.A_VERIFIER, "Statut NIS2 non renseigne.", ref)
+    if p.entite_nis2 == "non_concernee":
+        return Decision(
+            Verdict.EXEMPTE,
+            "Organisation ni entite essentielle ni entite importante au sens de NIS2.",
+            ref,
+        )
+    return Decision(
+        Verdict.APPLICABLE,
+        f"Entite {p.entite_nis2} au sens de NIS2 : obligation applicable.",
+        ref,
+    )
+
+
+def _nis2_dns(p: ProfilOrganisme) -> Decision:
+    """Articles 27 et 28 : ne visent pas toute entite essentielle/importante
+    mais specifiquement les fournisseurs de services DNS, les registres de
+    noms de domaine de premier niveau et les entites d'enregistrement de
+    noms de domaine (voir correction 1 en tete de module). Le statut
+    essentielle/importante seul ne suffit donc pas a conclure."""
+    ref = "NIS2, art. 27 et 28 (fournisseurs DNS et registres de noms de domaine)"
+    if p.entite_nis2 == "non_concernee":
+        return Decision(
+            Verdict.EXEMPTE,
+            "Organisation hors champ NIS2 : ne peut relever du role specifique vise par cet article.",
+            ref,
+        )
+    return Decision(
+        Verdict.A_VERIFIER,
+        "Vise specifiquement les fournisseurs de services DNS et registres de noms de "
+        "domaine, pas toute entite essentielle/importante : role a verifier.",
+        ref,
+    )
+
+
+# --------------------------------------------------------------------------
+# Regles DORA
+# --------------------------------------------------------------------------
+
+def _dora_entite_financiere(p: ProfilOrganisme) -> Decision:
+    """Obligations generales pesant sur toute entite financiere (DORA, art. 2)."""
+    ref = "DORA, art. 2"
+    if p.entite_financiere_dora is None:
+        return Decision(Verdict.A_VERIFIER, "Statut d'entite financiere DORA non renseigne.", ref)
+    if p.entite_financiere_dora is False:
+        return Decision(
+            Verdict.EXEMPTE,
+            "Organisation non consideree comme une entite financiere au sens de DORA.",
+            ref,
+        )
+    return Decision(Verdict.APPLICABLE, "Entite financiere au sens de DORA : obligation applicable.", ref)
+
+
+def _dora_paiement(p: ProfilOrganisme) -> Decision:
+    """Article 23 : ne vise que les etablissements de credit, etablissements
+    de paiement, prestataires de services d'information sur les comptes et
+    etablissements de monnaie electronique -- pas toute entite financiere
+    (voir correction 2 en tete de module)."""
+    ref = "DORA, art. 23 (etablissements de credit, de paiement et assimiles)"
+    if p.entite_financiere_dora is False:
+        return Decision(
+            Verdict.EXEMPTE,
+            "Organisation non entite financiere : ne peut relever du role specifique vise par cet article.",
+            ref,
+        )
+    return Decision(
+        Verdict.A_VERIFIER,
+        "Vise specifiquement les etablissements de credit, de paiement et assimiles, "
+        "pas toute entite financiere : role a verifier.",
+        ref,
+    )
+
+
+def _dora_institutionnel(p: ProfilOrganisme) -> Decision:
+    """Articles 15, 20 et 21 : obligations des AES (autorites europeennes de
+    surveillance), jamais de l'entite financiere elle-meme (voir
+    correction 3 en tete de module). Toujours exempte."""
+    return Decision(
+        Verdict.EXEMPTE,
+        "Obligation des autorites europeennes de surveillance (AES), pas de l'entite "
+        "financiere elle-meme.",
+        "DORA (article institutionnel, hors obligations de l'entite financiere)",
+    )
+
+
+# --------------------------------------------------------------------------
+# Regles AI Act
+# --------------------------------------------------------------------------
+
+def _ai_act_jamais_exempte(p: ProfilOrganisme) -> Decision:
+    """Article 5 : pratiques interdites, s'applique a tout operateur
+    independamment de son role ou du niveau de risque du systeme. Jamais
+    exempte."""
+    return Decision(
+        Verdict.APPLICABLE,
+        "Pratiques interdites en matiere d'IA : s'applique a tout operateur, sans exception.",
+        "AI Act, art. 5",
+    )
+
+
+def _ai_act_transparence(p: ProfilOrganisme) -> Decision:
+    """Article 50 : obligations de transparence, independantes du niveau de
+    risque -- s'appliquent des lors que l'organisation fournit ou deploie un
+    systeme d'IA, quel qu'il soit."""
+    ref = "AI Act, art. 50"
+    if p.ia_utilisee is None:
+        return Decision(Verdict.A_VERIFIER, "Usage de systemes d'IA non renseigne.", ref)
+    if p.ia_utilisee is False:
+        return Decision(
+            Verdict.EXEMPTE, "Organisation ne fournissant ni ne deployant aucun systeme d'IA.", ref
+        )
+    return Decision(
+        Verdict.APPLICABLE,
+        "Organisation fournissant ou deployant un systeme d'IA : obligations de "
+        "transparence applicables.",
+        ref,
+    )
+
+
+def _ai_act_fournisseur(p: ProfilOrganisme) -> Decision:
+    """Exigences applicables aux systemes d'IA a haut risque et obligations
+    du fournisseur (AI Act, art. 6 et 16)."""
+    ref = "AI Act, art. 6 et 16"
+    if p.ia_fournisseur_haut_risque is None:
+        return Decision(
+            Verdict.A_VERIFIER, "Statut de fournisseur de systeme d'IA a haut risque non renseigne.", ref
+        )
+    if p.ia_fournisseur_haut_risque is False:
+        return Decision(
+            Verdict.EXEMPTE, "Organisation ne fournissant aucun systeme d'IA a haut risque.", ref
+        )
+    return Decision(
+        Verdict.APPLICABLE, "Fournisseur d'un systeme d'IA a haut risque : obligation applicable.", ref
+    )
+
+
+def _ai_act_deployeur(p: ProfilOrganisme) -> Decision:
+    """Obligations generales du deployeur d'un systeme d'IA a haut risque
+    (AI Act, art. 26)."""
+    ref = "AI Act, art. 26"
+    if p.ia_deployeur_haut_risque is None:
+        return Decision(
+            Verdict.A_VERIFIER, "Statut de deployeur de systeme d'IA a haut risque non renseigne.", ref
+        )
+    if p.ia_deployeur_haut_risque is False:
+        return Decision(
+            Verdict.EXEMPTE, "Organisation ne deployant aucun systeme d'IA a haut risque.", ref
+        )
+    return Decision(
+        Verdict.APPLICABLE, "Deployeur d'un systeme d'IA a haut risque : obligation applicable.", ref
+    )
+
+
+def _ai_act_deployeur_restreint(p: ProfilOrganisme) -> Decision:
+    """Articles 27 et 86 : ne visent qu'un sous-ensemble des deployeurs de
+    systemes a haut risque (voir correction 4 en tete de module). Etre
+    deployeur d'un systeme a haut risque ne suffit donc pas a conclure ;
+    seule l'absence de tout deploiement a haut risque exempte avec
+    certitude."""
+    ref = "AI Act, art. 27 et 86 (sous-ensemble des deployeurs a haut risque)"
+    if p.ia_deployeur_haut_risque is False:
+        return Decision(
+            Verdict.EXEMPTE,
+            "Organisation ne deployant aucun systeme d'IA a haut risque : ne peut relever "
+            "du sous-ensemble vise.",
+            ref,
+        )
+    return Decision(
+        Verdict.A_VERIFIER,
+        "Vise un sous-ensemble specifique des deployeurs de systemes a haut risque : "
+        "perimetre exact a verifier.",
+        ref,
+    )
+
+
 # Clees sur (code du referentiel, numero d'article). Toute exigence absente de
 # cette table est APPLICABLE : le filtre ne peut pas ecarter ce qu'il ne connait
 # pas, et un referentiel non couvert (NIS2, CSRD) passe integralement.
@@ -249,6 +521,72 @@ REGLES: dict[tuple[str, int], Callable[[ProfilOrganisme], Decision]] = {
     ("rgpd", 14): _rgpd_art14,
     ("rgpd", 30): _rgpd_art30,
     ("rgpd", 37): _rgpd_art37,
+
+    ("nis2", 20): _nis2_entite,
+    ("nis2", 21): _nis2_entite,
+    ("nis2", 23): _nis2_entite,
+    ("nis2", 24): _nis2_entite,
+    ("nis2", 27): _nis2_dns,
+    ("nis2", 28): _nis2_dns,
+    ("nis2", 29): _nis2_entite,
+    ("nis2", 30): _nis2_entite,
+
+    ("dora", 5): _dora_entite_financiere,
+    ("dora", 6): _dora_entite_financiere,
+    ("dora", 7): _dora_entite_financiere,
+    ("dora", 8): _dora_entite_financiere,
+    ("dora", 9): _dora_entite_financiere,
+    ("dora", 10): _dora_entite_financiere,
+    ("dora", 11): _dora_entite_financiere,
+    ("dora", 12): _dora_entite_financiere,
+    ("dora", 13): _dora_entite_financiere,
+    ("dora", 14): _dora_entite_financiere,
+    ("dora", 15): _dora_institutionnel,
+    ("dora", 16): _dora_entite_financiere,
+    ("dora", 17): _dora_entite_financiere,
+    ("dora", 18): _dora_entite_financiere,
+    ("dora", 19): _dora_entite_financiere,
+    ("dora", 20): _dora_institutionnel,
+    ("dora", 21): _dora_institutionnel,
+    ("dora", 22): _dora_entite_financiere,
+    ("dora", 23): _dora_paiement,
+    ("dora", 24): _dora_entite_financiere,
+    ("dora", 25): _dora_entite_financiere,
+    ("dora", 26): _dora_entite_financiere,
+    ("dora", 27): _dora_entite_financiere,
+    ("dora", 28): _dora_entite_financiere,
+    ("dora", 29): _dora_entite_financiere,
+    ("dora", 30): _dora_entite_financiere,
+
+    ("ai_act", 5): _ai_act_jamais_exempte,
+    ("ai_act", 8): _ai_act_fournisseur,
+    ("ai_act", 9): _ai_act_fournisseur,
+    ("ai_act", 10): _ai_act_fournisseur,
+    ("ai_act", 11): _ai_act_fournisseur,
+    ("ai_act", 12): _ai_act_fournisseur,
+    ("ai_act", 13): _ai_act_fournisseur,
+    ("ai_act", 14): _ai_act_fournisseur,
+    ("ai_act", 15): _ai_act_fournisseur,
+    ("ai_act", 16): _ai_act_fournisseur,
+    ("ai_act", 17): _ai_act_fournisseur,
+    ("ai_act", 18): _ai_act_fournisseur,
+    ("ai_act", 19): _ai_act_fournisseur,
+    ("ai_act", 20): _ai_act_fournisseur,
+    ("ai_act", 21): _ai_act_fournisseur,
+    ("ai_act", 22): _ai_act_fournisseur,
+    # 23, 24 (importateurs, distributeurs) : aucune regle, voir correction 5
+    # en tete de module -- role distinct de celui du fournisseur, pas de
+    # champ de profil dedie. Reste APPLICABLE par defaut.
+    ("ai_act", 25): _ai_act_fournisseur,
+    ("ai_act", 26): _ai_act_deployeur,
+    ("ai_act", 27): _ai_act_deployeur_restreint,
+    ("ai_act", 47): _ai_act_fournisseur,
+    ("ai_act", 48): _ai_act_fournisseur,
+    ("ai_act", 49): _ai_act_fournisseur,
+    ("ai_act", 50): _ai_act_transparence,
+    ("ai_act", 72): _ai_act_fournisseur,
+    ("ai_act", 73): _ai_act_fournisseur,
+    ("ai_act", 86): _ai_act_deployeur_restreint,
 }
 
 _APPLICABLE_PAR_DEFAUT = Decision(
@@ -299,6 +637,32 @@ def filtrer_exigences(
     return a_evaluer, exemptees
 
 
+def referentiel_hors_champ(framework: str, profil: ProfilOrganisme) -> bool:
+    """Le referentiel choisi ne s'applique-t-il certainement pas du tout a
+    cette organisation ? Vrai seulement si TOUS ses articles auditables
+    resolvent a EXEMPTE pour ce profil -- pas simplement si aucun n'est
+    APPLICABLE (un profil non renseigne donne A_VERIFIER partout, jamais
+    EXEMPTE, donc cette fonction renvoie toujours False pour un profil vide :
+    c'est le comportement voulu, l'absence d'information n'emet jamais cet
+    avertissement).
+
+    Sert uniquement a avertir a la creation d'une campagne (voir
+    POST /orgs/{org_id}/audits) ; ne bloque jamais la creation.
+    """
+    from app.ingestion.scoping import WHITELISTS
+
+    auditables = WHITELISTS.get(framework.strip().lower())
+    if not auditables:
+        return False
+    numeros_auditables, _ = auditables
+    if not numeros_auditables:
+        return False
+    return all(
+        evaluer(framework, numero, profil).verdict is Verdict.EXEMPTE
+        for numero in numeros_auditables
+    )
+
+
 def _entier(valeur) -> int | None:
     """N'accepte qu'un entier reel.
 
@@ -314,6 +678,18 @@ def _entier(valeur) -> int | None:
 
 def _booleen(valeur) -> bool | None:
     if not isinstance(valeur, bool):
+        return None
+    return valeur
+
+
+_ENTITE_NIS2_VALEURS = {"essentielle", "importante", "non_concernee"}
+
+
+def _entite_nis2(valeur) -> str | None:
+    """N'accepte que les trois valeurs reconnues. Une valeur inattendue
+    (colonne corrompue, saisie API hors schema) est ramenee a None, donc a
+    A_VERIFIER -- jamais interpretee comme une exemption."""
+    if not isinstance(valeur, str) or valeur not in _ENTITE_NIS2_VALEURS:
         return None
     return valeur
 
@@ -347,4 +723,9 @@ def depuis_organisation(organisation) -> ProfilOrganisme:
         risque_droits_libertes=_booleen(getattr(organisation, "risque_droits_libertes", None)),
         collecte_directe=_booleen(getattr(organisation, "collecte_directe", None)),
         collecte_indirecte=_booleen(getattr(organisation, "collecte_indirecte", None)),
+        entite_nis2=_entite_nis2(getattr(organisation, "entite_nis2", None)),
+        entite_financiere_dora=_booleen(getattr(organisation, "entite_financiere_dora", None)),
+        ia_fournisseur_haut_risque=_booleen(getattr(organisation, "ia_fournisseur_haut_risque", None)),
+        ia_deployeur_haut_risque=_booleen(getattr(organisation, "ia_deployeur_haut_risque", None)),
+        ia_utilisee=_booleen(getattr(organisation, "ia_utilisee", None)),
     )

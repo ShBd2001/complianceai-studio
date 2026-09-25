@@ -33,6 +33,7 @@ from app.models.enums import AuditStatus, OrgRole
 from app.models.scheduling import AuditSchedule
 from app.schemas.audit import (
     AuditCreate,
+    AuditCreateOut,
     AuditOut,
     AuditRunOut,
     ComparisonArticle,
@@ -51,6 +52,7 @@ from app.services.documents import (
     save_document,
     storage_root,
 )
+from app.services.eligibilite import depuis_organisation, referentiel_hors_champ
 from app.services.quotas import PLAN_LIMITS, campaign_quota_remaining
 from app.services.scheduling import compute_next_run
 
@@ -85,7 +87,7 @@ def list_audits(
     )
 
 
-@router.post("", response_model=AuditOut, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=AuditCreateOut, status_code=status.HTTP_201_CREATED)
 def create_audit(
     payload: AuditCreate,
     request: Request,
@@ -113,6 +115,16 @@ def create_audit(
         entity_type="audit", entity_id=audit.id, request=request,
         payload={"framework": payload.framework.value},
     )
+    # Avertissement seul, jamais un blocage : le profil peut etre incomplet
+    # ou volontairement ignore (petite structure sans temps a y consacrer).
+    profil = depuis_organisation(ctx.organization)
+    if referentiel_hors_champ(payload.framework.value, profil):
+        audit.scope_warning = (
+            "D'apres le profil de votre organisation, ce referentiel ne s'applique pas. "
+            "Les obligations seront marquees non applicables."
+        )
+    else:
+        audit.scope_warning = None
     return audit
 
 

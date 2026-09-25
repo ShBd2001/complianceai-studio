@@ -29,13 +29,15 @@ from app.services.quotas import PLAN_LIMITS, member_quota_remaining
 
 router = APIRouter(prefix="/orgs", tags=["Organisations"])
 
-# Champs du profil d'eligibilite (Tache 8) : memes noms cote modele, schema
-# et route, pour ne construire la liste qu'une seule fois.
+# Champs du profil d'eligibilite (Taches 8 et F1) : memes noms cote modele,
+# schema et route, pour ne construire la liste qu'une seule fois.
 PROFIL_CHAMPS = [
     "organisme_public", "donnees_sensibles", "donnees_penales",
     "activite_de_base_traitement", "suivi_regulier_systematique",
     "grande_echelle", "professionnel_liberal_isole", "traitement_occasionnel",
     "risque_droits_libertes", "collecte_directe", "collecte_indirecte",
+    "entite_nis2", "entite_financiere_dora",
+    "ia_fournisseur_haut_risque", "ia_deployeur_haut_risque", "ia_utilisee",
 ]
 
 
