@@ -1,0 +1,63 @@
+NOTE INTERNE SUR L'UTILISATION D'OUTILS D'INTELLIGENCE ARTIFICIELLE
+CREDIT EXPRESS PARTICULIERS — Etablissement de credit a la consommation — 60 salaries
+
+PRESENTATION
+Credit Express Particuliers utilise depuis 2023 un systeme d'intelligence
+artificielle achete aupres d'un editeur specialise, etabli en France, pour
+evaluer la solvabilite des demandeurs de credit a la consommation et decider
+de l'octroi ou du refus des dossiers. Ce systeme relève de l'annexe III du
+reglement sur l'intelligence artificielle (evaluation de la solvabilite) et
+constitue un systeme d'IA a haut risque. Credit Express Particuliers en est
+le deployeur au sens du reglement : l'entreprise n'a developpe ni ne
+commercialise elle-meme aucun systeme d'IA, elle se contente d'utiliser celui
+fourni par son editeur.
+
+FONCTIONNEMENT DU SYSTEME ET PRATIQUES INTERDITES (Article 5)
+Le systeme calcule, pour chaque demandeur, un « score de fiabilite globale »
+qui ne se limite pas aux donnees financieres transmises dans le dossier de
+credit : il integre des donnees comportementales collectees sur les reseaux
+sociaux publics des demandeurs (frequence de publication, cercle de contacts,
+zones geographiques frequentees) afin d'en deduire un profil de risque social,
+sans lien direct avec la solvabilite financiere declaree. Ce profil social
+influence directement la decision d'octroi et le taux propose, y compris pour
+des demandeurs dont le dossier financier est par ailleurs conforme aux
+criteres habituels. Cette pratique s'apparente a une notation sociale de
+personnes physiques fondee sur leur comportement social, produisant un
+traitement defavorable disproportionne au regard du contexte dans lequel les
+donnees sociales ont ete collectees.
+
+UTILISATION DU SYSTEME PAR L'ORGANISATION
+Aucun controle humain effectif n'est exerce sur les decisions produites par le
+systeme : les refus de credit sont notifies automatiquement des lors que le
+score calcule est inferieur au seuil parametre, sans intervention d'un
+conseiller. Aucun conseiller n'a recu de formation specifique a l'utilisation
+du systeme ni a l'interpretation de ses limites. Le systeme est utilise selon
+les parametres par defaut fournis par l'editeur, jamais revus depuis 2023.
+
+INFORMATION DES PERSONNES CONCERNEES
+Les demandeurs de credit ne sont pas informes qu'une decision automatisee
+fondee sur un systeme d'intelligence artificielle a haut risque est a
+l'origine du refus de leur dossier. Aucune explication individuelle n'est
+fournie aux demandeurs refuses sur les principaux elements ayant conduit a la
+decision, meme lorsqu'ils en font la demande expresse aupres du service
+client.
+
+SURVEILLANCE ET TENUE DE REGISTRES
+Aucun journal d'utilisation du systeme n'est conserve par Credit Express
+Particuliers au-dela de trente jours. Aucune analyse d'impact relative aux
+droits fondamentaux n'a ete realisee avant la mise en service du systeme en
+2023, ni depuis. Aucun enregistrement du systeme ou de son utilisation n'a ete
+effectue dans une base de donnees publique.
+
+FOURNITURE DU SYSTEME
+Le systeme est fourni par un editeur specialise etabli en France, dans le
+cadre d'un contrat de licence standard. Credit Express Particuliers n'a
+developpe, importe, ni distribue aucun systeme d'intelligence artificielle :
+l'entreprise en est uniquement l'utilisatrice pour ses propres besoins
+d'evaluation de credit.
+
+TRANSPARENCE DE L'OUTIL
+Le systeme est un outil d'aide a la decision de credit, sans interaction
+conversationnelle avec le public, sans generation de contenu de synthese et
+sans fonction de reconnaissance des emotions ou de categorisation
+biometrique.

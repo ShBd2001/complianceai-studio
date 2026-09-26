@@ -1,0 +1,49 @@
+NOTE INTERNE SUR L'ORGANISATION INFORMATIQUE
+TRANSPORTS REGIONAUX RAPIDES — Entite importante (transport) — 340 salaries
+
+PRESENTATION
+Transports Regionaux Rapides exploite un reseau de transport routier de
+voyageurs et gere une plateforme de billetterie et de gestion des flottes en
+ligne. L'entreprise a ete notifiee par l'autorite competente de son statut
+d'entite importante au sens de la directive NIS2, au titre du secteur des
+transports. Elle n'exploite pas de service DNS ni de bureau d'enregistrement
+de noms de domaine.
+
+ORGANISATION ACTUELLE
+Il n'existe pas de politique de securite des systemes d'information formalisee.
+Le suivi informatique est assure par un prestataire externe generaliste,
+intervenant sur demande, sans mission de securite specifiquement definie dans
+son contrat. Aucun membre de la direction n'a suivi de formation a la
+cybersecurite. Le sujet n'a jamais ete inscrit a l'ordre du jour du comite de
+direction.
+
+GESTION DES RISQUES
+Aucune analyse de risques n'a ete menee. Il n'existe ni plan de continuite
+d'activite, ni plan de reprise apres sinistre. Les sauvegardes sont realisees
+de maniere manuelle et irreguliere par un technicien, sans procedure ecrite ni
+test de restauration. Les contrats avec l'editeur de la billetterie en ligne
+et l'hebergeur ne comportent aucune clause de securite. Les mots de passe des
+comptes administrateurs n'ont pas ete changes depuis la mise en service de la
+plateforme en 2019, et l'authentification multifacteurs n'est activee sur
+aucun acces, y compris les acces distants du prestataire externe. Les postes
+de travail ne recoivent pas de mises a jour de securite automatiques.
+
+OBLIGATIONS D'INFORMATION
+En mars 2025, une panne de la billetterie en ligne consecutive a une intrusion
+n'a ete signalee au CSIRT national que onze jours apres sa decouverte, alors
+que l'incident repondait aux criteres d'un incident important. Aucune alerte
+precoce n'a ete transmise dans les 24 heures, et aucun rapport final n'a ete
+etabli. Il n'existe pas de procedure ecrite de notification des incidents.
+
+RECOURS AUX SCHEMAS DE CERTIFICATION
+Aucune exigence de certification de cybersecurite n'est integree aux
+processus d'achat informatique.
+
+REGISTRE DES ENTITES ET NOMS DE DOMAINE
+L'entreprise n'exploite pas de service DNS ni de registre de noms de domaine
+pour des tiers ; ces obligations ne la concernent pas.
+
+PARTAGE D'INFORMATIONS ET NOTIFICATION VOLONTAIRE
+L'entreprise ne participe a aucun dispositif de partage d'informations sur les
+cybermenaces et n'a jamais transmis de notification volontaire au CSIRT
+national.

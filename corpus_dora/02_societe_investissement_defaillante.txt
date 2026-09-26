@@ -1,0 +1,53 @@
+NOTE INTERNE SUR L'ORGANISATION INFORMATIQUE
+CAPITAL GESTION PRIVEE — Societe de gestion de portefeuille — 45 salaries
+
+PRESENTATION
+Capital Gestion Privee est une societe de gestion de portefeuille agreee,
+gerant des mandats pour une clientele de particuliers fortunes. Elle est a ce
+titre une entite financiere au sens du reglement DORA. Elle ne fournit aucun
+service de paiement, n'est ni etablissement de credit, ni etablissement de
+paiement, ni etablissement de monnaie electronique, ni prestataire de
+services d'information sur les comptes.
+
+ORGANISATION ACTUELLE
+Il n'existe pas de cadre de gestion du risque lie aux TIC formalise. Le sujet
+informatique n'est jamais aborde par le conseil d'administration, dont
+l'ordre du jour se concentre exclusivement sur la performance des mandats
+geres. Aucun responsable des risques TIC n'a ete designe ; les questions
+informatiques sont traitees ponctuellement par l'assistant de direction, sans
+mission ni competence specifique en la matiere.
+
+SYSTEMES ET GESTION DES RISQUES
+Le systeme de gestion des ordres et le systeme de reporting client
+fonctionnent sur des versions logicielles dont le support editeur a pris fin
+en 2021, sans plan de migration. Aucune cartographie des actifs
+informationnels n'existe. Aucune mesure de chiffrement n'est appliquee aux
+donnees clients stockees localement. Les acces ne sont pas soumis a
+authentification multifacteurs. Aucun dispositif de detection des anomalies
+n'est en place.
+
+REPONSE, SAUVEGARDE ET CONTINUITE
+Il n'existe ni plan de reponse aux incidents, ni plan de continuite
+d'activite. Les sauvegardes sont realisees de maniere irreguliere sur un
+disque externe conserve dans les locaux de la societe, sans test de
+restauration. Aucun retour d'experience n'est formalise apres un incident.
+
+GESTION DES INCIDENTS ET DECLARATION
+Il n'existe pas de procedure de classification des incidents ni de procedure
+de declaration a l'autorite de controle. Lors d'une compromission du systeme
+de messagerie en 2024 ayant expose des documents clients pendant plusieurs
+semaines, aucune notification n'a ete transmise a l'autorite de controle. Les
+clients concernes n'ont recu aucune communication a ce sujet, la societe ne
+disposant d'aucun plan de communication de crise, interne ou externe.
+
+TESTS DE RESILIENCE
+Aucun programme de tests de resilience operationnelle numerique n'existe.
+Aucun test de vulnerabilite n'a jamais ete realise sur les systemes de la
+societe.
+
+GESTION DES PRESTATAIRES TIERS
+La societe recourt a un hebergeur externe pour le systeme de reporting client
+et a un editeur pour le systeme de gestion des ordres, sans registre des
+contrats, sans evaluation du risque de concentration, et sans clause d'audit,
+de reversibilite ou de strategie de sortie dans les contrats signes en 2018 et
+jamais renegocies depuis.

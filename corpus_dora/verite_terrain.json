@@ -1,5 +1,126 @@
 {
   "version": "0.1",
-  "note": "Squelette vide, a completer par l'equipe. Voir README.md de ce dossier pour le format et corpus/verite_terrain.json (RGPD) pour un exemple rempli. Toute annotation doit etre justifiee : c'est la reference contre laquelle le moteur est mesure, une erreur ici invalide toutes les metriques.",
-  "cas": []
+  "referentiel": "dora",
+  "note": "Brouillon redige par Claude Code a la demande explicite de l'equipe (protocole de mesure NIS2/DORA/AI Act), destine a etre relu et corrige article par article avant tout gel de reference -- voir README.md de ce dossier. Articles auditables DORA : 5 a 30 (app/ingestion/scoping.py::DORA_AUDITABLE). Le champ 'profil' fixe directement entite_financiere_dora sur l'organisation de test (validation/evaluate.py::_appliquer_profil). Verdict 'tolere' utilise sur deux cas ou l'eligibilite ne capture pas une nuance de proportionnalite du reglement (cadre simplifie art.16, tests avances art.26 pour une tres petite structure) que le code actuel ne modelise pas -- signale explicitement plutot que tranche arbitrairement, a la charge de l'equipe de statuer.",
+  "cas": [
+    {
+      "fichier": "01_banque_regionale_conforme.txt",
+      "description": "Etablissement de credit regional, 480 salaries, entite financiere, dispositif DORA mature.",
+      "profil": { "entite_financiere_dora": true },
+      "score_attendu": [85, 100],
+      "verdicts_attendus": {
+        "5": "conforme", "6": "conforme", "7": "conforme", "8": "conforme",
+        "9": "conforme", "10": "conforme", "11": "conforme", "12": "conforme",
+        "13": "conforme", "14": "conforme",
+        "15": "hors_perimetre",
+        "16": "tolere",
+        "17": "conforme", "18": "conforme", "19": "conforme",
+        "20": "hors_perimetre", "21": "hors_perimetre",
+        "22": "conforme", "23": "conforme", "24": "conforme", "25": "conforme",
+        "26": "conforme", "27": "conforme", "28": "conforme", "29": "conforme",
+        "30": "conforme"
+      },
+      "jamais_exclure": ["5","6","7","8","9","10","11","12","13","14","17","18","19","22","23","24","25","26","27","28","29","30"],
+      "commentaires": {
+        "15": "« Sans objet pour une entite financiere individuelle : cette disposition organise l'harmonisation des outils de surveillance entre autorites europeennes » -- exemption institutionnelle (_dora_institutionnel, toujours hors perimetre quel que soit le profil).",
+        "16": "Cadre simplifie reserve a certaines petites entites non interconnectees ; la banque declare explicitement ne pas y etre eligible et appliquer le cadre complet. Ambigu au niveau ground-truth : on peut lire ceci comme une non-application legitime de l'article 16 (hors_perimetre) ou comme une conformite (determination correcte de son propre regime). Marque 'tolere' : les deux lectures sont defendables, a trancher par l'equipe.",
+        "20": "Harmonisation des modeles de rapport entre autorites europeennes de surveillance -- exemption institutionnelle, jamais une obligation de l'entite qui utilise ces modeles.",
+        "21": "Centralisation des notifications aupres d'un point d'entree europeen unique -- exemption institutionnelle, faculte des autorites.",
+        "23": "Etablissement de credit proposant des moyens de paiement : entre bien dans le perimetre plus etroit de l'article 23 (etablissements de credit/paiement/monnaie electronique/PSIC), contrairement a une entite financiere generique.",
+        "26": "Test de penetration fonde sur la menace (TLPT) realise tous les trois ans conformement au cadre TIBER-EU, avec testeurs accredites -- justifie par le profil de risque et l'importance systemique regionale invoques dans le document."
+      }
+    },
+    {
+      "fichier": "02_societe_investissement_defaillante.txt",
+      "description": "Societe de gestion de portefeuille, 45 salaries, entite financiere, aucun cadre de gestion du risque TIC.",
+      "profil": { "entite_financiere_dora": true },
+      "score_attendu": [0, 10],
+      "verdicts_attendus": {
+        "5": "manquement", "6": "manquement", "7": "manquement", "8": "manquement",
+        "9": "manquement", "10": "manquement", "11": "manquement", "12": "manquement",
+        "13": "manquement", "14": "manquement",
+        "15": "hors_perimetre",
+        "17": "manquement", "18": "manquement", "19": "manquement",
+        "20": "hors_perimetre", "21": "hors_perimetre",
+        "23": "hors_perimetre",
+        "24": "manquement", "25": "manquement",
+        "28": "manquement", "29": "manquement", "30": "manquement"
+      },
+      "jamais_exclure": ["5","6","7","8","9","10","11","12","13","14","17","18","19","24","25","28","29","30"],
+      "commentaires": {
+        "15": "Exemption institutionnelle, sans lien avec la defaillance generale de l'organisation -- doit rester hors_perimetre meme dans un dossier tres deficient, precisement pour verifier que le filtre d'eligibilite n'est pas influence par le contenu du document.",
+        "20": "Exemption institutionnelle, meme remarque que ci-dessus.",
+        "21": "Exemption institutionnelle, meme remarque que ci-dessus.",
+        "23": "« Ne fournit aucun service de paiement [...], n'est ni etablissement de credit, ni etablissement de paiement, ni etablissement de monnaie electronique » -- exclusion de CONTENU (le profil entite_financiere_dora=true seul resout l'article 23 a 'a verifier', pas a l'exemption : c'est la lecture du document, pas le profil, qui doit amener le hors_perimetre ici -- limite connue du modele d'eligibilite, cf. eligibilite.py correction 2).",
+        "19": "Compromission du systeme de messagerie en 2024, aucune notification transmise a l'autorite de controle malgre une exposition de plusieurs semaines de documents clients -- manquement caracterise, pas seulement un retard.",
+        "26": "Non annote : aucun element du document ne permet de determiner si un test avance fonde sur la menace serait proportionne a une structure de 45 salaries (nuance de proportionnalite non modelisee par l'eligibilite actuelle, voir cas 1). A juger par l'equipe si elle souhaite l'ajouter."
+      }
+    },
+    {
+      "fichier": "03_assurance_partielle_contradictoire.txt",
+      "description": "Entreprise d'assurance, 190 salaries, entite financiere, conformite partielle et contradictions entre le cadre ecrit et la pratique constatee.",
+      "profil": { "entite_financiere_dora": true },
+      "score_attendu": [40, 65],
+      "verdicts_attendus": {
+        "5": "manquement",
+        "6": "conforme",
+        "8": "manquement",
+        "9": "manquement",
+        "10": "conforme",
+        "11": "conforme",
+        "12": "manquement",
+        "15": "hors_perimetre",
+        "17": "conforme",
+        "18": "conforme",
+        "19": "manquement",
+        "20": "hors_perimetre",
+        "21": "hors_perimetre",
+        "23": "hors_perimetre",
+        "24": "manquement",
+        "25": "conforme",
+        "26": "manquement",
+        "28": "manquement",
+        "29": "manquement",
+        "30": "manquement"
+      },
+      "jamais_exclure": ["5","6","8","9","10","11","12","17","18","19","24","25","26","28","29","30"],
+      "commentaires": {
+        "5": "Contradiction : le cadre ecrit affirme que « la direction generale assume la responsabilite pleine et entiere [...] et en assure le suivi continu », mais les comptes-rendus de comite de direction des deux dernieres annees ne font apparaitre aucun point sur le sujet, delegue de fait sans rattachement hierarchique -- l'affirmation n'est pas etayee.",
+        "6": "Distinct de l'article 5 : un cadre a formellement ete approuve par le conseil en 2023 -- l'existence documentaire du cadre est averee, seule sa gouvernance effective (art. 5) fait defaut.",
+        "8": "Inventaire des actifs incomplet : le portail des agents commerciaux externes, qui accede pourtant aux donnees clients, n'y figure pas.",
+        "9": "Chiffrement non etendu aux postes portables des inspecteurs sinistres (donnees clients emportees hors des locaux) ; authentification multifacteurs absente sur le portail des agents commerciaux externes.",
+        "12": "Test de restauration realise il y a dix-huit mois alors que la politique interne en impose un tous les six mois -- non-respect de la propre politique de l'organisation.",
+        "15": "Exemption institutionnelle.",
+        "20": "Exemption institutionnelle.",
+        "21": "Exemption institutionnelle.",
+        "23": "« Ne fournit aucun service de paiement au sens des etablissements de paiement ou de monnaie electronique » -- exclusion de contenu, meme limite du modele d'eligibilite que pour le cas 2 (article 23, correction 2).",
+        "19": "Notification initiale transmise dans les delais pour l'incident de juin 2024, mais rapport final transmis quatre mois plus tard, tres au-dela du delai attendu -- manquement malgre le respect partiel de la procedure.",
+        "24": "« Aucun test de penetration fonde sur la menace n'a ete realise a ce jour » et absence de preuve de l'evaluation annuelle d'eligibilite pourtant revendiquee sur trois ans -- le programme general de tests de resilience (article 24, distinct du TLPT proprement dit couvert par l'article 26) presente une lacune structurelle documentee.",
+        "26": "Contradiction : la mutuelle affirme evaluer chaque annee son eligibilite a un test avance, mais aucune trace de cette evaluation n'existe sur trois ans -- manquement porte sur le processus revendique et non etaye, independamment de la question (non tranchee ici) de savoir si un TLPT serait finalement requis pour une structure de cette taille.",
+        "28": "Le contrat du prestataire du portail des agents commerciaux (signe en 2017) ne comporte aucune des clauses presentes dans les contrats principaux depuis 2023.",
+        "29": "L'evaluation du risque de concentration de 2024 ne porte que sur les deux prestataires principaux, sans inclure le prestataire du portail des agents commerciaux.",
+        "30": "Meme contrat de 2017 : absence de clause d'audit, de reversibilite ou de conditions de localisation des donnees."
+      }
+    },
+    {
+      "fichier": "04_pme_industrielle_hors_perimetre.txt",
+      "description": "Sous-traitant industriel (usinage de precision), 95 salaries, hors du champ d'application du reglement DORA.",
+      "profil": { "entite_financiere_dora": false },
+      "score_attendu": [85, 100],
+      "verdicts_attendus": {
+        "5": "hors_perimetre", "6": "hors_perimetre", "7": "hors_perimetre", "8": "hors_perimetre",
+        "9": "hors_perimetre", "10": "hors_perimetre", "11": "hors_perimetre", "12": "hors_perimetre",
+        "13": "hors_perimetre", "14": "hors_perimetre", "15": "hors_perimetre", "16": "hors_perimetre",
+        "17": "hors_perimetre", "18": "hors_perimetre", "19": "hors_perimetre", "20": "hors_perimetre",
+        "21": "hors_perimetre", "22": "hors_perimetre", "23": "hors_perimetre", "24": "hors_perimetre",
+        "25": "hors_perimetre", "26": "hors_perimetre", "27": "hors_perimetre", "28": "hors_perimetre",
+        "29": "hors_perimetre", "30": "hors_perimetre"
+      },
+      "jamais_exclure": [],
+      "commentaires": {
+        "5": "Sous-traitant industriel, aucune des categories d'entite financiere de l'article 2 du reglement DORA : exemption de profil (entite_financiere_dora = false), et non simple absence de preuve -- s'applique uniformement aux 26 articles auditables.",
+        "23": "A la difference des cas 2 et 3 (exclusion de CONTENU malgre un profil entite_financiere_dora=true), ici l'exemption vient directement du profil : aucune ambiguite, l'organisation n'est pas une entite financiere du tout."
+      }
+    }
+  ]
 }

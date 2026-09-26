@@ -1,0 +1,156 @@
+CADRE DE GESTION DU RISQUE LIE AUX TIC
+BANQUE COOPERATIVE DU CENTRE — Etablissement de credit — 480 salaries
+
+PRESENTATION
+La Banque Cooperative du Centre est un etablissement de credit agree,
+proposant des services bancaires de detail et des moyens de paiement a une
+clientele regionale de particuliers et de professionnels. Elle est a ce titre
+une entite financiere au sens du reglement DORA.
+
+GOUVERNANCE ET ORGANISATION (Article 5)
+Le conseil d'administration approuve annuellement le cadre de gestion du
+risque lie aux TIC et en assume la responsabilite finale. Un Responsable des
+Risques TIC, rattache directement a la direction generale, anime un comite
+des risques TIC trimestriel associant les directions metier. Les roles et
+responsabilites sont formalises dans une charte de gouvernance des systemes
+d'information, revue chaque annee.
+
+CADRE DE GESTION DU RISQUE (Article 6)
+Le cadre documente couvre l'ensemble des exigences de l'article 6 : strategie
+de resilience operationnelle numerique, politiques et procedures de securite
+de l'information, mecanismes de detection et de reponse. Il est revu apres
+tout incident majeur et fait l'objet d'un audit interne annuel.
+
+SYSTEMES, PROTOCOLES ET OUTILS (Article 7)
+L'infrastructure repose sur des systemes a jour, avec un inventaire exhaustif
+des composants critiques et un plan de remplacement des technologies en fin de
+vie, suivi par le comite des risques TIC.
+
+IDENTIFICATION (Article 8)
+Une cartographie des actifs informationnels et des fonctions critiques ou
+importantes est tenue et mise a jour semestriellement, incluant les
+dependances vis-a-vis des prestataires tiers de services TIC.
+
+PROTECTION ET PREVENTION (Article 9)
+Chiffrement des donnees au repos et en transit, segmentation reseau entre
+environnement bancaire et environnement bureautique, gestion des acces selon
+le principe du moindre privilege avec revue trimestrielle des habilitations,
+authentification multifacteurs generalisee.
+
+DETECTION (Article 10)
+Un centre operationnel de securite (SOC) externalise assure une surveillance
+continue et une detection des anomalies, avec des seuils d'alerte documentes
+et testes.
+
+REPONSE ET RETABLISSEMENT (Article 11)
+Un plan de reponse aux incidents et un plan de continuite d'activite couvrant
+les fonctions critiques sont formalises et testes chaque annee par un exercice
+de crise impliquant la direction generale.
+
+SAUVEGARDE ET RESTAURATION (Article 12)
+Politique de sauvegarde documentee, sauvegardes quotidiennes chiffrees sur un
+site distinct, avec test de restauration complet realise chaque trimestre et
+compte-rendu transmis au comite des risques TIC.
+
+APPRENTISSAGE ET EVOLUTION (Article 13)
+Chaque incident significatif fait l'objet d'un retour d'experience formalise,
+integre a un registre des enseignements. Une veille sur les cybermenaces
+sectorielles alimente des sessions de sensibilisation trimestrielles pour
+l'ensemble du personnel.
+
+COMMUNICATION (Article 14)
+Un plan de communication de crise definit les messages et les destinataires
+(clients, autorite de controle, presse) en cas d'incident majeur ou de
+perturbation significative de l'activite.
+
+HARMONISATION DES OUTILS (Article 15)
+Sans objet pour une entite financiere individuelle : cette disposition
+organise l'harmonisation des outils de surveillance entre autorites
+europeennes de surveillance, sans obligation directe pour la banque.
+
+CADRE SIMPLIFIE (Article 16)
+La Banque Cooperative du Centre ne remplit pas les conditions d'eligibilite
+au cadre simplifie de gestion du risque lie aux TIC (reserve a certaines
+petites entreprises d'investissement non interconnectees et entites
+assimilees) : elle applique le cadre complet decrit ci-dessus.
+
+GESTION DES INCIDENTS (Article 17)
+Un processus de gestion des incidents lies aux TIC est documente, avec
+detection, journalisation, qualification et escalade selon des criteres de
+gravite predefinis.
+
+CLASSIFICATION DES INCIDENTS (Article 18)
+Les criteres de classification (clients affectes, duree, zone geographique,
+impact sur les donnees, criticite des services) sont documentes et alignes
+sur les criteres reglementaires des autorites europeennes de surveillance.
+
+DECLARATION DES INCIDENTS MAJEURS (Article 19)
+Une procedure de notification a l'autorite de controle competente est
+formalisee : notification initiale, rapport intermediaire et rapport final,
+avec des delais suivis par le Responsable des Risques TIC. Les cybermenaces
+importantes evitees sont egalement notifiees a titre volontaire.
+
+HARMONISATION DES MODELES DE RAPPORT (Article 20)
+Sans objet pour une entite financiere individuelle : l'harmonisation du
+contenu et des modeles de notification releve des autorites europeennes de
+surveillance, pas de l'entite qui utilise les modeles ainsi harmonises.
+
+CENTRALISATION DES NOTIFICATIONS (Article 21)
+Sans objet pour une entite financiere individuelle : la centralisation des
+notifications aupres d'un point d'entree unique europeen est une faculte
+laissee aux autorites, non une obligation de l'entite financiere.
+
+RETOUR D'INFORMATION EN MATIERE DE SURVEILLANCE (Article 22)
+L'autorite de controle transmet chaque annee un retour synthetique sur les
+incidents declares par les etablissements du secteur ; ce retour est examine
+en comite des risques TIC et donne lieu, si pertinent, a des actions
+correctives suivies.
+
+INCIDENTS LIES AU PAIEMENT (Article 23)
+En tant qu'etablissement de credit proposant des moyens de paiement, la
+banque applique le regime specifique de declaration des incidents
+operationnels ou de securite lies au paiement, distinct du regime general des
+incidents TIC, avec des seuils et delais propres suivis par le service
+moyens de paiement.
+
+EXIGENCES GENERALES DE TESTS (Article 24)
+Un programme annuel de tests de resilience operationnelle numerique couvre
+l'ensemble des systemes critiques, proportionne au profil de risque de la
+banque, avec restitution au comite des risques TIC.
+
+TEST DES OUTILS ET SYSTEMES (Article 25)
+Des tests de vulnerabilite reguliers, des analyses de la securite des reseaux,
+des revues de code et des tests de scenario sont realises selon un calendrier
+documente.
+
+TESTS AVANCES FONDES SUR LA MENACE (Article 26)
+Compte tenu de son profil de risque, de sa taille et de son importance
+systemique regionale, la banque realise tous les trois ans un test de
+penetration fonde sur la menace (TLPT) couvrant ses fonctions critiques en
+conditions reelles, conforme au cadre TIBER-EU, avec l'appui de testeurs
+accredites.
+
+EXIGENCES APPLICABLES AUX TESTEURS (Article 27)
+Les testeurs internes et externes mobilises pour le TLPT disposent des
+accreditations requises et d'une assurance responsabilite civile
+professionnelle adaptee ; le contrat avec le prestataire de test externe
+integre ces exigences.
+
+PRINCIPES GENERAUX DE GESTION DU RISQUE TIERS (Article 28)
+Une strategie relative au risque lie aux prestataires tiers de TIC est
+formalisee, incluant un registre des accords contractuels tenu a jour et
+transmis annuellement a l'autorite de controle.
+
+EVALUATION DU RISQUE DE CONCENTRATION (Article 29)
+Une evaluation prealable du risque de concentration lie au recours a un
+nombre restreint de prestataires TIC critiques est realisee chaque annee et
+presentee au comite des risques TIC, avec un plan de diversification pour les
+deux prestataires identifies comme les plus critiques.
+
+DISPOSITIONS CONTRACTUELLES ESSENTIELLES (Article 30)
+Les contrats avec les prestataires de services TIC comportent une description
+complete des services, des indicateurs de performance, des clauses d'audit et
+d'acces aux informations, une strategie de sortie documentee et testee, et les
+conditions de localisation et de protection des donnees. Ces clauses ont ete
+integrees systematiquement aux contrats renegocies depuis 2023 et retro-
+appliquees aux contrats critiques existants.

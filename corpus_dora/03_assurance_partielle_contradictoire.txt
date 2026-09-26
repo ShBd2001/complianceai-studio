@@ -1,0 +1,62 @@
+CADRE DE GESTION DU RISQUE NUMERIQUE
+MUTUELLE ASSURANCE FAMILIALE — Entreprise d'assurance — 190 salaries
+
+PRESENTATION
+Mutuelle Assurance Familiale est une entreprise d'assurance proposant des
+contrats d'assurance habitation, automobile et sante a une clientele de
+particuliers. Elle est a ce titre une entite financiere au sens du reglement
+DORA. Elle ne fournit aucun service de paiement au sens des etablissements de
+paiement ou de monnaie electronique.
+
+GOUVERNANCE ET CADRE DE RISQUE
+Le conseil d'administration a approuve en 2023 un cadre de gestion du risque
+lie aux TIC. Le document affirme que « la direction generale assume la
+responsabilite pleine et entiere du dispositif et en assure le suivi
+continu » ; les comptes-rendus du comite de direction des deux dernieres
+annees ne font toutefois apparaitre aucun point consacre aux risques
+numeriques, le sujet ayant ete delegue de fait au seul responsable
+informatique, sans rattachement hierarchique direct a la direction generale
+ni comite dedie.
+
+SYSTEMES ET PROTECTION
+L'inventaire des actifs informationnels couvre les systemes de gestion des
+sinistres et de facturation, mais ne mentionne pas les outils utilises par le
+reseau d'agents commerciaux independants, qui accedent pourtant aux donnees
+clients via un portail dedie. Le chiffrement des donnees au repos est en
+place sur les serveurs centraux mais n'a pas ete etendu aux postes portables
+des inspecteurs sinistres, qui emportent des dossiers clients hors des
+locaux. L'authentification multifacteurs est activee pour les acces internes
+mais pas pour le portail des agents commerciaux externes.
+
+DETECTION, REPONSE ET SAUVEGARDE
+Un prestataire de supervision de securite surveille le reseau interne 24h/24.
+Un plan de reponse aux incidents existe et a ete active a deux reprises en
+2024 avec des delais de resolution documentes. Les sauvegardes sont
+quotidiennes et chiffrees ; le dernier test de restauration documente remonte
+toutefois a dix-huit mois, alors que la politique interne en prevoit un tous
+les six mois.
+
+GESTION DES INCIDENTS ET DECLARATION
+Une procedure de classification des incidents existe, fondee sur les criteres
+reglementaires. Un incident classe majeur en juin 2024 a fait l'objet d'une
+notification initiale a l'autorite de controle dans les delais, mais le
+rapport final n'a ete transmis que quatre mois plus tard, largement au-dela
+du delai attendu, faute de suivi apres la clôture operationnelle de
+l'incident.
+
+TESTS DE RESILIENCE
+Des tests de vulnerabilite sont realises chaque annee sur les systemes
+centraux. Aucun test de penetration fonde sur la menace n'a ete realise a ce
+jour ; le dispositif de gestion des risques indique que la mutuelle « evalue
+chaque annee son eligibilite a un tel test au regard de son profil de
+risque », mais aucune trace de cette evaluation annuelle n'a ete produite pour
+les trois dernieres annees.
+
+GESTION DES PRESTATAIRES TIERS
+Un registre des contrats avec les prestataires TIC est tenu pour les
+prestataires informatiques principaux (hebergeur, editeur du logiciel de
+gestion des sinistres), avec clauses d'audit et de reversibilite integrees
+depuis 2023. Le contrat avec le prestataire assurant le portail des agents
+commerciaux, signe en 2017, ne comporte en revanche aucune de ces clauses et
+n'a pas ete identifie dans l'evaluation du risque de concentration realisee
+en 2024, laquelle ne porte que sur les deux prestataires principaux.

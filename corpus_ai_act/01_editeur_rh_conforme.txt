@@ -1,0 +1,158 @@
+DOSSIER DE CONFORMITE — SYSTEME D'IA DE PRESELECTION DE CANDIDATURES
+TALENTSCORE EDITIONS — Editeur de logiciels RH — 130 salaries
+
+PRESENTATION
+Talentscore Editions concoit et commercialise TalentScore Pro, un systeme
+d'intelligence artificielle destine a preselectionner et classer des
+candidatures dans le cadre de processus de recrutement, commercialise aupres
+d'entreprises clientes. Ce systeme relève de l'annexe III du reglement sur
+l'intelligence artificielle (emploi, gestion des travailleurs et acces a
+l'emploi independant) et constitue a ce titre un systeme d'IA a haut risque.
+Talentscore Editions en est le fournisseur au sens du reglement. L'entreprise
+n'utilise par ailleurs elle-meme aucun systeme d'IA a haut risque en tant que
+deployeur pour ses propres besoins internes.
+
+PRATIQUES INTERDITES (Article 5)
+Une revue de conformite prealable au developpement de TalentScore Pro a
+verifie l'absence de toute pratique interdite : le systeme ne recourt a aucune
+technique subliminale ou manipulatoire, n'exploite aucune vulnerabilite liee a
+l'age, au handicap ou a la situation sociale ou economique, ne procede a
+aucune notation sociale des candidats, et n'effectue aucune categorisation
+biometrique visant a deduire des donnees sensibles (opinions politiques,
+appartenance syndicale, orientation sexuelle, origine ethnique). Le systeme
+n'utilise aucune reconnaissance des emotions, celle-ci etant explicitement
+exclue du perimetre fonctionnel dans les specifications techniques.
+
+RESPECT DES EXIGENCES (Article 8)
+Un dossier de conformite documente le respect systematique de l'ensemble des
+exigences du chapitre III, section 2, avant mise sur le marche de chaque
+version majeure.
+
+SYSTEME DE GESTION DES RISQUES (Article 9)
+Un systeme de gestion des risques est mis en oeuvre tout au long du cycle de
+vie du produit : identification des risques connus et previsibles (biais de
+discrimination indirecte, erreurs de classement), estimation, evaluation et
+mesures d'attenuation, avec tests utilisateurs impliquant des recruteurs de
+plusieurs secteurs avant chaque mise a jour majeure.
+
+DONNEES ET GOUVERNANCE DES DONNEES (Article 10)
+Les jeux de donnees d'entrainement, de validation et de test font l'objet
+d'un examen documente de pertinence, de representativite et d'absence de
+biais previsibles au regard de criteres proteges (sexe, origine, age,
+handicap). Un audit de biais est realise avant chaque mise en production.
+
+DOCUMENTATION TECHNIQUE (Article 11)
+Une documentation technique complete, conforme a l'annexe IV, est etablie et
+tenue a jour avant la mise sur le marche et a chaque modification
+substantielle.
+
+TENUE DE REGISTRES (Article 12)
+Le systeme genere automatiquement des journaux tout au long de son cycle de
+vie, tracant les entrees, les scores produits et les elements ayant conduit a
+chaque classement.
+
+TRANSPARENCE ENVERS LES DEPLOYEURS (Article 13)
+Une notice d'utilisation destinee aux entreprises clientes accompagne chaque
+licence, precisant les caracteristiques du systeme, ses limites de
+performance connues, le niveau de precision mesure et les mesures de
+surveillance humaine attendues du deployeur.
+
+CONTROLE HUMAIN (Article 14)
+Le systeme est concu pour ne jamais rendre de decision finale d'exclusion
+automatique : il produit un classement indicatif que le recruteur doit
+valider avant toute decision, avec une fonction d'interruption permettant a
+tout moment de suspendre le traitement.
+
+EXACTITUDE, ROBUSTESSE ET CYBERSECURITE (Article 15)
+Des metriques de precision et de robustesse sont mesurees a chaque version et
+publiees dans la documentation technique. Des tests de resistance aux
+donnees d'entree degradees ou adversariales sont realises avant chaque
+publication.
+
+OBLIGATIONS GENERALES DES FOURNISSEURS (Article 16)
+L'ensemble des obligations du present chapitre (systeme qualite,
+documentation, enregistrement, marquage CE, cooperation avec les autorites)
+est integre au processus de mise sur le marche, pilote par la direction
+qualite.
+
+SYSTEME DE GESTION DE LA QUALITE (Article 17)
+Un systeme de gestion de la qualite certifie ISO 9001, etendu aux exigences
+specifiques du reglement sur l'IA, couvre la conception, le developpement, le
+controle qualite et la surveillance post-commercialisation.
+
+CONSERVATION DES DOCUMENTS (Article 18)
+La documentation technique et les journaux generes sont conserves dix ans
+apres la mise sur le marche de la version concernee.
+
+JOURNAUX GENERES AUTOMATIQUEMENT (Article 19)
+Les journaux sont conserves par les entreprises clientes deployeuses pendant
+une duree appropriee a la finalite du systeme, conformement aux instructions
+transmises dans la notice d'utilisation.
+
+MESURES CORRECTIVES ET DEVOIR D'INFORMATION (Article 20)
+Une procedure de gestion des non-conformites prevoit le retrait, la
+desactivation a distance ou le rappel du systeme, et l'information immediate
+des autorites competentes et des entreprises clientes en cas de risque
+identifie.
+
+COOPERATION AVEC LES AUTORITES (Article 21)
+Un contact designe repond aux demandes des autorites de surveillance du
+marche dans les delais reglementaires et fournit sur demande la documentation
+technique dans une langue comprehensible.
+
+MANDATAIRE (Article 22)
+Talentscore Editions est etablie en France, au sein de l'Union europeenne :
+la designation d'un mandataire, qui ne concerne que les fournisseurs etablis
+en dehors de l'Union, ne s'applique pas a l'entreprise.
+
+RESPONSABILITES DANS LA CHAINE DE VALEUR (Article 25)
+Les contrats de distribution precisent explicitement que toute modification
+substantielle du systeme par un distributeur ou une entreprise cliente
+transfere a celui-ci les obligations de fournisseur, information rappelee
+dans la documentation contractuelle.
+
+DECLARATION UE DE CONFORMITE (Article 47)
+Une declaration UE de conformite est etablie et signee pour chaque version
+majeure du systeme, tenue a disposition des autorites pendant dix ans.
+
+MARQUAGE CE (Article 48)
+Le marquage CE est appose sur la documentation commerciale et contractuelle
+accompagnant le produit, conformement aux exigences applicables.
+
+ENREGISTREMENT (Article 49)
+TalentScore Pro est enregistre dans la base de donnees de l'Union europeenne
+pour les systemes d'IA a haut risque prealablement a sa mise sur le marche,
+avec mise a jour a chaque modification substantielle.
+
+SURVEILLANCE APRES COMMERCIALISATION (Article 72)
+Un plan de surveillance post-commercialisation collecte et analyse les
+retours d'utilisation des entreprises clientes et les incidents signales,
+alimentant le processus d'amelioration continue.
+
+SIGNALEMENT D'INCIDENTS GRAVES (Article 73)
+Une procedure de signalement des incidents graves aux autorites competentes
+est formalisee, avec des delais alignes sur les exigences reglementaires
+selon la gravite de l'incident.
+
+OBLIGATIONS DE TRANSPARENCE POUR CERTAINS SYSTEMES (Article 50)
+TalentScore Pro n'est pas un systeme destine a interagir directement avec des
+personnes physiques a la maniere d'un agent conversationnel, ne genere ni
+contenu de synthese ni hypertrucage, et ne procede a aucune reconnaissance des
+emotions ni categorisation biometrique : les obligations de transparence
+specifiques de cet article, qui visent ces categories de systemes, ne
+trouvent pas a s'appliquer ici.
+
+OBLIGATIONS DES IMPORTATEURS ET DES DISTRIBUTEURS (Articles 23 et 24)
+Talentscore Editions est le fournisseur direct de TalentScore Pro, developpe
+et mis sur le marche par ses propres soins : l'entreprise n'agit ni comme
+importateur, ni comme distributeur d'un systeme d'IA developpe par un tiers
+etabli hors de l'Union, et les obligations propres a ces deux roles ne la
+concernent pas pour ce produit.
+
+OBLIGATIONS DES DEPLOYEURS ET ANALYSE D'IMPACT (Articles 26, 27 et 86)
+Talentscore Editions n'est pas elle-meme deployeuse d'un systeme d'IA a haut
+risque : elle en est exclusivement le fournisseur. Les obligations propres
+aux deployeurs, y compris l'analyse d'impact sur les droits fondamentaux et le
+droit a l'explication des decisions individuelles, incombent aux entreprises
+clientes qui utilisent TalentScore Pro dans leurs propres processus de
+recrutement, non a l'editeur.

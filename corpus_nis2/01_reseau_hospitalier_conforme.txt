@@ -1,0 +1,87 @@
+POLITIQUE DE SECURITE DES RESEAUX ET SYSTEMES D'INFORMATION
+RESEAU HOSPITALIER DU LITTORAL — Groupement de cooperation sanitaire — 1400 salaries
+
+PRESENTATION
+Le Reseau Hospitalier du Littoral regroupe trois etablissements de sante publics
+et gere a ce titre des systemes d'information critiques pour la continuite des
+soins (dossier patient informatise, imagerie, pharmacie, supervision des
+dispositifs medicaux connectes). A ce titre, l'etablissement est enregistre
+aupres de l'autorite nationale de cybersecurite comme entite essentielle au
+sens de la directive NIS2, dans le secteur de la sante.
+
+Le Reseau n'exploite ni service DNS ni bureau d'enregistrement de noms de
+domaine : le nom de domaine institutionnel est gere par un prestataire externe
+specialise, avec lequel un contrat de sous-traitance encadre la prestation.
+
+GOUVERNANCE (Article 20)
+Le conseil de direction a approuve en 2024 une politique de securite des
+systemes d'information et en revoit l'application chaque semestre. Un Directeur
+des Systemes d'Information et de la Securite (DSIS), membre du comite de
+direction, est responsable de la mise en oeuvre des mesures de gestion des
+risques. L'ensemble des membres du conseil de direction a suivi une formation
+de sensibilisation a la cybersecurite dispensee par l'ANSSI en 2024, et une
+piqure de rappel annuelle est prevue au plan de formation. Le DSIS rend compte
+trimestriellement au conseil de l'etat des risques et des incidents.
+
+GESTION DES RISQUES (Article 21)
+Une analyse de risques formalisee couvre l'ensemble du systeme d'information,
+mise a jour annuellement et apres tout changement majeur. Elle s'appuie sur les
+mesures suivantes, documentees dans la politique de securite :
+- politique d'analyse des risques et de securite des systemes d'information ;
+- procedure de gestion des incidents, avec astreinte technique 24h/24 ;
+- plan de continuite d'activite et plan de reprise apres sinistre, testes
+  chaque annee par un exercice de crise impliquant les services cliniques ;
+- politique de securite de la chaine d'approvisionnement, incluant une
+  clause de securite type dans les contrats avec les editeurs de logiciels
+  medicaux et les hebergeurs de donnees de sante ;
+- procedures d'acquisition, de developpement et de maintenance securisee des
+  systemes, avec revue de code et tests d'intrusion avant mise en production ;
+- politiques d'evaluation de l'efficacite des mesures de gestion des risques,
+  au moyen d'audits internes annuels et d'un audit externe tous les deux ans ;
+- pratiques d'hygiene informatique de base (gestion des correctifs, postes de
+  travail standardises, sensibilisation du personnel soignant et administratif
+  aux risques d'hameconnage, deux campagnes par an) ;
+- politique de cryptographie, chiffrement des donnees de sante au repos et en
+  transit ;
+- politique de securite des ressources humaines (habilitations liees aux
+  fonctions, revue trimestrielle des acces, procedure de depart) et gestion
+  des actifs (inventaire du parc informatique et biomedical connecte) ;
+- authentification multifacteurs pour tous les acces distants et pour les
+  comptes a privileges, communications chiffrees et systeme de communication
+  d'urgence redondant en cas d'indisponibilite du reseau principal.
+
+OBLIGATIONS D'INFORMATION (Article 23)
+Une procedure de notification des incidents importants est formalisee et
+diffusee aux equipes techniques et cliniques : alerte precoce au CSIRT national
+sous 24 heures apres la detection d'un incident important, notification
+detaillee sous 72 heures precisant l'evaluation initiale de gravite et
+d'impact, puis rapport final sous un mois incluant une description detaillee
+de l'incident, sa gravite, sa cause probable et les mesures d'attenuation
+mises en oeuvre. Deux exercices de simulation d'incident ont ete conduits en
+2024 pour tester cette procedure, avec un retour d'experience formalise.
+
+RECOURS AUX SCHEMAS DE CERTIFICATION (Article 24)
+Les equipements biomedicaux connectes acquis depuis 2023 font l'objet d'une
+exigence contractuelle de conformite a un schema europeen de certification de
+cybersecurite lorsqu'un tel schema existe pour la categorie de produit
+concernee. Le service achats tient un tableau de suivi des certifications
+disponibles par categorie d'equipement.
+
+REGISTRE DES ENTITES ET NOMS DE DOMAINE (Articles 27 et 28)
+Le Reseau Hospitalier du Littoral n'est ni un registre de noms de domaine de
+premier niveau, ni un bureau d'enregistrement, ni un fournisseur de services
+DNS pour des tiers : ces obligations ne le concernent pas. Le nom de domaine
+institutionnel est enregistre et gere par un prestataire specialise tiers.
+
+PARTAGE D'INFORMATIONS EN CYBERSECURITE (Article 29)
+Le DSIS participe au dispositif sectoriel de partage d'informations sur les
+cybermenaces anime par l'agence regionale de sante, au titre d'un accord de
+partage volontaire signe en 2023. Les indicateurs de compromission recus sont
+integres aux outils de detection dans un delai de 48 heures.
+
+NOTIFICATION VOLONTAIRE (Article 30)
+Au-dela des incidents a notification obligatoire, le Reseau notifie
+volontairement au CSIRT national les tentatives d'intrusion detectees et
+contenues sans impact avere, ainsi que les cybermenaces significatives
+identifiees par sa veille, dans un objectif de contribution collective a la
+detection precoce. Trois notifications volontaires ont ete transmises en 2024.

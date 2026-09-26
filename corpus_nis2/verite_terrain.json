@@ -1,5 +1,115 @@
 {
   "version": "0.1",
-  "note": "Squelette vide, a completer par l'equipe. Voir README.md de ce dossier pour le format et corpus/verite_terrain.json (RGPD) pour un exemple rempli. Toute annotation doit etre justifiee : c'est la reference contre laquelle le moteur est mesure, une erreur ici invalide toutes les metriques.",
-  "cas": []
+  "referentiel": "nis2",
+  "note": "Brouillon redige par Claude Code a la demande explicite de l'equipe (protocole de mesure NIS2/DORA/AI Act), destine a etre relu et corrige article par article avant tout gel de reference -- voir README.md de ce dossier pour la clause de gouvernance habituelle (Claude Code ne redige jamais seul une verite terrain non revue). Articles auditables NIS2 : 20, 21, 23, 24, 27, 28, 29, 30 (app/ingestion/scoping.py::NIS2_AUDITABLE). Le champ 'profil' fixe directement entite_nis2 sur l'organisation de test (validation/evaluate.py::_appliquer_profil), sans dependre d'une extraction heuristique depuis 'description'.",
+  "cas": [
+    {
+      "fichier": "01_reseau_hospitalier_conforme.txt",
+      "description": "Groupement hospitalier public, 1400 salaries, entite essentielle (sante), gouvernance mature.",
+      "profil": { "entite_nis2": "essentielle" },
+      "score_attendu": [85, 100],
+      "verdicts_attendus": {
+        "20": "conforme",
+        "21": "conforme",
+        "23": "conforme",
+        "24": "conforme",
+        "27": "hors_perimetre",
+        "28": "hors_perimetre",
+        "29": "conforme",
+        "30": "conforme"
+      },
+      "jamais_exclure": ["20", "21", "23", "24", "29", "30"],
+      "commentaires": {
+        "20": "Politique approuvee par le conseil de direction, DSIS designe et membre du comite de direction, formation ANSSI de l'ensemble du conseil en 2024, reporting trimestriel.",
+        "21": "Dix mesures documentees couvrant l'ensemble de l'article 21§2 (a a j) : analyse de risques, gestion des incidents, continuite/reprise testees, securite de la chaine d'approvisionnement, cycle de vie securise, evaluation de l'efficacite, hygiene informatique, cryptographie, RH et gestion des actifs, authentification multifacteurs.",
+        "23": "Procedure formalisee alerte precoce 24h / notification 72h / rapport final 1 mois, testee par deux exercices de simulation en 2024.",
+        "24": "Exigence contractuelle de certification europeenne pour les equipements biomedicaux connectes depuis 2023, avec suivi documente par categorie.",
+        "27": "« Le Reseau Hospitalier du Littoral n'est ni un registre de noms de domaine de premier niveau, ni un bureau d'enregistrement, ni un fournisseur de services DNS pour des tiers » -- exclusion de contenu, l'article 27 vise specifiquement ces activites, pas le statut general d'entite essentielle.",
+        "28": "Meme exclusion que l'article 27 : le nom de domaine institutionnel est gere par un prestataire tiers, l'etablissement n'exploite pas de base de donnees d'enregistrement de noms de domaine.",
+        "29": "Participation documentee au dispositif sectoriel de partage anime par l'agence regionale de sante depuis 2023, delai d'integration des indicateurs de 48h.",
+        "30": "Trois notifications volontaires transmises en 2024 (tentatives d'intrusion contenues, cybermenaces identifiees par la veille)."
+      }
+    },
+    {
+      "fichier": "02_transporteur_defaillant.txt",
+      "description": "Entreprise de transport routier de voyageurs, 340 salaries, entite importante, aucune mesure de securite formalisee.",
+      "profil": { "entite_nis2": "importante" },
+      "score_attendu": [0, 15],
+      "verdicts_attendus": {
+        "20": "manquement",
+        "21": "manquement",
+        "23": "manquement",
+        "24": "manquement",
+        "27": "hors_perimetre",
+        "28": "hors_perimetre",
+        "29": "manquement",
+        "30": "manquement"
+      },
+      "jamais_exclure": ["20", "21", "23", "24", "29", "30"],
+      "commentaires": {
+        "20": "Aucune politique formalisee, aucun membre de la direction forme, sujet jamais aborde en comite de direction.",
+        "21": "Aucune analyse de risques, aucun plan de continuite ni de reprise, sauvegardes manuelles et irregulieres sans test de restauration, mots de passe administrateurs inchanges depuis 2019, authentification multifacteurs absente, aucune clause de securite dans les contrats prestataires.",
+        "23": "Incident de mars 2025 notifie 11 jours apres decouverte (au lieu de l'alerte precoce sous 24h), aucun rapport final etabli, aucune procedure ecrite de notification.",
+        "24": "Aucune exigence de certification integree aux achats informatiques.",
+        "27": "« L'entreprise n'exploite pas de service DNS ni de registre de noms de domaine pour des tiers » -- exclusion de contenu, non liee a la defaillance generale.",
+        "28": "Meme exclusion que l'article 27.",
+        "29": "« Ne participe a aucun dispositif de partage d'informations sur les cybermenaces. »",
+        "30": "« N'a jamais transmis de notification volontaire au CSIRT national. »"
+      }
+    },
+    {
+      "fichier": "03_energie_partielle_contradictoire.txt",
+      "description": "Distributeur regional d'electricite, 210 salaries, entite importante, conformite partielle et contradictions entre politique ecrite et pratique constatee.",
+      "profil": { "entite_nis2": "importante" },
+      "score_attendu": [25, 50],
+      "verdicts_attendus": {
+        "20": "manquement",
+        "21": "manquement",
+        "23": "manquement",
+        "24": "conforme",
+        "27": "hors_perimetre",
+        "28": "hors_perimetre",
+        "29": "manquement",
+        "30": "manquement"
+      },
+      "jamais_exclure": ["20", "21", "23", "24", "29", "30"],
+      "commentaires": {
+        "20": "Contradiction : la politique affirme que « l'ensemble des membres du comite de direction est forme », mais le registre RH ne recense qu'une seule participation (le responsable securite lui-meme) -- l'affirmation n'est pas etayee par les faits.",
+        "21": "Cartographie des risques SCADA non mise a jour depuis 2022 malgre un changement materiel en 2024, absence de plan de continuite formalise et de plan de reprise malgre leur mention dans l'organigramme documentaire, un contrat (CRM) sans clause de securite, campagne de sensibilisation limitee aux services administratifs (equipes d'exploitation exclues) -- gaps multiples malgre des points positifs reels (authentification multifacteurs sur le reseau de supervision, sauvegardes testees trimestriellement).",
+        "23": "L'alerte precoce de l'incident de janvier 2025 respecte le delai de 24h (22h), mais le rapport final n'a ete produit que six semaines apres l'incident, au-dela du delai d'un mois, et apres relance de l'autorite -- manquement caracterise malgre le respect partiel de la procedure.",
+        "24": "Automates de supervision 2024 selectionnes parmi des references certifiees lorsque la certification existait pour la categorie -- pratique reelle et positive, sans contradiction relevee.",
+        "27": "« L'entreprise n'exploite pas de service DNS ni de registre de noms de domaine pour des tiers » -- exclusion de contenu.",
+        "28": "Meme exclusion que l'article 27.",
+        "29": "A rejoint le dispositif sectoriel en 2024 mais n'a transmis aucune information depuis -- adhesion sans mise en oeuvre reelle, ne repond pas a l'esprit de l'obligation.",
+        "30": "« N'a effectue aucune notification volontaire d'incident mineur ou de cybermenace. »"
+      }
+    },
+    {
+      "fichier": "04_artisan_hors_perimetre.txt",
+      "description": "Boulangerie-patisserie artisanale, trois boutiques, 14 salaries, hors du champ d'application de la directive NIS2.",
+      "profil": { "entite_nis2": "non_concernee" },
+      "score_attendu": [85, 100],
+      "verdicts_attendus": {
+        "20": "hors_perimetre",
+        "21": "hors_perimetre",
+        "23": "hors_perimetre",
+        "24": "hors_perimetre",
+        "27": "hors_perimetre",
+        "28": "hors_perimetre",
+        "29": "hors_perimetre",
+        "30": "hors_perimetre"
+      },
+      "jamais_exclure": [],
+      "commentaires": {
+        "20": "Secteur (boulangerie artisanale) hors annexes I et II de la directive, effectif tres inferieur aux seuils : exemption de profil (entite_nis2 = non_concernee), et non simple absence de preuve.",
+        "21": "Meme fondement d'exemption que l'article 20 -- a ne jamais confondre avec un manquement : l'organisation n'est simplement pas soumise a la directive.",
+        "23": "Meme fondement d'exemption.",
+        "24": "Meme fondement d'exemption.",
+        "27": "Exemption de profil (non_concernee) : contrairement aux articles 27/28 des cas 1 a 3 (exclus par le CONTENU du document, statut general non pertinent pour le DNS), ici l'exemption vient directement du profil puisque l'organisation n'est pas du tout une entite NIS2.",
+        "28": "Meme fondement que l'article 27 ci-dessus.",
+        "29": "Meme fondement d'exemption.",
+        "30": "Meme fondement d'exemption."
+      }
+    }
+  ]
 }

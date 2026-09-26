@@ -1,0 +1,78 @@
+DOSSIER DE CONFORMITE — SYSTEME DE SCORING DE CREDIT
+FINEO SCORING — Etablissement financier specialise — 85 salaries
+
+PRESENTATION
+Fineo Scoring developpe et utilise pour son propre compte ScoreFineo, un
+systeme d'intelligence artificielle d'evaluation de la solvabilite des
+demandeurs de credit a la consommation. Fineo Scoring est a la fois le
+fournisseur de ScoreFineo (systeme developpe en interne, jamais commercialise
+a des tiers) et son deployeur (utilisation pour ses propres decisions de
+credit). Ce systeme relève de l'annexe III (evaluation de la solvabilite) et
+constitue un systeme d'IA a haut risque.
+
+PRATIQUES INTERDITES (Article 5)
+Le comite d'ethique des donnees, cree en 2023, a valide l'absence de toute
+pratique interdite dans ScoreFineo : aucune notation sociale, aucune
+exploitation de vulnerabilite liee a l'age ou au handicap, aucune
+categorisation biometrique. Les variables utilisees se limitent aux donnees
+financieres et declaratives du demandeur.
+
+SYSTEME DE GESTION DES RISQUES ET DONNEES (Articles 9 et 10)
+Un systeme de gestion des risques documente couvre le cycle de vie du produit.
+La documentation relative aux donnees d'entrainement precise que « les jeux
+de donnees sont audites chaque annee pour ecarter tout biais discriminatoire
+» ; l'examen du registre des audits internes ne fait toutefois apparaitre
+qu'un seul audit de biais, realise en 2022 lors du developpement initial,
+sans renouvellement depuis malgre deux mises a jour majeures du modele en
+2023 et 2024.
+
+DOCUMENTATION TECHNIQUE ET JOURNAUX (Articles 11 et 12)
+La documentation technique existe mais n'a pas ete mise a jour depuis la
+version initiale de 2022, alors que le systeme a fait l'objet de deux
+modifications substantielles depuis. Le systeme genere des journaux
+automatiques complets, conserves conformement aux exigences.
+
+CONTROLE HUMAIN (Article 14)
+La politique interne affirme que « toute decision de refus fait l'objet d'une
+revue par un charge de clientele avant notification au demandeur ». L'examen
+d'un echantillon de dossiers traites en 2024 montre que 92 % des refus ont ete
+notifies automatiquement dans un delai inferieur a trois minutes apres le
+depot du dossier, sans qu'aucune intervention humaine documentee n'ait eu
+lieu dans ce delai.
+
+EXACTITUDE ET ROBUSTESSE (Article 15)
+Des metriques de precision sont mesurees et documentees a chaque version.
+Aucun test de robustesse face a des donnees d'entree degradees n'a en
+revanche ete realise depuis la version de 2022.
+
+SYSTEME QUALITE ET CONSERVATION DES DOCUMENTS (Articles 17 et 18)
+Un systeme de gestion de la qualite est en place, non certifie par un
+organisme tiers. La documentation technique et les journaux sont conserves
+huit ans, en deca de la duree de dix ans prevue par le reglement.
+
+ENREGISTREMENT (Article 49)
+ScoreFineo est enregistre dans la base de donnees de l'Union europeenne pour
+les systemes d'IA a haut risque depuis sa mise en service en 2022 ; la fiche
+d'enregistrement n'a toutefois pas ete mise a jour lors des modifications
+substantielles de 2023 et 2024.
+
+MANDATAIRE (Article 22)
+Fineo Scoring est etablie en France : la designation d'un mandataire ne
+s'applique pas.
+
+OBLIGATIONS DES IMPORTATEURS ET DES DISTRIBUTEURS (Articles 23 et 24)
+Fineo Scoring developpe ScoreFineo en interne et ne le distribue a aucun
+tiers : les obligations d'importateur et de distributeur ne la concernent
+pas.
+
+ANALYSE D'IMPACT ET INFORMATION DES PERSONNES (Articles 27 et 86)
+Une analyse d'impact relative aux droits fondamentaux a ete realisee en 2022
+lors de la mise en service initiale, mais n'a pas ete renouvelee lors des
+modifications substantielles de 2023 et 2024. Les demandeurs refuses peuvent
+solliciter une explication aupres du service client ; le delai moyen de
+reponse constate en 2024 est de vingt-deux jours ouvres.
+
+TRANSPARENCE (Article 50)
+ScoreFineo est un outil d'evaluation de credit, sans interaction
+conversationnelle, sans generation de contenu de synthese et sans fonction de
+reconnaissance des emotions ou de categorisation biometrique.

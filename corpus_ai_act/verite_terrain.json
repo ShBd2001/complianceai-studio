@@ -1,5 +1,144 @@
 {
   "version": "0.1",
-  "note": "Squelette vide, a completer par l'equipe. Voir README.md de ce dossier pour le format et corpus/verite_terrain.json (RGPD) pour un exemple rempli. Toute annotation doit etre justifiee : c'est la reference contre laquelle le moteur est mesure, une erreur ici invalide toutes les metriques.",
-  "cas": []
+  "referentiel": "ai_act",
+  "note": "Brouillon redige par Claude Code a la demande explicite de l'equipe (protocole de mesure NIS2/DORA/AI Act), destine a etre relu et corrige article par article avant tout gel de reference -- voir README.md de ce dossier. Articles auditables AI Act : 5, 8-27, 47, 48, 49, 50, 72, 73, 86 (app/ingestion/scoping.py::AI_ACT_AUDITABLE). Le champ 'profil' fixe directement ia_fournisseur_haut_risque, ia_deployeur_haut_risque et ia_utilisee sur l'organisation de test (validation/evaluate.py::_appliquer_profil). L'article 5 (pratiques interdites) est teste dans deux documents (01 et 02, plus trivialement dans 04) car jamais exempte par construction (eligibilite.py::_ai_act_jamais_exempte).",
+  "cas": [
+    {
+      "fichier": "01_editeur_rh_conforme.txt",
+      "description": "Editeur de logiciel RH, 130 salaries, fournisseur d'un systeme d'IA a haut risque (preselection de candidatures), dossier de conformite mature.",
+      "profil": { "ia_fournisseur_haut_risque": true, "ia_deployeur_haut_risque": false, "ia_utilisee": true },
+      "score_attendu": [85, 100],
+      "verdicts_attendus": {
+        "5": "conforme", "8": "conforme", "9": "conforme", "10": "conforme",
+        "11": "conforme", "12": "conforme", "13": "conforme", "14": "conforme",
+        "15": "conforme", "16": "conforme", "17": "conforme", "18": "conforme",
+        "19": "conforme", "20": "conforme", "21": "conforme",
+        "22": "hors_perimetre",
+        "23": "hors_perimetre", "24": "hors_perimetre",
+        "25": "conforme",
+        "26": "hors_perimetre", "27": "hors_perimetre",
+        "47": "conforme", "48": "conforme", "49": "conforme",
+        "50": "hors_perimetre",
+        "72": "conforme", "73": "conforme",
+        "86": "hors_perimetre"
+      },
+      "jamais_exclure": ["5","8","9","10","11","12","13","14","15","16","17","18","19","20","21","25","47","48","49","72","73"],
+      "commentaires": {
+        "5": "Revue de conformite documentee : absence de technique subliminale, d'exploitation de vulnerabilite, de notation sociale, de categorisation biometrique sensible et de reconnaissance des emotions -- jamais exempte par construction (article toujours applicable), verdict fonde ici sur une preuve positive de conformite.",
+        "22": "« Talentscore Editions est etablie en France, au sein de l'Union europeenne » -- exclusion de CONTENU : la designation d'un mandataire ne concerne que les fournisseurs etablis hors de l'Union (aucune regle d'eligibilite dediee, cf. eligibilite.py, l'article suit le regime par defaut).",
+        "23": "« L'entreprise n'agit ni comme importateur, ni comme distributeur [...] » -- exclusion de contenu : aucune regle d'eligibilite ne couvre les articles 23/24 (correction 5, absence deliberee de regle), l'exclusion ne peut venir que de la lecture du document.",
+        "24": "Meme exclusion de contenu que l'article 23.",
+        "26": "Exemption de profil : Talentscore Editions n'est pas deployeuse d'un systeme d'IA a haut risque (ia_deployeur_haut_risque = false), seulement fournisseuse.",
+        "27": "Meme exemption de profil que l'article 26 (regle restreinte deployeur, eligibilite.py::_ai_act_deployeur_restreint).",
+        "50": "« N'est pas un systeme destine a interagir directement avec des personnes physiques [...] ne genere ni contenu de synthese ni hypertrucage [...] » -- exclusion de contenu : ia_utilisee=true rend l'article APPLICABLE cote eligibilite (le profil ne distingue pas le TYPE de systeme vise par l'article 50), c'est la lecture du document qui doit amener le hors_perimetre.",
+        "86": "Meme exemption de profil que les articles 26/27 : le droit a l'explication des decisions individuelles incombe au deployeur (l'entreprise cliente), pas au fournisseur du logiciel."
+      }
+    },
+    {
+      "fichier": "02_organisme_credit_defaillant.txt",
+      "description": "Etablissement de credit a la consommation, 60 salaries, deployeur d'un systeme d'IA a haut risque de scoring de solvabilite achete a un editeur, pratique de notation sociale caracterisee.",
+      "profil": { "ia_fournisseur_haut_risque": false, "ia_deployeur_haut_risque": true, "ia_utilisee": true },
+      "score_attendu": [0, 10],
+      "verdicts_attendus": {
+        "5": "manquement",
+        "8": "hors_perimetre", "9": "hors_perimetre", "10": "hors_perimetre",
+        "11": "hors_perimetre", "12": "hors_perimetre", "13": "hors_perimetre",
+        "14": "hors_perimetre", "15": "hors_perimetre", "16": "hors_perimetre",
+        "17": "hors_perimetre", "18": "hors_perimetre", "19": "hors_perimetre",
+        "20": "hors_perimetre", "21": "hors_perimetre", "25": "hors_perimetre",
+        "47": "hors_perimetre", "48": "hors_perimetre", "72": "hors_perimetre",
+        "73": "hors_perimetre",
+        "23": "hors_perimetre", "24": "hors_perimetre",
+        "26": "manquement", "27": "manquement", "49": "manquement", "86": "manquement",
+        "50": "hors_perimetre"
+      },
+      "jamais_exclure": ["5", "26", "27", "49", "86"],
+      "commentaires": {
+        "5": "Le « score de fiabilite globale » integre des donnees comportementales issues des reseaux sociaux (frequence de publication, cercle de contacts, zones frequentees) pour deduire un profil de risque social influencant directement l'octroi de credit, sans lien avec la solvabilite financiere declaree -- notation sociale de personnes physiques produisant un traitement defavorable disproportionne au regard du contexte de collecte : pratique interdite caracterisee (article 5, jamais exempte).",
+        "8": "Exemption de profil : obligations de fournisseur (ia_fournisseur_haut_risque = false), Credit Express Particuliers n'etant que deployeur.",
+        "9": "Meme exemption de profil que l'article 8.", "10": "Meme exemption de profil que l'article 8.",
+        "11": "Meme exemption de profil que l'article 8.", "12": "Meme exemption de profil que l'article 8.",
+        "13": "Meme exemption de profil que l'article 8.", "14": "Meme exemption de profil que l'article 8 (attention : ne pas confondre avec le controle humain effectivement absent cote deployeur, qui est un manquement reel mais releve de l'article 26, pas de l'article 14 qui vise le fournisseur).",
+        "15": "Meme exemption de profil que l'article 8.", "16": "Meme exemption de profil que l'article 8.",
+        "17": "Meme exemption de profil que l'article 8.", "18": "Meme exemption de profil que l'article 8.",
+        "19": "Meme exemption de profil que l'article 8.", "20": "Meme exemption de profil que l'article 8.",
+        "21": "Meme exemption de profil que l'article 8.", "25": "Meme exemption de profil que l'article 8.",
+        "47": "Meme exemption de profil que l'article 8.", "48": "Meme exemption de profil que l'article 8.",
+        "72": "Meme exemption de profil que l'article 8.", "73": "Meme exemption de profil que l'article 8.",
+        "23": "« N'a developpe, importe, ni distribue aucun systeme d'intelligence artificielle » -- exclusion de contenu (aucune regle d'eligibilite dediee aux articles 23/24).",
+        "24": "Meme exclusion de contenu que l'article 23.",
+        "26": "Aucun controle humain effectif (refus notifies automatiquement sous le seuil parametre, sans intervention), aucune formation des conseillers, parametres par defaut jamais revus depuis 2023 -- manquement caracterise aux obligations du deployeur.",
+        "27": "« Aucune analyse d'impact relative aux droits fondamentaux n'a ete realisee avant la mise en service [...] ni depuis » -- manquement.",
+        "49": "Aucun enregistrement effectue. Nuance signalee a l'equipe : l'article 49§3 du reglement vise en particulier certains deployeurs publics ; Credit Express Particuliers est une entreprise privee, et l'applicabilite stricte de l'obligation d'enregistrement a ce type de deployeur prive reste une zone grise du texte que le modele d'eligibilite actuel (eligibilite.py, correction 6) resout par prudence vers 'applicable' des lors que ia_deployeur_haut_risque=true, sans distinguer public/prive -- a trancher par l'equipe si elle souhaite affiner.",
+        "86": "Aucune explication individuelle fournie aux demandeurs refuses meme sur demande expresse -- manquement caracterise.",
+        "50": "Outil d'aide a la decision de credit, sans interaction conversationnelle, sans generation de contenu de synthese, sans reconnaissance des emotions -- exclusion de contenu, meme limite du profil que dans le cas 1 (ia_utilisee ne distingue pas le type de systeme vise par l'article 50)."
+      }
+    },
+    {
+      "fichier": "03_fintech_partielle_contradictoire.txt",
+      "description": "Etablissement financier specialise, 85 salaries, a la fois fournisseur et deployeur d'un systeme de scoring de credit developpe en interne, conformite partielle et contradictions entre le dossier ecrit et la pratique constatee.",
+      "profil": { "ia_fournisseur_haut_risque": true, "ia_deployeur_haut_risque": true, "ia_utilisee": true },
+      "score_attendu": [35, 60],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "9": "conforme",
+        "10": "manquement",
+        "11": "manquement",
+        "12": "conforme",
+        "14": "manquement",
+        "15": "manquement",
+        "17": "conforme",
+        "18": "manquement",
+        "22": "hors_perimetre",
+        "23": "hors_perimetre", "24": "hors_perimetre",
+        "27": "manquement",
+        "49": "manquement",
+        "50": "hors_perimetre",
+        "86": "manquement"
+      },
+      "jamais_exclure": ["5", "9", "10", "11", "12", "14", "15", "17", "18", "27", "49", "86"],
+      "commentaires": {
+        "10": "Contradiction : le dossier affirme un audit de biais annuel, mais le registre des audits internes n'en recense qu'un seul (2022), malgre deux mises a jour majeures du modele en 2023 et 2024.",
+        "11": "Documentation technique non mise a jour depuis 2022 malgre deux modifications substantielles depuis -- non conforme a l'obligation de tenir la documentation a jour.",
+        "14": "Contradiction : la politique affirme une revue humaine systematique des refus, mais 92% des refus observes en 2024 sont notifies automatiquement en moins de trois minutes sans intervention documentee.",
+        "15": "Aucun test de robustesse realise depuis la version de 2022.",
+        "17": "Systeme de gestion de la qualite en place et applique ; l'absence de certification tierce n'est pas en elle-meme une exigence de l'article 17, qui porte sur l'existence et l'application effective du systeme, non sur sa certification externe -- point de lecture a confirmer avec l'equipe.",
+        "18": "Conservation documentee sur huit ans, en deca des dix ans prevus par le reglement -- ecart chiffre explicite.",
+        "22": "Etablie en France, exclusion de contenu identique au cas 1.",
+        "23": "Developpement interne exclusivement, aucune distribution a des tiers -- exclusion de contenu.",
+        "24": "Meme exclusion de contenu que l'article 23.",
+        "27": "Analyse d'impact realisee une seule fois en 2022, jamais renouvelee malgre deux modifications substantielles.",
+        "49": "Enregistrement initial effectue en 2022 mais jamais mis a jour lors des modifications substantielles de 2023 et 2024 -- manquement sur l'obligation de mise a jour, distinct d'une absence totale d'enregistrement.",
+        "50": "Outil de scoring de credit sans interaction conversationnelle ni contenu de synthese -- exclusion de contenu.",
+        "86": "Explication disponible sur demande, mais delai moyen constate de vingt-deux jours ouvres -- lecture proposee comme un delai excessif au regard de l'exigence d'explication 'sans retard indu', a confirmer par l'equipe (aucun delai chiffre n'est fixe par le texte lui-meme, c'est une appreciation)."
+      }
+    },
+    {
+      "fichier": "04_commerce_hors_perimetre.txt",
+      "description": "Commerce de detail d'ameublement, 40 salaries, aucun systeme d'IA a haut risque, seul un assistant conversationnel standard est utilise.",
+      "profil": { "ia_fournisseur_haut_risque": false, "ia_deployeur_haut_risque": false, "ia_utilisee": true },
+      "score_attendu": [90, 100],
+      "verdicts_attendus": {
+        "5": "conforme",
+        "8": "hors_perimetre", "9": "hors_perimetre", "10": "hors_perimetre",
+        "11": "hors_perimetre", "12": "hors_perimetre", "13": "hors_perimetre",
+        "14": "hors_perimetre", "15": "hors_perimetre", "16": "hors_perimetre",
+        "17": "hors_perimetre", "18": "hors_perimetre", "19": "hors_perimetre",
+        "20": "hors_perimetre", "21": "hors_perimetre", "25": "hors_perimetre",
+        "26": "hors_perimetre", "27": "hors_perimetre",
+        "47": "hors_perimetre", "48": "hors_perimetre", "49": "hors_perimetre",
+        "72": "hors_perimetre", "73": "hors_perimetre", "86": "hors_perimetre",
+        "23": "hors_perimetre", "24": "hors_perimetre",
+        "50": "conforme"
+      },
+      "jamais_exclure": ["5", "50"],
+      "commentaires": {
+        "5": "Aucune pratique interdite, y compris pour une organisation sans aucun systeme a haut risque -- article jamais exempte par construction, second document du corpus a le tester (avec le cas 2, en violation) pour confirmer qu'il n'est exclu par aucun profil.",
+        "8": "Exemption de profil : ni fournisseur ni deployeur d'un systeme a haut risque (les deux champs sont a false).",
+        "23": "« N'agit ni comme importateur ni comme distributeur » d'un systeme d'IA -- exclusion de contenu, l'entreprise n'est qu'utilisatrice finale d'un assistant conversationnel standard.",
+        "24": "Meme exclusion de contenu que l'article 23.",
+        "50": "Assistant conversationnel avec bandeau de divulgation explicite (« Vous echangez avec un assistant automatise [...] ») rappele dans les CGU -- conformite averee, l'article 50 est bien applicable ici (ia_utilisee=true et le systeme correspond effectivement au type vise, contrairement aux cas 1-3)."
+      }
+    }
+  ]
 }

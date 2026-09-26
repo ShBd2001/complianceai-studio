@@ -1,0 +1,26 @@
+NOTE D'ORGANISATION INTERNE
+MECANIQUE DE PRECISION DU RHONE — SAS, sous-traitant industriel — 95 salaries
+
+PRESENTATION
+Mecanique de Precision du Rhone est un sous-traitant industriel specialise
+dans l'usinage de precision pour les secteurs automobile et aeronautique.
+L'entreprise n'est ni un etablissement de credit, ni un etablissement de
+paiement, ni une entreprise d'investissement, ni un etablissement de monnaie
+electronique, ni une entreprise d'assurance ou de reassurance, ni un
+prestataire de services sur crypto-actifs, ni aucune autre categorie d'entite
+financiere mentionnee a l'article 2 du reglement DORA : elle n'entre pas dans
+le champ d'application de ce reglement.
+
+ORGANISATION INFORMATIQUE
+L'entreprise dispose d'un service informatique interne de deux personnes,
+gerant le systeme de gestion de production, la conception assistee par
+ordinateur et le reseau bureautique. Une politique de sauvegarde et un
+antivirus sont en place sur l'ensemble du parc, sans lien avec un quelconque
+cadre reglementaire DORA, l'entreprise n'y etant pas soumise.
+
+SITUATION AU REGARD DE LA RESILIENCE NUMERIQUE
+Aucun cadre de gestion du risque lie aux TIC au sens du reglement DORA n'a ete
+mis en place, ce qui est sans consequence puisque l'entreprise n'entre pas
+dans le champ d'application de ce texte. L'entreprise applique par ailleurs
+les exigences de cybersecurite liees a ses certifications sectorielles
+aeronautiques, sans rapport avec le reglement DORA.

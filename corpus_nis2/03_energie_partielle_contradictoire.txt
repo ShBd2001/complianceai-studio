@@ -1,0 +1,60 @@
+POLITIQUE DE CYBERSECURITE
+DISTRIBUTION ENERGIE VALLEE — Entite importante (energie) — 210 salaries
+
+PRESENTATION
+Distribution Energie Vallee exploite un reseau local de distribution
+d'electricite. L'entreprise a ete identifiee comme entite importante au sens
+de la directive NIS2 au titre du secteur de l'energie. Elle n'exploite pas de
+service DNS ni de registre de noms de domaine.
+
+GOUVERNANCE
+Un responsable de la securite des systemes d'information a ete designe en
+2023, rattache a la direction technique. Il presente un point d'avancement au
+comite de direction une fois par an. La politique de securite affirme que
+« l'ensemble des membres du comite de direction est forme aux enjeux de
+cybersecurite » ; toutefois, le registre des formations tenu par les
+ressources humaines ne recense qu'une seule participation, celle du
+responsable de la securite lui-meme, a un webinaire de sensibilisation en
+2023. Aucun autre membre du comite de direction n'a suivi de formation.
+
+GESTION DES RISQUES
+Une cartographie des risques cyber a ete etablie en 2022 pour le systeme de
+supervision du reseau electrique (SCADA), mais n'a pas ete mise a jour depuis
+malgre le remplacement d'une partie des automates en 2024. Une procedure de
+gestion des incidents existe et decrit les etapes de qualification et
+d'escalade. En revanche, aucun plan de continuite d'activite formalise n'a ete
+retrouve, et le plan de reprise apres sinistre mentionne dans l'organigramme
+documentaire n'a pas ete produit lors de la revue interne de 2025.
+Les sauvegardes du systeme de facturation sont realisees chaque nuit et un
+test de restauration est effectue chaque trimestre, documente par un
+compte-rendu. Les acces distants au reseau de supervision sont proteges par
+authentification multifacteurs depuis 2024. Les contrats avec l'integrateur
+du systeme SCADA et avec l'hebergeur du systeme de facturation comportent une
+clause de securite, mais le contrat avec l'editeur du logiciel de gestion de
+la relation clientele, signe en 2019 et jamais renegocie, n'en comporte
+aucune. Une campagne de sensibilisation au hameconnage a ete menee en 2024
+aupres des seuls services administratifs, pas aupres des equipes
+d'exploitation du reseau.
+
+OBLIGATIONS D'INFORMATION
+La procedure de notification prevoit une alerte precoce au CSIRT national
+sous 24 heures et un rapport final sous un mois. Lors d'un incident survenu en
+janvier 2025 (compromission d'un poste administratif), l'alerte precoce a ete
+transmise sous 22 heures, mais aucun rapport final n'a ete etabli dans le
+delai d'un mois : il a ete produit six semaines apres l'incident, apres
+relance de l'autorite competente.
+
+RECOURS AUX SCHEMAS DE CERTIFICATION
+Les nouveaux automates de supervision acquis en 2024 ont ete selectionnes
+parmi des references disposant d'une certification de cybersecurite reconnue
+au niveau europeen lorsque celle-ci existait pour la categorie de produit.
+
+REGISTRE DES ENTITES ET NOMS DE DOMAINE
+L'entreprise n'exploite pas de service DNS ni de registre de noms de domaine
+pour des tiers ; ces obligations ne la concernent pas.
+
+PARTAGE D'INFORMATIONS ET NOTIFICATION VOLONTAIRE
+L'entreprise a rejoint en 2024 le dispositif sectoriel de partage
+d'informations anime par la federation professionnelle des distributeurs
+d'energie, mais n'a transmis aucune information a ce jour et n'a effectue
+aucune notification volontaire d'incident mineur ou de cybermenace.

@@ -1,0 +1,39 @@
+NOTE D'ORGANISATION INTERNE
+MAISON DE L'AMEUBLEMENT DURAND — Commerce de detail (ameublement) — 40 salaries
+
+PRESENTATION
+La Maison de l'Ameublement Durand exploite deux magasins de vente au detail de
+mobilier et un site de vente en ligne. L'entreprise ne developpe, ne
+commercialise et ne deploie aucun systeme d'intelligence artificielle a haut
+risque au sens de l'annexe III du reglement sur l'intelligence artificielle :
+elle n'utilise l'intelligence artificielle que pour un assistant conversationnel
+de service client sur son site de vente en ligne, sans lien avec l'emploi, le
+credit, l'evaluation de la solvabilite, les infrastructures critiques, la
+biometrie, l'education, les services essentiels ou toute autre categorie a
+haut risque.
+
+PRATIQUES INTERDITES (Article 5)
+Aucune pratique interdite au sens de l'article 5 n'est mise en oeuvre : ni
+technique subliminale ou manipulatoire, ni exploitation de vulnerabilite, ni
+notation sociale, ni categorisation biometrique, ni reconnaissance des
+emotions, ni surveillance biometrique en temps reel. L'assistant
+conversationnel se limite a repondre aux questions courantes sur les produits,
+les commandes et la livraison.
+
+TRANSPARENCE DE L'ASSISTANT CONVERSATIONNEL (Article 50)
+Des l'ouverture d'une conversation, l'assistant affiche le message suivant :
+« Vous echangez avec un assistant automatise. Un conseiller humain peut
+prendre le relais a tout moment sur simple demande. » Cette information est
+egalement rappelee dans les conditions generales d'utilisation du site.
+
+ABSENCE DE SYSTEME D'IA A HAUT RISQUE
+L'entreprise n'est ni fournisseur, ni deployeur, ni importateur, ni
+distributeur d'un systeme d'intelligence artificielle a haut risque : les
+obligations relatives a la gestion des risques, a la documentation technique,
+a la tenue de registres, au controle humain renforce, a l'enregistrement dans
+la base de donnees de l'Union, a la declaration de conformite, au marquage CE,
+a l'analyse d'impact sur les droits fondamentaux et au droit a l'explication
+des decisions individuelles ne trouvent pas a s'appliquer a son activite.
+L'assistant conversationnel utilise est un produit standard du marche,
+fourni par un prestataire etabli dans l'Union europeenne, sans acces aux
+donnees financieres ou personnelles sensibles des clients.

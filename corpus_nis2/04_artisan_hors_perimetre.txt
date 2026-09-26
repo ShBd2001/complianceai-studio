@@ -1,0 +1,30 @@
+NOTE D'ORGANISATION INTERNE
+BOULANGERIES DU MARAIS — SARL, trois boutiques — 14 salaries
+
+PRESENTATION
+Boulangeries du Marais exploite trois boutiques de boulangerie-patisserie
+artisanale. L'entreprise n'exerce dans aucun des secteurs mentionnes aux
+annexes I et II de la directive NIS2 (energie, transport, banque,
+infrastructures des marches financiers, sante, eau potable, eaux usees,
+infrastructure numerique, administration publique, espace, services
+postaux, gestion des dechets, fabrication de produits chimiques, industrie
+agroalimentaire pour ce qui concerne les seuils definis par la directive,
+fabrication, production et distribution ne relevant pas de ces secteurs,
+fournisseurs numeriques) et ne depasse aucun des seuils d'effectif ou de
+chiffre d'affaires prevus. Elle n'a fait l'objet d'aucune notification de
+l'autorite nationale de cybersecurite la designant comme entite essentielle
+ou importante, et n'exploite ni service DNS ni registre de noms de domaine.
+
+ORGANISATION INFORMATIQUE
+L'entreprise utilise un logiciel de caisse standard dans chaque boutique et
+un compte de messagerie professionnelle pour les commandes aupres des
+fournisseurs. Un prestataire informatique local intervient ponctuellement en
+cas de panne. Il n'existe pas de politique de securite formalisee, ce qui est
+sans consequence au regard de la directive NIS2 puisque l'entreprise n'entre
+pas dans son champ d'application.
+
+SITUATION AU REGARD DE LA CYBERSECURITE
+Aucune analyse de risques cyber n'a ete menee et aucune procedure de
+notification d'incident n'existe, l'entreprise n'y etant pas tenue. Les mises
+a jour des logiciels de caisse sont installees par le prestataire lors de ses
+interventions.
