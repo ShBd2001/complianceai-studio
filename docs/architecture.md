@@ -386,10 +386,25 @@ premier verdict peu sûr, plus seulement oui/partiel/non) ; un verdict
 déjà abaissée à ≤ 0,3 par `_ramener_a_indetermine`) repasse lui aussi par le
 vote, ce qui lui laisse une chance d'être corrigé si le premier appel avait
 cité un passage légèrement reformulé, au prix d'appels supplémentaires sur
-un cas qui était auparavant résolu sans coût additionnel. **Mesure
-d'efficacité post-déploiement restant à faire** : l'ampleur réelle de la
-réduction de l'écart sur ce troisième palier n'a pas encore été quantifiée
-en conditions réelles, une fois ce commit déployé.
+un cas qui était auparavant résolu sans coût additionnel.
+
+*Mesure après ce troisième palier.* Même document, deux exécutions, code
+identique à ce commit (mesure locale, base de développement, pas encore
+vérifiée directement sur Render) : écart de score ramené à **1,4 point**
+(65,7 puis 67,1, contre 6,0 puis 7,6 aux deux paliers précédents) et **10
+articles sur 40** avec un verdict différent — en net progrès, mais le
+résidu observé n'est plus le même phénomène : la majorité de ces 10
+bascules ne sont plus des changements de verdict sur un même article, mais
+des articles qui **apparaissent ou disparaissent** de la liste des constats
+d'une exécution à l'autre (ex. articles 24, 25, 35, 9). Cause identifiée :
+`_propagate_dependencies()` reclasse en cascade un article dépendant
+("sans objet") quand son article maître l'est déjà (ex. art. 39 dépend de
+l'art. 37) ; si le verdict du maître flotte encore d'une exécution à
+l'autre — issu d'un cas non couvert par le vote (confiance ≥ 0,7) — ses
+dépendants basculent avec lui. Un effet de second ordre du même phénomène
+de fond, pas une régression de ce commit ; non traité ici faute de temps
+avant le gel du code, à documenter comme limite résiduelle plutôt qu'à
+corriger dans l'urgence.
 
 *Réversibilité.* Isolé dans `evaluate_requirement()` et sa fonction
 auxiliaire `_verifier_citation()` : retirer le bloc du vote fait retomber

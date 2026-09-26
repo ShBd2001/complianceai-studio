@@ -370,5 +370,11 @@ d'avis indépendants s'accorde sur un verdict tranché différent, il
 remplace l'"indéterminé"/"non_applicable" d'origine (réponse complète
 adoptée, jamais un mot-clé isolé), et repasse par la vérification de
 citation avant publication comme n'importe quel premier appel
-(`_verifier_citation`, factorisée à cet effet). Mesure de l'effet réel sur
-ce troisième palier, une fois déployé, encore à faire.
+(`_verifier_citation`, factorisée à cet effet). Mesure locale après ce
+correctif : écart ramené à 1,4 point (contre 6,0 puis 7,6 aux paliers
+précédents) sur le même document, deux exécutions — net progrès. Résidu
+identifié : la cascade de dépendances entre articles (`_propagate_dependencies`)
+peut encore faire apparaître ou disparaître un article dépendant si son
+article maître garde une confiance suffisante pour échapper au vote ; noté
+comme limite résiduelle dans DA-09 plutôt que corrigé dans l'urgence, faute
+de temps avant le gel du code.
