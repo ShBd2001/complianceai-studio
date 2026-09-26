@@ -2907,7 +2907,11 @@ function chargerMesOrganisations() {
       <td>${h(etiquetteRole(o.my_role))} ${o.member_count > 1
         ? `· ${o.member_count} ${LANG === 'en' ? 'members' : 'membres'}`
         : (LANG === 'en' ? '· only you' : '· vous seul(e)')}</td>
-      <td>${h((LANG === 'en' ? NOM_OFFRE_EN : NOM_OFFRE)[o.plan] || o.plan)}</td>
+      <td>${o.my_role === 'owner'
+        ? `<select class="compact" onchange="changerOffre('${o.id}', this.value, this)">
+            ${['essentiel', 'pro', 'cabinet'].map(p => `<option value="${p}"${o.plan === p ? ' selected' : ''}>${h((LANG === 'en' ? NOM_OFFRE_EN : NOM_OFFRE)[p])}</option>`).join('')}
+          </select>`
+        : h((LANG === 'en' ? NOM_OFFRE_EN : NOM_OFFRE)[o.plan] || o.plan)}</td>
       <td>${o.id === E.orgId ? '<span class="etiq e-ok">Active</span>' : ''}</td>
       <td class="rangee">
         ${o.my_role === 'owner' || o.my_role === 'admin'
@@ -2916,6 +2920,23 @@ function chargerMesOrganisations() {
           ? `<button class="discret" style="border-color:var(--sceau);color:var(--sceau)" onclick="supprimerOrganisation('${o.id}')">Supprimer</button>`
           : `<button class="discret" onclick="quitterOrganisation('${o.id}')">Quitter</button>`}</td>
     </tr>`).join('')}</tbody></table>` : `<p class="vide">Aucune organisation.</p>`);
+}
+
+async function changerOffre(orgId, plan, champ) {
+  champ.disabled = true;
+  try {
+    const org = await appel(`/api/v1/orgs/${orgId}/plan`, {
+      method: 'PATCH', body: JSON.stringify({ plan }),
+    });
+    const idx = E.orgs.findIndex(o => o.id === orgId);
+    if (idx !== -1) E.orgs[idx] = org;
+  } catch (e) {
+    alert(tr(e.message));
+  }
+  // Reconstruit dans tous les cas : en cas d'echec (ex. effectif au-dela de
+  // la nouvelle limite), remet le menu sur l'offre reellement en vigueur
+  // plutot que de laisser affichee la selection refusee.
+  chargerMesOrganisations();
 }
 
 function rendreRetention() {

@@ -90,7 +90,7 @@ le RGPD dispose aujourd'hui d'un corpus mesuré ; `corpus_nis2/`,
 
 ## Tests et intégration continue
 
-- **Backend** : 212 tests (`backend/tests`, `pytest`) — authentification,
+- **Backend** : 218 tests (`backend/tests`, `pytest`) — authentification,
   isolation multi-tenant, pipeline d'audit complet, quotas, veille
   réglementaire, RGPD, filtre d'éligibilité RGPD/NIS2/DORA/AI Act.
   Couverture globale 80 % (`--cov-fail-under=80`, bloquant en CI).

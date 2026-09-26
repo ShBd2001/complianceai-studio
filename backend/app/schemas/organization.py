@@ -90,6 +90,10 @@ class OrganizationProfileUpdate(BaseModel):
     ia_utilisee: bool | None = None
 
 
+class PlanUpdate(BaseModel):
+    plan: OrgPlan
+
+
 class RetentionUpdate(BaseModel):
     document_retention_days: int | None = Field(default=None)
 
