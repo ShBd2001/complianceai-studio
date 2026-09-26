@@ -355,3 +355,20 @@ outillé côté laboratoire (`evaluation/evaluateur.py`), réimplémenté
 localement sans importer ce package (voir DA-07/DA-09,
 docs/architecture.md). Mesure de l'effet réel sur l'ampleur des écarts,
 une fois ce correctif déployé, encore à faire.
+
+## Second avis : extension à "indéterminé" et "non_applicable" natifs
+
+Le vote à 3 (entrée précédente) restait insuffisant : mesuré à nouveau,
+l'écart de score ne se réduisait que de 7,6 à 6,0 points, et 14 articles sur
+39 changeaient encore de verdict entre deux exécutions du même document. En
+regardant le détail, 12 de ces 14 bascules concernaient un "indéterminé" ou
+un "non_applicable" natif — exactement les deux catégories que le
+mécanisme excluait, sur l'hypothèse (fausse, invalidée par cette mesure)
+qu'un "indéterminé" natif serait déjà un état stable. Le vote s'applique
+désormais à tout premier verdict peu sûr, sans exception : si une majorité
+d'avis indépendants s'accorde sur un verdict tranché différent, il
+remplace l'"indéterminé"/"non_applicable" d'origine (réponse complète
+adoptée, jamais un mot-clé isolé), et repasse par la vérification de
+citation avant publication comme n'importe quel premier appel
+(`_verifier_citation`, factorisée à cet effet). Mesure de l'effet réel sur
+ce troisième palier, une fois déployé, encore à faire.

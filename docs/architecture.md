@@ -283,15 +283,18 @@ nulle, le routage entre experts pouvant être sensible au lot d'autres
 requêtes traitées en parallèle sur le même matériel à cet instant — un
 phénomène mesuré indépendamment côté laboratoire de validation
 (`validation/harnais.py`, `verdicts_instables`, non nul même cache vidé).
-Dans `evaluate_requirement()` (`app/services/audit_engine.py`), un verdict
-"oui"/"partiel" (citation déjà vérifiée) ou "non" dont la confiance
-déclarée par le modèle reste sous `SECOND_OPINION_CONFIDENCE_THRESHOLD`
-déclenche un ou deux appels indépendants supplémentaires, même prompt (vote
-à 3, voir plus bas) : le verdict n'est conservé que s'il obtient la
-majorité absolue des avis recueillis, sinon il est ramené à "indéterminé"
-par prudence. Un "indéterminé" natif n'y est volontairement pas soumis :
-c'est déjà l'état final vers lequel un désaccord ferait converger, un appel
-supplémentaire n'y changerait rien.
+Dans `evaluate_requirement()` (`app/services/audit_engine.py`), tout
+premier verdict — quelle que soit sa valeur, y compris "indéterminé" et
+"non_applicable" natifs (voir plus bas) — dont la confiance déclarée par le
+modèle reste sous `SECOND_OPINION_CONFIDENCE_THRESHOLD` déclenche un ou
+deux appels indépendants supplémentaires, même prompt (vote à 3). Le
+verdict d'origine est conservé s'il obtient la majorité absolue des avis
+recueillis ; si c'est une autre valeur qui l'obtient, la réponse complète
+d'un avis qui la porte est adoptée à sa place (jamais seulement le mot-clé
+"conforme" en gardant l'ancienne preuve et l'ancien constat) et repasse par
+la même vérification de citation qu'un premier appel avant publication ; en
+l'absence de toute majorité absolue, le verdict est ramené à "indéterminé"
+par prudence.
 
 *Mesure ayant motivé l'élargissement à "non".* La version initiale de ce
 garde-fou ne couvrait que "oui"/"partiel". Deux exécutions indépendantes du
@@ -342,25 +345,56 @@ ces exigences sont de toute façon déjà promises à une vérification
 humaine, les appels supplémentaires ne font qu'éviter d'afficher à tort un
 verdict qu'un vote indépendant ne confirme pas.
 
-*Conséquences.* Positives : réduit les bascules impliquant un "indéterminé"
-d'une exécution à l'autre sur un sous-ensemble plus large qu'auparavant
-(seuil relevé), et un désaccord isolé au second appel ne suffit plus seul à
-retrograder un verdict par ailleurs majoritaire (troisième avis arbitre).
-Négatives : ne couvre pas un verdict confiant (≥ 0,7) qui se révèle malgré
-tout instable ; jusqu'à 3 appels au lieu d'1 sur les cas concernés (coût et
-latence accrus, contenu du verdict conservé du premier appel même quand un
-verdict différent obtient la majorité, par choix de conception — voir
-ci-dessus) ; un appel supplémentaire qui échoue statue sur les avis déjà
-recueillis plutôt que d'en réclamer un de plus. **Mesure d'efficacité
-post-déploiement restant à faire** : ce changement corrige un défaut
-identifié par la mesure ci-dessus, mais son effet réel sur l'ampleur des
-écarts (et non plus seulement sur son mécanisme) n'a pas encore été
-quantifié par une nouvelle comparaison même document, deux exécutions, une
-fois ce commit déployé.
+*Mesure ayant motivé l'extension à "indéterminé" et "non_applicable"
+natifs.* Après déploiement du vote à 3 limité à "oui"/"partiel"/"non"
+(commit `3648e3f`), une nouvelle comparaison même document / deux
+exécutions a montré que l'écart de score ne se résorbait que marginalement
+(68,9 puis 74,9, soit 6,0 points contre 7,6 avant ce commit) et que **14
+articles sur 39 (36 %) changeaient encore de verdict** — une proportion
+supérieure à la mesure initiale. Le détail des bascules a révélé la cause :
+**12 des 14 concernaient un "indéterminé" ou un "non_applicable" natif**
+("non" ↔ "indéterminé", "partiel" ↔ "indéterminé", "non_applicable" ↔
+"indéterminé"), c'est-à-dire précisément les deux catégories que le
+mécanisme excluait par construction. L'hypothèse de conception initiale —
+"un indéterminé natif est déjà l'état terminal stable, un vote n'y changerait
+rien" — s'est révélée fausse : un "indéterminé" natif n'est pas plus stable
+qu'un "oui" ou un "non", il bascule tout autant vers un verdict tranché
+qu'un verdict tranché bascule vers lui. L'exclure du vote manquait donc
+l'essentiel des bascules réellement observées, sur les deux mesures
+successives.
 
-*Réversibilité.* Isolé dans `evaluate_requirement()` : retirer le bloc du
-second avis fait retomber sur le comportement précédent (un seul appel),
-sans migration ni effet sur le reste du moteur.
+*Conséquence de conception.* Le vote s'applique désormais à toute valeur de
+premier verdict, sans exception. Pour "indéterminé"/"non_applicable", cela
+signifie qu'une majorité d'avis indépendants en faveur d'un verdict tranché
+**remplace** le verdict d'origine plutôt que de le laisser indéterminé par
+défaut — un changement de posture par rapport à la version précédente, qui
+ne faisait jamais que confirmer ou dégrader vers "indéterminé", jamais
+l'inverse. Ce remplacement réutilise toujours la réponse complète d'un avis
+qui porte la valeur majoritaire (jamais un mot-clé isolé) et la fait
+repasser par la vérification de citation avant publication, pour ne jamais
+contourner le principe directeur du moteur (`_verifier_citation`,
+factorisée de sorte à être appliquée aussi bien au premier appel qu'à un
+avis adopté par vote).
+
+*Conséquences.* Positives : couvre désormais la cause dominante des
+bascules mesurées (indéterminé/non_applicable natifs), et peut corriger un
+faux indéterminé aussi bien qu'un faux "oui". Négatives : ne couvre pas un
+verdict confiant (≥ 0,7) qui se révèle malgré tout instable ; jusqu'à 3
+appels au lieu d'1 sur une part désormais plus large des exigences (tout
+premier verdict peu sûr, plus seulement oui/partiel/non) ; un verdict
+"indéterminé" issu d'une dégradation pour citation invérifiable (confiance
+déjà abaissée à ≤ 0,3 par `_ramener_a_indetermine`) repasse lui aussi par le
+vote, ce qui lui laisse une chance d'être corrigé si le premier appel avait
+cité un passage légèrement reformulé, au prix d'appels supplémentaires sur
+un cas qui était auparavant résolu sans coût additionnel. **Mesure
+d'efficacité post-déploiement restant à faire** : l'ampleur réelle de la
+réduction de l'écart sur ce troisième palier n'a pas encore été quantifiée
+en conditions réelles, une fois ce commit déployé.
+
+*Réversibilité.* Isolé dans `evaluate_requirement()` et sa fonction
+auxiliaire `_verifier_citation()` : retirer le bloc du vote fait retomber
+sur le comportement précédent (un seul appel), sans migration ni effet sur
+le reste du moteur.
 
 ## 5. Vue de déploiement
 

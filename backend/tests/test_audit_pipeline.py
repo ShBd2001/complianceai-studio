@@ -838,10 +838,13 @@ def test_low_confidence_verdict_confirmed_by_second_opinion_is_kept(monkeypatch)
     assert verdict["conforme"] == "oui"
 
 
-def test_low_confidence_verdict_contradicted_by_second_and_third_opinion_is_downgraded(monkeypatch):
+def test_low_confidence_verdict_overturned_by_clear_majority_is_replaced(monkeypatch):
     """Confiance sous le seuil, second avis en desaccord (declenche un
     troisieme avis pour trancher), et le troisieme confirme le desaccord :
-    aucune majorite pour le verdict d'origine, la prudence l'emporte."""
+    l'autre valeur obtient la majorite absolue (2/3), le verdict d'origine
+    est remplace par une reponse qui la porte -- jamais par un simple mot
+    cle en gardant l'ancien constat/preuve, toujours la reponse complete
+    d'un des avis qui a reellement produit cette conclusion."""
     from app.services import audit_engine, llm, rag
 
     monkeypatch.setattr(llm, "is_available", lambda: True)
@@ -867,6 +870,43 @@ def test_low_confidence_verdict_contradicted_by_second_and_third_opinion_is_down
             "constat": "Chiffrement absent des documents fournis.",
             "preuve": "Les données sont chiffrées au repos et en transit.",
             "recommandation": "Documenter le chiffrement mis en oeuvre.",
+        },
+    ]
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: reponses.pop(0))
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "non"
+    assert verdict["severite"] == "major"
+    assert verdict["constat"] == "Chiffrement absent des documents fournis."
+
+
+def test_low_confidence_verdict_with_no_absolute_majority_is_downgraded(monkeypatch):
+    """Confiance sous le seuil, et les trois avis recueillis donnent trois
+    valeurs differentes : aucune majorite absolue ne peut etre etablie, la
+    prudence l'emporte quelle que soit la valeur d'origine."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    reponses = [
+        {
+            "conforme": "oui", "severite": "info", "confiance": 0.3,
+            "constat": "Chiffrement en place.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": None,
+        },
+        {
+            "conforme": "non", "severite": "major", "confiance": 0.6,
+            "constat": "Chiffrement absent des documents fournis.",
+            "preuve": None, "recommandation": "Documenter le chiffrement mis en oeuvre.",
+        },
+        {
+            "conforme": "partiel", "severite": "minor", "confiance": 0.4,
+            "constat": "Chiffrement partiellement documente.",
+            "preuve": None, "recommandation": "Completer la documentation.",
         },
     ]
     monkeypatch.setattr(llm, "complete_json", lambda *a, **k: reponses.pop(0))
@@ -1043,10 +1083,12 @@ def test_low_confidence_non_conformity_confirmed_by_second_opinion_is_kept(monke
     assert verdict["conforme"] == "non"
 
 
-def test_low_confidence_non_conformity_contradicted_by_second_opinion_is_downgraded(monkeypatch):
-    """Meme configuration, mais les second et troisieme avis contredisent
-    (majorite 2/3 contre l'original) : le manquement n'est pas publie tel
-    quel, prudence oblige."""
+def test_low_confidence_non_conformity_overturned_but_unverifiable_citation_is_downgraded(monkeypatch):
+    """Meme configuration, mais les second et troisieme avis contredisent en
+    faveur d'une conformite (majorite 2/3) fondee sur une citation fabriquee :
+    la reponse adoptee repasse par la verification de citation comme un
+    premier appel, et echoue -- le manquement n'est donc pas publie comme
+    une conformite non confirmee, il est ramene a indetermine."""
     from app.services import audit_engine, llm, rag
 
     monkeypatch.setattr(llm, "is_available", lambda: True)
@@ -1064,13 +1106,13 @@ def test_low_confidence_non_conformity_contradicted_by_second_opinion_is_downgra
         {
             "conforme": "oui", "severite": "info", "confiance": 0.6,
             "constat": "Chiffrement en place.",
-            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "preuve": "Une citation fabriquee absente des documents.",
             "recommandation": None,
         },
         {
             "conforme": "oui", "severite": "info", "confiance": 0.6,
             "constat": "Chiffrement en place.",
-            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "preuve": "Une citation fabriquee absente des documents.",
             "recommandation": None,
         },
     ]
@@ -1081,11 +1123,11 @@ def test_low_confidence_non_conformity_contradicted_by_second_opinion_is_downgra
     assert verdict["severite"] != "info"
 
 
-def test_native_indetermine_does_not_trigger_a_second_call(monkeypatch):
-    """Un "indetermine" natif est deja l'etat final vers lequel un desaccord
-    ferait converger : un second appel n'y changerait rien, il ne doit donc
-    jamais etre declenche (economie de cout sur un cas qui ne peut pas
-    s'ameliorer)."""
+def test_native_indetermine_now_triggers_a_vote_and_can_be_confirmed(monkeypatch):
+    """Un "indetermine" natif s'est revele, a la mesure, tout aussi instable
+    qu'un "oui"/"non" (voir DA-09) : il declenche desormais le meme vote a
+    plusieurs avis. Si la majorite confirme "indetermine", il reste
+    "indetermine" (rien a corriger)."""
     from app.services import audit_engine, llm, rag
 
     monkeypatch.setattr(llm, "is_available", lambda: True)
@@ -1106,8 +1148,86 @@ def test_native_indetermine_does_not_trigger_a_second_call(monkeypatch):
     monkeypatch.setattr(llm, "complete_json", faux_complete_json)
     verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
 
-    assert len(appels) == 1
+    assert len(appels) == 2
     assert verdict["conforme"] == "indetermine"
+
+
+def test_native_indetermine_overturned_by_majority_is_replaced(monkeypatch):
+    """Meme depart "indetermine" natif a faible confiance, mais les deux
+    avis suivants s'accordent tous les deux sur "partiel" avec une citation
+    verifiable : la majorite l'emporte, le verdict est remplace par une
+    conclusion tranchee plutot que de rester indetermine par defaut. C'est
+    precisement la correction motivee par la mesure en conditions reelles
+    (12 des 14 bascules observees partaient ou arrivaient a un
+    "indetermine" natif, hors du perimetre de la version precedente)."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    reponses = [
+        {
+            "conforme": "indetermine", "severite": "info", "confiance": 0.3,
+            "constat": "Les extraits ne permettent pas de conclure.",
+            "preuve": None, "recommandation": None,
+        },
+        {
+            "conforme": "partiel", "severite": "minor", "confiance": 0.5,
+            "constat": "Chiffrement partiellement documente.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": "Completer la documentation du chiffrement.",
+        },
+        {
+            "conforme": "partiel", "severite": "minor", "confiance": 0.5,
+            "constat": "Chiffrement partiellement documente.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": "Completer la documentation du chiffrement.",
+        },
+    ]
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: reponses.pop(0))
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "partiel"
+    assert verdict["constat"] == "Chiffrement partiellement documente."
+    assert verdict["_passage_verifie"] is not None
+
+
+def test_non_applicable_overturned_by_majority_is_replaced(monkeypatch):
+    """Meme correction pour "non_applicable" natif (l'autre valeur touchee
+    par la mesure, ex. article 8/9 du RGPD observes basculer avec
+    "indetermine") : une majorite d'avis independants pour une autre
+    conclusion remplace le "non_applicable" d'origine."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    reponses = [
+        {
+            "conforme": "non_applicable", "severite": "info", "confiance": 0.4,
+            "constat": "Situation absente de l'activite auditee.",
+            "preuve": None, "recommandation": None,
+        },
+        {
+            "conforme": "non", "severite": "major", "confiance": 0.6,
+            "constat": "Situation presente mais non traitee.",
+            "preuve": None, "recommandation": "Traiter la situation identifiee.",
+        },
+        {
+            "conforme": "non", "severite": "major", "confiance": 0.6,
+            "constat": "Situation presente mais non traitee.",
+            "preuve": None, "recommandation": "Traiter la situation identifiee.",
+        },
+    ]
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: reponses.pop(0))
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "non"
+    assert verdict["constat"] == "Situation presente mais non traitee."
 
 
 def test_compliance_claim_with_no_passages_is_downgraded(monkeypatch):

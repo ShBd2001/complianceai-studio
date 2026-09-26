@@ -15,6 +15,7 @@ import unicodedata
 import uuid
 import threading
 import time
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -457,6 +458,43 @@ def _ramener_a_indetermine(verdict: dict, raison: str) -> None:
     )
 
 
+def _verifier_citation(verdict: dict, requirement: Requirement, passages: list[rag.Passage]) -> str:
+    """Verifie en place la citation d'un verdict et le retrograde si besoin.
+
+    Le modele ne repond jamais de memoire (voir docstring du module) : une
+    citation qu'on ne retrouve pas telle quelle dans les extraits fournis
+    n'est pas une preuve, c'est une affirmation. On ne publie jamais une
+    conformite ("oui"/"partiel") fondee sur une citation invérifiee ou
+    absente — y compris quand aucun passage pertinent n'a ete retrouve,
+    auquel cas aucune citation n'est de toute facon verifiable. Le verdict
+    est alors ramene a "indetermine" : ni valide ni sanctionne, mais
+    signale pour verification humaine plutot que presente comme un constat
+    de conformite. Retourne la conformite (mise a jour si retrograde).
+
+    Reutilisee a la fois sur le premier appel et sur une reponse adoptee
+    depuis un vote majoritaire (voir evaluate_requirement) : aucune des
+    deux ne doit pouvoir publier une conformite sans que sa propre citation
+    ait ete verifiee."""
+    passage_verifie = _passage_correspondant(verdict.get("preuve"), passages)
+    verdict["_passage_verifie"] = passage_verifie
+    conformity = str(verdict.get("conforme", "")).lower()
+    if conformity in ("oui", "partiel") and passage_verifie is None:
+        logger.info(
+            "Citation non verifiee sur %s : conformite '%s' ramenee a "
+            "'indetermine' par prudence.",
+            requirement.reference, verdict.get("conforme"),
+        )
+        _ramener_a_indetermine(
+            verdict,
+            "Le modele indiquait une conformite mais la citation fournie n'a "
+            "pas pu etre retrouvee telle quelle dans les documents verses : "
+            "verdict ramene a indetermine par prudence, une verification "
+            "manuelle est necessaire.",
+        )
+        return "indetermine"
+    return conformity
+
+
 def evaluate_requirement(
     requirement: Requirement,
     passages: list[rag.Passage],
@@ -488,99 +526,87 @@ def evaluate_requirement(
         if verdict.get("preuve"):
             verdict["preuve"] = _sans_reference_extrait(str(verdict["preuve"])) or None
 
-        # Le modele ne repond jamais de memoire (voir docstring du module) :
-        # une citation qu'on ne retrouve pas telle quelle dans les extraits
-        # fournis n'est pas une preuve, c'est une affirmation. On ne publie
-        # jamais une conformite ("oui"/"partiel") fondee sur une citation
-        # invérifiee ou absente — y compris quand aucun passage pertinent
-        # n'a ete retrouve, auquel cas aucune citation n'est de toute facon
-        # verifiable. Le verdict est alors ramene a "indetermine" : ni
-        # valide ni sanctionne, mais signale pour verification humaine
-        # plutot que presente comme un constat de conformite.
-        passage_verifie = _passage_correspondant(verdict.get("preuve"), passages)
-        verdict["_passage_verifie"] = passage_verifie
-        conformity = str(verdict.get("conforme", "")).lower()
-        if conformity in ("oui", "partiel") and passage_verifie is None:
-            logger.info(
-                "Citation non verifiee sur %s : conformite '%s' ramenee a "
-                "'indetermine' par prudence.",
-                requirement.reference, verdict.get("conforme"),
-            )
-            _ramener_a_indetermine(
-                verdict,
-                "Le modele indiquait une conformite mais la citation fournie n'a "
-                "pas pu etre retrouvee telle quelle dans les documents verses : "
-                "verdict ramene a indetermine par prudence, une verification "
-                "manuelle est necessaire.",
-            )
-        elif conformity in ("oui", "partiel", "non"):
-            # Mesure en conditions reelles (deux executions independantes du
-            # meme document, meme code) : 32% des articles changent de
-            # verdict d'une execution a l'autre -- et la quasi-totalite de
-            # ces bascules se font depuis ou vers un "indetermine" natif
-            # (ex. "non" <-> "indetermine", "partiel" <-> "indetermine"), pas
-            # seulement depuis un "oui" non confirme. Limiter le second avis
-            # aux seules conformites "oui"/"partiel" (version initiale de ce
-            # garde-fou) manquait donc l'essentiel de l'instabilite
-            # observee. Voir DA-09 (docs/architecture.md) : l'API LLM n'est
-            # pas parfaitement reproductible meme a temperature 0 (routage
-            # MoE sensible au lot d'inference cote fournisseur).
-            #
-            # Un second passage (generalisation a "oui"/"partiel"/"non",
-            # commit 89834b2) reste insuffisant en conditions reelles sur
-            # Render : un desaccord isole au deuxieme appel retrograde le
-            # verdict meme quand ce deuxieme appel est lui-meme le bruit
-            # (l'ecart mesure ne se resorbe pas, voir DA-09). Le seuil de
-            # declenchement est donc releve (SECOND_OPINION_CONFIDENCE_THRESHOLD,
-            # 0.7 au lieu de reutiliser REVIEW_CONFIDENCE_THRESHOLD=0.5 --
-            # des cas a confiance 0.6 ont ete observes basculer), et un
-            # deuxieme desaccord ne retrograde plus seul : un troisieme avis
-            # tranche, comme le vote majoritaire deja utilise cote
-            # laboratoire (evaluation/evaluateur.py::evaluer_article_vote),
-            # reimplemente ici localement (DA-07 : le moteur de production
-            # n'importe jamais le package evaluation). Le verdict d'origine
-            # est conserve s'il obtient la majorite absolue des avis
-            # recueillis (y compris lui-meme) ; sinon il est ramene a
-            # "indetermine" par prudence -- jamais publie comme une
-            # conformite ou un manquement non confirmes, et jamais remplace
-            # par la valeur majoritaire elle-meme (le contenu du verdict --
-            # preuve, constat -- reste celui du premier appel, il ne faut
-            # donc jamais lui substituer une conclusion differente).
-            confiance = float(verdict.get("confiance") or 0.0)
-            if confiance < settings.SECOND_OPINION_CONFIDENCE_THRESHOLD:
-                avis = [conformity]
-                try:
-                    second_avis = llm.complete_json(SYSTEM_PROMPT, user_prompt)
-                    avis.append(str(second_avis.get("conforme", "")).lower())
-                    if avis[-1] != conformity:
-                        # Premier desaccord : un troisieme avis independant
-                        # tranche plutot que de retrograder sur un simple 1-1,
-                        # ou ce second appel pourrait lui-meme etre le bruit.
-                        troisieme_avis = llm.complete_json(SYSTEM_PROMPT, user_prompt)
-                        avis.append(str(troisieme_avis.get("conforme", "")).lower())
-                except Exception as exc:
-                    # Un appel supplementaire qui echoue ne doit pas faire
-                    # perdre le premier verdict, deja obtenu et valide en soi
-                    # -- on statue sur les avis deja recueillis.
-                    logger.warning(
-                        "Avis supplementaire indisponible sur %s (%s) : verdict "
-                        "evalue sur les %d avis deja recueillis.",
-                        requirement.reference, exc, len(avis),
-                    )
-                confirmations = avis.count(conformity)
-                if confirmations * 2 <= len(avis):
-                    logger.info(
-                        "Pas de majorite pour '%s' sur %s (avis %s, confiance "
-                        "initiale %.2f) : conformite ramenee a 'indetermine' par prudence.",
-                        conformity, requirement.reference, avis, confiance,
-                    )
-                    _ramener_a_indetermine(
-                        verdict,
-                        "Plusieurs avis independants sur cette exigence ne "
-                        "confirment pas majoritairement ce verdict : ramene a "
-                        "indetermine par prudence, une verification manuelle "
-                        "est necessaire.",
-                    )
+        conformity = _verifier_citation(verdict, requirement, passages)
+
+        # Vote a plusieurs avis independants sur tout premier verdict peu
+        # sur, quelle que soit sa valeur -- y compris "indetermine" et
+        # "non_applicable" natifs. Version initiale (commit ccb23fc puis
+        # 89834b2) : ne couvrait que "oui"/"partiel"/"non", en excluant
+        # deliberement "indetermine" natif au motif que c'est deja l'etat
+        # final vers lequel un desaccord ferait converger. Mesure en
+        # conditions reelles apres deploiement (meme document, deux
+        # executions, code identique) : cette hypothese est fausse -- 12 des
+        # 14 bascules observees partaient ou arrivaient a un "indetermine"
+        # ou un "non_applicable" natif, hors du perimetre du mecanisme, qui
+        # ne pouvait donc rien y corriger. Voir DA-09 (docs/architecture.md).
+        #
+        # Vote a 3 avis (comme evaluation/evaluateur.py::evaluer_article_vote
+        # cote laboratoire, reimplemente ici localement -- DA-07, le moteur
+        # de production n'importe jamais le package evaluation) : un second
+        # appel qui confirme la valeur d'origine suffit ; un desaccord
+        # declenche un troisieme avis qui tranche. Le verdict d'origine est
+        # conserve s'il obtient la majorite absolue des avis recueillis. Si
+        # c'est une autre valeur qui obtient cette majorite, la reponse
+        # complete d'un avis qui la porte est adoptee a la place -- jamais
+        # seulement le mot cle "conforme" en gardant l'ancienne preuve et
+        # l'ancien constat, qui ne correspondraient plus a la conclusion
+        # affichee. Cette reponse adoptee repasse alors par la meme
+        # verification de citation qu'un premier appel, avant publication.
+        # En l'absence de toute majorite absolue (ex. 3 valeurs differentes
+        # sur 3 avis), le verdict est ramene a "indetermine" par prudence.
+        confiance = float(verdict.get("confiance") or 0.0)
+        if confiance < settings.SECOND_OPINION_CONFIDENCE_THRESHOLD:
+            avis = [verdict]
+            try:
+                second_avis = llm.complete_json(SYSTEM_PROMPT, user_prompt)
+                avis.append(second_avis)
+                if str(second_avis.get("conforme", "")).lower() != conformity:
+                    # Premier desaccord : un troisieme avis independant
+                    # tranche plutot que de retrograder sur un simple 1-1,
+                    # ou ce second appel pourrait lui-meme etre le bruit.
+                    troisieme_avis = llm.complete_json(SYSTEM_PROMPT, user_prompt)
+                    avis.append(troisieme_avis)
+            except Exception as exc:
+                # Un appel supplementaire qui echoue ne doit pas faire
+                # perdre le premier verdict, deja obtenu et valide en soi --
+                # on statue sur les avis deja recueillis.
+                logger.warning(
+                    "Avis supplementaire indisponible sur %s (%s) : verdict "
+                    "evalue sur les %d avis deja recueillis.",
+                    requirement.reference, exc, len(avis),
+                )
+
+            valeurs = [str(a.get("conforme", "")).lower() for a in avis]
+            compte = Counter(valeurs)
+            valeur_majoritaire, effectif = compte.most_common(1)[0]
+
+            if effectif * 2 <= len(avis):
+                logger.info(
+                    "Pas de majorite sur %s (avis %s, confiance initiale %.2f) : "
+                    "conformite ramenee a 'indetermine' par prudence.",
+                    requirement.reference, valeurs, confiance,
+                )
+                _ramener_a_indetermine(
+                    verdict,
+                    "Plusieurs avis independants sur cette exigence ne "
+                    "s'accordent pas sur un meme verdict : ramene a "
+                    "indetermine par prudence, une verification manuelle "
+                    "est necessaire.",
+                )
+            elif valeur_majoritaire != conformity:
+                logger.info(
+                    "Avis majoritaire different du premier appel sur %s ('%s' -> "
+                    "'%s', %d/%d avis) : verdict remplace par l'avis majoritaire.",
+                    requirement.reference, conformity, valeur_majoritaire, effectif, len(avis),
+                )
+                verdict = next(
+                    a for a in avis if str(a.get("conforme", "")).lower() == valeur_majoritaire
+                )
+                verdict["_source"] = SOURCE_LLM
+                if verdict.get("preuve"):
+                    verdict["preuve"] = _sans_reference_extrait(str(verdict["preuve"])) or None
+                _verifier_citation(verdict, requirement, passages)
+            # else : le premier appel obtient la majorite, verdict conserve tel quel.
 
         if breaker is not None:
             breaker.record_success()
