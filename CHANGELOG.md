@@ -378,3 +378,34 @@ peut encore faire apparaître ou disparaître un article dépendant si son
 article maître garde une confiance suffisante pour échapper au vote ; noté
 comme limite résiduelle dans DA-09 plutôt que corrigé dans l'urgence, faute
 de temps avant le gel du code.
+
+## Retire la mention du modèle sur le badge de citation non confirmée
+
+Le badge affiché sur une citation non vérifiée répétait l'attribution au
+modèle ("Citation avancée par le modèle — non confirmée") alors que la
+carte du constat porte déjà ce contexte (badge "Citation non retrouvée"
+juste en dessous) : simplifié à "Citation non confirmée".
+
+## Tâche F2 : mesure réelle NIS2/DORA/AI Act
+
+Corpus composé (4 documents fictifs par référentiel, 219 verdicts annotés
+au total) selon un protocole en plusieurs étapes avec point de contrôle
+explicite : brouillon rédigé par Claude Code à la demande de l'équipe, relu
+et corrigé, gelé (`c3bbdc1`) seulement après validation. Support ajouté au
+harnais (`validation/harnais.py`, `validation/evaluate.py`,
+`validation/verifier_verite_terrain.py`) pour un bloc `profil` structuré par
+cas de `verite_terrain.json`, fixant directement `entite_nis2`,
+`entite_financiere_dora`, `ia_fournisseur_haut_risque`,
+`ia_deployeur_haut_risque`, `ia_utilisee` sur l'organisation de test — plus
+fiable que l'extraction heuristique depuis `description`, seule disponible
+jusqu'ici pour l'effectif RGPD.
+
+Mesure réelle (3 passages/document, `mesure_nis2.json`, `mesure_dora.json`,
+`mesure_ai_act.json`) : exactitude 90,6 % / 91,4 % / 86,7 %, exclusions
+abusives 0 / 0 / 1. Deux constats notables signalés à l'équipe pour
+arbitrage post-soutenance, non corrigés avant le gel faute de temps pour
+une nouvelle mesure de vérification : le moteur penche vers le faux positif
+sur les documents conformes en DORA et AI Act (précision 77,8 % et 52,4 %
+pour un rappel de 100 % et 84,6 %), et une exclusion abusive isolée sur
+l'AI Act (article 49, déployeur jamais enregistré classé à tort hors
+périmètre).

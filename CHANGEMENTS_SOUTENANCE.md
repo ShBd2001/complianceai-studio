@@ -216,32 +216,37 @@ entre la Tâche 9 et la Tâche F1 :
   une fois la Tâche F1 posée — réécrit pour vérifier la vraie propriété
   visée : l'absence de fuite des règles RGPD vers NIS2).
 
-## Tâche F2 — Préparation de la mesure sur NIS2, DORA et AI Act
+## Tâche F2 — Mesure réelle sur NIS2, DORA et AI Act
 
-**Commit** `01b2569`. Préparation uniquement — **aucune vérité terrain
-rédigée, aucune mesure réelle lancée** (interdit par le document de
-cadrage).
+**Préparation** : commit `01b2569` (harnais `--referentiel`,
+`validation/verifier_verite_terrain.py`, dossiers `corpus_nis2/`,
+`corpus_dora/`, `corpus_ai_act/` créés vides).
 
-- `validation/evaluate.py --referentiel {rgpd,nis2,dora,ai_act}` : fixe les
-  valeurs par défaut de `--corpus`/`--verite` selon le référentiel, sans
-  rien changer au comportement RGPD existant (défauts historiques
-  inchangés tant que `--corpus`/`--verite` ne sont pas passés
-  explicitement).
-- Nouveau `validation/verifier_verite_terrain.py` : vérifie la structure
-  d'un fichier de vérité terrain (clés d'article valides, vocabulaire des
-  verdicts, cohérence de `jamais_exclure`, fichiers présents dans le
-  corpus) — jamais le contenu sur le fond. Vérifié à la fois sur un cas
-  volontairement cassé (erreurs bien détectées) et sur le vrai corpus RGPD
-  de 210 verdicts (aucun faux positif).
-- Dossiers `corpus_nis2/`, `corpus_dora/`, `corpus_ai_act/` créés à la
-  racine (squelettes vides + `README.md` par référentiel expliquant le
-  format et les particularités de son filtre d'éligibilité) : composer les
-  documents et leur vérité terrain reste le travail de l'équipe.
-- Pipeline `--referentiel` vérifié de bout en bout avec un document et une
-  vérité terrain jetables, non commités (confirme que le Framework, le
-  filtrage par article et la comparaison à la vérité terrain fonctionnent
-  réellement pour un référentiel non-RGPD) avant d'écrire cette tâche comme
-  terminée.
+**Corpus et mesure** : protocole en plusieurs étapes avec point de contrôle
+explicite fourni par l'équipe — brouillon rédigé par Claude Code à la
+demande de l'équipe (4 documents fictifs + vérité terrain par référentiel,
+219 verdicts annotés au total), relu et corrigé par l'équipe, gelé
+(`c3bbdc1`, « corpus NIS2/DORA/AI Act validés par l'équipe ») seulement
+après le mot « référence validée ». Aucune vérité terrain n'a été rédigée
+puis mesurée sans ce passage par l'équipe.
+
+- Bloc `profil` structuré ajouté au format de `verite_terrain.json`
+  (`entite_nis2`, `entite_financiere_dora`, `ia_fournisseur_haut_risque`,
+  `ia_deployeur_haut_risque`, `ia_utilisee`), appliqué directement à
+  l'organisation de test par `validation/evaluate.py::_appliquer_profil` et
+  validé par `verifier_verite_terrain.py` — plus fiable que l'extraction
+  heuristique depuis `description`, seule disponible jusqu'ici pour
+  l'effectif RGPD.
+- Mesure réelle (3 passages/document, commit `c47b0f6`,
+  `mesure_nis2.json`/`mesure_dora.json`/`mesure_ai_act.json`) : exactitude
+  90,6 % / 91,4 % / 86,7 %, exclusions abusives 0 / 0 / 1. Rapport complet
+  remis à l'équipe avec la liste de toutes les erreurs et une section
+  séparée signalant les verdicts attendus que Claude Code considère
+  possiblement discutables (référence non modifiée après mesure).
+- Deux constats non corrigés avant le gel, faute de temps pour une nouvelle
+  mesure de vérification : faux positifs élevés sur les documents conformes
+  en DORA/AI Act (précision 77,8 %/52,4 %), et une exclusion abusive isolée
+  (AI Act, article 49) — documentés dans `docs/architecture.md` §6.
 
 ## Tâche F3 — Documentation
 
@@ -265,7 +270,7 @@ dans les points de vigilance connus).
 | Secrets détectés dans l'historique | 0 (gitleaks, scanné à chaque push) |
 | Profil d'organisation | 16 champs (`PATCH /orgs/{id}/profile`), tous nullable, jamais convertis en False — 11 RGPD (Tâche 8) + 5 NIS2/DORA/AI Act (Tâche F1) |
 | Règles d'éligibilité | RGPD (Tâche 8) + ~40 nouvelles pour NIS2/DORA/AI Act (Tâche F1) |
-| Corpus de validation mesuré | RGPD uniquement (15 documents, 210 verdicts) ; NIS2/DORA/AI Act : squelettes prêts, composition par l'équipe (Tâche F2) |
+| Corpus de validation mesuré | RGPD (15 documents, 210 verdicts) + NIS2/DORA/AI Act (4 documents chacun, 219 verdicts au total, mesure réelle Tâche F2) |
 
 ---
 
@@ -307,21 +312,13 @@ dans les points de vigilance connus).
    l'application déployée.** Si l'analyse dépasse 60 secondes, préparer une
    campagne déjà analysée pour la démonstration plutôt que de lancer
    l'analyse en direct devant le jury.
-7. **Composer les corpus NIS2/DORA/AI Act** (Tâche F2) — documents `.txt` et
-   vérité terrain article par article dans `corpus_nis2/`, `corpus_dora/`,
-   `corpus_ai_act/` (voir le `README.md` de chaque dossier pour le format et
-   les particularités du filtre d'éligibilité de ce référentiel). Vérifier
-   la structure avant toute mesure :
-   ```
-   python -m validation.verifier_verite_terrain --referentiel nis2
-   ```
-   puis lancer la mesure réelle (même avertissement de quota Groq que la
-   Tâche 7) :
-   ```
-   python -m validation.evaluate --referentiel nis2 --runs 3 --output rapport_nis2.json
-   ```
-   Ne jamais ajuster une règle d'éligibilité ou de comparaison après avoir
-   vu les résultats.
+7. **Arbitrer les deux constats de la Tâche F2 non corrigés avant le gel**
+   (voir `docs/architecture.md` §6) : faux positifs élevés sur les
+   documents conformes en DORA/AI Act, et l'exclusion abusive isolée sur
+   l'AI Act (article 49) — décider si et comment `audit_engine.py` doit
+   être retouché après la soutenance, avec une nouvelle mesure de
+   vérification (`python -m validation.evaluate --referentiel ai_act --runs 3 --output ...`)
+   avant tout gel définitif du correctif.
 
 ## Ce qui reste volontairement hors périmètre
 
@@ -334,9 +331,10 @@ engagé » dans `docs/architecture.md` §6, pas comme un oubli.
 
 Les dix tâches du plan initial (0 à 9), les quatre corrections hors plan
 remontées en usage réel, et les tâches F1 à F3 du second document de
-cadrage sont traitées, committées et vérifiées vertes en CI. Rien n'a été
-volontairement laissé de côté à ce stade — les seuls éléments restants sont
-les actions que seule l'équipe peut accomplir elle-même (voir la section
-ci-dessus : tarifs Groq, vérification du disque Render, mesure réelle de la
-Tâche 7, `cout_analyses.py` sur la production, composition des corpus
-NIS2/DORA/AI Act et leur mesure réelle pour la Tâche F2).
+cadrage — y compris la composition du corpus et la mesure réelle NIS2/
+DORA/AI Act de la Tâche F2 — sont traitées, committées et vérifiées vertes
+en CI. Rien n'a été volontairement laissé de côté à ce stade — les seuls
+éléments restants sont les actions que seule l'équipe peut accomplir
+elle-même (voir la section ci-dessus : tarifs Groq, vérification du disque
+Render, mesure réelle de la Tâche 7, `cout_analyses.py` sur la production,
+et l'arbitrage des deux constats F2 non corrigés avant le gel).

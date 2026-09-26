@@ -83,10 +83,11 @@ python -m validation.run_validation --corpus corpus_demo \
 Détail des métriques et du corpus : [validation/README.md](validation/README.md).
 
 `validation/evaluate.py --referentiel {rgpd,nis2,dora,ai_act}` mesure le
-moteur de production sur un référentiel donné (défaut RGPD, inchangé). Seul
-le RGPD dispose aujourd'hui d'un corpus mesuré ; `corpus_nis2/`,
-`corpus_dora/`, `corpus_ai_act/` sont des squelettes prêts à l'emploi
-(README + `python -m validation.verifier_verite_terrain`) pour l'équipe.
+moteur de production sur un référentiel donné (défaut RGPD, inchangé). Les
+quatre référentiels disposent désormais d'un corpus gelé et mesuré : RGPD
+(`corpus/`, 15 documents, 210 verdicts) et NIS2/DORA/AI Act (`corpus_nis2/`,
+`corpus_dora/`, `corpus_ai_act/`, 4 documents chacun, 219 verdicts au total
+— Tâche F2, exactitude 90,6 %/91,4 %/86,7 %).
 
 ## Tests et intégration continue
 

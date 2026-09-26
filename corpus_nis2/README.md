@@ -1,9 +1,13 @@
 # Corpus de validation — NIS2
 
-Squelette vide. Composer ce corpus (documents + vérité terrain) est le
-travail de l'équipe, pas de Claude Code — voir la tâche F2 du plan de
-soutenance : « Claude Code ne rédige jamais de vérité terrain ni de grille
-détaillée pour NIS2/DORA/AI Act ».
+Composé (4 documents, 32 verdicts annotés) et mesuré en conditions réelles
+(Tâche F2, 3 passages/document, `mesure_nis2.json` à la racine du dépôt) :
+exactitude 90,6 % (IC95 75,8–96,8 %), 0 exclusion abusive. Composé
+initialement comme brouillon par Claude Code à la demande explicite de
+l'équipe (protocole de mesure en plusieurs étapes avec point de contrôle),
+puis relu, corrigé et validé par l'équipe avant gel (`c3bbdc1`) — voir la
+tâche F2 du plan de soutenance : « Claude Code ne rédige jamais seul une
+vérité terrain non revue par l'équipe ».
 
 ## Format attendu
 
@@ -30,14 +34,22 @@ Vérifier la structure avant de mesurer quoi que ce soit :
 Le filtre d'éligibilité ([`app/services/eligibilite.py`](../backend/app/services/eligibilite.py))
 distingue le statut général NIS2 (entité essentielle/importante, articles
 20/21/23/24/29/30) de la fourniture de DNS/registre (articles 27/28, plus
-étroit — voir le tableau de correspondance en tête de ce fichier). Si la
-`description` d'un document mentionne le statut de l'organisation, envisager
-d'étendre `validation/evaluate.py` pour en extraire `entite_nis2` comme cela
-existe déjà pour l'effectif RGPD (`_effectif_depuis_description`) — sans
-cela, le filtre répond « à vérifier » plutôt que d'exempter, ce qui reste
-correct mais moins représentatif d'un usage réel.
+étroit — voir le tableau de correspondance en tête de ce fichier). Chaque cas
+de `verite_terrain.json` fixe directement `entite_nis2` via un bloc `profil`
+structuré (`validation/evaluate.py::_appliquer_profil`), plutôt que de
+dépendre d'une extraction heuristique depuis `description` (seule disponible
+pour l'effectif RGPD).
 
-## Une fois le corpus composé
+## Résultats de la mesure (Tâche F2)
+
+Voir `mesure_nis2.json` à la racine pour le détail complet. Les 3 erreurs
+observées sont des faux négatifs (le moteur sous-estime un manquement),
+répartis sur 2 des 4 documents — aucune exclusion abusive. Deux de ces
+verdicts attendus sont eux-mêmes signalés comme discutables (article 24,
+facultatif pour l'entité et non une obligation inconditionnelle ; articles
+21/30 du document 3, lecture stricte assumée par l'auteur du brouillon).
+
+## Relancer la mesure
 
     python -m validation.evaluate --referentiel nis2 --sans-modele    # verification de bout en bout, resultats non valides
     python -m validation.evaluate --referentiel nis2 --runs 3 --output rapport_nis2.json   # mesure reelle, necessite GROQ_API_KEY

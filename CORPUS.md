@@ -1,10 +1,10 @@
 # Corpus de validation — 15 documents, 210 verdicts
 
-Ce corpus couvre le RGPD, seul référentiel mesuré à ce jour. Les dossiers
-`corpus_nis2/`, `corpus_dora/`, `corpus_ai_act/` à la racine du dépôt sont
-des squelettes équivalents, prêts à être complétés par l'équipe (voir le
-`README.md` de chacun) — `validation/evaluate.py --referentiel {nis2,dora,ai_act}`
-les mesurera de la même façon une fois composés.
+Ce corpus couvre le RGPD. Les dossiers `corpus_nis2/`, `corpus_dora/`,
+`corpus_ai_act/` à la racine du dépôt suivent désormais le même principe
+(4 documents chacun, gelés et mesurés — Tâche F2, voir le `README.md` de
+chacun et `mesure_nis2.json`/`mesure_dora.json`/`mesure_ai_act.json`) :
+exactitude 90,6 % / 91,4 % / 86,7 %, 0/0/1 exclusion(s) abusive(s).
 
 ## Ce que le corpus couvre
 

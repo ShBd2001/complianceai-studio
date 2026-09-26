@@ -1,9 +1,13 @@
 # Corpus de validation — AI Act
 
-Squelette vide. Composer ce corpus (documents + vérité terrain) est le
-travail de l'équipe, pas de Claude Code — voir la tâche F2 du plan de
-soutenance : « Claude Code ne rédige jamais de vérité terrain ni de grille
-détaillée pour NIS2/DORA/AI Act ».
+Composé (4 documents, 98 verdicts annotés) et mesuré en conditions réelles
+(Tâche F2, 3 passages/document, `mesure_ai_act.json` à la racine du dépôt) :
+exactitude 86,7 % (IC95 78,6–92,1 %), 1 exclusion abusive (article 49).
+Composé initialement comme brouillon par Claude Code à la demande explicite
+de l'équipe (protocole de mesure en plusieurs étapes avec point de
+contrôle), puis relu, corrigé et validé par l'équipe avant gel (`c3bbdc1`)
+— voir la tâche F2 du plan de soutenance : « Claude Code ne rédige jamais
+seul une vérité terrain non revue par l'équipe ».
 
 ## Format attendu
 
@@ -35,15 +39,24 @@ toujours, sans exemption possible ; les articles 8 à 22 (plus 25, 47-49, 72,
 soit ; les articles 26/27/86 (obligations du déployeur) sont plus étroits
 que la simple qualité de déployeur. Les articles 23/24 (importateurs/
 distributeurs) n'ont volontairement aucune règle d'exemption : aucun champ
-de profil dédié n'existe, ils sont donc toujours évalués. Si la
-`description` d'un document mentionne le rôle de l'organisation, envisager
-d'étendre `validation/evaluate.py` pour en extraire `ia_utilisee` /
-`ia_fournisseur_haut_risque` / `ia_deployeur_haut_risque` comme cela existe
-déjà pour l'effectif RGPD (`_effectif_depuis_description`) — sans cela, le
-filtre répond « à vérifier » plutôt que d'exempter, ce qui reste correct
-mais moins représentatif d'un usage réel.
+de profil dédié n'existe, ils sont donc toujours évalués. Chaque cas de
+`verite_terrain.json` fixe directement `ia_utilisee` / `ia_fournisseur_haut_risque`
+/ `ia_deployeur_haut_risque` via un bloc `profil` structuré
+(`validation/evaluate.py::_appliquer_profil`), plutôt que de dépendre d'une
+extraction heuristique depuis `description` (seule disponible pour
+l'effectif RGPD).
 
-## Une fois le corpus composé
+## Résultats de la mesure (Tâche F2)
+
+Voir `mesure_ai_act.json` à la racine pour le détail complet. Constat le
+plus notable : une exclusion abusive sur l'article 49 (document 2, obligation
+d'enregistrement d'un déployeur jamais enregistré, classée à tort hors
+périmètre par le moteur) — le seul cas des trois référentiels. Le document
+censé être le plus conforme (01) concentre 7 des 13 erreurs, toutes des faux
+positifs, signe que le moteur exige un niveau de détail assez fin avant
+d'accepter "conforme".
+
+## Relancer la mesure
 
     python -m validation.evaluate --referentiel ai_act --sans-modele    # verification de bout en bout, resultats non valides
     python -m validation.evaluate --referentiel ai_act --runs 3 --output rapport_ai_act.json   # mesure reelle, necessite GROQ_API_KEY

@@ -1,9 +1,13 @@
 # Corpus de validation — DORA
 
-Squelette vide. Composer ce corpus (documents + vérité terrain) est le
-travail de l'équipe, pas de Claude Code — voir la tâche F2 du plan de
-soutenance : « Claude Code ne rédige jamais de vérité terrain ni de grille
-détaillée pour NIS2/DORA/AI Act ».
+Composé (4 documents, 89 verdicts annotés) et mesuré en conditions réelles
+(Tâche F2, 3 passages/document, `mesure_dora.json` à la racine du dépôt) :
+exactitude 91,4 % (IC95 83,9–95,6 %), 0 exclusion abusive, rappel 100 % sur
+les manquements. Composé initialement comme brouillon par Claude Code à la
+demande explicite de l'équipe (protocole de mesure en plusieurs étapes avec
+point de contrôle), puis relu, corrigé et validé par l'équipe avant gel
+(`c3bbdc1`) — voir la tâche F2 du plan de soutenance : « Claude Code ne
+rédige jamais seul une vérité terrain non revue par l'équipe ».
 
 ## Format attendu
 
@@ -32,14 +36,24 @@ distingue le statut général d'entité financière (la plupart des articles) de
 la fourniture de services de paiement (article 23, plus étroit) et des
 articles purement institutionnels réservés aux autorités européennes de
 surveillance (15, 20, 21 — toujours hors périmètre pour une organisation
-cliente, quel que soit son profil). Si la `description` d'un document
-mentionne le statut de l'organisation, envisager d'étendre
-`validation/evaluate.py` pour en extraire `entite_financiere_dora` comme
-cela existe déjà pour l'effectif RGPD (`_effectif_depuis_description`) —
-sans cela, le filtre répond « à vérifier » plutôt que d'exempter, ce qui
-reste correct mais moins représentatif d'un usage réel.
+cliente, quel que soit son profil). Chaque cas de `verite_terrain.json` fixe
+directement `entite_financiere_dora` via un bloc `profil` structuré
+(`validation/evaluate.py::_appliquer_profil`), plutôt que de dépendre d'une
+extraction heuristique depuis `description` (seule disponible pour
+l'effectif RGPD) — le filtre dispose ainsi de la même information qu'un
+auditeur lisant le document, sans exemption à tort possible sur une valeur
+manquante.
 
-## Une fois le corpus composé
+## Résultats de la mesure (Tâche F2)
+
+Voir `mesure_dora.json` à la racine pour le détail complet (métriques,
+matrice de confusion, exécution par document). Constats notables signalés à
+l'équipe : le moteur penche vers le faux positif sur les documents conformes
+(précision 77,8 % pour un rappel de 100 %), avec 8 erreurs concentrées sur
+les deux documents censés être les plus conformes ou les plus contrastés —
+aucune exclusion abusive en revanche.
+
+## Relancer la mesure
 
     python -m validation.evaluate --referentiel dora --sans-modele    # verification de bout en bout, resultats non valides
     python -m validation.evaluate --referentiel dora --runs 3 --output rapport_dora.json   # mesure reelle, necessite GROQ_API_KEY
