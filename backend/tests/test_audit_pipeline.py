@@ -900,6 +900,95 @@ def test_second_opinion_call_failure_keeps_first_verdict(monkeypatch):
     assert verdict["conforme"] == "oui"
 
 
+def test_low_confidence_non_conformity_confirmed_by_second_opinion_is_kept(monkeypatch):
+    """Le second avis (Tache : generalisation apres mesure en conditions
+    reelles, 32% de bascules observees, majoritairement autour de
+    "indetermine") couvre aussi "non", pas seulement "oui"/"partiel" : un
+    manquement a faible confiance, confirme deux fois, reste un manquement."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Politique de sécurité incomplète.",
+        reference="p1", distance=0.4, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    appels = []
+
+    def faux_complete_json(*a, **k):
+        appels.append(1)
+        return {
+            "conforme": "non", "severite": "major", "confiance": 0.3,
+            "constat": "Aucune mesure de chiffrement mentionnée.",
+            "preuve": None, "recommandation": "Documenter le chiffrement.",
+        }
+
+    monkeypatch.setattr(llm, "complete_json", faux_complete_json)
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert len(appels) == 2
+    assert verdict["conforme"] == "non"
+
+
+def test_low_confidence_non_conformity_contradicted_by_second_opinion_is_downgraded(monkeypatch):
+    """Meme configuration, mais le second avis contredit : le manquement
+    n'est pas publie tel quel, prudence oblige."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    reponses = [
+        {
+            "conforme": "non", "severite": "major", "confiance": 0.3,
+            "constat": "Chiffrement absent des documents fournis.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": "Documenter le chiffrement mis en oeuvre.",
+        },
+        {
+            "conforme": "oui", "severite": "info", "confiance": 0.6,
+            "constat": "Chiffrement en place.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": None,
+        },
+    ]
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: reponses.pop(0))
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "indetermine"
+    assert verdict["severite"] != "info"
+
+
+def test_native_indetermine_does_not_trigger_a_second_call(monkeypatch):
+    """Un "indetermine" natif est deja l'etat final vers lequel un desaccord
+    ferait converger : un second appel n'y changerait rien, il ne doit donc
+    jamais etre declenche (economie de cout sur un cas qui ne peut pas
+    s'ameliorer)."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    appels = []
+
+    def faux_complete_json(*a, **k):
+        appels.append(1)
+        return {
+            "conforme": "indetermine", "severite": "info", "confiance": 0.3,
+            "constat": "Les extraits ne permettent pas de conclure.",
+            "preuve": None, "recommandation": None,
+        }
+
+    monkeypatch.setattr(llm, "complete_json", faux_complete_json)
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert len(appels) == 1
+    assert verdict["conforme"] == "indetermine"
+
+
 def test_compliance_claim_with_no_passages_is_downgraded(monkeypatch):
     """Sans passage recupere, aucune citation n'est de toute facon
     verifiable : le modele ne doit pas pouvoir repondre "oui" dans le vide."""

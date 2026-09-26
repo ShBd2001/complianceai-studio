@@ -437,22 +437,23 @@ def _passage_correspondant(preuve: str | None, passages: list[rag.Passage]) -> r
 
 
 def _ramener_a_indetermine(verdict: dict, raison: str) -> None:
-    """Retrograde en place un verdict 'oui'/'partiel' vers 'indetermine' par
-    prudence (citation invalide, ou confiance insuffisante non confirmee par
-    un second avis), et neutralise au passage la gravite et la recommandation
-    du verdict d'origine. "oui" impose toujours la gravite "info" par
-    consigne du prompt, et une recommandation du type "poursuivre la
-    pratique actuelle" ne doit pas survivre a une conformite qui n'est plus
-    etablie -- afficherait sinon un badge "Information" a cote de "Revue
-    humaine requise", contradictoire a l'oeil (needs_human_review est
+    """Retrograde en place un verdict 'oui'/'partiel'/'non' vers 'indetermine'
+    par prudence (citation invalide, ou verdict non confirme par un second
+    avis independant), et neutralise au passage la gravite et la
+    recommandation du verdict d'origine. "oui" impose toujours la gravite
+    "info" par consigne du prompt, et une recommandation qui presuppose
+    encore une conformite ou un manquement precis ("poursuivre la pratique
+    actuelle", "corriger tel point") ne doit pas survivre a un verdict qui
+    n'est plus etabli -- afficherait sinon un badge "Information" a cote de
+    "Revue humaine requise", contradictoire a l'oeil (needs_human_review est
     toujours vrai sur un indetermine, voir _verification_humaine)."""
     verdict["conforme"] = "indetermine"
     verdict["confiance"] = min(float(verdict.get("confiance") or 0.5), 0.3)
     verdict["constat"] = (raison + " " + str(verdict.get("constat") or "")).strip()
     verdict["severite"] = "minor"
     verdict["recommandation"] = (
-        "Verifier manuellement le respect de cette exigence : la conformite "
-        "annoncee par le modele n'a pas pu etre confirmee avec une certitude suffisante."
+        "Verifier manuellement le respect de cette exigence : le verdict "
+        "rendu par le modele n'a pas pu etre confirme avec une certitude suffisante."
     )
 
 
@@ -512,17 +513,27 @@ def evaluate_requirement(
                 "verdict ramene a indetermine par prudence, une verification "
                 "manuelle est necessaire.",
             )
-        elif conformity in ("oui", "partiel"):
-            # Citation reelle, mais confiance du modele deja sous le seuil de
-            # revue humaine (REVIEW_CONFIDENCE_THRESHOLD) : l'API LLM n'est pas
-            # parfaitement reproductible meme a temperature 0 (routage MoE
-            # sensible au lot d'inference cote fournisseur -- voir
-            # docs/architecture.md, DA-09), et un cas deja fragile est
-            # justement celui le plus expose a une bascule d'un passage a
-            # l'autre. Un second appel independant, uniquement ici (pas sur
-            # l'ensemble des exigences : le cout ne se justifie que sur les
-            # cas deja marques incertains), sert de garde-fou : la conformite
-            # n'est publiee que si les deux avis s'accordent.
+        elif conformity in ("oui", "partiel", "non"):
+            # Mesure en conditions reelles (deux executions independantes du
+            # meme document, meme code) : 32% des articles changent de
+            # verdict d'une execution a l'autre -- et la quasi-totalite de
+            # ces bascules se font depuis ou vers un "indetermine" natif
+            # (ex. "non" <-> "indetermine", "partiel" <-> "indetermine"), pas
+            # seulement depuis un "oui" non confirme. Limiter le second avis
+            # aux seules conformites "oui"/"partiel" (version initiale de ce
+            # garde-fou) manquait donc l'essentiel de l'instabilite
+            # observee. Voir DA-09 (docs/architecture.md) : l'API LLM n'est
+            # pas parfaitement reproductible meme a temperature 0 (routage
+            # MoE sensible au lot d'inference cote fournisseur).
+            #
+            # Declenche donc ici sur "oui"/"partiel"/"non" a confiance deja
+            # sous le seuil de revue humaine (un "indetermine" natif est
+            # volontairement exclu : c'est deja l'etat final vers lequel un
+            # desaccord ferait converger, un second appel n'y changerait
+            # rien). Si un second avis independant confirme, le premier
+            # verdict est conserve tel quel ; s'il contredit, le verdict est
+            # ramene a "indetermine" par prudence -- jamais publie comme une
+            # conformite ou un manquement non confirmes.
             confiance = float(verdict.get("confiance") or 0.0)
             if confiance < settings.REVIEW_CONFIDENCE_THRESHOLD:
                 try:
@@ -545,10 +556,9 @@ def evaluate_requirement(
                     )
                     _ramener_a_indetermine(
                         verdict,
-                        "Le modele a indique une conformite avec une confiance "
-                        "insuffisante, et un second avis independant n'a pas confirme "
-                        "ce meme verdict : ramene a indetermine par prudence, une "
-                        "verification manuelle est necessaire.",
+                        "Un second avis independant n'a pas confirme ce verdict "
+                        "(confiance initiale insuffisante) : ramene a indetermine "
+                        "par prudence, une verification manuelle est necessaire.",
                     )
 
         if breaker is not None:

@@ -283,12 +283,24 @@ nulle, le routage entre experts pouvant être sensible au lot d'autres
 requêtes traitées en parallèle sur le même matériel à cet instant — un
 phénomène mesuré indépendamment côté laboratoire de validation
 (`validation/harnais.py`, `verdicts_instables`, non nul même cache vidé).
-Dans `evaluate_requirement()` (`app/services/audit_engine.py`), une
-conformité ("oui"/"partiel") dont la citation est vérifiée mais dont la
-confiance déclarée par le modèle reste sous `REVIEW_CONFIDENCE_THRESHOLD`
-déclenche un second appel indépendant, même prompt : la conformité n'est
-publiée que si les deux avis s'accordent, sinon le verdict est ramené à
-"indéterminé" par prudence.
+Dans `evaluate_requirement()` (`app/services/audit_engine.py`), un verdict
+"oui"/"partiel" (citation déjà vérifiée) ou "non" dont la confiance
+déclarée par le modèle reste sous `REVIEW_CONFIDENCE_THRESHOLD` déclenche
+un second appel indépendant, même prompt : le verdict n'est conservé que si
+les deux avis s'accordent, sinon il est ramené à "indéterminé" par
+prudence. Un "indéterminé" natif n'y est volontairement pas soumis : c'est
+déjà l'état final vers lequel un désaccord ferait converger, un second
+appel n'y changerait rien.
+
+*Mesure ayant motivé l'élargissement à "non".* La version initiale de ce
+garde-fou ne couvrait que "oui"/"partiel". Deux exécutions indépendantes du
+même document réel (même code, aucune modification entre les deux) ont
+montré que **32 % des articles évalués changeaient de verdict** d'une
+exécution à l'autre — et que la quasi-totalité de ces bascules se faisaient
+depuis ou vers un "indéterminé" natif ("non" ↔ "indéterminé", "partiel" ↔
+"indéterminé"), pas seulement depuis un "oui" non confirmé. Se limiter à
+"oui"/"partiel" manquait donc l'essentiel de l'instabilité réellement
+observée ; élargi à "non" en conséquence.
 
 *Justification.* Un vote majoritaire sur *toutes* les exigences (déjà
 outillé côté laboratoire, `validation/run_validation.py --vote`) est la
@@ -298,17 +310,17 @@ technique, qui reste à trancher par l'équipe. Cibler uniquement les cas
 déjà signalés incertains (confiance sous le seuil de revue humaine) capture
 la même instabilité là où elle est la plus probable, pour une fraction du
 coût : ces exigences sont de toute façon déjà promises à une vérification
-humaine, le second appel ne fait qu'éviter d'afficher à tort une conformité
+humaine, le second appel ne fait qu'éviter d'afficher à tort un verdict
 qu'un second passage ne confirme pas.
 
-*Conséquences.* Positives : réduit les bascules "oui" ↔ "indéterminé" d'une
-exécution à l'autre sur le sous-ensemble le plus exposé, sans changer le
-coût des exigences déjà confiantes. Négatives : ne couvre pas l'instabilité
-sur les verdicts "non"/"non applicable" (jugée moins grave — le risque d'un
-faux "non" est bien moindre que celui d'un faux "oui", voir la suite de
-tests) ni sur un "oui" confiant qui se révèle instable malgré tout (cas non
-mesuré comme fréquent) ; un second appel qui échoue (panne, quota) conserve
-le premier verdict tel quel plutôt que de le perdre.
+*Conséquences.* Positives : réduit les bascules impliquant un "indéterminé"
+d'une exécution à l'autre sur le sous-ensemble le plus exposé (confirmé par
+la mesure ci-dessus), sans changer le coût des exigences déjà confiantes ni
+des "indéterminé" natifs. Négatives : ne couvre pas un verdict confiant qui
+se révèle malgré tout instable (cas non mesuré comme fréquent, mais
+possible) ; un second appel qui échoue (panne, quota) conserve le premier
+verdict tel quel plutôt que de le perdre, au prix d'une confirmation
+manquée.
 
 *Réversibilité.* Isolé dans `evaluate_requirement()` : retirer le bloc du
 second avis fait retomber sur le comportement précédent (un seul appel),
