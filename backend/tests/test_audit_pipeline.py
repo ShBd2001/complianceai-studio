@@ -781,6 +781,125 @@ def test_unverifiable_citation_downgrades_compliance_to_indetermine(monkeypatch)
     assert "verifier" in verdict["recommandation"].lower()
 
 
+def test_confident_verdict_does_not_trigger_second_opinion(monkeypatch):
+    """Le second avis n'est demande que sur les cas deja marques incertains
+    (confiance < REVIEW_CONFIDENCE_THRESHOLD) : un seul appel suffit pour
+    une conformite confiante, pour ne pas doubler le cout Groq partout."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    appels = []
+
+    def faux_complete_json(*a, **k):
+        appels.append(1)
+        return {
+            "conforme": "oui", "severite": "info", "confiance": 0.9,
+            "constat": "Chiffrement en place.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": None,
+        }
+
+    monkeypatch.setattr(llm, "complete_json", faux_complete_json)
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert len(appels) == 1
+    assert verdict["conforme"] == "oui"
+
+
+def test_low_confidence_verdict_confirmed_by_second_opinion_is_kept(monkeypatch):
+    """Confiance sous le seuil : un second appel est fait, mais s'il confirme
+    le meme verdict, la conformite reste publiee telle quelle."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    appels = []
+
+    def faux_complete_json(*a, **k):
+        appels.append(1)
+        return {
+            "conforme": "oui", "severite": "info", "confiance": 0.3,
+            "constat": "Chiffrement en place.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": None,
+        }
+
+    monkeypatch.setattr(llm, "complete_json", faux_complete_json)
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert len(appels) == 2
+    assert verdict["conforme"] == "oui"
+
+
+def test_low_confidence_verdict_contradicted_by_second_opinion_is_downgraded(monkeypatch):
+    """Confiance sous le seuil ET second avis en desaccord : la prudence
+    l'emporte, la conformite n'est pas publiee."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    reponses = [
+        {
+            "conforme": "oui", "severite": "info", "confiance": 0.3,
+            "constat": "Chiffrement en place.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": None,
+        },
+        {
+            "conforme": "non", "severite": "major", "confiance": 0.6,
+            "constat": "Chiffrement absent des documents fournis.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": "Documenter le chiffrement mis en oeuvre.",
+        },
+    ]
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: reponses.pop(0))
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "indetermine"
+    assert verdict["severite"] != "info"
+    assert "second avis" in verdict["constat"].lower()
+
+
+def test_second_opinion_call_failure_keeps_first_verdict(monkeypatch):
+    """Un second appel qui echoue (panne, quota) ne doit pas faire perdre le
+    premier verdict, deja obtenu et valide en soi."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    appels = []
+
+    def faux_complete_json(*a, **k):
+        appels.append(1)
+        if len(appels) == 1:
+            return {
+                "conforme": "oui", "severite": "info", "confiance": 0.3,
+                "constat": "Chiffrement en place.",
+                "preuve": "Les données sont chiffrées au repos et en transit.",
+                "recommandation": None,
+            }
+        raise RuntimeError("Panne reseau simulee")
+
+    monkeypatch.setattr(llm, "complete_json", faux_complete_json)
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert len(appels) == 2
+    assert verdict["conforme"] == "oui"
+
+
 def test_compliance_claim_with_no_passages_is_downgraded(monkeypatch):
     """Sans passage recupere, aucune citation n'est de toute facon
     verifiable : le modele ne doit pas pouvoir repondre "oui" dans le vide."""

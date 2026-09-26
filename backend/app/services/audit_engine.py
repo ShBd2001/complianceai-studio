@@ -436,6 +436,26 @@ def _passage_correspondant(preuve: str | None, passages: list[rag.Passage]) -> r
     return premiere_correspondance
 
 
+def _ramener_a_indetermine(verdict: dict, raison: str) -> None:
+    """Retrograde en place un verdict 'oui'/'partiel' vers 'indetermine' par
+    prudence (citation invalide, ou confiance insuffisante non confirmee par
+    un second avis), et neutralise au passage la gravite et la recommandation
+    du verdict d'origine. "oui" impose toujours la gravite "info" par
+    consigne du prompt, et une recommandation du type "poursuivre la
+    pratique actuelle" ne doit pas survivre a une conformite qui n'est plus
+    etablie -- afficherait sinon un badge "Information" a cote de "Revue
+    humaine requise", contradictoire a l'oeil (needs_human_review est
+    toujours vrai sur un indetermine, voir _verification_humaine)."""
+    verdict["conforme"] = "indetermine"
+    verdict["confiance"] = min(float(verdict.get("confiance") or 0.5), 0.3)
+    verdict["constat"] = (raison + " " + str(verdict.get("constat") or "")).strip()
+    verdict["severite"] = "minor"
+    verdict["recommandation"] = (
+        "Verifier manuellement le respect de cette exigence : la conformite "
+        "annoncee par le modele n'a pas pu etre confirmee avec une certitude suffisante."
+    )
+
+
 def evaluate_requirement(
     requirement: Requirement,
     passages: list[rag.Passage],
@@ -478,37 +498,58 @@ def evaluate_requirement(
         # plutot que presente comme un constat de conformite.
         passage_verifie = _passage_correspondant(verdict.get("preuve"), passages)
         verdict["_passage_verifie"] = passage_verifie
-        if str(verdict.get("conforme", "")).lower() in ("oui", "partiel") and passage_verifie is None:
+        conformity = str(verdict.get("conforme", "")).lower()
+        if conformity in ("oui", "partiel") and passage_verifie is None:
             logger.info(
                 "Citation non verifiee sur %s : conformite '%s' ramenee a "
                 "'indetermine' par prudence.",
                 requirement.reference, verdict.get("conforme"),
             )
-            verdict["conforme"] = "indetermine"
-            verdict["confiance"] = min(float(verdict.get("confiance") or 0.5), 0.3)
-            verdict["constat"] = (
+            _ramener_a_indetermine(
+                verdict,
                 "Le modele indiquait une conformite mais la citation fournie n'a "
                 "pas pu etre retrouvee telle quelle dans les documents verses : "
                 "verdict ramene a indetermine par prudence, une verification "
-                "manuelle est necessaire. " + str(verdict.get("constat") or "")
-            ).strip()
-            # La gravite et la recommandation venaient du verdict d'origine
-            # ("oui" -> toujours gravite "info" par consigne du prompt,
-            # "partiel" -> gravite du point secondaire manquant) : les garder
-            # affichait un badge "Information" et une recommandation du type
-            # "poursuivre la pratique actuelle" sur un constat dont la
-            # conformite n'est plus établie, ce qui laissait croire a tort que
-            # rien n'appelait d'attention. Un indetermine n'est ni un
-            # manquement prouve (critical/major) ni une simple observation
-            # (info) : il releve du meme palier que les axes d'amelioration
-            # (NON_CONFORMITY_SEVERITIES ne l'inclut pas), avec une
-            # recommandation qui reflete ce qui reste reellement a faire.
-            verdict["severite"] = "minor"
-            verdict["recommandation"] = (
-                "Verifier manuellement le respect de cette exigence : la "
-                "conformite annoncee par le modele n'a pas pu etre confirmee "
-                "par une citation verifiable dans les documents verses."
+                "manuelle est necessaire.",
             )
+        elif conformity in ("oui", "partiel"):
+            # Citation reelle, mais confiance du modele deja sous le seuil de
+            # revue humaine (REVIEW_CONFIDENCE_THRESHOLD) : l'API LLM n'est pas
+            # parfaitement reproductible meme a temperature 0 (routage MoE
+            # sensible au lot d'inference cote fournisseur -- voir
+            # docs/architecture.md, DA-09), et un cas deja fragile est
+            # justement celui le plus expose a une bascule d'un passage a
+            # l'autre. Un second appel independant, uniquement ici (pas sur
+            # l'ensemble des exigences : le cout ne se justifie que sur les
+            # cas deja marques incertains), sert de garde-fou : la conformite
+            # n'est publiee que si les deux avis s'accordent.
+            confiance = float(verdict.get("confiance") or 0.0)
+            if confiance < settings.REVIEW_CONFIDENCE_THRESHOLD:
+                try:
+                    second_avis = llm.complete_json(SYSTEM_PROMPT, user_prompt)
+                    second_conformite = str(second_avis.get("conforme", "")).lower()
+                except Exception as exc:
+                    # Un second appel qui echoue ne doit pas faire perdre le
+                    # premier verdict, deja obtenu et valide en soi -- on se
+                    # contente de ne pas le confirmer.
+                    logger.warning(
+                        "Second avis indisponible sur %s (%s) : premier verdict conserve tel quel.",
+                        requirement.reference, exc,
+                    )
+                    second_conformite = conformity
+                if second_conformite != conformity:
+                    logger.info(
+                        "Second avis en desaccord sur %s ('%s' puis '%s', confiance "
+                        "initiale %.2f) : conformite ramenee a 'indetermine' par prudence.",
+                        requirement.reference, conformity, second_conformite, confiance,
+                    )
+                    _ramener_a_indetermine(
+                        verdict,
+                        "Le modele a indique une conformite avec une confiance "
+                        "insuffisante, et un second avis independant n'a pas confirme "
+                        "ce meme verdict : ramene a indetermine par prudence, une "
+                        "verification manuelle est necessaire.",
+                    )
 
         if breaker is not None:
             breaker.record_success()

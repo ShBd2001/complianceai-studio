@@ -273,6 +273,47 @@ distinct.
 retomber l'article concerné sur le parcours normal d'évaluation par le
 modèle, sans migration ni effet de bord.
 
+### DA-09 — Second avis ciblé sur les verdicts de conformité peu sûrs
+
+*Décision.* `LLM_TEMPERATURE=0.0` (le réglage le plus déterministe possible
+côté requête) n'élimine pas la variance d'un appel à l'autre : sur
+l'infrastructure d'inférence de Groq, le modèle (`openai/gpt-oss-120b`, à
+experts/MoE) n'est pas garanti bit-à-bit reproductible même à température
+nulle, le routage entre experts pouvant être sensible au lot d'autres
+requêtes traitées en parallèle sur le même matériel à cet instant — un
+phénomène mesuré indépendamment côté laboratoire de validation
+(`validation/harnais.py`, `verdicts_instables`, non nul même cache vidé).
+Dans `evaluate_requirement()` (`app/services/audit_engine.py`), une
+conformité ("oui"/"partiel") dont la citation est vérifiée mais dont la
+confiance déclarée par le modèle reste sous `REVIEW_CONFIDENCE_THRESHOLD`
+déclenche un second appel indépendant, même prompt : la conformité n'est
+publiée que si les deux avis s'accordent, sinon le verdict est ramené à
+"indéterminé" par prudence.
+
+*Justification.* Un vote majoritaire sur *toutes* les exigences (déjà
+outillé côté laboratoire, `validation/run_validation.py --vote`) est la
+mitigation la plus robuste, mais triple le coût et la durée de chaque
+analyse en production, en permanence — un choix économique, pas seulement
+technique, qui reste à trancher par l'équipe. Cibler uniquement les cas
+déjà signalés incertains (confiance sous le seuil de revue humaine) capture
+la même instabilité là où elle est la plus probable, pour une fraction du
+coût : ces exigences sont de toute façon déjà promises à une vérification
+humaine, le second appel ne fait qu'éviter d'afficher à tort une conformité
+qu'un second passage ne confirme pas.
+
+*Conséquences.* Positives : réduit les bascules "oui" ↔ "indéterminé" d'une
+exécution à l'autre sur le sous-ensemble le plus exposé, sans changer le
+coût des exigences déjà confiantes. Négatives : ne couvre pas l'instabilité
+sur les verdicts "non"/"non applicable" (jugée moins grave — le risque d'un
+faux "non" est bien moindre que celui d'un faux "oui", voir la suite de
+tests) ni sur un "oui" confiant qui se révèle instable malgré tout (cas non
+mesuré comme fréquent) ; un second appel qui échoue (panne, quota) conserve
+le premier verdict tel quel plutôt que de le perdre.
+
+*Réversibilité.* Isolé dans `evaluate_requirement()` : retirer le bloc du
+second avis fait retomber sur le comportement précédent (un seul appel),
+sans migration ni effet sur le reste du moteur.
+
 ## 5. Vue de déploiement
 
 ```
