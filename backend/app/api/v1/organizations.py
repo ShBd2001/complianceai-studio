@@ -22,6 +22,7 @@ from app.schemas.organization import (
     OrganizationCreate,
     OrganizationOut,
     OrganizationProfileUpdate,
+    PlanUpdate,
     RetentionUpdate,
 )
 from app.services import activity
@@ -188,6 +189,51 @@ def update_profile(
     count = db.scalar(
         select(func.count(Membership.id)).where(Membership.organization_id == ctx.org_id)
     )
+    return _org_out(ctx.organization, ctx.role, count)
+
+
+@router.patch("/{org_id}/plan", response_model=OrganizationOut)
+def update_plan(
+    payload: PlanUpdate,
+    request: Request,
+    ctx: OrgContext = Depends(require_role(OrgRole.OWNER)),
+    db: Session = Depends(get_db),
+) -> OrganizationOut:
+    """Changement d'offre (Essentiel/Pro/Cabinet), reserve au proprietaire :
+    une decision qui affecte le cout pour toute l'organisation, au meme
+    titre que sa suppression. Le nombre de campagnes/mois n'est jamais un
+    obstacle (le quota se recalcule tout seul le mois suivant), mais
+    descendre vers une offre dont la limite de membres est deja depassee
+    laisserait l'organisation dans un etat incoherent -- sans qu'aucune
+    regle ne dise qui retirer. Refuse dans ce cas plutot que de choisir a
+    la place de l'utilisateur."""
+    count = db.scalar(
+        select(func.count(Membership.id)).where(Membership.organization_id == ctx.org_id)
+    )
+    nouvelle_limite = PLAN_LIMITS[payload.plan]["max_members"]
+    if nouvelle_limite is not None and count > nouvelle_limite:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            f"Cette organisation compte {count} membre(s), au-dela de la limite de "
+            f"{nouvelle_limite} de l'offre choisie. Retirez des membres avant de "
+            "changer d'offre.",
+        )
+
+    ancien_plan = ctx.organization.plan
+    ctx.organization.plan = payload.plan
+    # La retention personnalisee des documents est reservee a l'offre
+    # Cabinet (PATCH /retention le refuse hors Cabinet) : en quitter la
+    # rangee sans reinitialiser ce champ laisserait une purge automatique
+    # active en silence, sur un reglage devenu invisible dans l'interface.
+    if payload.plan != OrgPlan.CABINET:
+        ctx.organization.document_retention_days = None
+    if payload.plan != ancien_plan:
+        activity.log(
+            db, action="org.plan_updated", actor_id=ctx.user.id, organization_id=ctx.org_id,
+            entity_type="organization", entity_id=ctx.org_id, request=request,
+            payload={"ancien_plan": ancien_plan.value, "nouveau_plan": payload.plan.value},
+        )
+    db.flush()
     return _org_out(ctx.organization, ctx.role, count)
 
 

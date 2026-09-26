@@ -307,3 +307,32 @@ aussi l'effectif : seule information chiffrée dont dépend la dispense de
 registre de l'article 30(5) du RGPD, jusqu'ici une colonne existante mais
 non modifiable après la création de l'organisation (aucune route ne
 l'exposait) — ajouté comme champ numérique dédié, avec sa propre carte.
+
+## Gravité "info" exclue pour tout constat indéterminé, natif ou rétrogradé
+
+Le correctif sur la rétrogradation ("oui"/"partiel" → "indéterminé" faute
+de citation vérifiable) ne couvrait pas le cas où le modèle répond
+"indéterminé" de lui-même — parfois avec une citation réellement vérifiée
+à l'appui de son raisonnement — car le prompt n'impose une gravité qu'au
+"oui" ("info" obligatoire), rien pour "indéterminé". Résultat observé en
+usage réel (article 44) : un badge "Information" affiché à côté de "Revue
+humaine requise", alors que ce second badge est toujours vrai sur un
+indéterminé quelle qu'en soit l'origine. La règle est déplacée dans la
+boucle principale de `run_audit()` pour couvrir les deux origines d'un
+coup : toute gravité "info" sur un verdict "indéterminé" est relevée à
+"minor".
+
+## Changement d'offre après la création de l'organisation
+
+Le message de quota épuisé promettait "il suffit de passer au palier
+supérieur depuis votre espace Mon compte", mais `plan` n'était fixé qu'à
+l'inscription et n'était modifiable nulle part ensuite. Nouvelle route
+`PATCH /orgs/{org_id}/plan`, réservée au propriétaire (une décision qui
+affecte le coût de toute l'organisation, au même titre que sa suppression) :
+refuse une offre dont la limite de membres serait déjà dépassée par
+l'effectif actuel plutôt que de choisir qui retirer à la place de
+l'utilisateur, et réinitialise la rétention personnalisée des documents en
+quittant l'offre Cabinet (qui seule la permet) pour ne pas laisser une
+purge automatique active en silence sur un réglage devenu invisible dans
+l'interface. Sélecteur d'offre directement dans le tableau des
+organisations de "Mon compte", réservé au propriétaire.
