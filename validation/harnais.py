@@ -71,6 +71,14 @@ class CasDeTest:
     # Articles dont l'exclusion serait ABUSIVE : obligations réellement dues.
     # Les écarter est une faute grave, suivie séparément.
     jamais_exclure: list[str] = field(default_factory=list)
+    # Profil d'organisation structuré (entite_nis2, entite_financiere_dora,
+    # ia_fournisseur_haut_risque, ia_deployeur_haut_risque, ia_utilisee,
+    # headcount) : sans lui, le filtre d'eligibilite (app/services/eligibilite.py)
+    # ne peut jamais exempter, seulement repondre "a verifier" (voir
+    # corpus_nis2/README.md et validation/evaluate.py::evaluate()). None sur
+    # le corpus RGPD historique, qui continue de deriver l'effectif de
+    # `description` (_effectif_depuis_description).
+    profil: dict[str, Any] | None = None
 
     @classmethod
     def depuis_dict(cls, d: dict[str, Any]) -> "CasDeTest":
@@ -80,6 +88,7 @@ class CasDeTest:
             score_attendu=tuple(d["score_attendu"]),  # type: ignore[arg-type]
             verdicts_attendus=d["verdicts_attendus"],
             jamais_exclure=d.get("jamais_exclure", []),
+            profil=d.get("profil"),
         )
 
 

@@ -21,9 +21,46 @@ import json
 import pathlib
 import re
 import sys
+from typing import Any
 
 VERDICTS_VALIDES = {"conforme", "manquement", "hors_perimetre", "tolere"}
 _CLE_ARTICLE_RE = re.compile(r"^\d+(-\d+)?$")
+
+# Champs de profil qu'un bloc "profil" peut fixer sur l'organisation de test
+# (validation/evaluate.py::_appliquer_profil, Tache F1). Doit rester
+# synchronise avec CHAMPS_PROFIL_APPLICABLES de ce module -- une cle absente
+# des deux endroits a la fois n'est pas dangereuse (juste rejetee ici), mais
+# une cle acceptee ici et rejetee par evaluate.py ferait echouer la mesure
+# reelle apres coup.
+_VALEURS_ENTITE_NIS2 = {"essentielle", "importante", "non_concernee"}
+_CHAMPS_PROFIL = {
+    "headcount": lambda v: isinstance(v, int) and not isinstance(v, bool) and v >= 0,
+    "entite_nis2": lambda v: v is None or v in _VALEURS_ENTITE_NIS2,
+    "entite_financiere_dora": lambda v: v is None or isinstance(v, bool),
+    "ia_fournisseur_haut_risque": lambda v: v is None or isinstance(v, bool),
+    "ia_deployeur_haut_risque": lambda v: v is None or isinstance(v, bool),
+    "ia_utilisee": lambda v: v is None or isinstance(v, bool),
+}
+
+
+def _verifier_profil(profil: Any, prefixe: str, erreurs: list[str]) -> None:
+    if profil is None:
+        return
+    if not isinstance(profil, dict):
+        erreurs.append(f"{prefixe} : 'profil' doit etre un objet JSON.")
+        return
+    for champ, valeur in profil.items():
+        validateur = _CHAMPS_PROFIL.get(champ)
+        if validateur is None:
+            erreurs.append(
+                f"{prefixe} : champ de profil inconnu '{champ}' "
+                f"(attendu l'un de {sorted(_CHAMPS_PROFIL)})."
+            )
+        elif not validateur(valeur):
+            erreurs.append(
+                f"{prefixe} : valeur invalide pour le champ de profil "
+                f"'{champ}' : {valeur!r}."
+            )
 
 
 def _verifier_cle_article(cle: str) -> bool:
@@ -102,6 +139,8 @@ def verifier(donnees: dict, corpus_dir: pathlib.Path | None) -> tuple[list[str],
                         f"{prefixe} : verdict invalide '{verdict}' pour '{cle}' "
                         f"(attendu l'un de {sorted(VERDICTS_VALIDES)})."
                     )
+
+        _verifier_profil(cas.get("profil"), prefixe, erreurs)
 
         jamais_exclure = cas.get("jamais_exclure", [])
         if not isinstance(jamais_exclure, list):

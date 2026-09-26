@@ -74,6 +74,14 @@ extraction heuristique sur un texte redige a la main, pas un champ
 structure -- elle peut echouer silencieusement (headcount reste None) sans
 que cela invalide la mesure, puisque le filtre repond alors "a verifier"
 plutot que d'exempter a tort.
+
+Profil d'organisation (NIS2/DORA/AI Act) : un bloc "profil" optionnel, au
+niveau de chaque cas de verite_terrain.json (ex. {"entite_nis2":
+"essentielle", "ia_utilisee": true}), fixe directement les champs
+correspondants sur l'organisation de test (_appliquer_profil ci-dessous) --
+plus fiable que l'extraction heuristique depuis `description`, seule
+disponible pour l'effectif RGPD. Cle inconnue -> erreur immediate (faute de
+frappe dans verite_terrain.json), jamais ignoree en silence.
 """
 
 from __future__ import annotations
@@ -126,6 +134,34 @@ def _effectif_depuis_description(description: str) -> int | None:
         return None
 
 
+# Champs de profil que le bloc structure "profil" d'un cas de verite terrain
+# peut fixer directement sur l'organisation de test (Tache F1,
+# app/services/eligibilite.py) -- alternative explicite a l'extraction
+# heuristique depuis `description` (fragile, RGPD seulement). Restreint a
+# une liste connue pour qu'une cle mal orthographiee dans verite_terrain.json
+# echoue fort (AttributeError) plutot que d'etre silencieusement ignoree.
+CHAMPS_PROFIL_APPLICABLES = (
+    "headcount",
+    "entite_nis2",
+    "entite_financiere_dora",
+    "ia_fournisseur_haut_risque",
+    "ia_deployeur_haut_risque",
+    "ia_utilisee",
+)
+
+
+def _appliquer_profil(org: Any, profil: dict[str, Any] | None) -> None:
+    if not profil:
+        return
+    for champ, valeur in profil.items():
+        if champ not in CHAMPS_PROFIL_APPLICABLES:
+            raise ValueError(
+                f"Champ de profil inconnu '{champ}' (attendu l'un de "
+                f"{CHAMPS_PROFIL_APPLICABLES}) -- verifier verite_terrain.json."
+            )
+        setattr(org, champ, valeur)
+
+
 def _verdict_groupe(observed: dict[str, str], plage: str) -> str:
     """Agrege le verdict observe sur un groupe d'articles ("15-22", "44-49").
 
@@ -150,6 +186,7 @@ def _adapter_verite_terrain(cas: list[CasDeTest]) -> dict[str, dict[str, Any]]:
     return {
         c.fichier: {
             "profil": c.description,
+            "profil_organisation": c.profil,
             "score_attendu": list(c.score_attendu),
             "articles": {
                 article: {"verdict": verdict}
@@ -375,18 +412,16 @@ def evaluate(
                 print(f"  (ignore : {path.name} n'est pas annote)")
                 continue
 
-            # Effectif pose sur l'organisation de test quand la description le
-            # mentionne (voir _effectif_depuis_description dans le docstring
-            # du module) : le filtre d'eligibilite (article 30) doit disposer
-            # de la meme information qu'un auditeur lisant le document. Ne
-            # couvre que le RGPD : les champs de profil NIS2/DORA/AI Act
-            # (entite_nis2, entite_financiere_dora, ia_*, voir
-            # app/services/eligibilite.py, Tache F1) restent a None ici, faute
-            # d'un motif d'extraction equivalent -- sans consequence sur la
-            # validite d'une mesure (le principe de prudence du filtre repond
-            # alors "a verifier", jamais une exemption a tort), mais a
-            # completer si l'equipe le juge utile en redigeant le corpus.
+            # Effectif RGPD extrait heuristiquement de la description (voir
+            # _effectif_depuis_description dans le docstring du module), puis
+            # bloc de profil structure NIS2/DORA/AI Act applique explicitement
+            # s'il est present dans verite_terrain.json (_appliquer_profil) :
+            # le filtre d'eligibilite (app/services/eligibilite.py, Tache F1)
+            # doit disposer de la meme information qu'un auditeur lisant le
+            # document, sans dependre d'une extraction heuristique fragile
+            # pour ces trois referentiels.
             org.headcount = _effectif_depuis_description(spec.get("profil", ""))
+            _appliquer_profil(org, spec.get("profil_organisation"))
             db.flush()
 
             low, high = spec["score_attendu"]
