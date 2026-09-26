@@ -336,3 +336,22 @@ quittant l'offre Cabinet (qui seule la permet) pour ne pas laisser une
 purge automatique active en silence sur un réglage devenu invisible dans
 l'interface. Sélecteur d'offre directement dans le tableau des
 organisations de "Mon compte", réservé au propriétaire.
+
+## Second avis : vote à 3 et seuil de déclenchement relevé
+
+Le second avis ciblé (voir entrée précédente sur l'instabilité des
+verdicts) restait insuffisant : mesuré en production après déploiement,
+une même analyse relancée deux fois sur le même document affichait encore
+un écart de 7,6 points de score. Deux causes identifiées : le seuil de
+déclenchement (0,5, celui de la revue humaine) manquait des cas instables
+jusqu'à une confiance affichée de 0,6 ; et un unique second appel en
+désaccord rétrogradait systématiquement le verdict, alors que ce second
+appel pouvait lui-même être le bruit. Correctifs : seuil dédié
+`SECOND_OPINION_CONFIDENCE_THRESHOLD` relevé à 0,7, et un troisième avis
+indépendant tranche désormais un premier désaccord — le verdict d'origine
+est conservé s'il obtient la majorité absolue des avis recueillis, sinon
+ramené à "indéterminé" par prudence. Inspiré du vote majoritaire déjà
+outillé côté laboratoire (`evaluation/evaluateur.py`), réimplémenté
+localement sans importer ce package (voir DA-07/DA-09,
+docs/architecture.md). Mesure de l'effet réel sur l'ampleur des écarts,
+une fois ce correctif déployé, encore à faire.

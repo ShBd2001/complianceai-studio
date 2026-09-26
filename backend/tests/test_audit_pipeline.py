@@ -783,8 +783,8 @@ def test_unverifiable_citation_downgrades_compliance_to_indetermine(monkeypatch)
 
 def test_confident_verdict_does_not_trigger_second_opinion(monkeypatch):
     """Le second avis n'est demande que sur les cas deja marques incertains
-    (confiance < REVIEW_CONFIDENCE_THRESHOLD) : un seul appel suffit pour
-    une conformite confiante, pour ne pas doubler le cout Groq partout."""
+    (confiance < SECOND_OPINION_CONFIDENCE_THRESHOLD) : un seul appel suffit
+    pour une conformite confiante, pour ne pas doubler le cout Groq partout."""
     from app.services import audit_engine, llm, rag
 
     monkeypatch.setattr(llm, "is_available", lambda: True)
@@ -838,9 +838,10 @@ def test_low_confidence_verdict_confirmed_by_second_opinion_is_kept(monkeypatch)
     assert verdict["conforme"] == "oui"
 
 
-def test_low_confidence_verdict_contradicted_by_second_opinion_is_downgraded(monkeypatch):
-    """Confiance sous le seuil ET second avis en desaccord : la prudence
-    l'emporte, la conformite n'est pas publiee."""
+def test_low_confidence_verdict_contradicted_by_second_and_third_opinion_is_downgraded(monkeypatch):
+    """Confiance sous le seuil, second avis en desaccord (declenche un
+    troisieme avis pour trancher), et le troisieme confirme le desaccord :
+    aucune majorite pour le verdict d'origine, la prudence l'emporte."""
     from app.services import audit_engine, llm, rag
 
     monkeypatch.setattr(llm, "is_available", lambda: True)
@@ -861,13 +862,126 @@ def test_low_confidence_verdict_contradicted_by_second_opinion_is_downgraded(mon
             "preuve": "Les données sont chiffrées au repos et en transit.",
             "recommandation": "Documenter le chiffrement mis en oeuvre.",
         },
+        {
+            "conforme": "non", "severite": "major", "confiance": 0.6,
+            "constat": "Chiffrement absent des documents fournis.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": "Documenter le chiffrement mis en oeuvre.",
+        },
     ]
     monkeypatch.setattr(llm, "complete_json", lambda *a, **k: reponses.pop(0))
     verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
 
     assert verdict["conforme"] == "indetermine"
     assert verdict["severite"] != "info"
-    assert "second avis" in verdict["constat"].lower()
+    assert "avis independants" in verdict["constat"].lower()
+
+
+def test_low_confidence_verdict_contradicted_then_confirmed_by_third_opinion_is_kept(monkeypatch):
+    """Confiance sous le seuil, second avis en desaccord, mais le troisieme
+    avis tranche en faveur du verdict d'origine (majorite 2/3) : le verdict
+    initial est conserve, un desaccord isole au second appel ne doit pas a
+    lui seul retrograder un verdict par ailleurs majoritaire."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    reponses = [
+        {
+            "conforme": "oui", "severite": "info", "confiance": 0.3,
+            "constat": "Chiffrement en place.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": None,
+        },
+        {
+            "conforme": "non", "severite": "major", "confiance": 0.6,
+            "constat": "Chiffrement absent des documents fournis.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": "Documenter le chiffrement mis en oeuvre.",
+        },
+        {
+            "conforme": "oui", "severite": "info", "confiance": 0.4,
+            "constat": "Chiffrement en place.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": None,
+        },
+    ]
+    monkeypatch.setattr(llm, "complete_json", lambda *a, **k: reponses.pop(0))
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert verdict["conforme"] == "oui"
+    assert verdict["severite"] == "info"
+
+
+def test_third_opinion_call_failure_after_disagreement_downgrades_to_indetermine(monkeypatch):
+    """Second avis en desaccord, mais le troisieme appel (celui qui doit
+    trancher) echoue : seuls 2 avis contradictoires restent, aucune majorite
+    ne peut etre etablie -- la prudence l'emporte."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    appels = []
+
+    def faux_complete_json(*a, **k):
+        appels.append(1)
+        if len(appels) == 1:
+            return {
+                "conforme": "oui", "severite": "info", "confiance": 0.3,
+                "constat": "Chiffrement en place.",
+                "preuve": "Les données sont chiffrées au repos et en transit.",
+                "recommandation": None,
+            }
+        if len(appels) == 2:
+            return {
+                "conforme": "non", "severite": "major", "confiance": 0.6,
+                "constat": "Chiffrement absent des documents fournis.",
+                "preuve": "Les données sont chiffrées au repos et en transit.",
+                "recommandation": "Documenter le chiffrement mis en oeuvre.",
+            }
+        raise RuntimeError("Panne reseau simulee")
+
+    monkeypatch.setattr(llm, "complete_json", faux_complete_json)
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert len(appels) == 3
+    assert verdict["conforme"] == "indetermine"
+    assert verdict["severite"] != "info"
+
+
+def test_moderately_low_confidence_now_triggers_second_opinion(monkeypatch):
+    """Le seuil de declenchement du second avis a ete releve a 0.7 (au lieu
+    de reutiliser REVIEW_CONFIDENCE_THRESHOLD=0.5) : une confiance de 0.6,
+    auparavant non couverte, doit desormais declencher une verification."""
+    from app.services import audit_engine, llm, rag
+
+    monkeypatch.setattr(llm, "is_available", lambda: True)
+    passage = rag.Passage(
+        text="Les données sont chiffrées au repos et en transit.",
+        reference="p1", distance=0.1, source="politique.txt", document_id=uuid.uuid4(),
+    )
+    appels = []
+
+    def faux_complete_json(*a, **k):
+        appels.append(1)
+        return {
+            "conforme": "oui", "severite": "info", "confiance": 0.6,
+            "constat": "Chiffrement en place.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": None,
+        }
+
+    monkeypatch.setattr(llm, "complete_json", faux_complete_json)
+    verdict = audit_engine.evaluate_requirement(FakeRequirement(), [passage])
+
+    assert len(appels) == 2
+    assert verdict["conforme"] == "oui"
 
 
 def test_second_opinion_call_failure_keeps_first_verdict(monkeypatch):
@@ -930,8 +1044,9 @@ def test_low_confidence_non_conformity_confirmed_by_second_opinion_is_kept(monke
 
 
 def test_low_confidence_non_conformity_contradicted_by_second_opinion_is_downgraded(monkeypatch):
-    """Meme configuration, mais le second avis contredit : le manquement
-    n'est pas publie tel quel, prudence oblige."""
+    """Meme configuration, mais les second et troisieme avis contredisent
+    (majorite 2/3 contre l'original) : le manquement n'est pas publie tel
+    quel, prudence oblige."""
     from app.services import audit_engine, llm, rag
 
     monkeypatch.setattr(llm, "is_available", lambda: True)
@@ -945,6 +1060,12 @@ def test_low_confidence_non_conformity_contradicted_by_second_opinion_is_downgra
             "constat": "Chiffrement absent des documents fournis.",
             "preuve": "Les données sont chiffrées au repos et en transit.",
             "recommandation": "Documenter le chiffrement mis en oeuvre.",
+        },
+        {
+            "conforme": "oui", "severite": "info", "confiance": 0.6,
+            "constat": "Chiffrement en place.",
+            "preuve": "Les données sont chiffrées au repos et en transit.",
+            "recommandation": None,
         },
         {
             "conforme": "oui", "severite": "info", "confiance": 0.6,

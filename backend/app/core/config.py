@@ -122,6 +122,15 @@ class Settings(BaseSettings):
     # app/services/audit_engine.py, _verification_humaine).
     REVIEW_CONFIDENCE_THRESHOLD: float = 0.5
 
+    # En-dessous de ce seuil (distinct du precedent), un verdict de
+    # conformite declenche un vote a plusieurs avis independants avant
+    # publication (voir app/services/audit_engine.py, evaluate_requirement).
+    # Releve a 0.7 (au lieu de reutiliser REVIEW_CONFIDENCE_THRESHOLD=0.5)
+    # suite a une mesure reelle sur Groq montrant des retournements de
+    # verdict jusqu'a une confiance affichee de 0.6 (voir docs/architecture.md,
+    # DA-09).
+    SECOND_OPINION_CONFIDENCE_THRESHOLD: float = 0.7
+
     # Tarif Groq par million de jetons, utilise pour estimer le cout d'une
     # analyse (AuditOut.estimated_llm_cost_usd, backend/scripts/cout_analyses.py).
     # TODO equipe : reporter le tarif Groq officiel du modele (GROQ_MODEL) avant

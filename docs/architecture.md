@@ -285,12 +285,13 @@ phénomène mesuré indépendamment côté laboratoire de validation
 (`validation/harnais.py`, `verdicts_instables`, non nul même cache vidé).
 Dans `evaluate_requirement()` (`app/services/audit_engine.py`), un verdict
 "oui"/"partiel" (citation déjà vérifiée) ou "non" dont la confiance
-déclarée par le modèle reste sous `REVIEW_CONFIDENCE_THRESHOLD` déclenche
-un second appel indépendant, même prompt : le verdict n'est conservé que si
-les deux avis s'accordent, sinon il est ramené à "indéterminé" par
-prudence. Un "indéterminé" natif n'y est volontairement pas soumis : c'est
-déjà l'état final vers lequel un désaccord ferait converger, un second
-appel n'y changerait rien.
+déclarée par le modèle reste sous `SECOND_OPINION_CONFIDENCE_THRESHOLD`
+déclenche un ou deux appels indépendants supplémentaires, même prompt (vote
+à 3, voir plus bas) : le verdict n'est conservé que s'il obtient la
+majorité absolue des avis recueillis, sinon il est ramené à "indéterminé"
+par prudence. Un "indéterminé" natif n'y est volontairement pas soumis :
+c'est déjà l'état final vers lequel un désaccord ferait converger, un appel
+supplémentaire n'y changerait rien.
 
 *Mesure ayant motivé l'élargissement à "non".* La version initiale de ce
 garde-fou ne couvrait que "oui"/"partiel". Deux exécutions indépendantes du
@@ -300,27 +301,62 @@ exécution à l'autre — et que la quasi-totalité de ces bascules se faisaient
 depuis ou vers un "indéterminé" natif ("non" ↔ "indéterminé", "partiel" ↔
 "indéterminé"), pas seulement depuis un "oui" non confirmé. Se limiter à
 "oui"/"partiel" manquait donc l'essentiel de l'instabilité réellement
-observée ; élargi à "non" en conséquence.
+observée ; élargi à "non" en conséquence (commit `89834b2`).
+
+*Mesure ayant motivé le passage à un vote à 3 et au relèvement du seuil.*
+Après déploiement de `89834b2` sur Render, une même analyse relancée deux
+fois sur le même document a continué de produire des écarts de score
+importants (57,9 puis 65,5 sur 100, soit 7,6 points — écart mesuré en
+production, code déployé confirmé identique entre les deux passages via
+sondage 401/404 des routes plutôt que `/openapi.json`, désactivé en
+production). Deux limites du mécanisme à deux appels expliquent cette
+insuffisance : (1) le seuil de déclenchement (`REVIEW_CONFIDENCE_THRESHOLD`,
+0,5, réutilisé par simplicité) manquait des cas observés instables jusqu'à
+une confiance affichée de 0,6 ; (2) un unique second appel en désaccord
+rétrograde systématiquement vers "indéterminé", alors que ce second appel
+peut lui-même être le bruit plutôt que le premier — un simple 1-1 ne
+justifie pas de trancher contre l'avis initial. Corrections apportées :
+`SECOND_OPINION_CONFIDENCE_THRESHOLD` dédié, relevé à 0,7 ; et, en cas de
+désaccord au second appel, un troisième avis indépendant tranche (motif
+retenu s'il obtient la majorité absolue sur l'ensemble des avis recueillis,
+premier appel inclus — jamais la valeur elle-même du troisième avis, pour
+ne jamais publier un verdict dont le contenu, preuve et constat, ne
+correspond plus à la conclusion affichée). Inspiré du vote majoritaire déjà
+outillé côté laboratoire (`evaluation/evaluateur.py::evaluer_article_vote`,
+`n_votes=3`, `collections.Counter`), réimplémenté localement dans
+`audit_engine.py` sans jamais importer le package `evaluation` (DA-07). Le
+laboratoire retient par défaut l'option la plus protectrice
+("manquement") sur une pluralité fragile ; le moteur de production s'en
+écarte délibérément, cohérent avec le reste du fichier : en l'absence de
+majorité claire, la conformité **et** le manquement sont tous deux ramenés
+à "indéterminé", jamais l'un ou l'autre affirmé sans confirmation.
 
 *Justification.* Un vote majoritaire sur *toutes* les exigences (déjà
 outillé côté laboratoire, `validation/run_validation.py --vote`) est la
 mitigation la plus robuste, mais triple le coût et la durée de chaque
 analyse en production, en permanence — un choix économique, pas seulement
 technique, qui reste à trancher par l'équipe. Cibler uniquement les cas
-déjà signalés incertains (confiance sous le seuil de revue humaine) capture
-la même instabilité là où elle est la plus probable, pour une fraction du
-coût : ces exigences sont de toute façon déjà promises à une vérification
-humaine, le second appel ne fait qu'éviter d'afficher à tort un verdict
-qu'un second passage ne confirme pas.
+déjà signalés incertains (confiance sous le seuil dédié) capture la même
+instabilité là où elle est la plus probable, pour une fraction du coût :
+ces exigences sont de toute façon déjà promises à une vérification
+humaine, les appels supplémentaires ne font qu'éviter d'afficher à tort un
+verdict qu'un vote indépendant ne confirme pas.
 
 *Conséquences.* Positives : réduit les bascules impliquant un "indéterminé"
-d'une exécution à l'autre sur le sous-ensemble le plus exposé (confirmé par
-la mesure ci-dessus), sans changer le coût des exigences déjà confiantes ni
-des "indéterminé" natifs. Négatives : ne couvre pas un verdict confiant qui
-se révèle malgré tout instable (cas non mesuré comme fréquent, mais
-possible) ; un second appel qui échoue (panne, quota) conserve le premier
-verdict tel quel plutôt que de le perdre, au prix d'une confirmation
-manquée.
+d'une exécution à l'autre sur un sous-ensemble plus large qu'auparavant
+(seuil relevé), et un désaccord isolé au second appel ne suffit plus seul à
+retrograder un verdict par ailleurs majoritaire (troisième avis arbitre).
+Négatives : ne couvre pas un verdict confiant (≥ 0,7) qui se révèle malgré
+tout instable ; jusqu'à 3 appels au lieu d'1 sur les cas concernés (coût et
+latence accrus, contenu du verdict conservé du premier appel même quand un
+verdict différent obtient la majorité, par choix de conception — voir
+ci-dessus) ; un appel supplémentaire qui échoue statue sur les avis déjà
+recueillis plutôt que d'en réclamer un de plus. **Mesure d'efficacité
+post-déploiement restant à faire** : ce changement corrige un défaut
+identifié par la mesure ci-dessus, mais son effet réel sur l'ampleur des
+écarts (et non plus seulement sur son mécanisme) n'a pas encore été
+quantifié par une nouvelle comparaison même document, deux exécutions, une
+fois ce commit déployé.
 
 *Réversibilité.* Isolé dans `evaluate_requirement()` : retirer le bloc du
 second avis fait retomber sur le comportement précédent (un seul appel),
