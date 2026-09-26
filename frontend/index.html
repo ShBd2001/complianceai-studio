@@ -1139,7 +1139,7 @@ const TRAD_EN = {
   'Propriétaire': 'Owner', 'Administrateur': 'Admin', 'Auditeur': 'Auditor', 'Lecture seule': 'Viewer',
   'Toutes gravités': 'All severities', 'Tous statuts': 'All statuses', 'Filtrer par article ou intitulé': 'Filter by article or title',
   'À revoir': 'To review', 'Citation vérifiée ✓': 'Citation verified ✓', 'Citation non retrouvée': 'Citation not found',
-  'Citation avancée par le modèle — non confirmée': 'Citation claimed by the model — unconfirmed',
+  'Citation non confirmée': 'Unconfirmed citation',
   'Indéterminé': 'Undetermined', 'Revue humaine requise': 'Human review required',
   "Profil de l'organisation": "Organization profile",
   "Ces réponses affinent le filtre d'éligibilité : une obligation qui ne concerne pas votre organisation peut être écartée automatiquement, avec justification. Une question laissée sur « Je ne sais pas » n'exempte jamais à tort — l'exigence suit alors le parcours normal d'évaluation.":
@@ -2594,7 +2594,7 @@ function carte(c, auditId, campagne, prefix = 'constats') {
   // comme un extrait fiable au meme titre qu'une citation verifiee.
   const doute = c.citation_verified === false;
   const citation = c.evidence
-    ? `<blockquote${doute ? ' class="doute"' : ''}>${doute ? `<span class="doute-label">${tr('Citation avancée par le modèle — non confirmée')}</span>` : ''}${h(c.evidence)}</blockquote>`
+    ? `<blockquote${doute ? ' class="doute"' : ''}>${doute ? `<span class="doute-label">${tr('Citation non confirmée')}</span>` : ''}${h(c.evidence)}</blockquote>`
     : '';
   return `<article class="constat">
     <div class="dos d-${g}">
