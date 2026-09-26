@@ -1,0 +1,415 @@
+{
+  "date": "2026-09-26T21:13:40.807927+00:00",
+  "referentiel": "nis2",
+  "passages_par_document": 3,
+  "corpus": "..\\corpus_nis2",
+  "verite_terrain": "..\\corpus_nis2\\verite_terrain.json",
+  "sans_modele": false,
+  "metriques": {
+    "articles_evalues": 32,
+    "articles_comptes": 32,
+    "articles_tolerés": 0,
+    "exactitude": 0.90625,
+    "exactitude_ic95": [
+      0.7578150066422116,
+      0.9675990373736805
+    ],
+    "detection_manquements": {
+      "precision": 1.0,
+      "rappel": 0.7272727272727273,
+      "f1": 0.8421052631578948,
+      "vrais_positifs": 8,
+      "faux_positifs": 0,
+      "faux_negatifs": 3
+    },
+    "perimetre": {
+      "exclusions_attendues": 14,
+      "exclusions_correctes": 14,
+      "taux": 1.0,
+      "exclusions_abusives": 0
+    },
+    "score": {
+      "documents_dans_intervalle": 3,
+      "documents_total": 4,
+      "ecart_moyen": 2.075
+    },
+    "reproductibilite": {
+      "stabilite_moyenne": 0.9642857142857143,
+      "ecart_type_score_max": 4.4549597828338126
+    },
+    "matrice_confusion": {
+      "conforme": {
+        "conforme": 7
+      },
+      "hors_perimetre": {
+        "hors_perimetre": 14
+      },
+      "manquement": {
+        "manquement": 8,
+        "conforme": 3
+      }
+    }
+  },
+  "documents": [
+    {
+      "document": "01_reseau_hospitalier_conforme.txt",
+      "profil": "Groupement hospitalier public, 1400 salaries, entite essentielle (sante), gouvernance mature.",
+      "intervalle_attendu": [
+        85,
+        100
+      ],
+      "scores": [
+        100.0,
+        100.0,
+        100.0
+      ],
+      "stabilite": 1.0,
+      "articles": [
+        {
+          "article": "20",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "21",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "23",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "24",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "27",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "29",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 8,
+          "jetons_prompt": 13445,
+          "jetons_completion": 4330,
+          "duree_s": 15.0168
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 8,
+          "jetons_prompt": 13445,
+          "jetons_completion": 4268,
+          "duree_s": 9.174121
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 8,
+          "jetons_prompt": 13445,
+          "jetons_completion": 4029,
+          "duree_s": 7.926769
+        }
+      ]
+    },
+    {
+      "document": "02_transporteur_defaillant.txt",
+      "profil": "Entreprise de transport routier de voyageurs, 340 salaries, entite importante, aucune mesure de securite formalisee.",
+      "intervalle_attendu": [
+        0,
+        15
+      ],
+      "scores": [
+        23.3,
+        23.3,
+        23.3
+      ],
+      "stabilite": 1.0,
+      "articles": [
+        {
+          "article": "20",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "21",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "23",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "24",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "27",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "29",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 8,
+          "jetons_prompt": 13756,
+          "jetons_completion": 4045,
+          "duree_s": 11.683687
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 8,
+          "jetons_prompt": 13756,
+          "jetons_completion": 4197,
+          "duree_s": 8.643253
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 8,
+          "jetons_prompt": 13756,
+          "jetons_completion": 4288,
+          "duree_s": 9.902386
+        }
+      ]
+    },
+    {
+      "document": "03_energie_partielle_contradictoire.txt",
+      "profil": "Distributeur regional d'electricite, 210 salaries, entite importante, conformite partielle et contradictions entre politique ecrite et pratique constatee.",
+      "intervalle_attendu": [
+        25,
+        50
+      ],
+      "scores": [
+        51.7,
+        46.7,
+        40.8
+      ],
+      "stabilite": 0.8571428571428571,
+      "articles": [
+        {
+          "article": "20",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "21",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "23",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "24",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "27",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "29",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 8,
+          "jetons_prompt": 13674,
+          "jetons_completion": 5246,
+          "duree_s": 12.935969
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 8,
+          "jetons_prompt": 13674,
+          "jetons_completion": 5451,
+          "duree_s": 11.023492
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 8,
+          "jetons_prompt": 13674,
+          "jetons_completion": 5274,
+          "duree_s": 9.264939
+        }
+      ]
+    },
+    {
+      "document": "04_artisan_hors_perimetre.txt",
+      "profil": "Boulangerie-patisserie artisanale, trois boutiques, 14 salaries, hors du champ d'application de la directive NIS2.",
+      "intervalle_attendu": [
+        85,
+        100
+      ],
+      "scores": [
+        100.0,
+        100.0,
+        100.0
+      ],
+      "stabilite": 1.0,
+      "articles": [
+        {
+          "article": "20",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "21",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "23",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "24",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "27",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "29",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 0,
+          "jetons_prompt": 0,
+          "jetons_completion": 0,
+          "duree_s": 0.712627
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 0,
+          "jetons_prompt": 0,
+          "jetons_completion": 0,
+          "duree_s": 0.373214
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 0,
+          "jetons_prompt": 0,
+          "jetons_completion": 0,
+          "duree_s": 0.386683
+        }
+      ]
+    }
+  ]
+}

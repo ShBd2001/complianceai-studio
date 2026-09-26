@@ -1,0 +1,787 @@
+{
+  "date": "2026-09-26T21:18:19.798942+00:00",
+  "referentiel": "dora",
+  "passages_par_document": 3,
+  "corpus": "..\\corpus_dora",
+  "verite_terrain": "..\\corpus_dora\\verite_terrain.json",
+  "sans_modele": false,
+  "metriques": {
+    "articles_evalues": 94,
+    "articles_comptes": 93,
+    "articles_tolerés": 1,
+    "exactitude": 0.9139784946236559,
+    "exactitude_ic95": [
+      0.8393453815534051,
+      0.9557674625136072
+    ],
+    "detection_manquements": {
+      "precision": 0.7777777777777778,
+      "rappel": 1.0,
+      "f1": 0.8750000000000001,
+      "vrais_positifs": 28,
+      "faux_positifs": 8,
+      "faux_negatifs": 0
+    },
+    "perimetre": {
+      "exclusions_attendues": 37,
+      "exclusions_correctes": 37,
+      "taux": 1.0,
+      "exclusions_abusives": 0
+    },
+    "score": {
+      "documents_dans_intervalle": 2,
+      "documents_total": 4,
+      "ecart_moyen": 2.3083333333333336
+    },
+    "reproductibilite": {
+      "stabilite_moyenne": 0.8925339366515838,
+      "ecart_type_score_max": 2.1561282171728258
+    },
+    "matrice_confusion": {
+      "conforme": {
+        "conforme": 20,
+        "manquement": 8
+      },
+      "hors_perimetre": {
+        "hors_perimetre": 37
+      },
+      "manquement": {
+        "manquement": 28
+      }
+    }
+  },
+  "documents": [
+    {
+      "document": "01_banque_regionale_conforme.txt",
+      "profil": "Etablissement de credit regional, 480 salaries, entite financiere, dispositif DORA mature.",
+      "intervalle_attendu": [
+        85,
+        100
+      ],
+      "scores": [
+        83.3,
+        79.9,
+        85.1
+      ],
+      "stabilite": 0.6470588235294118,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "7",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "8",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "9",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "10",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "11",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "14",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "15",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "16",
+          "attendu": "conforme",
+          "obtenu": "hors_perimetre",
+          "tolere": true
+        },
+        {
+          "article": "17",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "18",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "19",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "20",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "21",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "22",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "23",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "24",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "26",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "27",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "29",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 23,
+          "jetons_prompt": 38320,
+          "jetons_completion": 16080,
+          "duree_s": 35.798776
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 23,
+          "jetons_prompt": 38320,
+          "jetons_completion": 17812,
+          "duree_s": 32.611091
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 23,
+          "jetons_prompt": 38320,
+          "jetons_completion": 16602,
+          "duree_s": 32.394079
+        }
+      ]
+    },
+    {
+      "document": "02_societe_investissement_defaillante.txt",
+      "profil": "Societe de gestion de portefeuille, 45 salaries, entite financiere, aucun cadre de gestion du risque TIC.",
+      "intervalle_attendu": [
+        0,
+        10
+      ],
+      "scores": [
+        4.8,
+        8.9,
+        7.5
+      ],
+      "stabilite": 1.0,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "7",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "8",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "9",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "10",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "11",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "14",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "17",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "18",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "19",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "20",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "21",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "23",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "24",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "29",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 23,
+          "jetons_prompt": 39108,
+          "jetons_completion": 12344,
+          "duree_s": 23.721949
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 23,
+          "jetons_prompt": 39108,
+          "jetons_completion": 12654,
+          "duree_s": 23.253283
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 23,
+          "jetons_prompt": 39108,
+          "jetons_completion": 13042,
+          "duree_s": 25.128318
+        }
+      ]
+    },
+    {
+      "document": "03_assurance_partielle_contradictoire.txt",
+      "profil": "Entreprise d'assurance, 190 salaries, entite financiere, conformite partielle et contradictions entre le cadre ecrit et la pratique constatee.",
+      "intervalle_attendu": [
+        40,
+        65
+      ],
+      "scores": [
+        32.5,
+        32.7,
+        33.8
+      ],
+      "stabilite": 0.9230769230769231,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "8",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "9",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "10",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "11",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "17",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "18",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "19",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "20",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "21",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "23",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "24",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "26",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "29",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 23,
+          "jetons_prompt": 39104,
+          "jetons_completion": 17617,
+          "duree_s": 30.833521
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 23,
+          "jetons_prompt": 39104,
+          "jetons_completion": 18723,
+          "duree_s": 35.391549
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 23,
+          "jetons_prompt": 39104,
+          "jetons_completion": 17087,
+          "duree_s": 34.134464
+        }
+      ]
+    },
+    {
+      "document": "04_pme_industrielle_hors_perimetre.txt",
+      "profil": "Sous-traitant industriel (usinage de precision), 95 salaries, hors du champ d'application du reglement DORA.",
+      "intervalle_attendu": [
+        85,
+        100
+      ],
+      "scores": [
+        100.0,
+        100.0,
+        100.0
+      ],
+      "stabilite": 1.0,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "7",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "8",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "9",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "10",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "11",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "14",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "15",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "16",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "17",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "18",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "19",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "20",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "21",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "22",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "23",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "24",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "26",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "27",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "29",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 0,
+          "jetons_prompt": 0,
+          "jetons_completion": 0,
+          "duree_s": 0.329985
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 0,
+          "jetons_prompt": 0,
+          "jetons_completion": 0,
+          "duree_s": 0.367253
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 0,
+          "jetons_prompt": 0,
+          "jetons_completion": 0,
+          "duree_s": 0.516976
+        }
+      ]
+    }
+  ]
+}
