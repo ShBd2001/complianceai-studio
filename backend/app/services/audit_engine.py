@@ -526,39 +526,60 @@ def evaluate_requirement(
             # pas parfaitement reproductible meme a temperature 0 (routage
             # MoE sensible au lot d'inference cote fournisseur).
             #
-            # Declenche donc ici sur "oui"/"partiel"/"non" a confiance deja
-            # sous le seuil de revue humaine (un "indetermine" natif est
-            # volontairement exclu : c'est deja l'etat final vers lequel un
-            # desaccord ferait converger, un second appel n'y changerait
-            # rien). Si un second avis independant confirme, le premier
-            # verdict est conserve tel quel ; s'il contredit, le verdict est
-            # ramene a "indetermine" par prudence -- jamais publie comme une
-            # conformite ou un manquement non confirmes.
+            # Un second passage (generalisation a "oui"/"partiel"/"non",
+            # commit 89834b2) reste insuffisant en conditions reelles sur
+            # Render : un desaccord isole au deuxieme appel retrograde le
+            # verdict meme quand ce deuxieme appel est lui-meme le bruit
+            # (l'ecart mesure ne se resorbe pas, voir DA-09). Le seuil de
+            # declenchement est donc releve (SECOND_OPINION_CONFIDENCE_THRESHOLD,
+            # 0.7 au lieu de reutiliser REVIEW_CONFIDENCE_THRESHOLD=0.5 --
+            # des cas a confiance 0.6 ont ete observes basculer), et un
+            # deuxieme desaccord ne retrograde plus seul : un troisieme avis
+            # tranche, comme le vote majoritaire deja utilise cote
+            # laboratoire (evaluation/evaluateur.py::evaluer_article_vote),
+            # reimplemente ici localement (DA-07 : le moteur de production
+            # n'importe jamais le package evaluation). Le verdict d'origine
+            # est conserve s'il obtient la majorite absolue des avis
+            # recueillis (y compris lui-meme) ; sinon il est ramene a
+            # "indetermine" par prudence -- jamais publie comme une
+            # conformite ou un manquement non confirmes, et jamais remplace
+            # par la valeur majoritaire elle-meme (le contenu du verdict --
+            # preuve, constat -- reste celui du premier appel, il ne faut
+            # donc jamais lui substituer une conclusion differente).
             confiance = float(verdict.get("confiance") or 0.0)
-            if confiance < settings.REVIEW_CONFIDENCE_THRESHOLD:
+            if confiance < settings.SECOND_OPINION_CONFIDENCE_THRESHOLD:
+                avis = [conformity]
                 try:
                     second_avis = llm.complete_json(SYSTEM_PROMPT, user_prompt)
-                    second_conformite = str(second_avis.get("conforme", "")).lower()
+                    avis.append(str(second_avis.get("conforme", "")).lower())
+                    if avis[-1] != conformity:
+                        # Premier desaccord : un troisieme avis independant
+                        # tranche plutot que de retrograder sur un simple 1-1,
+                        # ou ce second appel pourrait lui-meme etre le bruit.
+                        troisieme_avis = llm.complete_json(SYSTEM_PROMPT, user_prompt)
+                        avis.append(str(troisieme_avis.get("conforme", "")).lower())
                 except Exception as exc:
-                    # Un second appel qui echoue ne doit pas faire perdre le
-                    # premier verdict, deja obtenu et valide en soi -- on se
-                    # contente de ne pas le confirmer.
+                    # Un appel supplementaire qui echoue ne doit pas faire
+                    # perdre le premier verdict, deja obtenu et valide en soi
+                    # -- on statue sur les avis deja recueillis.
                     logger.warning(
-                        "Second avis indisponible sur %s (%s) : premier verdict conserve tel quel.",
-                        requirement.reference, exc,
+                        "Avis supplementaire indisponible sur %s (%s) : verdict "
+                        "evalue sur les %d avis deja recueillis.",
+                        requirement.reference, exc, len(avis),
                     )
-                    second_conformite = conformity
-                if second_conformite != conformity:
+                confirmations = avis.count(conformity)
+                if confirmations * 2 <= len(avis):
                     logger.info(
-                        "Second avis en desaccord sur %s ('%s' puis '%s', confiance "
+                        "Pas de majorite pour '%s' sur %s (avis %s, confiance "
                         "initiale %.2f) : conformite ramenee a 'indetermine' par prudence.",
-                        requirement.reference, conformity, second_conformite, confiance,
+                        conformity, requirement.reference, avis, confiance,
                     )
                     _ramener_a_indetermine(
                         verdict,
-                        "Un second avis independant n'a pas confirme ce verdict "
-                        "(confiance initiale insuffisante) : ramene a indetermine "
-                        "par prudence, une verification manuelle est necessaire.",
+                        "Plusieurs avis independants sur cette exigence ne "
+                        "confirment pas majoritairement ce verdict : ramene a "
+                        "indetermine par prudence, une verification manuelle "
+                        "est necessaire.",
                     )
 
         if breaker is not None:
