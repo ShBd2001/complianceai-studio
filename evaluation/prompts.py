@@ -14,23 +14,50 @@ from __future__ import annotations
 
 from referentiel.articles import ArticleRGPD
 
-SYSTEME = (
-    "Tu es un assistant d'extraction factuelle au service d'un audit RGPD. "
-    "Tu ne donnes jamais d'avis, tu ne juges pas, tu n'infères rien. "
-    "Tu recopies littéralement des extraits du document fourni et tu indiques "
-    "s'ils couvrent un point précis. "
-    "Toute citation que tu produis doit être copiée MOT POUR MOT depuis le "
-    "document. Inventer, reformuler, résumer ou compléter une citation est une "
-    "faute grave : les citations sont vérifiées automatiquement contre le texte "
-    "source et une citation introuvable invalide ta réponse. "
-    "Si un point n'est pas couvert, dis-le : c'est une réponse correcte et utile. "
-    "Tu réponds exclusivement par un objet JSON valide, sans texte avant ni après, "
-    "sans balises Markdown."
-)
+# Complement prepositionnel affiche dans les prompts pour un referentiel
+# donne (deja elide correctement : "du RGPD", "de la directive NIS2" --
+# jamais "de le ..."). Le RGPD reste la valeur par defaut de chaque fonction
+# ci-dessous : aucun appelant existant (evaluateur.py sans referentiel
+# explicite, run_validation.py historique) ne change de comportement. Voir
+# evaluateur.py::Evaluateur.referentiel pour le point d'entree qui fait
+# circuler cette valeur depuis run_validation.py --referentiel.
+NOMS_REFERENTIELS: dict[str, str] = {
+    "rgpd": "du RGPD",
+    "nis2": "de la directive NIS2",
+    "dora": "du règlement DORA",
+    "ai_act": "du règlement sur l'intelligence artificielle (AI Act)",
+}
 
 
-def prompt_applicabilite(art: ArticleRGPD, extraits: str) -> str:
-    return f"""Tu examines si l'article {art.numero} du RGPD ({art.intitule}) concerne l'organisme décrit.
+def systeme(referentiel: str = "du RGPD") -> str:
+    # Texte historique exact pour le RGPD ("un audit RGPD", pas "un audit du
+    # RGPD") : tout changement de formulation du system prompt peut faire
+    # deriver un modele reel, meme a sens equivalent -- preserve caractere
+    # pour caractere plutot que de generaliser au prix d'un ecart texte.
+    sujet = "RGPD" if referentiel == "du RGPD" else f"portant sur le respect {referentiel}"
+    return (
+        f"Tu es un assistant d'extraction factuelle au service d'un audit "
+        f"{sujet}. "
+        "Tu ne donnes jamais d'avis, tu ne juges pas, tu n'infères rien. "
+        "Tu recopies littéralement des extraits du document fourni et tu indiques "
+        "s'ils couvrent un point précis. "
+        "Toute citation que tu produis doit être copiée MOT POUR MOT depuis le "
+        "document. Inventer, reformuler, résumer ou compléter une citation est une "
+        "faute grave : les citations sont vérifiées automatiquement contre le texte "
+        "source et une citation introuvable invalide ta réponse. "
+        "Si un point n'est pas couvert, dis-le : c'est une réponse correcte et utile. "
+        "Tu réponds exclusivement par un objet JSON valide, sans texte avant ni après, "
+        "sans balises Markdown."
+    )
+
+
+# Conserve pour compatibilite : code et tests existants qui importent SYSTEME
+# directement (comportement RGPD, inchange).
+SYSTEME = systeme()
+
+
+def prompt_applicabilite(art: ArticleRGPD, extraits: str, referentiel: str = "du RGPD") -> str:
+    return f"""Tu examines si l'article {art.numero} {referentiel} ({art.intitule}) concerne l'organisme décrit.
 
 CONDITION D'APPLICABILITÉ DE L'ARTICLE :
 {art.condition_applicabilite}
@@ -85,7 +112,9 @@ Réponds uniquement par ce JSON :
 }}"""
 
 
-def prompt_extraction(art: ArticleRGPD, extraits: str, contexte_reglementaire: str) -> str:
+def prompt_extraction(
+    art: ArticleRGPD, extraits: str, contexte_reglementaire: str, referentiel: str = "du RGPD"
+) -> str:
     elements = "\n".join(
         f'  - cle="{e.cle}" : {e.intitule}' for e in art.elements_attendus
     )
@@ -96,7 +125,7 @@ def prompt_extraction(art: ArticleRGPD, extraits: str, contexte_reglementaire: s
         else ""
     )
 
-    return f"""Article {art.numero} du RGPD — {art.intitule}.
+    return f"""Article {art.numero} {referentiel} — {art.intitule}.
 {reglementaire}
 Pour CHACUN des éléments ci-dessous, cherche dans le document une phrase qui le couvre explicitement.
 
@@ -138,12 +167,14 @@ Réponds uniquement par ce JSON :
 }}"""
 
 
-def prompt_derogation(art: ArticleRGPD, extraits: str, manquants: list[str]) -> str:
+def prompt_derogation(
+    art: ArticleRGPD, extraits: str, manquants: list[str], referentiel: str = "du RGPD"
+) -> str:
     liste = "\n".join(
         f'  - reference="{d.reference}" ({d.intitule}) : {d.condition}'
         for d in art.derogations_ex_ante
     )
-    return f"""Un manquement à l'article {art.numero} du RGPD ({art.intitule}) est envisagé, faute de preuve pour : {", ".join(manquants)}.
+    return f"""Un manquement à l'article {art.numero} {referentiel} ({art.intitule}) est envisagé, faute de preuve pour : {", ".join(manquants)}.
 
 Avant de conclure, vérifie si une dérogation légale s'applique à l'organisme décrit.
 

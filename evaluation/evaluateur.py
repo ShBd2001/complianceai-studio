@@ -26,10 +26,10 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 
 from evaluation.prompts import (
-    SYSTEME,
     prompt_applicabilite,
     prompt_derogation,
     prompt_extraction,
+    systeme,
 )
 from evaluation.schemas import (
     DerogationRetenue,
@@ -151,6 +151,10 @@ class Evaluateur:
     k_passages: int = K_PASSAGES
     corpus_reglementaire: dict[str, str] | None = None
     reessais: int = 2
+    # Complement prepositionnel affiche dans les prompts (evaluation/prompts.py
+    # ::NOMS_REFERENTIELS) -- "du RGPD" par defaut, comportement historique
+    # inchange pour tout appelant qui ne le precise pas.
+    referentiel: str = "du RGPD"
 
     # -- appels modèle -----------------------------------------------------
 
@@ -158,7 +162,7 @@ class Evaluateur:
         derniere: Exception | None = None
         for tentative in range(self.reessais + 1):
             try:
-                return extraire_json(self.client(SYSTEME, prompt))
+                return extraire_json(self.client(systeme(self.referentiel), prompt))
             except Exception as exc:  # noqa: BLE001 — on veut tout rattraper
                 derniere = exc
                 logger.warning(
@@ -175,7 +179,7 @@ class Evaluateur:
         diagnostics: list[str] = []
         try:
             reponse = self._appeler(
-                prompt_applicabilite(art, extraits), f"applicabilite/{art.numero}"
+                prompt_applicabilite(art, extraits, self.referentiel), f"applicabilite/{art.numero}"
             )
         except RuntimeError:
             # Défaut protecteur : en cas d'échec, l'article reste dans le périmètre.
@@ -240,7 +244,7 @@ class Evaluateur:
 
         try:
             reponse = self._appeler(
-                prompt_extraction(art, extraits, contexte), f"extraction/{art.numero}"
+                prompt_extraction(art, extraits, contexte, self.referentiel), f"extraction/{art.numero}"
             )
         except RuntimeError as exc:
             diagnostics.append(f"extraction impossible : {exc}")
@@ -311,7 +315,7 @@ class Evaluateur:
         diagnostics: list[str] = []
         try:
             reponse = self._appeler(
-                prompt_derogation(art, extraits, manquants), f"derogation/{art.numero}"
+                prompt_derogation(art, extraits, manquants, self.referentiel), f"derogation/{art.numero}"
             )
         except RuntimeError as exc:
             diagnostics.append(f"passe dérogation impossible : {exc}")
@@ -456,7 +460,10 @@ class Evaluateur:
                         )
 
         resultat.confiance = self._confiance(resultat, preuves)
-        if art.numero in ARTICLES_REVUE_SYSTEMATIQUE:
+        # Numeros RGPD specifiquement (DPO, AIPD, decisions automatisees) : un
+        # "article 22" ou "35" d'un autre referentiel n'a aucun rapport et ne
+        # doit pas heriter de cette regle par collision de numerotation.
+        if self.referentiel == "du RGPD" and art.numero in ARTICLES_REVUE_SYSTEMATIQUE:
             resultat.revue_humaine_requise = True
             resultat.motif_revue = (
                 "qualification juridique appréciée au cas par cas — validation par un "

@@ -50,6 +50,53 @@ from validation.harnais import (  # noqa: E402
     tous_seuils_ok,
 )
 
+# Grille d'articles + complement prepositionnel (evaluation/prompts.py::
+# NOMS_REFERENTIELS) + seuils bloquants par referentiel. Import differe (a
+# l'interieur de la fonction) : eviter que --referentiel rgpd (le defaut,
+# celui utilise en CI) ne depende de fichiers non encore ecrits pour les
+# autres referentiels.
+def _grille_et_seuils(referentiel: str) -> tuple[tuple, str, SeuilsCI]:
+    if referentiel == "rgpd":
+        from referentiel.articles import REFERENTIEL
+
+        return REFERENTIEL, "du RGPD", SeuilsCI()
+
+    if referentiel == "nis2":
+        from referentiel.articles_nis2 import REFERENTIEL_NIS2
+
+        # Seuils provisoires, calibres avec marge sous la seule mesure
+        # reelle disponible a ce jour (voir validation/evaluate.py::SEUILS_CI
+        # pour le moteur de production, mesure equivalente) -- a affiner
+        # quand une mesure --repetitions 3 sur ce moteur sera disponible.
+        return (
+            REFERENTIEL_NIS2, "de la directive NIS2",
+            SeuilsCI(rappel_min=0.70, precision_min=0.50, exactitude_min=0.60,
+                     exclusions_abusives_max=0, score_hors_intervalle_max=3,
+                     verdicts_instables_max=0.30, taux_indetermines_max=0.10),
+        )
+
+    if referentiel == "dora":
+        from referentiel.articles_dora import REFERENTIEL_DORA
+
+        return (
+            REFERENTIEL_DORA, "du règlement DORA",
+            SeuilsCI(rappel_min=0.70, precision_min=0.50, exactitude_min=0.60,
+                     exclusions_abusives_max=0, score_hors_intervalle_max=3,
+                     verdicts_instables_max=0.30, taux_indetermines_max=0.10),
+        )
+
+    if referentiel == "ai_act":
+        from referentiel.articles_ai_act import REFERENTIEL_AI_ACT
+
+        return (
+            REFERENTIEL_AI_ACT, "du règlement sur l'intelligence artificielle (AI Act)",
+            SeuilsCI(rappel_min=0.70, precision_min=0.50, exactitude_min=0.60,
+                     exclusions_abusives_max=1, score_hors_intervalle_max=3,
+                     verdicts_instables_max=0.30, taux_indetermines_max=0.10),
+        )
+
+    raise ValueError(f"referentiel inconnu : {referentiel!r}")
+
 
 def construire_client(hors_ligne: bool):
     if hors_ligne:
@@ -74,19 +121,27 @@ def main() -> int:
     ap.add_argument("--sortie", default="rapport_validation.json")
     ap.add_argument("--ci", action="store_true", help="code de sortie 1 si seuil violé")
     ap.add_argument("--hors-ligne", action="store_true", help="client factice, sans appel API")
+    ap.add_argument(
+        "--referentiel", choices=["rgpd", "nis2", "dora", "ai_act"], default="rgpd",
+        help="référentiel mesuré (défaut : rgpd, comportement historique inchangé). "
+             "Fixe la grille d'articles et les seuils bloquants ; --corpus/--verite "
+             "restent explicites, sans valeur par défaut par référentiel ici "
+             "(contrairement à validation/evaluate.py, qui mesure un autre moteur).",
+    )
     args = ap.parse_args()
 
     corpus = Path(args.corpus)
     cas_liste = charger_verite_terrain(args.verite)
     client = construire_client(args.hors_ligne)
-    evaluateur = Evaluateur(client=client)
+    articles, nom_referentiel, seuils = _grille_et_seuils(args.referentiel)
+    evaluateur = Evaluateur(client=client, referentiel=nom_referentiel)
 
     metriques = Metriques()
     tous_rapports: dict[str, list] = {}
     sortie_json: dict = {"documents": [], "configuration": {}}
 
     print("=" * 74)
-    print(f"VALIDATION — {len(cas_liste)} documents, {args.repetitions} exécution(s)")
+    print(f"VALIDATION {args.referentiel.upper()} — {len(cas_liste)} documents, {args.repetitions} exécution(s)")
     if args.repetitions > 1:
         print("Cache vidé entre chaque exécution.")
     if args.vote > 1:
@@ -108,13 +163,14 @@ def main() -> int:
             if args.vote > 1:
                 rapports.append(
                     evaluateur.evaluer_document_vote(
-                        texte, nom=cas.fichier, tenant_id="validation", n_votes=args.vote
+                        texte, nom=cas.fichier, tenant_id="validation",
+                        articles=articles, n_votes=args.vote,
                     )
                 )
             else:
                 rapports.append(
                     evaluateur.evaluer_document(
-                        texte, nom=cas.fichier, tenant_id="validation"
+                        texte, nom=cas.fichier, tenant_id="validation", articles=articles,
                     )
                 )
 
@@ -155,7 +211,6 @@ def main() -> int:
         }
     )
 
-    seuils = SeuilsCI()
     print()
     print(rapport_texte(metriques, repro, seuils))
 
