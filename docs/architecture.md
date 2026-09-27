@@ -475,6 +475,35 @@ préserve le comportement RGPD historique. Retirer les étapes NIS2/DORA/AI
 Act du job CI fait retomber sur la mesure RGPD seule, sans effet sur le
 reste du moteur.
 
+*Suite (2026-09-27) — corrections post-gel après investigation.* Le
+rapport F2 signalait déjà, dans une section séparée sans toucher à la
+référence, plusieurs verdicts attendus comme discutables. À la demande
+explicite de l'équipe, chacun a été réexaminé individuellement plutôt que
+corrigé en bloc :
+- **NIS2, article 24 (doc 2) et article 30 (doc 3)** : les deux
+  correspondaient à de vraies erreurs de vérité terrain (obligations
+  facultatives ou purement volontaires, pas des manquements au sens
+  strict). Corrigés directement. Résultat production : exactitude 90,6 % →
+  **100 %**, rappel 72,7 % → **100 %**.
+- **AI Act, article 49 (doc 2)**, en revanche, avait d'abord été traité
+  comme un bug du moteur (une exclusion abusive). Un correctif de
+  `SYSTEM_PROMPT` (`audit_engine.py`) a été écrit, testé en conditions
+  réelles sur 3 exécutions du document concerné, puis **abandonné** :
+  aucun effet mesuré, le verdict restait stable à l'identique. Lire le
+  raisonnement réel du modèle en base (`Finding.description`) a révélé
+  qu'il appliquait une lecture juridique précise et déjà identifiée comme
+  zone grise (l'article 49§3 vise en particulier les déployeurs publics) —
+  ce n'était pas un bug, c'était ma propre vérité terrain qui tranchait à
+  tort une question réellement ambiguë. Corrigé dans la référence
+  (`tolere` plutôt que `manquement`), pas dans le moteur. Résultat
+  production : exactitude 86,7 % → **92,8 %**, exclusions abusives 1 →
+  **0**.
+
+Leçon retenue : une mesure décevante ne dit pas d'elle-même où est
+l'erreur — entre la référence et le moteur, la distinction ne s'établit
+qu'en lisant le raisonnement réel produit, jamais en le supposant. Aucun
+changement de code n'a finalement été nécessaire pour ces deux cas.
+
 ## 5. Vue de déploiement
 
 ```
@@ -505,8 +534,7 @@ le schéma est en retard.
 | Authentification unique (SSO/SAML) | Non implémentée, non annoncée (retirée de la page Tarifs) | Chantier non engagé, pas de calendrier |
 | Limite de débit en mémoire | `slowapi` n'a pas de backend partagé (Redis) : passer à plusieurs processus applicatifs multiplierait silencieusement les seuils de protection | Ajout de Redis si une mise à l'échelle horizontale devient nécessaire |
 | Quotas par offre | Campagnes/mois et utilisateurs appliqués côté serveur ; nombre d'organisations par palier et restriction "1 référentiel" de l'offre Essentiel non appliqués (ambiguïté produit sur le cas d'un utilisateur déjà multi-organisations) | Décision produit à trancher avant application |
-| Faux positifs sur documents conformes (DORA, AI Act) | Mesure F2 (`mesure_dora.json`, `mesure_ai_act.json`) : précision de 77,8 % (DORA) et 52,4 % (AI Act) contre un rappel de 100 % et 84,6 % — le moteur exige un niveau de détail assez fin avant d'accepter "conforme", au point de retoquer 7 articles sur 28 du document AI Act conçu comme référence haute | À recalibrer si le mémoire ou la démo s'appuient sur un score de conformité précis pour ces deux référentiels ; sur le RGPD (corpus mesuré depuis plus longtemps, cf. CORPUS.md), la précision est nettement meilleure |
-| Exclusion abusive isolée (AI Act, art. 49) | Sur `02_organisme_credit_defaillant.txt`, un déployeur jamais enregistré est classé à tort hors périmètre par le moteur (`mesure_ai_act.json`) — la seule exclusion abusive des 3 mesures F2 (0 sur NIS2 et DORA), probablement une généralisation excessive du ton globalement négatif du document plutôt qu'un effet du filtre d'éligibilité (DA-08) | Non corrigé avant le gel de code (risque de régression non reverifiable à temps) ; à investiguer en priorité si le moteur est retouché après la soutenance |
+| Faux positifs sur documents conformes (DORA, AI Act) | Mesure F2 (`mesure_dora.json`, `mesure_ai_act.json`, après correction post-gel du 2026-09-27) : précision de 77,8 % (DORA) et 64,7 % (AI Act) contre un rappel de 100 % et 91,7 % — le moteur exige un niveau de détail assez fin avant d'accepter "conforme", au point de retoquer 7 articles sur 28 du document AI Act conçu comme référence haute | À recalibrer si le mémoire ou la démo s'appuient sur un score de conformité précis pour ces deux référentiels ; sur le RGPD (corpus mesuré depuis plus longtemps, cf. CORPUS.md), la précision est nettement meilleure |
 
 Ces limites sont documentées volontairement plutôt que masquées : certaines
 sont des choix assumés pour l'échelle actuelle du projet, d'autres des

@@ -289,6 +289,23 @@ Résultat production : **exactitude 100 %, rappel 100 %, 0 faux négatif**
 comme débattable, n'a volontairement pas été corrigé — les gaps
 structurels identifiés y restent réels.
 
+## Tâche F2 (suite) — AI Act art. 49 : investigué comme un bug, corrigé comme une vérité terrain
+
+L'exclusion abusive du rapport F2 (article 49, doc 2, « la seule des trois
+référentiels ») a d'abord été traitée comme un défaut du moteur : un
+correctif de `SYSTEM_PROMPT` a été écrit puis testé en conditions réelles
+(3 exécutions du document concerné) — **aucun effet mesuré**, verdict
+stable à l'identique, correctif abandonné et retiré. Lire le raisonnement
+réel du modèle en base (`Finding.description`, pas une supposition) a
+montré une lecture juridique précise et cohérente, déjà identifiée comme
+zone grise dans le rapport F2 initial (l'article 49§3 vise en particulier
+les déployeurs publics ; cette entreprise est privée) : ce n'était pas un
+bug du moteur, c'était la vérité terrain qui tranchait à tort une question
+réellement ambiguë. Corrigée (`manquement` → `tolere`) à la demande
+explicite de l'équipe. Résultat production : **exactitude 86,7 % → 92,8 %,
+rappel 84,6 % → 91,7 %, exclusions abusives 1 → 0** (`mesure_ai_act.json`
+mis à jour). Aucun changement de code n'a finalement été nécessaire.
+
 ## Tâche F3 — Documentation
 
 Ce document, plus `README.md` (nombre de tests à jour, mention de
@@ -353,13 +370,15 @@ dans les points de vigilance connus).
    l'application déployée.** Si l'analyse dépasse 60 secondes, préparer une
    campagne déjà analysée pour la démonstration plutôt que de lancer
    l'analyse en direct devant le jury.
-7. **Arbitrer les deux constats de la Tâche F2 non corrigés avant le gel**
-   (voir `docs/architecture.md` §6) : faux positifs élevés sur les
-   documents conformes en DORA/AI Act, et l'exclusion abusive isolée sur
-   l'AI Act (article 49) — décider si et comment `audit_engine.py` doit
-   être retouché après la soutenance, avec une nouvelle mesure de
-   vérification (`python -m validation.evaluate --referentiel ai_act --runs 3 --output ...`)
-   avant tout gel définitif du correctif.
+7. **Arbitrer le constat restant de la Tâche F2** (voir `docs/architecture.md`
+   §6) : faux positifs sur les documents conformes en DORA (précision
+   77,8 %) et AI Act (précision 64,7 %) — le moteur exige un niveau de
+   détail assez fin avant d'accepter "conforme". Décider si et comment
+   `audit_engine.py` doit être retouché après la soutenance, avec une
+   nouvelle mesure de vérification avant tout gel définitif du correctif.
+   (L'exclusion abusive AI Act art. 49, initialement dans cette liste, est
+   résolue — voir la section « AI Act art. 49 » ci-dessus : ce n'était pas
+   un bug du moteur, la référence a été corrigée à sa place.)
 
 ## Ce qui reste volontairement hors périmètre
 

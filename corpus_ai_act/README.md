@@ -2,12 +2,13 @@
 
 Composé (4 documents, 98 verdicts annotés) et mesuré en conditions réelles
 (Tâche F2, 3 passages/document, `mesure_ai_act.json` à la racine du dépôt) :
-exactitude 86,7 % (IC95 78,6–92,1 %), 1 exclusion abusive (article 49).
-Composé initialement comme brouillon par Claude Code à la demande explicite
-de l'équipe (protocole de mesure en plusieurs étapes avec point de
-contrôle), puis relu, corrigé et validé par l'équipe avant gel (`c3bbdc1`)
-— voir la tâche F2 du plan de soutenance : « Claude Code ne rédige jamais
-seul une vérité terrain non revue par l'équipe ».
+exactitude 92,8 % (IC95 85,8–96,5 %), 0 exclusion abusive, après correction
+d'un verdict post-gel (voir plus bas). Composé initialement comme brouillon
+par Claude Code à la demande explicite de l'équipe (protocole de mesure en
+plusieurs étapes avec point de contrôle), puis relu, corrigé et validé par
+l'équipe avant gel (`c3bbdc1`) — voir la tâche F2 du plan de soutenance :
+« Claude Code ne rédige jamais seul une vérité terrain non revue par
+l'équipe ».
 
 ## Format attendu
 
@@ -48,13 +49,25 @@ l'effectif RGPD).
 
 ## Résultats de la mesure (Tâche F2)
 
-Voir `mesure_ai_act.json` à la racine pour le détail complet. Constat le
-plus notable : une exclusion abusive sur l'article 49 (document 2, obligation
-d'enregistrement d'un déployeur jamais enregistré, classée à tort hors
-périmètre par le moteur) — le seul cas des trois référentiels. Le document
-censé être le plus conforme (01) concentre 7 des 13 erreurs, toutes des faux
-positifs, signe que le moteur exige un niveau de détail assez fin avant
-d'accepter "conforme".
+Voir `mesure_ai_act.json` à la racine pour le détail complet. Mesure
+initiale : exactitude 86,7 %, 1 exclusion abusive (article 49, document 2 —
+enregistrement d'un déployeur jamais enregistré, classé à tort hors
+périmètre). Investigation approfondie (lecture du raisonnement réel du
+modèle en base, pas une simple relecture) : le modèle applique en fait une
+lecture juridique précise et cohérente (l'article 49§3 vise en particulier
+les déployeurs **publics**, cette entreprise étant privée) — exactement la
+nuance déjà signalée comme zone grise dans le rapport F2 initial. Un
+correctif de prompt (`SYSTEM_PROMPT`, `audit_engine.py`) a été tenté, testé
+en conditions réelles sur 3 exécutions, puis **abandonné** car sans effet
+mesuré (le verdict restait stable, ce n'était donc pas un bug de
+raisonnement à corriger par le prompt). **Corrigé plutôt dans la référence**
+(manquement → `tolere`, à la demande explicite de l'équipe, 2026-09-27) —
+voir le commentaire du cas dans `verite_terrain.json` pour le détail
+complet. Après correction : **exactitude 92,8 %, rappel 91,7 %, 0 exclusion
+abusive**. Le document censé être le plus conforme (01) concentre toujours
+la majorité des faux positifs restants, signe que le moteur exige un niveau
+de détail assez fin avant d'accepter "conforme" — limite non corrigée, non
+liée à cette correction.
 
 ## Relancer la mesure (moteur de production)
 
@@ -65,11 +78,14 @@ d'accepter "conforme".
 
 Le laboratoire (`evaluation/`, moteur séparé — DA-07) dispose de sa propre
 grille (`referentiel/articles_ai_act.py`) et réutilise ce même corpus déjà
-gelé, via `validation/run_validation.py --referentiel ai_act` (mesuré en
-CI, job `non-regression`). Après correction de deux erreurs de condition
+gelé (y compris la correction post-gel ci-dessus), via
+`validation/run_validation.py --referentiel ai_act` (mesuré en CI, job
+`non-regression`). Après correction de deux erreurs de condition
 d'applicabilité trouvées en cours de construction (voir DA-10,
-docs/architecture.md) : exactitude 92,9 %, 0 exclusion abusive, rappel
-100 % sur les manquements.
+docs/architecture.md) : exactitude entre 90,8 % et 92,9 % selon le tirage
+(mesures ponctuelles à un seul passage — variance normale du modèle,
+DA-09), 0 exclusion abusive, rappel 100 % sur les manquements dans les deux
+mesures.
 
     python -m validation.run_validation --referentiel ai_act --corpus corpus_ai_act --verite corpus_ai_act/verite_terrain.json --hors-ligne   # verification de bout en bout
     python -m validation.run_validation --referentiel ai_act --corpus corpus_ai_act --verite corpus_ai_act/verite_terrain.json --ci           # mesure reelle, necessite GROQ_API_KEY

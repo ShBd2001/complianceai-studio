@@ -1,7 +1,7 @@
 {
   "version": "0.1",
   "referentiel": "ai_act",
-  "note": "Brouillon redige par Claude Code a la demande explicite de l'equipe (protocole de mesure NIS2/DORA/AI Act), destine a etre relu et corrige article par article avant tout gel de reference -- voir README.md de ce dossier. Articles auditables AI Act : 5, 8-27, 47, 48, 49, 50, 72, 73, 86 (app/ingestion/scoping.py::AI_ACT_AUDITABLE). Le champ 'profil' fixe directement ia_fournisseur_haut_risque, ia_deployeur_haut_risque et ia_utilisee sur l'organisation de test (validation/evaluate.py::_appliquer_profil). L'article 5 (pratiques interdites) est teste dans deux documents (01 et 02, plus trivialement dans 04) car jamais exempte par construction (eligibilite.py::_ai_act_jamais_exempte).",
+  "note": "Brouillon redige par Claude Code a la demande explicite de l'equipe (protocole de mesure NIS2/DORA/AI Act), relu et corrige par l'equipe avant gel initial (commit c3bbdc1, 'reference validee'). CORRECTION POST-GEL (2026-09-27, a la demande explicite de l'equipe) : doc 02, art. 49 (manquement -> tolere), apres verification du raisonnement reel du modele -- voir le commentaire du cas pour le detail complet, y compris une tentative de correctif de prompt testee puis abandonnee car sans effet mesure. Articles auditables AI Act : 5, 8-27, 47, 48, 49, 50, 72, 73, 86 (app/ingestion/scoping.py::AI_ACT_AUDITABLE). Le champ 'profil' fixe directement ia_fournisseur_haut_risque, ia_deployeur_haut_risque et ia_utilisee sur l'organisation de test (validation/evaluate.py::_appliquer_profil). L'article 5 (pratiques interdites) est teste dans deux documents (01 et 02, plus trivialement dans 04) car jamais exempte par construction (eligibilite.py::_ai_act_jamais_exempte).",
   "cas": [
     {
       "fichier": "01_editeur_rh_conforme.txt",
@@ -49,10 +49,10 @@
         "47": "hors_perimetre", "48": "hors_perimetre", "72": "hors_perimetre",
         "73": "hors_perimetre",
         "23": "hors_perimetre", "24": "hors_perimetre",
-        "26": "manquement", "27": "manquement", "49": "manquement", "86": "manquement",
+        "26": "manquement", "27": "manquement", "49": "tolere", "86": "manquement",
         "50": "hors_perimetre"
       },
-      "jamais_exclure": ["5", "26", "27", "49", "86"],
+      "jamais_exclure": ["5", "26", "27", "86"],
       "commentaires": {
         "5": "Le « score de fiabilite globale » integre des donnees comportementales issues des reseaux sociaux (frequence de publication, cercle de contacts, zones frequentees) pour deduire un profil de risque social influencant directement l'octroi de credit, sans lien avec la solvabilite financiere declaree -- notation sociale de personnes physiques produisant un traitement defavorable disproportionne au regard du contexte de collecte : pratique interdite caracterisee (article 5, jamais exempte).",
         "8": "Exemption de profil : obligations de fournisseur (ia_fournisseur_haut_risque = false), Credit Express Particuliers n'etant que deployeur.",
@@ -69,7 +69,7 @@
         "24": "Meme exclusion de contenu que l'article 23.",
         "26": "Aucun controle humain effectif (refus notifies automatiquement sous le seuil parametre, sans intervention), aucune formation des conseillers, parametres par defaut jamais revus depuis 2023 -- manquement caracterise aux obligations du deployeur.",
         "27": "« Aucune analyse d'impact relative aux droits fondamentaux n'a ete realisee avant la mise en service [...] ni depuis » -- manquement.",
-        "49": "Aucun enregistrement effectue. Nuance signalee a l'equipe : l'article 49§3 du reglement vise en particulier certains deployeurs publics ; Credit Express Particuliers est une entreprise privee, et l'applicabilite stricte de l'obligation d'enregistrement a ce type de deployeur prive reste une zone grise du texte que le modele d'eligibilite actuel (eligibilite.py, correction 6) resout par prudence vers 'applicable' des lors que ia_deployeur_haut_risque=true, sans distinguer public/prive -- a trancher par l'equipe si elle souhaite affiner.",
+        "49": "CORRECTION POST-GEL (2026-09-27) : « manquement » a l'origine, ramene a « tolere » a la demande de l'equipe, apres verification directe du raisonnement du modele plutot que par simple relecture. Un correctif de prompt cible (ajout d'une regle generale sur l'independance des roles fournisseur/deployeur dans le SYSTEM_PROMPT de audit_engine.py) a d'abord ete tente puis abandonne : teste en conditions reelles (3 executions), il n'a rien change -- le verdict du moteur restait 'hors_perimetre' de facon parfaitement stable, pas par hasard. Le constat reel du modele, lu en base (Finding.description), donne un raisonnement juridique precis et coherent, pas une confusion : « L'obligation d'enregistrement prevue a l'article 49 incombe au fournisseur ou au mandataire, pas a l'utilisateur prive [...] n'est ni le fournisseur, ni le mandataire, ni un deployeur public. » C'est exactement la nuance deja signalee (l'article 49§3 vise en particulier les deployeurs PUBLICS) que le modele applique plus finement que le filtre d'eligibilite deterministe (eligibilite.py, correction 6), lequel resout par prudence vers 'applicable' pour tout deployeur sans distinguer public/prive. Question non tranchee ici (l'article 49§3 renvoie aussi aux deployeurs soumis a l'analyse d'impact de l'article 27, qui inclut l'evaluation de solvabilite -- un deployeur prive de scoring de credit pourrait donc etre concerne par une autre voie) : marque 'tolere' plutot que force dans un sens ou l'autre.",
         "86": "Aucune explication individuelle fournie aux demandeurs refuses meme sur demande expresse -- manquement caracterise.",
         "50": "Outil d'aide a la decision de credit, sans interaction conversationnelle, sans generation de contenu de synthese, sans reconnaissance des emotions -- exclusion de contenu, meme limite du profil que dans le cas 1 (ia_utilisee ne distingue pas le type de systeme vise par l'article 50)."
       }

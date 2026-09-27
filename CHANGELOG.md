@@ -462,3 +462,21 @@ pas été corrigé : les gaps structurels identifiés restent réels. Mesure du
 laboratoire relancée aussi (même corpus) : 78,1 % — écart avec la mesure
 initiale (90,6 %) attribué à la variance normale du modèle sur un seul
 tirage (DA-09), pas à cette correction.
+
+## AI Act, article 49 : investigué comme un bug, corrigé comme une vérité terrain
+
+L'exclusion abusive signalée dans le rapport F2 (article 49, document 2)
+a d'abord été traitée comme un défaut du moteur. Un correctif de
+`SYSTEM_PROMPT` (`audit_engine.py`, clarification sur l'indépendance des
+rôles fournisseur/déployeur) a été écrit, puis testé en conditions réelles
+(3 exécutions du document concerné) : aucun effet mesuré, verdict stable à
+l'identique — abandonné et retiré. Lire le raisonnement réel du modèle en
+base (`Finding.description`) a montré qu'il appliquait une lecture
+juridique précise, déjà identifiée comme zone grise dans le rapport F2
+initial (l'article 49§3 vise en particulier les déployeurs publics, cette
+entreprise étant privée) : ce n'était pas un bug, c'était la vérité
+terrain qui tranchait à tort une question réellement ambiguë. Corrigée
+(`manquement` → `tolere`) dans `corpus_ai_act/verite_terrain.json`, à la
+demande explicite de l'équipe. Remesuré sur les deux moteurs
+(`mesure_ai_act.json` mis à jour) : exactitude production 86,7 % → **92,8
+%**, rappel 84,6 % → **91,7 %**, exclusions abusives 1 → **0**.
