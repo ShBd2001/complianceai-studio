@@ -533,6 +533,59 @@ def compute_metrics(reports: list[DocumentReport]) -> dict[str, Any]:
     }
 
 
+# --------------------------------------------------------------------------
+# Seuils bloquants CI (non-regression, referentiels non-RGPD)
+# --------------------------------------------------------------------------
+# Le RGPD a son propre job non-regression, sur le moteur du LABORATOIRE
+# (evaluation/, harnais.py::SeuilsCI, .github/workflows/ci.yml) -- separe et
+# deja calibre. Ce module mesure le moteur de PRODUCTION (Tache F2) : jusqu'a
+# ce bloc, NIS2/DORA/AI Act n'avaient aucune protection en CI, seulement une
+# mesure manuelle ponctuelle (voir CHANGEMENTS_SOUTENANCE.md). Seuils fixes
+# ici sur l'unique mesure reelle disponible a ce jour (2026-09-27,
+# mesure_{nis2,dora,ai_act}.json, --runs 3), avec la meme philosophie que
+# harnais.py::SeuilsCI : une marge sous la valeur observee, jamais la valeur
+# cible ideale -- un seuil jamais respecte ne protege rien, il rend la CI
+# durablement rouge donc ignoree. Seuls exactitude et exclusions_abusives
+# bloquent : precision/rappel/score sont calcules sur 4 documents seulement
+# (contre 15 pour le RGPD), leurs denominateurs sont trop petits pour ne pas
+# osciller de plusieurs points d'une execution a l'autre sans regression
+# reelle -- affiches dans le rapport, non bloquants tant qu'un corpus plus
+# large n'a pas ete compose.
+SEUILS_CI: dict[str, dict[str, float | int]] = {
+    # Exactitude observee 90.6 %, exclusions abusives 0.
+    "nis2": {"exactitude_min": 0.70, "exclusions_abusives_max": 0},
+    # Exactitude observee 91.4 %, exclusions abusives 0.
+    "dora": {"exactitude_min": 0.70, "exclusions_abusives_max": 0},
+    # Exactitude observee 86.7 %, exclusions abusives 1 (AI Act, art. 49 --
+    # limite connue et documentee, docs/architecture.md §6 : le seuil
+    # reflete l'etat mesure, pas un objectif ; a ramener a 0 une fois
+    # corrige, jamais releve au-dela sans nouvelle justification mesuree).
+    "ai_act": {"exactitude_min": 0.65, "exclusions_abusives_max": 1},
+}
+
+
+def verifier_seuils_ci(referentiel: str, metrics: dict[str, Any]) -> list[tuple[str, bool, str, str]]:
+    """Compare les metriques mesurees aux seuils bloquants de SEUILS_CI.
+
+    Renvoie une liste (libelle, ok, valeur, seuil) -- meme forme que
+    harnais.py::evaluer_seuils, pour un rendu coherent entre les deux
+    familles de non-regression (laboratoire RGPD / production autres
+    referentiels)."""
+    seuils = SEUILS_CI[referentiel]
+    exactitude = metrics["exactitude"]
+    abusives = metrics["perimetre"]["exclusions_abusives"]
+    return [
+        (
+            "Exactitude", exactitude >= seuils["exactitude_min"],
+            f"{exactitude:.1%}", f"≥ {seuils['exactitude_min']:.0%}",
+        ),
+        (
+            "Exclusions abusives", abusives <= seuils["exclusions_abusives_max"],
+            str(abusives), f"≤ {seuils['exclusions_abusives_max']}",
+        ),
+    ]
+
+
 def print_report(reports: list[DocumentReport], metrics: dict[str, Any]) -> None:
     line = "=" * 72
     print(f"\n{line}\nRESULTATS PAR DOCUMENT\n{line}")
@@ -615,6 +668,13 @@ def main() -> int:
              "bout, PAS une mesure valide : ne jamais citer un resultat "
              "obtenu avec ce drapeau.",
     )
+    parser.add_argument(
+        "--ci", action="store_true",
+        help="Applique les seuils bloquants de SEUILS_CI (referentiels "
+             "nis2/dora/ai_act uniquement -- le RGPD est verifie via le "
+             "moteur du laboratoire, harnais.py::SeuilsCI) et sort en erreur "
+             "si l'un d'eux est viole.",
+    )
     args = parser.parse_args()
 
     from app.services import llm
@@ -628,6 +688,15 @@ def main() -> int:
     if args.sans_modele:
         print("--sans-modele : execution sans LLM, verification uniquement, "
               "resultats NON valides pour le memoire.\n")
+
+    if args.ci and args.referentiel not in SEUILS_CI:
+        print(
+            f"--ci n'est defini que pour {sorted(SEUILS_CI)} : le RGPD est "
+            "verifie via le moteur du laboratoire (harnais.py::SeuilsCI, "
+            "validation.run_validation --ci).",
+            file=sys.stderr,
+        )
+        return 2
 
     if args.referentiel == "rgpd":
         corpus_dir = args.corpus if args.corpus is not None else CORPUS_DIR
@@ -691,6 +760,17 @@ def main() -> int:
             json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8"
         )
         print(f"Rapport ecrit dans {args.output}\n")
+
+    if args.ci:
+        line = "=" * 72
+        print(f"\n{line}\nSEUILS BLOQUANTS ({args.referentiel})\n{line}")
+        resultats = verifier_seuils_ci(args.referentiel, metrics)
+        for libelle, ok, valeur, seuil in resultats:
+            print(f"  [{'OK ' if ok else 'ECHEC'}] {libelle:<22} {valeur:<10} (seuil {seuil})")
+        if not all(ok for _, ok, _, _ in resultats):
+            print("\nECHEC : au moins un seuil bloquant est viole.")
+            return 1
+        print("\nOK : seuils bloquants respectes.")
 
     return 0
 

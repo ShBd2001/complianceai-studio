@@ -409,3 +409,20 @@ sur les documents conformes en DORA et AI Act (précision 77,8 % et 52,4 %
 pour un rappel de 100 % et 84,6 %), et une exclusion abusive isolée sur
 l'AI Act (article 49, déployeur jamais enregistré classé à tort hors
 périmètre).
+
+## Protection en CI pour NIS2/DORA/AI Act (non-regression-autres-referentiels)
+
+Le job `non-regression` existant ne couvre que le RGPD : il mesure le moteur
+du laboratoire (`evaluation/`), codé en dur pour ce référentiel
+(`referentiel/articles.py`) — reconstruire l'équivalent pour NIS2/DORA/AI
+Act n'était pas réalisable avant le gel. `validation/evaluate.py` gagne un
+drapeau `--ci` (seuils bloquants `SEUILS_CI`, calibrés avec marge sous
+l'unique mesure réelle disponible — même principe que
+`harnais.py::SeuilsCI` pour le RGPD) et un nouveau job CI
+(`non-regression-autres-referentiels`, branche `main` uniquement) l'exécute
+sur les trois référentiels à chaque push. Seuls exactitude et exclusions
+abusives bloquent : précision/rappel/score sont calculés sur 4 documents
+seulement, trop peu pour ne pas osciller de plusieurs points sans
+régression réelle — affichés, non bloquants. Le seuil AI Act tolère la
+seule exclusion abusive déjà connue (article 49) plutôt que de partir rouge
+dès le premier run.

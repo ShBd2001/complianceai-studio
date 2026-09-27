@@ -187,3 +187,63 @@ jobs:
         with:
           name: rapport-validation
           path: rapport_validation.json
+
+  non-regression-autres-referentiels:
+    # Le job ci-dessus (non-regression) mesure le moteur du LABORATOIRE
+    # (evaluation/) sur le RGPD uniquement -- ce module est hors de portee
+    # pour NIS2/DORA/AI Act (referentiel/articles.py y est code en dur pour
+    # le RGPD, voir docs/architecture.md DA-07). Ce job mesure a la place le
+    # moteur de PRODUCTION (app/services/audit_engine.py, validation/evaluate.py
+    # --ci, Tache F2) sur ces trois referentiels : sans lui, aucune
+    # protection en CI n'existait pour eux, seulement une mesure manuelle
+    # ponctuelle (2026-09-27).
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: compliance
+          POSTGRES_PASSWORD: compliance
+          POSTGRES_DB: complianceai_f2
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U compliance -d complianceai_f2"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    # Consomme du quota Groq : reserve a la branche principale, comme non-regression.
+    if: github.ref == 'refs/heads/main'
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      DATABASE_URL: postgresql+psycopg://compliance:compliance@localhost:5432/complianceai_f2
+      JWT_SECRET: ci-only-secret-never-used-outside-github-actions-runners
+      PYTHONPATH: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Installer les dépendances
+        run: pip install -r backend/requirements.txt
+      - name: Avertir si GROQ_API_KEY est absent
+        if: env.GROQ_API_KEY == ''
+        run: echo "::warning::GROQ_API_KEY n'est pas configuré — validation non-régression (NIS2/DORA/AI Act) ignorée."
+      # --runs 1 : meme choix cout/duree que le job non-regression (RGPD) --
+      # la mesure de reproductibilite (--runs 3) reste manuelle, pas sur
+      # chaque push. Chaque referentiel est une etape distincte pour que le
+      # rapport CI dise lequel echoue sans avoir a lire les logs en detail.
+      - name: NIS2 — seuils bloquants
+        if: env.GROQ_API_KEY != ''
+        run: python -m validation.evaluate --referentiel nis2 --runs 1 --ci --output mesure_nis2_ci.json
+      - name: DORA — seuils bloquants
+        if: env.GROQ_API_KEY != ''
+        run: python -m validation.evaluate --referentiel dora --runs 1 --ci --output mesure_dora_ci.json
+      - name: AI Act — seuils bloquants
+        if: env.GROQ_API_KEY != ''
+        run: python -m validation.evaluate --referentiel ai_act --runs 1 --ci --output mesure_ai_act_ci.json
+      - uses: actions/upload-artifact@v4
+        if: always() && env.GROQ_API_KEY != ''
+        with:
+          name: rapport-validation-autres-referentiels
+          path: mesure_*_ci.json
