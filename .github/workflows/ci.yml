@@ -229,6 +229,19 @@ jobs:
       - name: Avertir si GROQ_API_KEY est absent
         if: env.GROQ_API_KEY == ''
         run: echo "::warning::GROQ_API_KEY n'est pas configuré — validation non-régression (NIS2/DORA/AI Act) ignorée."
+      # Base ephemere par job (postgres ci-dessus) : jamais migree ni peuplee
+      # par un autre job. alembic upgrade + ingestion (copies locales, EUR-Lex
+      # bloque les clients automatises) sont donc explicites ici, contrairement
+      # a evaluate.py qui suppose une base deja prete (usage local habituel).
+      - name: Migrer la base
+        if: env.GROQ_API_KEY != ''
+        run: cd backend && python -m alembic upgrade head
+      - name: Ingérer NIS2/DORA/AI Act (copies locales)
+        if: env.GROQ_API_KEY != ''
+        run: |
+          python -m app.ingestion.cli --only nis2 --fichier nis2.html
+          python -m app.ingestion.cli --only dora --fichier dora.html
+          python -m app.ingestion.cli --only ai_act --fichier ai_act.html
       # --runs 1 : meme choix cout/duree que le job non-regression (RGPD) --
       # la mesure de reproductibilite (--runs 3) reste manuelle, pas sur
       # chaque push. Chaque referentiel est une etape distincte pour que le
