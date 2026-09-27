@@ -161,7 +161,9 @@ jobs:
     # toujours respecte) a une seule execution -- voir harnais.py:327. La
     # mesure de reproductibilite reelle (--repetitions 3) reste a faire
     # manuellement, pas sur chaque push.
-    timeout-minutes: 25
+    # 25 min suffisait au RGPD seul ; NIS2+DORA+AI Act (Tache F2) ajoutent
+    # jusqu'a ~59 articles x 4 documents supplementaires -- marge doublee.
+    timeout-minutes: 45
     # Consomme du quota Groq : réservé à la branche principale.
     if: github.ref == 'refs/heads/main'
     env:
@@ -174,7 +176,7 @@ jobs:
       - name: Avertir si GROQ_API_KEY est absent
         if: env.GROQ_API_KEY == ''
         run: echo "::warning::GROQ_API_KEY n'est pas configuré (Settings > Secrets and variables > Actions) — validation non-régression ignorée."
-      - name: Validation avec seuils bloquants
+      - name: RGPD — seuils bloquants
         if: env.GROQ_API_KEY != ''
         run: |
           python -m validation.run_validation \
@@ -182,11 +184,35 @@ jobs:
             --verite corpus/verite_terrain.json \
             --repetitions 1 \
             --ci
+      # NIS2/DORA/AI Act : meme moteur du laboratoire (evaluation/), grilles
+      # dediees (referentiel/articles_{nis2,dora,ai_act}.py), corpus deja gele
+      # de la Tache F2 reutilise tel quel (validation.harnais lit le meme
+      # format de verite terrain). Sans base de donnees, contrairement au job
+      # non-regression-autres-referentiels (moteur de PRODUCTION, lui migre
+      # et peuple sa propre base) -- le laboratoire n'a aucune dependance DB.
+      - name: NIS2 — seuils bloquants (laboratoire)
+        if: env.GROQ_API_KEY != ''
+        run: |
+          python -m validation.run_validation --referentiel nis2 \
+            --corpus corpus_nis2 --verite corpus_nis2/verite_terrain.json \
+            --repetitions 1 --ci --sortie rapport_validation_nis2.json
+      - name: DORA — seuils bloquants (laboratoire)
+        if: env.GROQ_API_KEY != ''
+        run: |
+          python -m validation.run_validation --referentiel dora \
+            --corpus corpus_dora --verite corpus_dora/verite_terrain.json \
+            --repetitions 1 --ci --sortie rapport_validation_dora.json
+      - name: AI Act — seuils bloquants (laboratoire)
+        if: env.GROQ_API_KEY != ''
+        run: |
+          python -m validation.run_validation --referentiel ai_act \
+            --corpus corpus_ai_act --verite corpus_ai_act/verite_terrain.json \
+            --repetitions 1 --ci --sortie rapport_validation_ai_act.json
       - uses: actions/upload-artifact@v4
         if: always() && env.GROQ_API_KEY != ''
         with:
           name: rapport-validation
-          path: rapport_validation.json
+          path: rapport_validation*.json
 
   non-regression-autres-referentiels:
     # Le job ci-dessus (non-regression) mesure le moteur du LABORATOIRE
