@@ -53,7 +53,20 @@ l'équipe : le moteur penche vers le faux positif sur les documents conformes
 les deux documents censés être les plus conformes ou les plus contrastés —
 aucune exclusion abusive en revanche.
 
-## Relancer la mesure
+## Relancer la mesure (moteur de production)
 
     python -m validation.evaluate --referentiel dora --sans-modele    # verification de bout en bout, resultats non valides
     python -m validation.evaluate --referentiel dora --runs 3 --output rapport_dora.json   # mesure reelle, necessite GROQ_API_KEY
+
+## Ce même corpus mesure aussi le laboratoire (DA-10)
+
+Le laboratoire (`evaluation/`, moteur séparé — DA-07) dispose de sa propre
+grille (`referentiel/articles_dora.py`) et réutilise ce même corpus déjà
+gelé, via `validation/run_validation.py --referentiel dora` (mesuré en CI,
+job `non-regression`). Écart assumé : les articles institutionnels 15, 20
+et 21 sont absents de cette grille (le laboratoire n'a pas de mécanisme
+d'exemption indépendant du contenu du document, contrairement au filtre
+d'éligibilité de production) — voir DA-10, docs/architecture.md.
+
+    python -m validation.run_validation --referentiel dora --corpus corpus_dora --verite corpus_dora/verite_terrain.json --hors-ligne   # verification de bout en bout
+    python -m validation.run_validation --referentiel dora --corpus corpus_dora --verite corpus_dora/verite_terrain.json --ci           # mesure reelle, necessite GROQ_API_KEY

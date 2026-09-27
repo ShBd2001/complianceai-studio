@@ -411,6 +411,70 @@ auxiliaire `_verifier_citation()` : retirer le bloc du vote fait retomber
 sur le comportement précédent (un seul appel), sans migration ni effet sur
 le reste du moteur.
 
+### DA-10 — Laboratoire (`evaluation/`) étendu à NIS2, DORA et AI Act
+
+*Décision.* Le laboratoire de validation (`evaluation/`, moteur séparé du
+moteur de production — DA-07, jamais importé l'un par l'autre) ne couvrait
+que le RGPD : `referentiel/articles.py` (grille d'éléments probants,
+dérogations, criticité par article) était codé en dur pour ce seul
+référentiel, et `evaluation/prompts.py` mentionnait littéralement "RGPD"
+dans le texte envoyé au modèle. `evaluation/prompts.py` et
+`evaluation/evaluateur.py` (`Evaluateur.referentiel`) sont généralisés pour
+accepter un référentiel en paramètre ; trois nouvelles grilles
+(`referentiel/articles_nis2.py`, `articles_dora.py`, `articles_ai_act.py`)
+réutilisent le corpus déjà gelé de la Tâche F2 (mêmes documents, même
+vérité terrain — le format `validation/harnais.py::CasDeTest` est partagé
+entre les deux moteurs). `validation/run_validation.py --referentiel
+{rgpd,nis2,dora,ai_act}` sélectionne la grille et des seuils bloquants
+dédiés ; le job CI `non-regression` mesure désormais les quatre
+référentiels à chaque push sur `main` (RGPD : comportement historique
+inchangé, texte des prompts vérifié identique caractère pour caractère
+avant tout push).
+
+*Écart assumé (DORA).* Les articles institutionnels 15, 20 et 21 (jamais
+une obligation de l'entité elle-même — DA-08, `_dora_institutionnel`, qui
+exempte inconditionnellement côté production) sont absents de la grille du
+laboratoire : celui-ci n'a aucun mécanisme d'exemption indépendant du
+contenu du document, sa décision d'applicabilité reposant uniquement sur
+une citation extraite du texte audité et sur la consigne de prompt qui fait
+défaut à "applicable" en l'absence de citation. Aucun document d'entreprise
+ne cite jamais les obligations propres des autorités de surveillance entre
+elles : les inclure produirait des faux manquements systématiques plutôt
+qu'une exemption correcte. La métrique d'exactitude brute mesurée pour DORA
+sous-compte ces trois absences comme des écarts (`harnais.py::comparer`
+compte tout article attendu mais non évalué comme une erreur) — écart de
+mesure documenté, pas un défaut du moteur.
+
+*Bug corrigé en cours de construction.* Une première version de la
+condition d'applicabilité de l'article 5 de l'AI Act (jamais exempté)
+utilisait `exclusion_exige_preuve=False`, dont l'effet réel est l'inverse
+de l'intention (autoriser une exclusion SANS preuve, au lieu d'interdire
+toute exclusion) — mesuré en conditions réelles : 8 exclusions abusives sur
+le corpus AI Act. Corrigé (retour à `True`, la valeur par défaut, plus une
+instruction explicite dans la condition d'applicabilité interdisant au
+modèle de conclure à la non-applicabilité quelle que soit la citation
+trouvée) et une seconde erreur dans la condition du fournisseur (qui
+suggérait implicitement qu'un système développé et utilisé en interne,
+jamais commercialisé à des tiers, ne constituerait pas une qualité de
+fournisseur — faux au sens du règlement) : après correction, 0 exclusion
+abusive, exactitude 92,9 %, rappel 100 % sur les manquements.
+
+*Conséquences.* Positives : les quatre référentiels bénéficient désormais
+de la même protection en CI (mesure réelle contre régression à chaque
+push), pas seulement d'une mesure manuelle ponctuelle. Négatives : coût
+Groq et durée du job `non-regression` significativement accrus (jusqu'à 59
+articles × 4 documents supplémentaires par push sur `main` ; timeout porté
+de 25 à 45 minutes) ; les seuils bloquants de NIS2/DORA/AI Act ne reposent
+que sur une seule mesure réelle à ce jour (pas de `--repetitions 3`), avec
+une marge large en conséquence — à resserrer une fois plusieurs mesures
+disponibles.
+
+*Réversibilité.* Les trois nouvelles grilles sont des fichiers
+additionnels ; `Evaluateur.referentiel` a une valeur par défaut qui
+préserve le comportement RGPD historique. Retirer les étapes NIS2/DORA/AI
+Act du job CI fait retomber sur la mesure RGPD seule, sans effet sur le
+reste du moteur.
+
 ## 5. Vue de déploiement
 
 ```

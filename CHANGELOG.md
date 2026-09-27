@@ -426,3 +426,23 @@ seulement, trop peu pour ne pas osciller de plusieurs points sans
 régression réelle — affichés, non bloquants. Le seuil AI Act tolère la
 seule exclusion abusive déjà connue (article 49) plutôt que de partir rouge
 dès le premier run.
+
+## Le laboratoire (evaluation/) couvre désormais NIS2, DORA et AI Act
+
+Jusqu'ici, seul le RGPD disposait d'une mesure réelle continue en CI (moteur
+du laboratoire, `evaluation/`) ; NIS2/DORA/AI Act n'avaient que le moteur de
+production (entrée précédente). `referentiel/articles.py` était codé en dur
+pour le RGPD (grille d'éléments probants par article) : `evaluation/prompts.py`
+et `evaluation/evaluateur.py` généralisés (référentiel en paramètre, défaut
+RGPD — texte des prompts vérifié identique caractère pour caractère, zéro
+régression), trois nouvelles grilles (`referentiel/articles_{nis2,dora,
+ai_act}.py`) réutilisant le corpus déjà gelé de la Tâche F2. Le job CI
+`non-regression` mesure maintenant les quatre référentiels à chaque push sur
+`main`. Deux bugs trouvés et corrigés en cours de construction : une
+condition d'applicabilité mal configurée (`exclusion_exige_preuve=False`,
+effet inverse de l'intention) provoquait 8 exclusions abusives sur l'AI Act ;
+une autre condition suggérait à tort qu'un système d'IA développé et utilisé
+en interne n'aurait pas la qualité de fournisseur. Après correction :
+exactitude 90,6 % (NIS2), 92,9 % (AI Act, 0 exclusion abusive), ~88 % (DORA,
+métrique brute sous-estimée par les 3 articles institutionnels — 15/20/21 —
+volontairement absents de la grille, voir DA-10, docs/architecture.md).

@@ -49,7 +49,17 @@ verdicts attendus sont eux-mêmes signalés comme discutables (article 24,
 facultatif pour l'entité et non une obligation inconditionnelle ; articles
 21/30 du document 3, lecture stricte assumée par l'auteur du brouillon).
 
-## Relancer la mesure
+## Relancer la mesure (moteur de production)
 
     python -m validation.evaluate --referentiel nis2 --sans-modele    # verification de bout en bout, resultats non valides
     python -m validation.evaluate --referentiel nis2 --runs 3 --output rapport_nis2.json   # mesure reelle, necessite GROQ_API_KEY
+
+## Ce même corpus mesure aussi le laboratoire (DA-10)
+
+Le laboratoire (`evaluation/`, moteur séparé — DA-07) dispose de sa propre
+grille d'éléments probants (`referentiel/articles_nis2.py`) et réutilise
+ce même corpus déjà gelé, via `validation/run_validation.py --referentiel
+nis2` (mesuré en CI, job `non-regression`) :
+
+    python -m validation.run_validation --referentiel nis2 --corpus corpus_nis2 --verite corpus_nis2/verite_terrain.json --hors-ligne   # verification de bout en bout
+    python -m validation.run_validation --referentiel nis2 --corpus corpus_nis2 --verite corpus_nis2/verite_terrain.json --ci           # mesure reelle, necessite GROQ_API_KEY

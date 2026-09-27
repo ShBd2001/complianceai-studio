@@ -56,7 +56,20 @@ censé être le plus conforme (01) concentre 7 des 13 erreurs, toutes des faux
 positifs, signe que le moteur exige un niveau de détail assez fin avant
 d'accepter "conforme".
 
-## Relancer la mesure
+## Relancer la mesure (moteur de production)
 
     python -m validation.evaluate --referentiel ai_act --sans-modele    # verification de bout en bout, resultats non valides
     python -m validation.evaluate --referentiel ai_act --runs 3 --output rapport_ai_act.json   # mesure reelle, necessite GROQ_API_KEY
+
+## Ce même corpus mesure aussi le laboratoire (DA-10)
+
+Le laboratoire (`evaluation/`, moteur séparé — DA-07) dispose de sa propre
+grille (`referentiel/articles_ai_act.py`) et réutilise ce même corpus déjà
+gelé, via `validation/run_validation.py --referentiel ai_act` (mesuré en
+CI, job `non-regression`). Après correction de deux erreurs de condition
+d'applicabilité trouvées en cours de construction (voir DA-10,
+docs/architecture.md) : exactitude 92,9 %, 0 exclusion abusive, rappel
+100 % sur les manquements.
+
+    python -m validation.run_validation --referentiel ai_act --corpus corpus_ai_act --verite corpus_ai_act/verite_terrain.json --hors-ligne   # verification de bout en bout
+    python -m validation.run_validation --referentiel ai_act --corpus corpus_ai_act --verite corpus_ai_act/verite_terrain.json --ci           # mesure reelle, necessite GROQ_API_KEY

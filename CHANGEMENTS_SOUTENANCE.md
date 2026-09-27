@@ -248,6 +248,34 @@ puis mesurée sans ce passage par l'équipe.
   en DORA/AI Act (précision 77,8 %/52,4 %), et une exclusion abusive isolée
   (AI Act, article 49) — documentés dans `docs/architecture.md` §6.
 
+## Tâche F2 (suite) — Extension du laboratoire à NIS2, DORA et AI Act
+
+À la demande explicite de l'équipe (le document de cadrage limitant
+initialement la rédaction de grilles détaillées à une revue préalable a été
+levé pour cette extension) : le laboratoire (`evaluation/`), qui ne
+couvrait que le RGPD (`referentiel/articles.py` codé en dur), est étendu
+aux trois autres référentiels — commits `20109a5` (généralisation +
+grilles) et `c7b6abc` (job CI `non-regression`). Réutilise le corpus déjà
+gelé de la Tâche F2 (mêmes documents, même vérité terrain), sans le
+modifier.
+
+- `evaluation/prompts.py`/`evaluateur.py` généralisés (référentiel en
+  paramètre, défaut RGPD) : texte des prompts RGPD vérifié identique
+  caractère pour caractère avant tout push, confirmé sans régression en CI
+  réelle.
+- Trois nouvelles grilles (`referentiel/articles_{nis2,dora,ai_act}.py`).
+  Écart assumé et documenté (DA-10) : les 3 articles institutionnels de
+  DORA (15/20/21) sont absents de la grille du laboratoire, qui n'a pas de
+  mécanisme d'exemption indépendant du contenu du document.
+- Deux bugs trouvés et corrigés pendant la construction (mesure réelle,
+  pas en relisant le code) : une condition d'applicabilité mal configurée
+  provoquait 8 exclusions abusives sur l'AI Act ; corrigées, ramenées à 0.
+- Mesure réelle finale : exactitude 90,6 % (NIS2), ~88 % corrigé / 76,6 %
+  brut (DORA, sous-compté par les 3 absences volontaires), 92,9 % (AI Act,
+  0 exclusion abusive, rappel 100 %).
+- Job CI `non-regression` mesure désormais les 4 référentiels à chaque
+  push sur `main` (timeout porté de 25 à 45 minutes).
+
 ## Tâche F3 — Documentation
 
 Ce document, plus `README.md` (nombre de tests à jour, mention de
@@ -270,7 +298,7 @@ dans les points de vigilance connus).
 | Secrets détectés dans l'historique | 0 (gitleaks, scanné à chaque push) |
 | Profil d'organisation | 16 champs (`PATCH /orgs/{id}/profile`), tous nullable, jamais convertis en False — 11 RGPD (Tâche 8) + 5 NIS2/DORA/AI Act (Tâche F1) |
 | Règles d'éligibilité | RGPD (Tâche 8) + ~40 nouvelles pour NIS2/DORA/AI Act (Tâche F1) |
-| Corpus de validation mesuré | RGPD (15 documents, 210 verdicts) + NIS2/DORA/AI Act (4 documents chacun, 219 verdicts au total, mesure réelle Tâche F2) |
+| Corpus de validation mesuré | RGPD (15 documents, 210 verdicts) + NIS2/DORA/AI Act (4 documents chacun, 219 verdicts au total) — mesuré sur les deux moteurs (production, Tâche F2 ; laboratoire, DA-10) |
 
 ---
 
@@ -331,10 +359,13 @@ engagé » dans `docs/architecture.md` §6, pas comme un oubli.
 
 Les dix tâches du plan initial (0 à 9), les quatre corrections hors plan
 remontées en usage réel, et les tâches F1 à F3 du second document de
-cadrage — y compris la composition du corpus et la mesure réelle NIS2/
-DORA/AI Act de la Tâche F2 — sont traitées, committées et vérifiées vertes
-en CI. Rien n'a été volontairement laissé de côté à ce stade — les seuls
-éléments restants sont les actions que seule l'équipe peut accomplir
-elle-même (voir la section ci-dessus : tarifs Groq, vérification du disque
-Render, mesure réelle de la Tâche 7, `cout_analyses.py` sur la production,
-et l'arbitrage des deux constats F2 non corrigés avant le gel).
+cadrage — y compris la composition du corpus, la mesure réelle NIS2/DORA/
+AI Act de la Tâche F2 sur le moteur de production, et son extension au
+laboratoire (DA-10, à la demande explicite de l'équipe) — sont traitées,
+committées et vérifiées vertes en CI, les quatre référentiels protégés en
+continu sur les deux moteurs. Rien n'a été volontairement laissé de côté à
+ce stade — les seuls éléments restants sont les actions que seule l'équipe
+peut accomplir elle-même (voir la section ci-dessus : tarifs Groq,
+vérification du disque Render, mesure réelle de la Tâche 7,
+`cout_analyses.py` sur la production, et l'arbitrage des constats F2 non
+corrigés avant le gel).
