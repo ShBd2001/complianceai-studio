@@ -8,6 +8,15 @@ exactitude 100 % / 91,4 % / 92,8 %, 0 exclusion abusive sur les 3 (NIS2 et
 AI Act corrigés post-gel le 2026-09-27, voir `corpus_nis2/README.md` et
 `corpus_ai_act/README.md`).
 
+Le moteur de production mesuré sur ce corpus RGPD complet (15 documents,
+210 verdicts) pour la première fois le 2026-09-28 (`mesure_rgpd.json`) :
+exactitude 66,2 %, précision 55,6 %, rappel 76,9 % — nettement sous les
+trois autres référentiels. Cause identifiée (requête de recherche construite depuis le texte légal
+brut plutôt que depuis des mots-clés adaptés au vocabulaire d'un document
+réel — voir `docs/architecture.md` §6 et `CHANGELOG.md`) : deux correctifs
+testés en conditions réelles et abandonnés (gain non significatif ou
+régression). Limite connue, documentée, pas encore corrigée.
+
 ## Ce que le corpus couvre
 
 | # | Document | Profil | Ce qu'il teste |

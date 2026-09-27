@@ -480,3 +480,47 @@ terrain qui tranchait à tort une question réellement ambiguë. Corrigée
 demande explicite de l'équipe. Remesuré sur les deux moteurs
 (`mesure_ai_act.json` mis à jour) : exactitude production 86,7 % → **92,8
 %**, rappel 84,6 % → **91,7 %**, exclusions abusives 1 → **0**.
+
+## RGPD : première mesure réelle du moteur de production sur le corpus complet
+
+`validation/evaluate.py --referentiel rgpd --corpus corpus --runs 3` n'avait
+jamais été exécuté sur le corpus complet (15 documents, 210 verdicts) : le
+commit `d090150` (24/09) avait préparé le script mais reporté la mesure
+réelle faute de budget Groq (~700 appels). Exécutée le 2026-09-28
+(`mesure_rgpd.json`) : **exactitude 66,2 %, précision 55,6 %, rappel
+76,9 %** — très en dessous de NIS2/DORA/AI Act (91-100 %) et du laboratoire
+RGPD.
+
+Cause identifiée par lecture du code, pas par hypothèse : la requête de
+recherche de passages envoyée au document client
+(`audit_engine.py::run_audit`, phase 1) est
+`f"{requirement.title} {requirement.body[:300]}"` — le texte légal brut de
+l'article. Le laboratoire (`evaluation/evaluateur.py`) construit sa requête
+à partir des `indices` de `referentiel/articles.py`, des mots-clés écrits à
+la main pour matcher le vocabulaire d'un vrai document, pas celui de la loi.
+Sur les articles au libellé le plus abstrait (12, 13, 15-22, 32-34, 44-49),
+le recouvrement lexical entre la requête et le document est nul dans la
+plupart des documents — y compris les documents de référence conçus comme
+conformes — et le retriever lexical retombe alors sur les premiers passages
+du document dans leur ordre d'origine (`_classer_lexical`, `rag.py`), sans
+rapport avec la question posée. Confirmé par les verdicts eux-mêmes : ces
+faux positifs "manquement" sont rendus à haute confiance (0,7-0,9), donc
+sans même déclencher le second avis DA-09 — ce n'est pas un problème de vote,
+c'est un problème de recherche de passages en amont.
+
+Deux correctifs testés en conditions réelles sur un sous-corpus de 4
+documents (01, 02, 09, 12, choisis pour couvrir les cas les plus touchés et
+un cas de non-conformité à ne pas casser) et abandonnés :
+
+- repli sur une recherche sémantique quand le score lexical est nul :
+  66,1 % → 67,9 % sur ce sous-corpus, gain non significatif (un seul
+  passage, pas de répétitions) ;
+- requête réduite au seul titre de l'exigence : 64,3 %, pire — introduit
+  2 faux négatifs sur un document (02) auparavant parfait (13/13).
+
+Les deux changements ont été annulés (`git checkout`) : le moteur de
+production reste inchangé. `validation/evaluate.py --ci` n'est volontairement
+pas étendu à RGPD : un seuil bloquant fixé sur ce chiffre (~60 %) ne
+protégerait contre aucune régression réelle. Une vraie solution demande des
+mots-clés par exigence dérivés du texte ingéré, pas un ajustement ponctuel
+de la requête — hors délai avant le gel du 2026-09-28.

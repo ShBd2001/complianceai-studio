@@ -1,0 +1,1948 @@
+{
+  "date": "2026-09-27T22:15:49.304594+00:00",
+  "referentiel": "rgpd",
+  "passages_par_document": 3,
+  "corpus": "..\\corpus",
+  "verite_terrain": "..\\corpus\\verite_terrain.json",
+  "sans_modele": false,
+  "metriques": {
+    "articles_evalues": 210,
+    "articles_comptes": 210,
+    "articles_tolerés": 0,
+    "exactitude": 0.6619047619047619,
+    "exactitude_ic95": [
+      0.5955239679595139,
+      0.7224684151876379
+    ],
+    "detection_manquements": {
+      "precision": 0.5555555555555556,
+      "rappel": 0.7692307692307693,
+      "f1": 0.6451612903225806,
+      "vrais_positifs": 60,
+      "faux_positifs": 48,
+      "faux_negatifs": 18
+    },
+    "perimetre": {
+      "exclusions_attendues": 16,
+      "exclusions_correctes": 7,
+      "taux": 0.4375,
+      "exclusions_abusives": 0
+    },
+    "score": {
+      "documents_dans_intervalle": 4,
+      "documents_total": 15,
+      "ecart_moyen": 12.42
+    },
+    "reproductibilite": {
+      "stabilite_moyenne": 0.6703335303335304,
+      "ecart_type_score_max": 3.647830405414522
+    },
+    "matrice_confusion": {
+      "conforme": {
+        "manquement": 44,
+        "conforme": 72
+      },
+      "hors_perimetre": {
+        "conforme": 5,
+        "hors_perimetre": 7,
+        "manquement": 4
+      },
+      "manquement": {
+        "manquement": 60,
+        "conforme": 18
+      }
+    }
+  },
+  "documents": [
+    {
+      "document": "01_grande_pme_conforme.txt",
+      "profil": "Groupe de 610 salaries, gouvernance mature et documentee. Reference haute du corpus.",
+      "intervalle_attendu": [
+        88,
+        100
+      ],
+      "scores": [
+        68.4,
+        71.5,
+        75.4
+      ],
+      "stabilite": 0.675,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "7",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "35",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "hors_perimetre",
+          "obtenu": "conforme",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76335,
+          "jetons_completion": 25357,
+          "duree_s": 156.858342
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76335,
+          "jetons_completion": 25660,
+          "duree_s": 164.754382
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76335,
+          "jetons_completion": 25562,
+          "duree_s": 233.648936
+        }
+      ]
+    },
+    {
+      "document": "02_micro_entreprise_defaillante.txt",
+      "profil": "Micro-entreprise, mentions legales tenant lieu de politique. Manquements massifs.",
+      "intervalle_attendu": [
+        0,
+        22
+      ],
+      "scores": [
+        26.5,
+        29.4,
+        31.0
+      ],
+      "stabilite": 0.8636363636363636,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "7",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 70248,
+          "jetons_completion": 23361,
+          "duree_s": 129.635714
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 70248,
+          "jetons_completion": 22687,
+          "duree_s": 111.796549
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 70248,
+          "jetons_completion": 22408,
+          "duree_s": 95.845888
+        }
+      ]
+    },
+    {
+      "document": "03_pme_artisanale.txt",
+      "profil": "PME artisanale de 34 salaries, solide sur la securite, lacunaire sur la formalisation.",
+      "intervalle_attendu": [
+        40,
+        62
+      ],
+      "scores": [
+        57.6,
+        57.7,
+        58.8
+      ],
+      "stabilite": 0.6428571428571429,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "hors_perimetre",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 72754,
+          "jetons_completion": 22658,
+          "duree_s": 99.817976
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 74290,
+          "jetons_completion": 22515,
+          "duree_s": 137.137266
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 72754,
+          "jetons_completion": 23522,
+          "duree_s": 102.369337
+        }
+      ]
+    },
+    {
+      "document": "04_artisan_hors_perimetre.txt",
+      "profil": "Artisan a deux personnes, traitements minimaux mais correctement couverts.",
+      "intervalle_attendu": [
+        82,
+        100
+      ],
+      "scores": [
+        61.9,
+        64.1,
+        70.5
+      ],
+      "stabilite": 0.7567567567567568,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "hors_perimetre",
+          "obtenu": "conforme",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76713,
+          "jetons_completion": 24443,
+          "duree_s": 139.038112
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 78761,
+          "jetons_completion": 24717,
+          "duree_s": 138.514522
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76713,
+          "jetons_completion": 24384,
+          "duree_s": 114.008142
+        }
+      ]
+    },
+    {
+      "document": "05_cabinet_medical.txt",
+      "profil": "Cabinet medical : donnees de sante licites, transferts hors UE non encadres. Piege principal du corpus.",
+      "intervalle_attendu": [
+        28,
+        48
+      ],
+      "scores": [
+        46.1,
+        38.6,
+        38.5
+      ],
+      "stabilite": 0.7142857142857143,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "9",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "22",
+          "attendu": "hors_perimetre",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "35",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 73225,
+          "jetons_completion": 24076,
+          "duree_s": 125.924437
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 73225,
+          "jetons_completion": 25104,
+          "duree_s": 143.930071
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 73225,
+          "jetons_completion": 24021,
+          "duree_s": 117.633714
+        }
+      ]
+    },
+    {
+      "document": "06_rh_donnees_sensibles.txt",
+      "profil": "RH de 340 salaries : donnees sensibles licites via 9(2)(b), mais preselection automatique sans reexamen humain.",
+      "intervalle_attendu": [
+        60,
+        80
+      ],
+      "scores": [
+        64.7,
+        62.3,
+        59.6
+      ],
+      "stabilite": 0.575,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "9",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "22",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "35",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "hors_perimetre",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "hors_perimetre",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 75850,
+          "jetons_completion": 25045,
+          "duree_s": 118.695307
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 75850,
+          "jetons_completion": 25490,
+          "duree_s": 151.113674
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 75850,
+          "jetons_completion": 25811,
+          "duree_s": 99.369223
+        }
+      ]
+    },
+    {
+      "document": "07_contradictoire.txt",
+      "profil": "Cabinet de conseil affirmant une conformite exemplaire que chaque detail contredit.",
+      "intervalle_attendu": [
+        5,
+        28
+      ],
+      "scores": [
+        49.4,
+        46.9,
+        48.8
+      ],
+      "stabilite": 0.7333333333333333,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "hors_perimetre",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 72279,
+          "jetons_completion": 24332,
+          "duree_s": 136.575705
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 72279,
+          "jetons_completion": 24966,
+          "duree_s": 162.843149
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 72535,
+          "jetons_completion": 23792,
+          "duree_s": 123.965931
+        }
+      ]
+    },
+    {
+      "document": "08_conformite_partielle.txt",
+      "profil": "Organisme de formation : registre existant mais incomplet, notification absente derriere une bonne securite.",
+      "intervalle_attendu": [
+        55,
+        75
+      ],
+      "scores": [
+        68.9,
+        63.6,
+        61.7
+      ],
+      "stabilite": 0.6590909090909091,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "hors_perimetre",
+          "obtenu": "conforme",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 74484,
+          "jetons_completion": 26772,
+          "duree_s": 163.419267
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76020,
+          "jetons_completion": 26270,
+          "duree_s": 134.177029
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 74484,
+          "jetons_completion": 26584,
+          "duree_s": 127.902785
+        }
+      ]
+    },
+    {
+      "document": "09_ecommerce_transferts.txt",
+      "profil": "E-commerce avec transferts hors UE reels mais correctement encadres. Teste l'absence de sanction d'un transfert licite.",
+      "intervalle_attendu": [
+        85,
+        100
+      ],
+      "scores": [
+        64.8,
+        71.0,
+        68.1
+      ],
+      "stabilite": 0.5384615384615384,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "7",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 75503,
+          "jetons_completion": 27277,
+          "duree_s": 148.061003
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 75503,
+          "jetons_completion": 27457,
+          "duree_s": 118.484914
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 75503,
+          "jetons_completion": 26215,
+          "duree_s": 58.294107
+        }
+      ]
+    },
+    {
+      "document": "10_collecte_indirecte.txt",
+      "profil": "Editeur B2B : donnees de prospection obtenues aupres de tiers. Teste la mise en perimetre de l'article 14.",
+      "intervalle_attendu": [
+        85,
+        100
+      ],
+      "scores": [
+        73.5,
+        71.1,
+        65.2
+      ],
+      "stabilite": 0.6923076923076923,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "14",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 75493,
+          "jetons_completion": 24529,
+          "duree_s": 50.621887
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 75493,
+          "jetons_completion": 24923,
+          "duree_s": 53.631205
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 77540,
+          "jetons_completion": 24737,
+          "duree_s": 48.121907
+        }
+      ]
+    },
+    {
+      "document": "11_videosurveillance_aipd.txt",
+      "profil": "Centre commercial, videoprotection a grande echelle : DPO et AIPD obligatoires et presents.",
+      "intervalle_attendu": [
+        85,
+        100
+      ],
+      "scores": [
+        64.9,
+        68.7,
+        61.2
+      ],
+      "stabilite": 0.6,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "22",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "35",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "hors_perimetre",
+          "obtenu": "hors_perimetre",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76387,
+          "jetons_completion": 24734,
+          "duree_s": 52.023184
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76387,
+          "jetons_completion": 25137,
+          "duree_s": 64.387025
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 79203,
+          "jetons_completion": 25092,
+          "duree_s": 51.293418
+        }
+      ]
+    },
+    {
+      "document": "12_scoring_credit.txt",
+      "profil": "Courtier en credit : decision entierement automatisee, applicable ET conforme. Cas le plus exigeant du corpus.",
+      "intervalle_attendu": [
+        88,
+        100
+      ],
+      "scores": [
+        73.1,
+        70.5,
+        73.4
+      ],
+      "stabilite": 0.6153846153846154,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "22",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "35",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "hors_perimetre",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 74927,
+          "jetons_completion": 27015,
+          "duree_s": 68.283035
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 77998,
+          "jetons_completion": 26596,
+          "duree_s": 62.620221
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76463,
+          "jetons_completion": 25478,
+          "duree_s": 61.156762
+        }
+      ]
+    },
+    {
+      "document": "13_association_faible_maturite.txt",
+      "profil": "Association de quartier, faible maturite, donnees sensibles traitees sans fondement ni garanties.",
+      "intervalle_attendu": [
+        0,
+        20
+      ],
+      "scores": [
+        43.6,
+        48.4,
+        51.9
+      ],
+      "stabilite": 0.5777777777777777,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "7",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "9",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 72179,
+          "jetons_completion": 24581,
+          "duree_s": 50.111443
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 74739,
+          "jetons_completion": 23902,
+          "duree_s": 48.260649
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 73815,
+          "jetons_completion": 23460,
+          "duree_s": 48.753415
+        }
+      ]
+    },
+    {
+      "document": "14_document_long_multisite.txt",
+      "profil": "Reseau hotelier, 780 salaries, document long et structure. Eprouve le decoupage sur un texte etendu.",
+      "intervalle_attendu": [
+        88,
+        100
+      ],
+      "scores": [
+        70.2,
+        69.9,
+        64.9
+      ],
+      "stabilite": 0.7,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "7",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "9",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "35",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "conforme",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76062,
+          "jetons_completion": 27609,
+          "duree_s": 74.451307
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 78110,
+          "jetons_completion": 27186,
+          "duree_s": 68.035651
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 76318,
+          "jetons_completion": 26244,
+          "duree_s": 67.811415
+        }
+      ]
+    },
+    {
+      "document": "15_faux_semblants.txt",
+      "profil": "Agence marketing : securite exemplaire et detaillee, tout le reste absent. Piege 32 contre 33.",
+      "intervalle_attendu": [
+        10,
+        32
+      ],
+      "scores": [
+        43.4,
+        42.0,
+        42.9
+      ],
+      "stabilite": 0.7111111111111111,
+      "articles": [
+        {
+          "article": "5",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "6",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "12",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "13",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "14",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "15-22",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "25",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "28",
+          "attendu": "manquement",
+          "obtenu": "conforme",
+          "tolere": false
+        },
+        {
+          "article": "30",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "32",
+          "attendu": "conforme",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "33",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "34",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "35",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "37",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        },
+        {
+          "article": "44-49",
+          "attendu": "manquement",
+          "obtenu": "manquement",
+          "tolere": false
+        }
+      ],
+      "execution": [
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 73266,
+          "jetons_completion": 24701,
+          "duree_s": 49.751602
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 73266,
+          "jetons_completion": 25067,
+          "duree_s": 51.433138
+        },
+        {
+          "retriever": "lexical",
+          "modele": "openai/gpt-oss-120b",
+          "appels": 45,
+          "jetons_prompt": 73266,
+          "jetons_completion": 24592,
+          "duree_s": 49.32796
+        }
+      ]
+    }
+  ]
+}

@@ -306,6 +306,40 @@ explicite de l'équipe. Résultat production : **exactitude 86,7 % → 92,8 %,
 rappel 84,6 % → 91,7 %, exclusions abusives 1 → 0** (`mesure_ai_act.json`
 mis à jour). Aucun changement de code n'a finalement été nécessaire.
 
+## Tâche F2 (suite) — RGPD : première mesure réelle du moteur de production
+
+La Tâche 7 avait préparé le script mais reporté la mesure réelle faute de
+budget Groq (commit `d090150`, 24/09 — item 3 de la liste "Ce que l'équipe
+doit faire elle-même" ci-dessous, maintenant fait). Exécutée le 2026-09-28
+(`python -m validation.evaluate --referentiel rgpd --corpus corpus --verite
+corpus/verite_terrain.json --runs 3 --output mesure_rgpd.json`) :
+**exactitude 66,2 %, précision 55,6 %, rappel 76,9 %** — nettement sous
+NIS2/DORA/AI Act (91-100 %) et sous le laboratoire RGPD.
+
+Cause identifiée par lecture du code (`audit_engine.py::run_audit`, phase 1) :
+la requête envoyée pour chercher les passages pertinents dans le document
+client est `f"{requirement.title} {requirement.body[:300]}"` — le texte
+légal brut de l'article. Le laboratoire construit la sienne à partir des
+`indices` de `referentiel/articles.py`, des mots-clés écrits à la main pour
+matcher le vocabulaire d'un vrai document. Sur les articles au libellé le
+plus abstrait (12, 13, 15-22, 32-34, 44-49), le recouvrement lexical est nul
+dans la plupart des documents — y compris ceux conçus comme conformes — et
+le retriever lexical retombe sur les premiers passages du document dans
+leur ordre d'origine, sans rapport avec la question. Confirmé par les
+verdicts eux-mêmes : faux positifs "manquement" à haute confiance
+(0,7-0,9), donc sans déclencher le second avis DA-09 — un problème de
+recherche de passages, pas de vote.
+
+Deux correctifs testés en conditions réelles sur un sous-corpus de 4
+documents (01, 02, 09, 12) et abandonnés : repli sémantique si le score
+lexical est nul (66,1 % → 67,9 %, gain non significatif) et requête réduite
+au titre seul (64,3 %, pire — 2 faux négatifs apparus sur un document
+auparavant parfait). Les deux annulés (`git checkout`), moteur de
+production inchangé. `--ci` de `validation/evaluate.py` volontairement pas
+étendu à RGPD : un seuil bloquant à ~60 % ne protégerait rien de réel.
+Documenté dans `CHANGELOG.md`, `docs/architecture.md` §6, `CORPUS.md` et
+`README.md`.
+
 ## Tâche F3 — Documentation
 
 Ce document, plus `README.md` (nombre de tests à jour, mention de
@@ -344,17 +378,13 @@ dans les points de vigilance connus).
    `complianceai-api` depuis le tableau de bord Render, confirmer que le
    document est toujours présent. Non testable localement (pas de disque
    Render en local).
-3. **Lancer la mesure de la Tâche 7 avec la clé Groq réelle**, en ayant
-   budgété le quota (~700 appels pour 3 passages × 15 documents) :
-   ```
-   python -m validation.evaluate --corpus corpus \
-       --verite corpus/verite_terrain.json --runs 3 --output rapport.json
-   ```
-   (depuis la racine du dépôt, avec `PYTHONPATH=backend` et `DATABASE_URL`/
-   `JWT_SECRET`/`GROQ_API_KEY` renseignés — voir `backend/.env` pour le
-   gabarit). Ne jamais ajuster la règle de comparaison des groupes d'articles
-   après avoir vu les résultats (documentée dans le docstring de
-   `validation/evaluate.py`).
+3. ~~**Lancer la mesure de la Tâche 7 avec la clé Groq réelle**~~ — fait le
+   2026-09-28 (`mesure_rgpd.json`) : exactitude 66,2 %, nettement sous les
+   trois autres référentiels. Voir la section « Tâche F2 (suite) — RGPD »
+   ci-dessus pour le diagnostic complet et les deux correctifs testés et
+   abandonnés. **Reste à faire par l'équipe** : concevoir une vraie
+   correction (mots-clés par exigence dérivés du texte ingéré, à la manière
+   des `indices` du laboratoire) — hors délai avant le gel du 2026-09-28.
 4. **Lancer `backend/scripts/cout_analyses.py`** sur la base de production,
    après quelques analyses réelles :
    ```
