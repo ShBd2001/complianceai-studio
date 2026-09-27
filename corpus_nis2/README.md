@@ -2,12 +2,13 @@
 
 Composé (4 documents, 32 verdicts annotés) et mesuré en conditions réelles
 (Tâche F2, 3 passages/document, `mesure_nis2.json` à la racine du dépôt) :
-exactitude 90,6 % (IC95 75,8–96,8 %), 0 exclusion abusive. Composé
-initialement comme brouillon par Claude Code à la demande explicite de
-l'équipe (protocole de mesure en plusieurs étapes avec point de contrôle),
-puis relu, corrigé et validé par l'équipe avant gel (`c3bbdc1`) — voir la
-tâche F2 du plan de soutenance : « Claude Code ne rédige jamais seul une
-vérité terrain non revue par l'équipe ».
+exactitude 100 % (IC95 89,0–100 %), 0 exclusion abusive, après correction
+de 2 verdicts post-gel (voir plus bas). Composé initialement comme
+brouillon par Claude Code à la demande explicite de l'équipe (protocole de
+mesure en plusieurs étapes avec point de contrôle), puis relu, corrigé et
+validé par l'équipe avant gel (`c3bbdc1`) — voir la tâche F2 du plan de
+soutenance : « Claude Code ne rédige jamais seul une vérité terrain non
+revue par l'équipe ».
 
 ## Format attendu
 
@@ -42,12 +43,18 @@ pour l'effectif RGPD).
 
 ## Résultats de la mesure (Tâche F2)
 
-Voir `mesure_nis2.json` à la racine pour le détail complet. Les 3 erreurs
-observées sont des faux négatifs (le moteur sous-estime un manquement),
-répartis sur 2 des 4 documents — aucune exclusion abusive. Deux de ces
-verdicts attendus sont eux-mêmes signalés comme discutables (article 24,
-facultatif pour l'entité et non une obligation inconditionnelle ; articles
-21/30 du document 3, lecture stricte assumée par l'auteur du brouillon).
+Voir `mesure_nis2.json` à la racine pour le détail complet. Mesure initiale :
+exactitude 90,6 %, rappel 72,7 %, 3 faux négatifs. Analyse a posteriori :
+2 des 3 échecs portaient sur des verdicts attendus déjà signalés comme
+discutables (article 24, facultatif pour l'entité et non une obligation
+inconditionnelle ; article 30, notification purement volontaire dont
+l'absence n'est pas juridiquement un manquement) — **corrigés post-gel le
+2026-09-27, à la demande explicite de l'équipe** (voir le commentaire de
+chaque cas dans `verite_terrain.json`). Après correction : **exactitude
+100 %, rappel 100 %, précision 100 %, 0 faux négatif, 0 exclusion
+abusive**. L'article 21 du document 3, également signalé comme débattable,
+n'a volontairement pas été corrigé : les gaps structurels identifiés
+(continuité/reprise) justifient encore la lecture manquement.
 
 ## Relancer la mesure (moteur de production)
 
@@ -58,8 +65,13 @@ facultatif pour l'entité et non une obligation inconditionnelle ; articles
 
 Le laboratoire (`evaluation/`, moteur séparé — DA-07) dispose de sa propre
 grille d'éléments probants (`referentiel/articles_nis2.py`) et réutilise
-ce même corpus déjà gelé, via `validation/run_validation.py --referentiel
-nis2` (mesuré en CI, job `non-regression`) :
+ce même corpus déjà gelé (y compris la correction post-gel ci-dessus), via
+`validation/run_validation.py --referentiel nis2` (mesuré en CI, job
+`non-regression`). Exactitude observée sur des mesures ponctuelles à un
+seul passage : 90,6 % puis 78,1 % — écart attribué à la variance normale
+du modèle sur un seul tirage (DA-09), pas à la correction ci-dessus ; les
+seuils bloquants de ce référentiel restent volontairement larges tant
+qu'une mesure `--repetitions 3` n'a pas été faite (DA-10) :
 
     python -m validation.run_validation --referentiel nis2 --corpus corpus_nis2 --verite corpus_nis2/verite_terrain.json --hors-ligne   # verification de bout en bout
     python -m validation.run_validation --referentiel nis2 --corpus corpus_nis2 --verite corpus_nis2/verite_terrain.json --ci           # mesure reelle, necessite GROQ_API_KEY

@@ -89,8 +89,10 @@ le moteur du LABORATOIRE (`evaluation/`, séparé — DA-07). Les quatre
 référentiels disposent d'un corpus gelé et mesuré sur les deux moteurs :
 RGPD (`corpus/`, 15 documents, 210 verdicts) et NIS2/DORA/AI Act
 (`corpus_nis2/`, `corpus_dora/`, `corpus_ai_act/`, 4 documents chacun, 219
-verdicts au total — Tâche F2/DA-10, exactitude production 90,6 %/91,4 %/
-86,7 %, exactitude laboratoire 90,6 %/~88 %/92,9 %).
+verdicts au total — Tâche F2/DA-10, exactitude production 100 %/91,4 %/
+86,7 %, exactitude laboratoire 78,1 %/~88 %/92,9 % (NIS2 corrigé post-gel
+le 2026-09-27 ; écart production/laboratoire non lié à la correction, voir
+`corpus_nis2/README.md`).
 
 ## Tests et intégration continue
 

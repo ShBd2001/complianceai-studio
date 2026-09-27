@@ -446,3 +446,19 @@ en interne n'aurait pas la qualité de fournisseur. Après correction :
 exactitude 90,6 % (NIS2), 92,9 % (AI Act, 0 exclusion abusive), ~88 % (DORA,
 métrique brute sous-estimée par les 3 articles institutionnels — 15/20/21 —
 volontairement absents de la grille, voir DA-10, docs/architecture.md).
+
+## Correction post-gel de 2 verdicts NIS2 (à la demande de l'équipe)
+
+Le rapport F2 initial signalait déjà 2 des 3 faux négatifs NIS2 comme
+attendus discutables (rappel 72,7 %) : article 24 (doc 2 — facultatif pour
+l'État membre, pas une obligation inconditionnelle de l'entité) et article
+30 (doc 3 — notification purement volontaire, son absence n'est
+juridiquement pas un manquement). Corrigés dans `corpus_nis2/verite_terrain.json`
+avec justification, à la demande explicite de l'équipe, puis remesurés sur
+les deux moteurs (`mesure_nis2.json` mis à jour). Résultat production :
+**exactitude 100 %, rappel 100 %, précision 100 %, 0 faux négatif**.
+L'article 21 (doc 3), également signalé comme débattable, n'a volontairement
+pas été corrigé : les gaps structurels identifiés restent réels. Mesure du
+laboratoire relancée aussi (même corpus) : 78,1 % — écart avec la mesure
+initiale (90,6 %) attribué à la variance normale du modèle sur un seul
+tirage (DA-09), pas à cette correction.

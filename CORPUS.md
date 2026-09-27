@@ -4,7 +4,8 @@ Ce corpus couvre le RGPD. Les dossiers `corpus_nis2/`, `corpus_dora/`,
 `corpus_ai_act/` à la racine du dépôt suivent désormais le même principe
 (4 documents chacun, gelés et mesurés — Tâche F2, voir le `README.md` de
 chacun et `mesure_nis2.json`/`mesure_dora.json`/`mesure_ai_act.json`) :
-exactitude 90,6 % / 91,4 % / 86,7 %, 0/0/1 exclusion(s) abusive(s).
+exactitude 100 % / 91,4 % / 86,7 %, 0/0/1 exclusion(s) abusive(s) (NIS2
+corrigé post-gel le 2026-09-27, voir `corpus_nis2/README.md`).
 
 ## Ce que le corpus couvre
 

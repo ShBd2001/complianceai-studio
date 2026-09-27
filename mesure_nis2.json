@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-26T21:13:40.807927+00:00",
+  "date": "2026-09-27T16:49:23.947448+00:00",
   "referentiel": "nis2",
   "passages_par_document": 3,
   "corpus": "..\\corpus_nis2",
@@ -7,20 +7,20 @@
   "sans_modele": false,
   "metriques": {
     "articles_evalues": 32,
-    "articles_comptes": 32,
-    "articles_tolerés": 0,
-    "exactitude": 0.90625,
+    "articles_comptes": 31,
+    "articles_tolerés": 1,
+    "exactitude": 1.0,
     "exactitude_ic95": [
-      0.7578150066422116,
-      0.9675990373736805
+      0.889740999265246,
+      0.9999999999999999
     ],
     "detection_manquements": {
       "precision": 1.0,
-      "rappel": 0.7272727272727273,
-      "f1": 0.8421052631578948,
-      "vrais_positifs": 8,
+      "rappel": 1.0,
+      "f1": 1.0,
+      "vrais_positifs": 9,
       "faux_positifs": 0,
-      "faux_negatifs": 3
+      "faux_negatifs": 0
     },
     "perimetre": {
       "exclusions_attendues": 14,
@@ -31,22 +31,21 @@
     "score": {
       "documents_dans_intervalle": 3,
       "documents_total": 4,
-      "ecart_moyen": 2.075
+      "ecart_moyen": 2.283333333333333
     },
     "reproductibilite": {
-      "stabilite_moyenne": 0.9642857142857143,
-      "ecart_type_score_max": 4.4549597828338126
+      "stabilite_moyenne": 0.96875,
+      "ecart_type_score_max": 6.981085557100385
     },
     "matrice_confusion": {
       "conforme": {
-        "conforme": 7
+        "conforme": 8
       },
       "hors_perimetre": {
         "hors_perimetre": 14
       },
       "manquement": {
-        "manquement": 8,
-        "conforme": 3
+        "manquement": 9
       }
     }
   },
@@ -120,24 +119,24 @@
           "modele": "openai/gpt-oss-120b",
           "appels": 8,
           "jetons_prompt": 13445,
-          "jetons_completion": 4330,
-          "duree_s": 15.0168
+          "jetons_completion": 4371,
+          "duree_s": 38.405641
         },
         {
           "retriever": "lexical",
           "modele": "openai/gpt-oss-120b",
           "appels": 8,
           "jetons_prompt": 13445,
-          "jetons_completion": 4268,
-          "duree_s": 9.174121
+          "jetons_completion": 4488,
+          "duree_s": 7.716286
         },
         {
           "retriever": "lexical",
           "modele": "openai/gpt-oss-120b",
           "appels": 8,
           "jetons_prompt": 13445,
-          "jetons_completion": 4029,
-          "duree_s": 7.926769
+          "jetons_completion": 4305,
+          "duree_s": 24.396941
         }
       ]
     },
@@ -151,7 +150,7 @@
       "scores": [
         23.3,
         23.3,
-        23.3
+        25.8
       ],
       "stabilite": 1.0,
       "articles": [
@@ -175,9 +174,9 @@
         },
         {
           "article": "24",
-          "attendu": "manquement",
+          "attendu": "conforme",
           "obtenu": "conforme",
-          "tolere": false
+          "tolere": true
         },
         {
           "article": "27",
@@ -210,24 +209,24 @@
           "modele": "openai/gpt-oss-120b",
           "appels": 8,
           "jetons_prompt": 13756,
-          "jetons_completion": 4045,
-          "duree_s": 11.683687
+          "jetons_completion": 4009,
+          "duree_s": 23.953702
         },
         {
           "retriever": "lexical",
           "modele": "openai/gpt-oss-120b",
           "appels": 8,
           "jetons_prompt": 13756,
-          "jetons_completion": 4197,
-          "duree_s": 8.643253
+          "jetons_completion": 4261,
+          "duree_s": 26.321623
         },
         {
           "retriever": "lexical",
           "modele": "openai/gpt-oss-120b",
           "appels": 8,
           "jetons_prompt": 13756,
-          "jetons_completion": 4288,
-          "duree_s": 9.902386
+          "jetons_completion": 4208,
+          "duree_s": 29.54694
         }
       ]
     },
@@ -239,11 +238,11 @@
         50
       ],
       "scores": [
-        51.7,
-        46.7,
-        40.8
+        38.3,
+        40.8,
+        54.2
       ],
-      "stabilite": 0.8571428571428571,
+      "stabilite": 0.875,
       "articles": [
         {
           "article": "20",
@@ -254,7 +253,7 @@
         {
           "article": "21",
           "attendu": "manquement",
-          "obtenu": "conforme",
+          "obtenu": "manquement",
           "tolere": false
         },
         {
@@ -289,7 +288,7 @@
         },
         {
           "article": "30",
-          "attendu": "manquement",
+          "attendu": "conforme",
           "obtenu": "conforme",
           "tolere": false
         }
@@ -300,24 +299,24 @@
           "modele": "openai/gpt-oss-120b",
           "appels": 8,
           "jetons_prompt": 13674,
-          "jetons_completion": 5246,
-          "duree_s": 12.935969
+          "jetons_completion": 5310,
+          "duree_s": 10.832211
         },
         {
           "retriever": "lexical",
           "modele": "openai/gpt-oss-120b",
           "appels": 8,
           "jetons_prompt": 13674,
-          "jetons_completion": 5451,
-          "duree_s": 11.023492
+          "jetons_completion": 5088,
+          "duree_s": 9.274662
         },
         {
           "retriever": "lexical",
           "modele": "openai/gpt-oss-120b",
           "appels": 8,
           "jetons_prompt": 13674,
-          "jetons_completion": 5274,
-          "duree_s": 9.264939
+          "jetons_completion": 5093,
+          "duree_s": 36.69143
         }
       ]
     },
@@ -391,7 +390,7 @@
           "appels": 0,
           "jetons_prompt": 0,
           "jetons_completion": 0,
-          "duree_s": 0.712627
+          "duree_s": 0.491283
         },
         {
           "retriever": "lexical",
@@ -399,7 +398,7 @@
           "appels": 0,
           "jetons_prompt": 0,
           "jetons_completion": 0,
-          "duree_s": 0.373214
+          "duree_s": 0.467574
         },
         {
           "retriever": "lexical",
@@ -407,7 +406,7 @@
           "appels": 0,
           "jetons_prompt": 0,
           "jetons_completion": 0,
-          "duree_s": 0.386683
+          "duree_s": 0.371002
         }
       ]
     }

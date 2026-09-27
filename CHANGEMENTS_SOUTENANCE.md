@@ -276,6 +276,19 @@ modifier.
 - Job CI `non-regression` mesure désormais les 4 référentiels à chaque
   push sur `main` (timeout porté de 25 à 45 minutes).
 
+## Tâche F2 (suite) — Correction post-gel de 2 verdicts NIS2
+
+À la demande explicite de l'équipe, après relecture du rapport F2 initial :
+2 des 3 faux négatifs NIS2 (rappel initial 72,7 %) provenaient de verdicts
+attendus déjà signalés comme discutables dans ce même rapport — article 24
+(doc 2, obligation facultative pour l'État membre) et article 30 (doc 3,
+notification purement volontaire). Corrigés avec justification dans
+`corpus_nis2/verite_terrain.json`, puis remesurés sur les deux moteurs.
+Résultat production : **exactitude 100 %, rappel 100 %, 0 faux négatif**
+(`mesure_nis2.json` mis à jour). L'article 21 (doc 3), également signalé
+comme débattable, n'a volontairement pas été corrigé — les gaps
+structurels identifiés y restent réels.
+
 ## Tâche F3 — Documentation
 
 Ce document, plus `README.md` (nombre de tests à jour, mention de

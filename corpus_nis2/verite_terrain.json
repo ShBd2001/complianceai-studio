@@ -1,7 +1,7 @@
 {
   "version": "0.1",
   "referentiel": "nis2",
-  "note": "Brouillon redige par Claude Code a la demande explicite de l'equipe (protocole de mesure NIS2/DORA/AI Act), destine a etre relu et corrige article par article avant tout gel de reference -- voir README.md de ce dossier pour la clause de gouvernance habituelle (Claude Code ne redige jamais seul une verite terrain non revue). Articles auditables NIS2 : 20, 21, 23, 24, 27, 28, 29, 30 (app/ingestion/scoping.py::NIS2_AUDITABLE). Le champ 'profil' fixe directement entite_nis2 sur l'organisation de test (validation/evaluate.py::_appliquer_profil), sans dependre d'une extraction heuristique depuis 'description'.",
+  "note": "Brouillon redige par Claude Code a la demande explicite de l'equipe (protocole de mesure NIS2/DORA/AI Act), relu et corrige par l'equipe avant gel initial (commit c3bbdc1, 'reference validee'). CORRECTION POST-GEL (2026-09-27, a la demande explicite de l'equipe) : 2 verdicts deja signales comme discutables dans le rapport F2 initial ont ete corriges avec justification -- doc 02, art. 24 (manquement -> tolere, obligation facultative pour l'Etat membre, pas inconditionnelle pour l'entite) et doc 03, art. 30 (manquement -> conforme, notification purement volontaire, son absence n'est pas juridiquement un manquement). Voir les commentaires de chaque cas pour le detail. Articles auditables NIS2 : 20, 21, 23, 24, 27, 28, 29, 30 (app/ingestion/scoping.py::NIS2_AUDITABLE). Le champ 'profil' fixe directement entite_nis2 sur l'organisation de test (validation/evaluate.py::_appliquer_profil), sans dependre d'une extraction heuristique depuis 'description'.",
   "cas": [
     {
       "fichier": "01_reseau_hospitalier_conforme.txt",
@@ -39,18 +39,18 @@
         "20": "manquement",
         "21": "manquement",
         "23": "manquement",
-        "24": "manquement",
+        "24": "tolere",
         "27": "hors_perimetre",
         "28": "hors_perimetre",
         "29": "manquement",
         "30": "manquement"
       },
-      "jamais_exclure": ["20", "21", "23", "24", "29", "30"],
+      "jamais_exclure": ["20", "21", "23", "29", "30"],
       "commentaires": {
         "20": "Aucune politique formalisee, aucun membre de la direction forme, sujet jamais aborde en comite de direction.",
         "21": "Aucune analyse de risques, aucun plan de continuite ni de reprise, sauvegardes manuelles et irregulieres sans test de restauration, mots de passe administrateurs inchanges depuis 2019, authentification multifacteurs absente, aucune clause de securite dans les contrats prestataires.",
         "23": "Incident de mars 2025 notifie 11 jours apres decouverte (au lieu de l'alerte precoce sous 24h), aucun rapport final etabli, aucune procedure ecrite de notification.",
-        "24": "Aucune exigence de certification integree aux achats informatiques.",
+        "24": "CORRECTION POST-GEL (2026-09-27, signalee des le rapport F2 comme discutable) : « manquement » a l'origine, ramene a « tolere ». L'article 24 est une faculte pour l'Etat membre d'imposer un schema de certification pour une categorie de produit donnee, pas une obligation inconditionnelle de l'entite d'utiliser systematiquement des produits certifies. « Aucune exigence de certification integree aux achats » ne prouve donc pas a lui seul un manquement en l'absence d'un element montrant qu'un tel schema a ete rendu obligatoire pour cette categorie de produit.",
         "27": "« L'entreprise n'exploite pas de service DNS ni de registre de noms de domaine pour des tiers » -- exclusion de contenu, non liee a la defaillance generale.",
         "28": "Meme exclusion que l'article 27.",
         "29": "« Ne participe a aucun dispositif de partage d'informations sur les cybermenaces. »",
@@ -70,18 +70,18 @@
         "27": "hors_perimetre",
         "28": "hors_perimetre",
         "29": "manquement",
-        "30": "manquement"
+        "30": "conforme"
       },
       "jamais_exclure": ["20", "21", "23", "24", "29", "30"],
       "commentaires": {
         "20": "Contradiction : la politique affirme que « l'ensemble des membres du comite de direction est forme », mais le registre RH ne recense qu'une seule participation (le responsable securite lui-meme) -- l'affirmation n'est pas etayee par les faits.",
-        "21": "Cartographie des risques SCADA non mise a jour depuis 2022 malgre un changement materiel en 2024, absence de plan de continuite formalise et de plan de reprise malgre leur mention dans l'organigramme documentaire, un contrat (CRM) sans clause de securite, campagne de sensibilisation limitee aux services administratifs (equipes d'exploitation exclues) -- gaps multiples malgre des points positifs reels (authentification multifacteurs sur le reseau de supervision, sauvegardes testees trimestriellement).",
+        "21": "Cartographie des risques SCADA non mise a jour depuis 2022 malgre un changement materiel en 2024, absence de plan de continuite formalise et de plan de reprise malgre leur mention dans l'organigramme documentaire, un contrat (CRM) sans clause de securite, campagne de sensibilisation limitee aux services administratifs (equipes d'exploitation exclues) -- gaps multiples malgre des points positifs reels (authentification multifacteurs sur le reseau de supervision, sauvegardes testees trimestriellement). Signale comme discutable au rapport F2 mais NON corrige : plusieurs gaps structurels reels (continuite/reprise) justifient encore la lecture manquement, a la difference des articles 24 et 30 ci-dessous.",
         "23": "L'alerte precoce de l'incident de janvier 2025 respecte le delai de 24h (22h), mais le rapport final n'a ete produit que six semaines apres l'incident, au-dela du delai d'un mois, et apres relance de l'autorite -- manquement caracterise malgre le respect partiel de la procedure.",
         "24": "Automates de supervision 2024 selectionnes parmi des references certifiees lorsque la certification existait pour la categorie -- pratique reelle et positive, sans contradiction relevee.",
         "27": "« L'entreprise n'exploite pas de service DNS ni de registre de noms de domaine pour des tiers » -- exclusion de contenu.",
         "28": "Meme exclusion que l'article 27.",
         "29": "A rejoint le dispositif sectoriel en 2024 mais n'a transmis aucune information depuis -- adhesion sans mise en oeuvre reelle, ne repond pas a l'esprit de l'obligation.",
-        "30": "« N'a effectue aucune notification volontaire d'incident mineur ou de cybermenace. »"
+        "30": "CORRECTION POST-GEL (2026-09-27, signalee des le rapport F2 comme discutable) : « manquement » a l'origine, corrige en « conforme ». L'article 30 est une notification purement volontaire (« peuvent notifier ») : l'absence de notification volontaire n'est juridiquement pas un manquement, contrairement a l'article 29 ci-dessus ou une adhesion sans mise en oeuvre reelle reste distinguable d'un manquement caracterise mais releve d'une autre logique (participation formelle sans substance, pas simple non-exercice d'une faculte)."
       }
     },
     {
