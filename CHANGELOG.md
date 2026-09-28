@@ -525,32 +525,60 @@ protégerait contre aucune régression réelle. Une vraie solution demande des
 mots-clés par exigence dérivés du texte ingéré, pas un ajustement ponctuel
 de la requête — hors délai avant le gel du 2026-09-28.
 
-## RGPD : troisième correctif (mots-clés du laboratoire), gain réel mais annulé
+## RGPD : troisième correctif (mots-clés du laboratoire), corrigé et déployé
 
 Une troisième piste, plus sérieuse que les deux précédentes : réutiliser
-tels quels les `indices` déjà écrits à la main dans les 4 grilles du
-laboratoire (`referentiel/articles*.py`, DA-10) — copiés statiquement dans
-`app/ingestion/mots_cles_recherche.py` (pas d'import du paquet
+tels quels les `indices` BLOQUANTS déjà écrits à la main dans les 4 grilles
+du laboratoire (`referentiel/articles*.py`, DA-10) — copiés statiquement
+dans `app/ingestion/mots_cles_recherche.py` (pas d'import du paquet
 `referentiel` depuis le backend) et ajoutés, jamais substitués, à la
-requête de recherche de `audit_engine.py`.
+requête de recherche de `audit_engine.py`. RGPD uniquement : vérifié comme
+dégradant NIS2/DORA/AI Act (déjà validés à 91-100 %) quand testé sur leurs
+corpus complets (ex. NIS2 rappel 100 % → 88,9 %).
 
-Sur le sous-corpus de 4 documents utilisé pour les essais précédents :
-66,1 % → 82,1 % d'exactitude. Vérifié à tort comme suffisant : une
-vérification séparée sur NIS2/DORA/AI Act (déjà validés à 91-100 %) a
-montré une dégradation cohérente sur les trois référentiels (ex. NIS2
-rappel 100 % → 88,9 %) — ajouter des termes de requête peut déplacer le
-classement du top-K et écarter un passage qui suffisait déjà, contrairement
-à l'hypothèse initiale que l'ajout ne pouvait que servir.
+Premier essai (mots-clés concaténés à la requête texte, décodés mot par mot
+par `_scores_lexicaux` comme le reste de la requête) : gain net sur un
+sous-corpus de 4 documents (66,1 % → 82,1 %), mais deux exclusions abusives
+distinctes sont apparues au fil des vérifications — chaque fois un mot
+générique isolé, caché dans une phrase ou déjà seul dans la grille, matchant
+un passage sans rapport ("direction" dans "rattaché à la direction" pour
+l'article 37, puis "prestataire" seul pour l'article 28). Corrigé à la
+racine plutôt que mot-clé par mot-clé : nouvelle fonction
+`rag.py::_scores_phrases`, qui apparie une phrase ENTIÈRE (pas mot par mot)
+et n'attribue un bonus de score que si au moins 2 phrases distinctes
+matchent le même passage — une correspondance isolée, générique ou non, ne
+suffit plus seule à orienter la recherche. `audit_engine.py` passe
+désormais les mots-clés séparément à `rag.search_client_documents`
+(paramètre `phrases`) plutôt que de les concaténer à la requête texte.
 
-Restreint à RGPD seul (`_REFERENTIELS_MOTS_CLES_ACTIFS`), puis remesuré sur
-le corpus complet (15 documents, 3 passages) : exactitude 66,2 % →
-**72,9 %**, précision 55,6 % → **62,7 %**, rappel 76,9 % → **82,1 %** — un
-gain réel, plus modeste que le sous-corpus ne le laissait croire, mais avec
-un effet de bord : une exclusion abusive nouvelle (document 15, article 37 —
-délégué à la protection des données classé à tort hors périmètre), catégorie
-d'erreur traitée comme la plus grave du projet et jusque-là maintenue à 0
-sur ce corpus. Jugé trop risqué à quelques heures de la soutenance malgré le
-gain net : annulé (`git checkout`, suppression de
-`mots_cles_recherche.py`), moteur de production inchangé. Piste validée en
-direction, à reprendre après le gel en excluant les mots-clés des articles
-à fort enjeu (37) de l'enrichissement.
+Mesuré sur le corpus complet (15 documents, 210 verdicts, 3 passages,
+`mesure_rgpd.json`) : exactitude 66,2 % → **76,7 %**, précision 55,6 % →
+**68,5 %**, rappel 76,9 % → **80,8 %**, exclusions abusives **0** — stable
+sur plusieurs tirages de vérification (sous-corpus de 4 documents inclus le
+document 15, testé deux fois indépendamment). Déployé (commits `ccc9f6e`,
+suivi de `3e793b3` pour un correctif e2e sans rapport). `--ci` de
+`validation/evaluate.py` toujours pas étendu à RGPD : à reconsidérer une
+fois ce chiffre confirmé stable sur plusieurs mesures supplémentaires.
+
+## RGPD : prototype "preuve par élément", vers l'approche du laboratoire
+
+76,7 % reste sous le laboratoire (84-87 % sur ce même corpus). La
+différence structurelle : le laboratoire ne demande jamais un verdict
+holistique au modèle — il extrait une preuve par élément attendu de la
+grille (`evaluation/evaluateur.py::evaluer_article`), puis c'est le CODE qui
+décide du verdict (tous les éléments bloquants prouvés → conforme, sinon
+manquement). La production demande au modèle un verdict direct
+(`SYSTEM_PROMPT`, "oui"/"partiel"/"non"...), avec toute la subjectivité que
+ça implique.
+
+Prototype limité à RGPD : `app/ingestion/grille_rgpd.py` (copie statique de
+`condition_applicabilite`, éléments bloquants et dérogations ex-ante depuis
+`referentiel/articles.py`, sans les indices déjà dans
+`mots_cles_recherche.py`) et une nouvelle fonction
+`audit_engine.py::_evaluer_par_elements`, avec un prompt dédié qui demande
+au modèle d'extraire une citation par élément (jamais un verdict), revérifiée
+comme toute autre citation (`_passage_correspondant`) avant d'être acceptée.
+`evaluate_requirement()` y délègue automatiquement pour tout article RGPD
+couvert par `GRILLE_RGPD` ; les articles non couverts et les trois autres
+référentiels continuent sur l'approche existante, inchangée. Mesure en
+cours.

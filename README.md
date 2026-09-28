@@ -94,9 +94,10 @@ verdicts au total — Tâche F2/DA-10, exactitude production 100 %/91,4 %/
 corrigés post-gel le 2026-09-27 ; écarts production/laboratoire non liés
 aux corrections, variance normale du modèle — voir `corpus_nis2/README.md`
 et `corpus_ai_act/README.md`). Le moteur de production sur le corpus RGPD
-complet, mesuré pour la première fois le 2026-09-28 : exactitude 66,2 %,
-nettement sous les trois autres référentiels — cause identifiée et
-documentée, correctif pas encore trouvé (voir CHANGELOG.md et
+complet, mesuré pour la première fois le 2026-09-28 (66,2 %, nettement sous
+les trois autres référentiels), puis corrigé le même jour (mots-clés du
+laboratoire, appariement par phrase entière) : exactitude **76,7 %**,
+précision 68,5 %, rappel 80,8 %, 0 exclusion abusive (voir CHANGELOG.md et
 docs/architecture.md §6).
 
 ## Tests et intégration continue
