@@ -106,8 +106,14 @@ class FakeConnector:
     code = "rgpd"
 
     def fetch(self) -> IngestionResult:
+        # Article 8 choisi car absent de app/ingestion/mots_cles_recherche.py
+        # (RGPD_AUDITABLE exige un numero reel, 5-49 -- une reference fictive
+        # est rejetee a l'ingestion) : garantit qu'aucun mot-cle ne vient
+        # enrichir la requete de recherche pour ce test, meme si la table
+        # s'etend a l'avenir -- ce test verifie le repli sans preuve trouvee,
+        # pas un article reel.
         articles = [
-            ("Article 32", "Sécurité du traitement",
+            ("Article 8", "Sécurité du traitement",
              ("Le responsable du traitement met en oeuvre les mesures techniques et "
               "organisationnelles appropriees, notamment le chiffrement des donnees.")),
         ]

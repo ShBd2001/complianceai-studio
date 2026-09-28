@@ -28,6 +28,7 @@ from app.core.config import settings
 from app.models.audit import Audit, Document, DocumentChunk, Finding
 from app.models.enums import AuditStatus, FindingStatus, Severity
 from app.models.framework import Framework, FrameworkVersion, Requirement
+from app.ingestion.mots_cles_recherche import MOTS_CLES
 from app.ingestion.scoping import dependency_of
 from app.services import llm, rag
 from app.services.documents import chunk_text, extract_text, read_document
@@ -713,6 +714,52 @@ def _article_number_of(reference: str) -> int | None:
     return int(match.group(1)) if match else None
 
 
+# Referentiels ou l'enrichissement par mots-cles est ACTIF en production.
+# RGPD seul : gain mesure net sur le corpus complet (2026-09-28, exactitude
+# 66,2 % -> 72,9 %, voir CHANGELOG.md). NIS2/DORA/AI Act EXCLUS : une
+# verification sur leurs corpus complets a montre une degradation sur les
+# trois (ex. NIS2 rappel 100 % -> 88,9 %) -- plus de termes de requete peut
+# deplacer le classement du top-K et ecarter un passage qui matchait deja
+# bien le texte legal seul. Ne pas etendre sans nouvelle mesure.
+_REFERENTIELS_MOTS_CLES_ACTIFS = frozenset({"rgpd"})
+
+
+def _requete_recherche(
+    requirement: Requirement, framework_code: str,
+) -> tuple[str, tuple[str, ...]]:
+    """Construit la requete de recherche de passages pour une exigence.
+
+    Renvoie (requete, phrases) : la requete de base (texte legal, titre +
+    debut du corps) sert toujours a rag.search_client_documents comme
+    query -- c'est le repli garanti. `phrases` (mots-cles de MOTS_CLES, RGPD
+    uniquement, voir _REFERENTIELS_MOTS_CLES_ACTIFS) est passe separement,
+    pour etre apparie PHRASE ENTIERE (rag.py::_scores_phrases), pas mot par
+    mot : un mot generique isole ("direction", "prestataire") ne doit pas
+    suffire seul a orienter la recherche vers un passage sans rapport --
+    observe en conditions reelles le 2026-09-28 (voir CHANGELOG.md) quand
+    les mots-cles etaient simplement concatenes a la requete texte et
+    decoupes mot par mot comme le reste.
+
+    Le texte legal seul echoue sur les articles au libelle le plus abstrait
+    (12, 13, 15-22, 32-34, 44-49 en RGPD -- aucun recouvrement lexical avec
+    le vocabulaire d'un vrai document) car il n'emploie jamais le
+    vocabulaire d'un document reel ("chiffrement AES-256") mais celui de la
+    loi ("mesures appropriees") ; les mots-cles du laboratoire
+    (app/ingestion/mots_cles_recherche.py -- copie adaptee des `indices`
+    BLOQUANTS, DA-07/DA-10) comblent cet ecart.
+    """
+    base = f"{requirement.title} {requirement.body[:300]}"
+    if framework_code not in _REFERENTIELS_MOTS_CLES_ACTIFS:
+        return base, ()
+    numero = _article_number_of(requirement.reference)
+    if numero is None:
+        return base, ()
+    mots = MOTS_CLES.get(framework_code, {}).get(numero)
+    if not mots:
+        return base, ()
+    return base, mots
+
+
 def _to_severity(value: str | None) -> Severity:
     try:
         return Severity(str(value).lower())
@@ -902,18 +949,19 @@ def run_audit(
         # Phase 1 (base, sequentielle) : recuperer les passages pertinents.
         # La session SQLAlchemy n'est pas partageable entre threads, on isole
         # donc tous les acces base avant la parallelisation.
-        retrieved: list[tuple[Requirement, list[rag.Passage]]] = [
-            (
+        retrieved: list[tuple[Requirement, list[rag.Passage]]] = []
+        for requirement in a_evaluer:
+            requete, phrases = _requete_recherche(requirement, audit.framework.value)
+            retrieved.append((
                 requirement,
                 rag.search_client_documents(
                     db,
-                    f"{requirement.title} {requirement.body[:300]}",
+                    requete,
                     organization_id=audit.organization_id,
                     audit_id=audit.id,
+                    phrases=phrases,
                 ),
-            )
-            for requirement in a_evaluer
-        ]
+            ))
 
         # Phase 2 (reseau, parallele) : les appels au modele sont des I/O pures
         # et independants. Les paralleliser divise la duree d'un audit RGPD

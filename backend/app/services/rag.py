@@ -107,6 +107,42 @@ def _scores_lexicaux(requete: str, candidats: list[tuple[str, str]]) -> dict[str
     return scores
 
 
+def _scores_phrases(
+    phrases: tuple[str, ...], candidats: list[tuple[str, str]], seuil_occurrences: int = 2,
+) -> dict[str, float]:
+    """Score bonus pour un jeu de phrases-cles (pas des mots isoles) -- voir
+    audit_engine.py::_requete_recherche, mots-cles du laboratoire (RGPD).
+
+    A la difference de _scores_lexicaux, une phrase entiere ("delegue a la
+    protection des donnees") doit apparaitre telle quelle : elle n'est pas
+    decoupee en mots individuels comptes separement. Cela evite qu'un mot
+    generique cache dans une phrase ("direction" dans "rattache a la
+    direction") ne matche seul un passage sans rapport.
+
+    N'attribue un bonus que si AU MOINS `seuil_occurrences` phrases
+    DISTINCTES matchent le meme candidat : une correspondance isolee reste
+    trop faible pour orienter la recherche a elle seule -- observe en
+    conditions reelles (2026-09-28, corpus RGPD complet) sur des mots-cles
+    a un seul mot deja generiques dans la grille elle-meme ("prestataire",
+    genuinement present dans le vocabulaire d'un document sur un tout autre
+    sujet qu'un contrat de sous-traitance). Exiger une convergence d'au
+    moins deux signaux evite qu'un seul mot-cle isole, generique ou non,
+    ne suffise a faire basculer un verdict.
+    """
+    phrases_normalisees = [p for p in (_normaliser(x) for x in phrases) if p]
+    if len(phrases_normalisees) < seuil_occurrences:
+        return {}
+    scores: dict[str, float] = {}
+    for identifiant, texte in candidats:
+        corps = _normaliser(texte)
+        matches = [p for p in phrases_normalisees if p in corps]
+        if len(matches) < seuil_occurrences:
+            continue
+        occurrences = sum(corps.count(p) for p in matches)
+        scores[identifiant] = occurrences / (1 + len(corps) / 800)
+    return scores
+
+
 def _classer_lexical(candidats: list[tuple[str, str]], scores: dict[str, float], limit: int) -> list[str]:
     ordre = [i for i, _ in candidats]
     retenus = sorted((i for i in ordre if i in scores), key=lambda i: scores[i], reverse=True)
@@ -245,8 +281,16 @@ def search_client_documents(
     organization_id: uuid.UUID,
     audit_id: uuid.UUID | None = None,
     limit: int | None = None,
+    phrases: tuple[str, ...] = (),
 ) -> list[Passage]:
-    """Retrouve les passages des documents deposes par le client."""
+    """Retrouve les passages des documents deposes par le client.
+
+    `phrases` (optionnel) : mots-cles de app/ingestion/mots_cles_recherche.py
+    a apparier phrase entiere, pas mot par mot -- voir _scores_phrases.
+    Ignore en mode semantique/hybride (le classement s'appuie deja sur le
+    sens, pas sur des termes exacts) : seul le mode lexical, source du
+    probleme diagnostique le 2026-09-28, en beneficie.
+    """
     limit = limit or settings.RAG_TOP_K
     methode = settings.RAG_RETRIEVER
 
@@ -264,7 +308,7 @@ def search_client_documents(
         return _documents_semantique(db, query, base, limit)
     if methode == "hybride":
         return _documents_hybride(db, query, base, limit)
-    return _documents_lexical(db, query, base, limit)
+    return _documents_lexical(db, query, base, limit, phrases)
 
 
 def _documents_semantique(db: Session, query: str, base, limit: int) -> list[Passage]:
@@ -279,12 +323,17 @@ def _documents_semantique(db: Session, query: str, base, limit: int) -> list[Pas
     return [_passage_chunk(c, filename, float(d)) for c, filename, d in rows]
 
 
-def _documents_lexical(db: Session, query: str, base, limit: int) -> list[Passage]:
+def _documents_lexical(
+    db: Session, query: str, base, limit: int, phrases: tuple[str, ...] = (),
+) -> list[Passage]:
     lignes = db.execute(base).all()
     if not lignes:
         return []
     candidats = [(str(c.id), c.content) for c, _ in lignes]
     scores = _scores_lexicaux(query, candidats)
+    if phrases:
+        for identifiant, bonus in _scores_phrases(phrases, candidats).items():
+            scores[identifiant] = scores.get(identifiant, 0.0) + bonus
     par_id = {str(c.id): (c, filename) for c, filename in lignes}
     classement = _classer_lexical(candidats, scores, limit)
     return [
