@@ -355,10 +355,15 @@ Documenté dans `CHANGELOG.md`, `docs/architecture.md` §6, `CORPUS.md` et
 Reste sous le laboratoire (84-87 % sur ce même corpus). Différence
 structurelle : le laboratoire extrait une preuve par élément de la grille
 et laisse le CODE décider du verdict ; la production demande un verdict
-holistique directement au modèle. Prototype en cours pour rapprocher les
-deux (`app/ingestion/grille_rgpd.py`, `audit_engine.py::_evaluer_par_elements`,
-RGPD uniquement, les autres référentiels inchangés) — voir CHANGELOG.md
-pour son état et sa mesure.
+holistique directement au modèle. Prototype tenté pour rapprocher les deux
+(`app/ingestion/grille_rgpd.py`, `audit_engine.py::_evaluer_par_elements`,
+RGPD uniquement) puis abandonné le même jour : mesuré à 67,2 % sur le même
+sous-corpus, moins bon que l'approche mots-clés déjà déployée
+(75,9-81,0 %) — exiger une citation exacte par élément s'est révélé trop
+strict (le document de référence 01 s'effondre à 38,8 au lieu de 88-100).
+Non déployé, code retiré. Voir CHANGELOG.md pour le détail de la mesure et
+la piste à reprendre (séparer l'appel applicabilité des éléments, comme le
+fait réellement le laboratoire).
 
 ## Tâche F3 — Documentation
 
@@ -402,9 +407,12 @@ dans les points de vigilance connus).
    2026-09-28 (`mesure_rgpd.json`) : exactitude 66,2 % initialement,
    corrigée le même jour à **76,7 %** (mots-clés du laboratoire). Voir la
    section « Tâche F2 (suite) — RGPD » ci-dessus pour le diagnostic complet.
-   **Reste à faire par l'équipe** : le prototype "preuve par élément"
-   (rapprochement avec le laboratoire, 84-87 % sur ce corpus) est en cours
-   d'évaluation — vérifier son résultat mesuré et décider de son déploiement.
+   Un prototype "preuve par élément" (rapprochement avec le laboratoire,
+   84-87 % sur ce corpus) a été tenté et mesuré à 67,2 % sur un sous-corpus
+   — moins bon, non déployé. **Reste à faire par l'équipe** : reprendre
+   cette piste en séparant l'appel applicabilité des éléments comme le fait
+   réellement le laboratoire (le prototype abandonné faisait les deux en un
+   seul appel).
 4. **Lancer `backend/scripts/cout_analyses.py`** sur la base de production,
    après quelques analyses réelles :
    ```

@@ -580,5 +580,26 @@ au modèle d'extraire une citation par élément (jamais un verdict), revérifi�
 comme toute autre citation (`_passage_correspondant`) avant d'être acceptée.
 `evaluate_requirement()` y délègue automatiquement pour tout article RGPD
 couvert par `GRILLE_RGPD` ; les articles non couverts et les trois autres
-référentiels continuent sur l'approche existante, inchangée. Mesure en
-cours.
+référentiels continuent sur l'approche existante, inchangée.
+
+Mesuré sur le même sous-corpus de 4 documents (01, 02, 12, 15, 3 passages) :
+exactitude **67,2 %** — moins bon que l'approche déjà en production sur ce
+même sous-corpus (75,9-81,0 %). Rappel parfait (100 %, aucun manquement
+raté) et 0 exclusion abusive, mais précision en net retrait (57,8 %) : le
+document de référence 01 (attendu 88-100) s'effondre à un score de 38,8
+avec seulement 3/15 articles corrects. Cause probable : exiger une citation
+EXACTE pour chaque élément individuel est plus strict que le verdict
+holistique actuel, et rejette des preuves réelles mais formulées
+différemment de l'intitulé de l'élément — une limite déjà connue du
+laboratoire lui-même (voir `note_auditeur` de plusieurs articles dans
+`referentiel/articles.py`), mais que ce prototype simplifié (un seul appel
+modèle par article, pas d'appel séparé pour l'applicabilité comme le fait
+le laboratoire) amplifie plutôt qu'il ne la corrige.
+
+Non déployé : `git checkout` sur `audit_engine.py`/`test_audit_pipeline.py`,
+suppression de `grille_rgpd.py`. Le moteur de production reste sur
+l'approche mots-clés (76,7 %, ci-dessus), la seule des deux mesurée comme
+un gain net. Piste abandonnée en l'état, pas reprise en l'état : rapprocher
+vraiment production et laboratoire demanderait de porter aussi la
+séparation applicabilité/éléments en deux appels distincts, pas un
+raccourci à un seul appel.
