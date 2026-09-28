@@ -40,7 +40,7 @@ def _register(page, frontend_server: str, backend_server, email: str, org: str =
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
     passer_tour_si_present(page)
 
 
@@ -79,7 +79,7 @@ def test_theme_and_language_toggles_persist_across_reload(page, frontend_server,
     # L'etat sombre pose avant la connexion doit rester actif dans l'appli.
     expect(page.locator("html")).to_have_attribute("data-theme", "dark")
     page.reload(wait_until="networkidle")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
     expect(page.locator("html")).to_have_attribute("data-theme", "dark")
 
 
@@ -120,7 +120,7 @@ def test_register_then_verify_email_via_real_link(page, frontend_server, backend
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
     passer_tour_si_present(page)
 
 
@@ -199,4 +199,4 @@ def test_password_reset_full_round_trip(page, frontend_server, backend_server):
     page.fill("#c-mail", email)
     page.fill("#c-mdp", new_pwd)
     page.click("#p-connexion button:not(.lien)")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)

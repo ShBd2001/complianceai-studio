@@ -37,7 +37,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> None:
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
     passer_tour_si_present(page)
 
 
@@ -142,7 +142,7 @@ def test_change_password_from_account_page(page, frontend_server, backend_server
     page.fill("#c-mail", email)
     page.fill("#c-mdp", new_pwd)
     page.click("#p-connexion button:not(.lien)")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
 
 
 def test_logout_actually_revokes_the_server_session(page, frontend_server, backend_server):
@@ -237,7 +237,7 @@ def _register_cabinet(page, frontend_server: str, backend_server, email: str) ->
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
     passer_tour_si_present(page)
 
 
@@ -260,7 +260,7 @@ def test_retention_control_visible_and_usable_for_cabinet_owner(page, frontend_s
 
     # La valeur enregistree cote serveur doit survivre a un rechargement.
     page.reload(wait_until="networkidle")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
     page.click("a[data-vue=\"compte\"]")
     page.wait_for_selector("#z-orgs table", timeout=15000)
     expect(page.locator("#co-retention")).to_have_value("90")

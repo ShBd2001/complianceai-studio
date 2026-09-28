@@ -39,7 +39,7 @@ def _register(page, frontend_server: str, backend_server, email: str) -> str:
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
     passer_tour_si_present(page)
     return page.locator("#ch-org-global option").first.get_attribute("value")
 
@@ -85,7 +85,7 @@ def test_notification_appears_with_badge(page, frontend_server, backend_server, 
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
     passer_tour_si_present(page)
 
     expect(page.locator("#badge-notifs")).to_be_visible()

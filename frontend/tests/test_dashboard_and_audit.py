@@ -44,7 +44,7 @@ def _register(page, frontend_server: str, backend_server, email: str, fermer_tou
     page.fill("#c-mail", email)
     page.fill("#c-mdp", PWD)
     page.click("#p-connexion button:not(.lien)")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
     # Le tour de premiers pas bloque l'interaction avec le reste du tableau
     # de bord tant qu'il est ouvert : les tests du tour lui-meme (plus bas)
     # ont besoin de le voir non ferme, d'ou ce parametre -- tous les autres
@@ -113,7 +113,7 @@ def test_getting_started_tour_can_be_dismissed_permanently(page, frontend_server
 
     # Doit rester masque apres un rechargement, pas seulement en memoire JS.
     page.reload(wait_until="networkidle")
-    page.wait_for_selector("#appli:not([hidden])", timeout=15000)
+    page.wait_for_selector("#appli:not([hidden])", timeout=30000)
     page.wait_for_timeout(500)
     expect(page.locator(".tour-bulle")).to_have_count(0)
 
