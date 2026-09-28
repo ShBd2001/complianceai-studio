@@ -13,9 +13,11 @@ Le moteur de production mesuré sur ce corpus RGPD complet (15 documents,
 exactitude 66,2 %, précision 55,6 %, rappel 76,9 % — nettement sous les
 trois autres référentiels. Cause identifiée (requête de recherche construite depuis le texte légal
 brut plutôt que depuis des mots-clés adaptés au vocabulaire d'un document
-réel — voir `docs/architecture.md` §6 et `CHANGELOG.md`) : deux correctifs
-testés en conditions réelles et abandonnés (gain non significatif ou
-régression). Limite connue, documentée, pas encore corrigée.
+réel — voir `docs/architecture.md` §6 et `CHANGELOG.md`) : trois correctifs
+testés en conditions réelles et abandonnés — dont un dernier (mots-clés du
+laboratoire) donnant un vrai gain (66,2 % → 72,9 %) mais introduisant une
+exclusion abusive nouvelle, jugée trop risquée à quelques heures de la
+soutenance. Limite connue, documentée, pas encore corrigée.
 
 ## Ce que le corpus couvre
 

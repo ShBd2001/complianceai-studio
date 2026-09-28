@@ -330,15 +330,27 @@ verdicts eux-mêmes : faux positifs "manquement" à haute confiance
 (0,7-0,9), donc sans déclencher le second avis DA-09 — un problème de
 recherche de passages, pas de vote.
 
-Deux correctifs testés en conditions réelles sur un sous-corpus de 4
-documents (01, 02, 09, 12) et abandonnés : repli sémantique si le score
-lexical est nul (66,1 % → 67,9 %, gain non significatif) et requête réduite
-au titre seul (64,3 %, pire — 2 faux négatifs apparus sur un document
-auparavant parfait). Les deux annulés (`git checkout`), moteur de
+Trois correctifs testés en conditions réelles, tous abandonnés. Deux
+premiers sur un sous-corpus de 4 documents (01, 02, 09, 12) : repli
+sémantique si le score lexical est nul (66,1 % → 67,9 %, gain non
+significatif) et requête réduite au titre seul (64,3 %, pire — 2 faux
+négatifs apparus). Troisième, plus sérieux : réutiliser les `indices` déjà
+écrits à la main dans les 4 grilles du laboratoire (DA-10), copiés
+statiquement dans `app/ingestion/mots_cles_recherche.py` et ajoutés à la
+requête. Prometteur sur le sous-corpus (82,1 %) mais dégradait NIS2/DORA/AI
+Act quand vérifié séparément (déjà validés à 91-100 %) — restreint à RGPD
+seul, puis remesuré sur le corpus complet (15 documents, 3 passages) :
+**exactitude 66,2 % → 72,9 %, précision 55,6 % → 62,7 %, rappel 76,9 % →
+82,1 %** — un vrai gain, mais avec une exclusion abusive nouvelle (document
+15, article 37, DPO) apparue en contrepartie — catégorie d'erreur la plus
+grave du projet, jusque-là à 0 sur ce corpus. Jugé trop risqué à quelques
+heures de la soutenance malgré le gain net : les trois correctifs annulés
+(`git checkout`, suppression de `mots_cles_recherche.py`), moteur de
 production inchangé. `--ci` de `validation/evaluate.py` volontairement pas
-étendu à RGPD : un seuil bloquant à ~60 % ne protégerait rien de réel.
-Documenté dans `CHANGELOG.md`, `docs/architecture.md` §6, `CORPUS.md` et
-`README.md`.
+étendu à RGPD : un seuil bloquant ne protégerait rien de réel tant que
+l'exclusion abusive n'est pas éliminée. Piste validée en direction (gain
+net confirmé), à reprendre après le gel. Documenté dans `CHANGELOG.md`,
+`docs/architecture.md` §6, `CORPUS.md` et `README.md`.
 
 ## Tâche F3 — Documentation
 
@@ -381,10 +393,12 @@ dans les points de vigilance connus).
 3. ~~**Lancer la mesure de la Tâche 7 avec la clé Groq réelle**~~ — fait le
    2026-09-28 (`mesure_rgpd.json`) : exactitude 66,2 %, nettement sous les
    trois autres référentiels. Voir la section « Tâche F2 (suite) — RGPD »
-   ci-dessus pour le diagnostic complet et les deux correctifs testés et
-   abandonnés. **Reste à faire par l'équipe** : concevoir une vraie
-   correction (mots-clés par exigence dérivés du texte ingéré, à la manière
-   des `indices` du laboratoire) — hors délai avant le gel du 2026-09-28.
+   ci-dessus pour le diagnostic complet et les trois correctifs testés et
+   abandonnés — dont un dernier (mots-clés du laboratoire, piste validée en
+   direction) donnant 72,9 % mais une exclusion abusive nouvelle. **Reste à
+   faire par l'équipe** : reprendre cette piste en excluant les mots-clés
+   des articles à fort enjeu (37, DPO) de l'enrichissement — hors délai
+   avant le gel du 2026-09-28.
 4. **Lancer `backend/scripts/cout_analyses.py`** sur la base de production,
    après quelques analyses réelles :
    ```

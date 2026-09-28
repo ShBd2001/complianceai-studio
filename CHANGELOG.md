@@ -524,3 +524,33 @@ pas étendu à RGPD : un seuil bloquant fixé sur ce chiffre (~60 %) ne
 protégerait contre aucune régression réelle. Une vraie solution demande des
 mots-clés par exigence dérivés du texte ingéré, pas un ajustement ponctuel
 de la requête — hors délai avant le gel du 2026-09-28.
+
+## RGPD : troisième correctif (mots-clés du laboratoire), gain réel mais annulé
+
+Une troisième piste, plus sérieuse que les deux précédentes : réutiliser
+tels quels les `indices` déjà écrits à la main dans les 4 grilles du
+laboratoire (`referentiel/articles*.py`, DA-10) — copiés statiquement dans
+`app/ingestion/mots_cles_recherche.py` (pas d'import du paquet
+`referentiel` depuis le backend) et ajoutés, jamais substitués, à la
+requête de recherche de `audit_engine.py`.
+
+Sur le sous-corpus de 4 documents utilisé pour les essais précédents :
+66,1 % → 82,1 % d'exactitude. Vérifié à tort comme suffisant : une
+vérification séparée sur NIS2/DORA/AI Act (déjà validés à 91-100 %) a
+montré une dégradation cohérente sur les trois référentiels (ex. NIS2
+rappel 100 % → 88,9 %) — ajouter des termes de requête peut déplacer le
+classement du top-K et écarter un passage qui suffisait déjà, contrairement
+à l'hypothèse initiale que l'ajout ne pouvait que servir.
+
+Restreint à RGPD seul (`_REFERENTIELS_MOTS_CLES_ACTIFS`), puis remesuré sur
+le corpus complet (15 documents, 3 passages) : exactitude 66,2 % →
+**72,9 %**, précision 55,6 % → **62,7 %**, rappel 76,9 % → **82,1 %** — un
+gain réel, plus modeste que le sous-corpus ne le laissait croire, mais avec
+un effet de bord : une exclusion abusive nouvelle (document 15, article 37 —
+délégué à la protection des données classé à tort hors périmètre), catégorie
+d'erreur traitée comme la plus grave du projet et jusque-là maintenue à 0
+sur ce corpus. Jugé trop risqué à quelques heures de la soutenance malgré le
+gain net : annulé (`git checkout`, suppression de
+`mots_cles_recherche.py`), moteur de production inchangé. Piste validée en
+direction, à reprendre après le gel en excluant les mots-clés des articles
+à fort enjeu (37) de l'enrichissement.
