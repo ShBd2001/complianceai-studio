@@ -144,7 +144,11 @@ jobs:
       - name: Suite bout-en-bout (Chrome du système pour le navigateur piloté, Chromium ci-dessus pour la génération PDF côté backend)
         # Demarre le vrai backend et le vrai serveur statique du frontend en
         # sous-processus (voir frontend/tests/conftest.py) : pas de mock DOM.
-        run: pytest -q frontend/tests
+        # --reruns 1 : absorbe la lenteur ponctuelle d'un executeur partage
+        # (constatee 3 fois sur le meme test, jamais reproduite en local —
+        # voir frontend/tests/requirements.txt), sans masquer un echec
+        # reellement reproductible.
+        run: pytest -q --reruns 1 frontend/tests
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

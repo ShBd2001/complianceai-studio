@@ -2,3 +2,10 @@
 # (meme environnement virtuel : ces tests demarrent le vrai backend en
 # sous-processus et ont donc besoin de tout ce dont il depend).
 playwright>=1.48
+# --reruns en CI (ci.yml) : un test peut echouer par lenteur ponctuelle du
+# navigateur piloted sur un executeur partage -- jamais reproduit localement
+# (8/8 passages reussis le 2026-10-01 sur le cas constate 3 fois en CI,
+# test_retention_control_visible_and_usable_for_cabinet_owner), jamais du
+# code de l'application. Une nouvelle tentative absorbe ce bruit sans
+# masquer un echec reellement reproductible (qui echoue aussi a la reprise).
+pytest-rerunfailures>=14
