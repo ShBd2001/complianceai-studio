@@ -3,17 +3,28 @@ copie adaptee de `intitule` (article), `condition_applicabilite` et
 intitules des elements BLOQUANTS des grilles du laboratoire
 (referentiel/articles*.py, DA-07/DA-10).
 
-Sert a REMPLACER (jamais completer) le texte legal brut envoye au modele
-pour certains articles composes de plusieurs sous-points legaux (ex. AI Act
-art. 16 : onze sous-points a) a k)) -- voir audit_engine.py::_texte_exigence.
+Deux dictionnaires, pour deux usages distincts (comme le fait le
+laboratoire, evaluateur.py::evaluer_article, qui separe deja la requete de
+recherche des elements probants de celle de la condition d'applicabilite) :
 
-Cause diagnostiquee le 2026-09-30 (voir CHANGELOG.md) : le texte legal brut,
-lu litteralement, pousse le modele a exiger une preuve pour CHAQUE
-sous-point individuellement, bien plus strict que la question globale du
-laboratoire -- sans que celle-ci soit plus permissive sur le fond (la
-citation verifiee reste exigee). La condition d'applicabilite est reprise
-explicitement (absente d'une premiere version testee le meme jour, qui
-degradait legerement les verdicts hors perimetre faute de ce contexte).
+- EXIGENCES_SIMPLIFIEES (texte complet, avec condition d'applicabilite) :
+  la question posee au modele, remplace le texte legal brut --
+  audit_engine.py::_texte_exigence.
+- REQUETES_RECHERCHE_SIMPLIFIEES (texte court, SANS condition) : la requete
+  de recherche de passages -- audit_engine.py::_requete_recherche. La
+  condition d'applicabilite est volontairement exclue ici : generique a
+  presque toutes les sections d'un dossier de conformite ("systeme
+  d'intelligence artificielle a haut risque..."), elle dilue le signal
+  specifique de la requete sur RAG_TOP_K=3. Diagnostique le 2026-10-01
+  (AI Act, article 12, document 01) : avec la condition incluse, la requete
+  (83 termes) ne retrouvait toujours pas le passage pertinent, pourtant
+  cite presque mot pour mot par le document.
+
+Cause racine diagnostiquee le 2026-09-30 (voir CHANGELOG.md) : le texte
+legal brut, lu litteralement par le modele, pousse a exiger une preuve
+pour CHAQUE sous-point d'un article compose individuellement, bien plus
+strict que la question globale du laboratoire -- sans etre plus permissif
+sur le fond (la citation verifiee reste exigee).
 
 AI Act art. 12 : intitule legal desambiguise (2026-10-01). Les articles 12
 et 49 partagent le MEME intitule legal "Enregistrement" pour deux notions
@@ -58,6 +69,39 @@ EXIGENCES_SIMPLIFIEES: dict[str, dict[int, str]] = {
         72: "Surveillance après commercialisation par les fournisseurs et plan de surveillance après commercialisation pour les systèmes d'IA à haut risque. Condition d'applicabilite : L'organisme développe, sous son propre nom ou sa propre marque, un système d'intelligence artificielle classé à haut risque au sens de l'annexe III du règlement (ou de l'annexe I), ET le met sur le marché OU le met en service — y compris pour son propre usage interne exclusif, sans jamais le commercialiser ni le distribuer à un tiers. La mise en service pour ses propres besoins suffit à constituer la qualité de fournisseur au sens du règlement : le fait qu'un système soit développé « en interne » ou « jamais commercialisé à des tiers » n'écarte PAS cette qualité, cela écarte seulement les obligations d'importateur ou de distributeur (articles 23/24), qui sont distinctes. Ce qui doit etre prouve si applicable : Un plan de surveillance post-commercialisation collecte et analyse les retours d'utilisation et incidents",
         73: "Signalement d'incidents graves. Condition d'applicabilite : L'organisme développe, sous son propre nom ou sa propre marque, un système d'intelligence artificielle classé à haut risque au sens de l'annexe III du règlement (ou de l'annexe I), ET le met sur le marché OU le met en service — y compris pour son propre usage interne exclusif, sans jamais le commercialiser ni le distribuer à un tiers. La mise en service pour ses propres besoins suffit à constituer la qualité de fournisseur au sens du règlement : le fait qu'un système soit développé « en interne » ou « jamais commercialisé à des tiers » n'écarte PAS cette qualité, cela écarte seulement les obligations d'importateur ou de distributeur (articles 23/24), qui sont distinctes. Ce qui doit etre prouve si applicable : Une procédure de signalement des incidents graves aux autorités compétentes, avec délais alignés sur la gravité, est formalisée",
         86: "Droit à l'explication des décisions individuelles. Condition d'applicabilite : L'organisme est déployeur d'un système d'IA à haut risque qui produit des effets juridiques ou affecte de manière significative une personne physique dans un contexte relevant de l'article 86 (ex. évaluation de solvabilité). Ce qui doit etre prouve si applicable : Une explication claire et significative des éléments ayant conduit à une décision est fournie à la personne concernée qui en fait la demande, sans retard indu",
+    },
+}
+
+REQUETES_RECHERCHE_SIMPLIFIEES: dict[str, dict[int, str]] = {
+    "ai_act": {
+        5: "Pratiques interdites en matière d'IA. Le document établit explicitement l'absence de pratiques interdites (notation sociale, manipulation subliminale, exploitation de vulnérabilités, catégorisation biométrique sensible, reconnaissance des émotions au travail, surveillance biométrique en temps réel non justifiée)",
+        8: "Respect des exigences. Un dossier de conformité documente le respect systématique des exigences du chapitre III, section 2, avant mise sur le marché",
+        9: "Système de gestion des risques. Un système de gestion des risques est mis en œuvre tout au long du cycle de vie (identification, estimation, évaluation, atténuation)",
+        10: "Données et gouvernance des données. Les jeux de données d'entraînement, de validation et de test font l'objet d'un examen de pertinence, de représentativité et d'absence de biais",
+        11: "Documentation technique. Une documentation technique complète, conforme à l'annexe IV, est établie et tenue à jour à chaque modification substantielle",
+        12: "Journalisation automatique (article 12, a ne pas confondre avec l'enregistrement dans la base de donnees UE de l'article 49). Le système génère automatiquement des journaux tout au long de son cycle de vie",
+        13: "Transparence et fourniture d'informations aux déployeurs. Une notice d'utilisation précise les caractéristiques, limites et mesures de surveillance humaine attendues",
+        14: "Contrôle humain. Le système est conçu pour permettre une supervision humaine effective (validation, interruption, non-automaticité de la décision finale)",
+        15: "Exactitude, robustesse et cybersécurité. Des métriques de précision et de robustesse sont mesurées et documentées",
+        16: "Obligations incombant aux fournisseurs de systèmes d'IA à haut risque. L'ensemble des obligations de fournisseur (système qualité, documentation, enregistrement, marquage CE, coopération) est piloté de façon identifiable",
+        17: "Système de gestion de la qualité. Un système de gestion de la qualité couvrant conception, développement, contrôle qualité et surveillance post-commercialisation est en place",
+        18: "Conservation des documents. La documentation technique et les journaux sont conservés pendant la durée requise (dix ans après mise sur le marché)",
+        19: "Journaux générés automatiquement. Les journaux générés par le système sont conservés pendant une durée appropriée à sa finalité",
+        20: "Mesures correctives et devoir d'information. Une procédure de retrait, désactivation ou rappel du système et d'information des autorités et déployeurs est prévue",
+        21: "Coopération avec les autorités compétentes. Un contact désigné répond aux demandes des autorités de surveillance dans les délais",
+        22: "Mandataires des fournisseurs de systèmes d'IA à haut risque. Un mandataire établi dans l'Union européenne est désigné par mandat écrit",
+        23: "Obligations des importateurs. L'importateur vérifie la conformité du système avant mise sur le marché (déclaration UE, documentation, marquage CE)",
+        24: "Obligations des distributeurs. Le distributeur vérifie la présence du marquage CE, de la déclaration de conformité et de la documentation avant mise à disposition",
+        25: "Responsabilités tout au long de la chaîne de valeur de l'IA. Les contrats précisent le transfert des obligations de fournisseur en cas de modification substantielle par un tiers",
+        26: "Obligations incombant aux déployeurs de systèmes d'IA à haut risque. Le déployeur assure un contrôle humain effectif et une surveillance du fonctionnement du système Les personnes affectées par une décision fondée sur le système sont informées de son utilisation",
+        27: "Analyse d'impact des systèmes d'IA à haut risque sur les droits fondamentaux. Une analyse d'impact sur les droits fondamentaux a été réalisée avant la mise en service et renouvelée après toute modification substantielle",
+        47: "Déclaration UE de conformité. Une déclaration UE de conformité est établie et signée pour chaque version majeure du système",
+        48: "Marquage CE. Le marquage CE est apposé conformément aux exigences applicables",
+        49: "Enregistrement. Le système, ou son utilisation par le déployeur, est enregistré dans la base de données de l'Union européenne, mis à jour à chaque modification substantielle",
+        50: "Obligations de transparence pour les fournisseurs et les déployeurs de certains systèmes d'IA. Les personnes sont informées qu'elles interagissent avec un système d'IA, ou qu'un contenu est généré ou manipulé artificiellement",
+        72: "Surveillance après commercialisation par les fournisseurs et plan de surveillance après commercialisation pour les systèmes d'IA à haut risque. Un plan de surveillance post-commercialisation collecte et analyse les retours d'utilisation et incidents",
+        73: "Signalement d'incidents graves. Une procédure de signalement des incidents graves aux autorités compétentes, avec délais alignés sur la gravité, est formalisée",
+        86: "Droit à l'explication des décisions individuelles. Une explication claire et significative des éléments ayant conduit à une décision est fournie à la personne concernée qui en fait la demande, sans retard indu",
     },
 }
 

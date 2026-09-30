@@ -394,6 +394,35 @@ fois) : **exactitude 92,8 % → 93,8 %** (identique sur les trois mesures),
 91,7-100 %**, exclusions abusives 0 sur toutes les mesures. Gain réel et
 stable. `mesure_ai_act.json` mis à jour.
 
+## AI Act : la requête de recherche avait le même défaut (2026-10-01)
+
+En creusant pourquoi l'article 12 échouait encore malgré la
+désambiguïsation ci-dessus, vérification directe des passages réellement
+retournés par `rag.search_client_documents` pour cet article : **aucun ne
+contenait la section pertinente**, pourtant explicite dans le document,
+noyée parmi 19 fragments avec `RAG_TOP_K=3`. Cause : `EXIGENCES_SIMPLIFIEES`
+avait corrigé la question posée au modèle, mais la requête de RECHERCHE de
+passages utilisait encore le texte légal brut — deux usages différents du
+texte de l'exigence, un seul corrigé. Même inclure le texte simplifié
+complet (avec condition d'applicabilité) dans la requête de recherche ne
+suffisait pas : la condition, générique à presque toutes les sections d'un
+dossier de conformité, dilue le signal spécifique.
+
+Corrigé en séparant les deux usages — exactement ce que fait déjà le
+laboratoire (`evaluateur.py::evaluer_article` : une requête pour les
+éléments probants, une autre pour l'applicabilité, jamais mélangées).
+`REQUETES_RECHERCHE_SIMPLIFIEES` (nouveau dictionnaire, même fichier :
+intitulé + éléments bloquants, SANS la condition) remplace le texte légal
+brut pour la recherche ; `EXIGENCES_SIMPLIFIEES` reste réservé à la
+question posée au modèle.
+
+Mesure finale sur le corpus complet : **exactitude 92,8 % → 96,9 %,
+précision 64,7 % → 100 %, rappel 91,7 % → 100 %**, exclusions abusives 0,
+les 4 documents dans l'intervalle de score attendu. 3 erreurs résiduelles
+sur 97 constats (articles 23/24, hors périmètre classé à tort conforme —
+n'affecte ni précision ni rappel, laissé en l'état). `mesure_ai_act.json`
+mis à jour.
+
 ## Tâche F3 — Documentation
 
 Ce document, plus `README.md` (nombre de tests à jour, mention de

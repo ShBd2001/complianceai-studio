@@ -90,9 +90,10 @@ référentiels disposent d'un corpus gelé et mesuré sur les deux moteurs :
 RGPD (`corpus/`, 15 documents, 210 verdicts) et NIS2/DORA/AI Act
 (`corpus_nis2/`, `corpus_dora/`, `corpus_ai_act/`, 4 documents chacun, 219
 verdicts au total — Tâche F2/DA-10, exactitude production 100 %/91,4 %/
-93,8 %, exactitude laboratoire 78,1 %/~88 %/90,8–92,9 % (NIS2 et AI Act
-corrigés post-gel le 2026-09-27 ; AI Act amélioré une seconde fois le
-2026-09-30 — voir `corpus_nis2/README.md` et `corpus_ai_act/README.md`).
+96,9 %, exactitude laboratoire 78,1 %/~88 %/90,8–92,9 % (NIS2 et AI Act
+corrigés post-gel le 2026-09-27 ; AI Act amélioré deux fois de plus les
+2026-09-30 et 2026-10-01, précision et rappel production désormais 100 %
+— voir `corpus_nis2/README.md` et `corpus_ai_act/README.md`).
 Le moteur de production sur le corpus RGPD complet, mesuré pour la première
 fois le 2026-09-28 (66,2 %, nettement sous les trois autres référentiels),
 puis corrigé le même jour (mots-clés du laboratoire, appariement par phrase

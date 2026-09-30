@@ -677,3 +677,47 @@ ne prouve de toute façon pas explicitement ce point, pour une raison
 différente et légitime cette fois), mais le raisonnement du moteur est
 maintenant correct sur le fond — gardé pour cette raison, pas pour un
 gain chiffré immédiat.
+
+## AI Act : la requête de recherche avait le même défaut que la question posée
+
+En vérifiant concrètement pourquoi l'article 12 échouait encore malgré la
+désambiguïsation ci-dessus, interrogation directe de `rag.search_client_documents`
+avec la requête réellement utilisée en production pour cet article : **aucun
+des passages retournés ne contenait la section pertinente du document**,
+alors qu'elle y figurait explicitement ("TENUE DE REGISTRES (Article 12) —
+Le système génère automatiquement des journaux tout au long de son cycle
+de vie"), noyée parmi les 19 fragments du document avec `RAG_TOP_K=3`.
+
+Cause : `EXIGENCES_SIMPLIFIEES` avait corrigé la QUESTION posée au modèle,
+mais `_requete_recherche` utilisait toujours le texte légal brut pour la
+RECHERCHE de passages — deux usages différents du texte de l'exigence,
+un seul corrigé. Essai avec le texte simplifié complet (condition
+d'applicabilité incluse) comme requête de recherche : toujours pas
+retrouvé — la condition d'applicabilité est générique à presque toutes
+les sections d'un dossier de conformité ("système d'intelligence
+artificielle à haut risque..."), elle dilue le signal spécifique de la
+requête (83 termes) sur un `RAG_TOP_K` aussi bas.
+
+C'est exactement la séparation que fait déjà le laboratoire
+(`evaluation/evaluateur.py::evaluer_article`) : une requête pour les
+éléments probants, une autre pour la condition d'applicabilité — jamais
+mélangées, avec la remarque explicite que « interroger avec les mauvais
+passages produit des exclusions abusives ». `app/ingestion/exigences_simplifiees.py`
+gagne un second dictionnaire, `REQUETES_RECHERCHE_SIMPLIFIEES` (intitulé +
+éléments bloquants, SANS la condition), utilisé par `_requete_recherche`
+à la place du texte légal brut — `EXIGENCES_SIMPLIFIEES` (avec condition)
+reste réservé à `_texte_exigence` (la question posée au modèle).
+
+Effet de bord trouvé et corrigé au passage : les articles 12 et 49
+partagent le même intitulé légal "Enregistrement" pour deux notions
+différentes (journalisation automatique vs enregistrement en base UE) —
+seule collision de ce type sur les 28 articles, désambiguïsée dans le
+même fichier.
+
+Mesure finale sur le corpus complet (4 documents, 3 passages) :
+**exactitude 92,8 % → 96,9 %, précision 64,7 % → 100 %, rappel 91,7 % →
+100 %**, exclusions abusives 0. `mesure_ai_act.json` mis à jour. Il reste
+3 erreurs résiduelles sur 97 constats, toutes de même nature bénigne
+(articles 23/24 — obligations importateur/distributeur — classés
+"conforme" au lieu de "hors périmètre" ; n'affecte ni la précision ni le
+rappel de détection des manquements, laissé en l'état).

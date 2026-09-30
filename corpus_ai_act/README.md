@@ -2,10 +2,10 @@
 
 Composé (4 documents, 98 verdicts annotés) et mesuré en conditions réelles
 (Tâche F2, 3 passages/document, `mesure_ai_act.json` à la racine du dépôt) :
-exactitude 93,8 %, précision 66,7-75,0 %, rappel 91,7-100 %, 0 exclusion
-abusive, après correction d'un verdict post-gel et d'un problème de
-précision sur les articles composés de plusieurs sous-points légaux (voir
-plus bas). Composé initialement comme brouillon
+exactitude 96,9 %, précision 100 %, rappel 100 %, 0 exclusion abusive,
+après correction d'un verdict post-gel et de deux problèmes distincts sur
+les articles composés de plusieurs sous-points légaux (voir plus bas).
+Composé initialement comme brouillon
 par Claude Code à la demande explicite de l'équipe (protocole de mesure en
 plusieurs étapes avec point de contrôle), puis relu, corrigé et validé par
 l'équipe avant gel (`c3bbdc1`) — voir la tâche F2 du plan de soutenance :
@@ -66,10 +66,24 @@ raisonnement à corriger par le prompt). **Corrigé plutôt dans la référence*
 (manquement → `tolere`, à la demande explicite de l'équipe, 2026-09-27) —
 voir le commentaire du cas dans `verite_terrain.json` pour le détail
 complet. Après correction : **exactitude 92,8 %, rappel 91,7 %, 0 exclusion
-abusive**. Le document censé être le plus conforme (01) concentre toujours
-la majorité des faux positifs restants, signe que le moteur exige un niveau
-de détail assez fin avant d'accepter "conforme" — limite non corrigée, non
-liée à cette correction.
+abusive**. Le document censé être le plus conforme (01) concentrait alors
+la majorité des faux positifs, signe que le moteur exigeait un niveau de
+détail assez fin avant d'accepter "conforme" pour les articles composés de
+plusieurs sous-points légaux.
+
+**Corrigé le 2026-09-30 et le 2026-10-01** (voir CHANGELOG.md pour le
+détail complet des deux correctifs) : `app/ingestion/exigences_simplifiees.py`
+remplace le texte légal brut par une formulation globale (comme le fait
+le laboratoire) à la fois pour la question posée au modèle et pour la
+requête de recherche de passages — cette seconde partie s'est révélée
+nécessaire après diagnostic direct (un passage pourtant explicite dans le
+document n'était simplement jamais retrouvé). Effet de bord trouvé et
+corrigé au passage : les articles 12 et 49 partagent le même intitulé
+légal "Enregistrement", source d'une confusion réelle du modèle. Mesure
+finale : **exactitude 96,9 %, précision 100 %, rappel 100 %, 0 exclusion
+abusive**. 3 erreurs résiduelles sur 97 constats, toutes de même nature
+bénigne (articles 23/24, hors périmètre classé à tort conforme — n'affecte
+ni la précision ni le rappel).
 
 ## Relancer la mesure (moteur de production)
 

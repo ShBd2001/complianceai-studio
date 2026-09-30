@@ -28,7 +28,10 @@ from app.core.config import settings
 from app.models.audit import Audit, Document, DocumentChunk, Finding
 from app.models.enums import AuditStatus, FindingStatus, Severity
 from app.models.framework import Framework, FrameworkVersion, Requirement
-from app.ingestion.exigences_simplifiees import EXIGENCES_SIMPLIFIEES
+from app.ingestion.exigences_simplifiees import (
+    EXIGENCES_SIMPLIFIEES,
+    REQUETES_RECHERCHE_SIMPLIFIEES,
+)
 from app.ingestion.mots_cles_recherche import MOTS_CLES
 from app.ingestion.scoping import dependency_of
 from app.services import llm, rag
@@ -775,12 +778,32 @@ def _requete_recherche(
     loi ("mesures appropriees") ; les mots-cles du laboratoire
     (app/ingestion/mots_cles_recherche.py -- copie adaptee des `indices`
     BLOQUANTS, DA-07/DA-10) comblent cet ecart.
+
+    Quand REQUETES_RECHERCHE_SIMPLIFIEES fournit une formulation courte pour
+    cet article, elle sert de requete de base a la place du texte legal brut
+    -- SANS la condition d'applicabilite (contrairement a EXIGENCES_SIMPLIFIEES,
+    utilisee pour la question posee au modele, voir _texte_exigence) : la
+    condition est generique a presque toute section d'un dossier de
+    conformite ("systeme d'intelligence artificielle a haut risque..."),
+    elle dilue le signal specifique de la requete sur RAG_TOP_K=3. Meme
+    separation que le laboratoire (evaluateur.py::evaluer_article), qui
+    n'interroge jamais la recherche de preuves avec la condition
+    d'applicabilite. Diagnostique le 2026-10-01 (AI Act, article 12,
+    document 01 du corpus) : la requete legale brute ne retrouvait AUCUN des
+    passages pertinents du document, alors que la section correspondante y
+    figurait explicitement ("TENUE DE REGISTRES (Article 12) -- Le systeme
+    genere automatiquement des journaux tout au long de son cycle de vie") ;
+    avec la condition d'applicabilite incluse dans la requete (83 termes),
+    toujours pas retrouvee -- seule la version courte, sans condition, y
+    parvient.
     """
-    base = f"{requirement.title} {requirement.body[:300]}"
-    if framework_code not in _REFERENTIELS_MOTS_CLES_ACTIFS:
-        return base, ()
     numero = _article_number_of(requirement.reference)
-    if numero is None:
+    simplifiee = (
+        REQUETES_RECHERCHE_SIMPLIFIEES.get(framework_code, {}).get(numero)
+        if numero is not None else None
+    )
+    base = simplifiee or f"{requirement.title} {requirement.body[:300]}"
+    if framework_code not in _REFERENTIELS_MOTS_CLES_ACTIFS or numero is None:
         return base, ()
     mots = MOTS_CLES.get(framework_code, {}).get(numero)
     if not mots:
