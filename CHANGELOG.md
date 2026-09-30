@@ -603,3 +603,77 @@ un gain net. Piste abandonnée en l'état, pas reprise en l'état : rapprocher
 vraiment production et laboratoire demanderait de porter aussi la
 séparation applicabilité/éléments en deux appels distincts, pas un
 raccourci à un seul appel.
+
+## AI Act : précision corrigée en reformulant les exigences composées
+
+Après la soutenance blanche (2026-09-30), reprise du constat de précision
+AI Act (64,7 %, documenté comme limite connue depuis la Tâche F2). Lecture
+du raisonnement réel du modèle (`Finding.description`) sur le document
+01 (référence haute, conçu conforme) : les citations retrouvées par le
+modèle pour les articles 13/15/16/17 étaient réelles et pertinentes, mais
+jugées insuffisantes. Cause exacte : ces articles comportent de nombreux
+sous-points légaux distincts (l'article 16 en a onze, a) à k)) ; le texte
+légal brut, envoyé tel quel au modèle, est lu littéralement et pousse à
+exiger une preuve pour CHAQUE sous-point séparément.
+
+Comparaison avec le laboratoire : sa grille (`referentiel/articles_ai_act.py`)
+ne pose qu'UN SEUL élément global pour ces mêmes articles (ex. article 16 :
+"l'ensemble des obligations de fournisseur est piloté de façon
+identifiable"). Le laboratoire exige la même rigueur de preuve sur le fond
+(citation vérifiée obligatoire) mais une question bien moins granulaire —
+ce qui explique l'écart de précision sans que le moteur de production soit
+réellement moins bon.
+
+Piste testée et écartée d'abord : réappliquer l'enrichissement par
+mots-clés développé pour RGPD (même dans sa version sûre, phrase entière +
+minimum 2 signaux) à AI Act. Résultat : exactitude 88,7 % (pire que les
+92,8 % de départ), les articles ciblés (13/15/16/17) toujours faux, de
+nouvelles erreurs apparues ailleurs. Confirme que ce n'est pas un problème
+de récupération de passages sur AI Act, contrairement à RGPD.
+
+Correctif retenu : `app/ingestion/exigences_simplifiees.py` (nouveau
+fichier, copie statique de `intitule` + `condition_applicabilite` +
+intitulés des éléments BLOQUANTS de la grille du laboratoire, AI Act
+uniquement pour l'instant) remplace le texte légal brut envoyé au modèle
+pour les 28 articles couverts — `audit_engine.py::_texte_exigence`, appelée
+dans `evaluate_requirement()` via un nouveau paramètre `framework_code`
+(fileté depuis `run_audit` comme pour les mots-clés RGPD). Une première
+version sans la condition d'applicabilité laissait passer quelques
+confusions sur les verdicts hors périmètre (articles 24, 50) ; ajoutée,
+elle les corrige.
+
+Mesuré trois fois sur le corpus complet (4 documents, 3 passages) :
+**exactitude 92,8 % → 93,8 %** (identique sur les trois mesures, signe de
+stabilité), **précision 64,7 % → 66,7-75,0 %** selon le tirage, **rappel
+91,7 % → 91,7-100 %**, exclusions abusives 0 sur toutes les mesures.
+`mesure_ai_act.json` mis à jour. RGPD/NIS2/DORA inchangés — DORA présente
+un profil de précision similaire (77,8 %) et pourrait bénéficier de la
+même approche, mais n'a pas été testée (une tentative de mots-clés
+antérieure avait dégradé DORA ; cette approche-ci, différente, n'a pas
+encore été essayée sur ce référentiel).
+
+## AI Act : bug de terminologie trouvé et corrigé (articles 12 et 49)
+
+En creusant les faux positifs restants après le correctif ci-dessus,
+lecture du raisonnement réel du modèle sur l'article 12 (document 03) :
+il citait "la fiche d'enregistrement n'a pas été mise à jour" comme preuve
+de manquement — mais l'article 12 porte sur la génération automatique de
+journaux, pas sur l'enregistrement dans la base de données UE (ça, c'est
+l'article 49). Cause trouvée : les articles 12 et 49 de l'AI Act portent
+**le même intitulé légal "Enregistrement"** pour deux notions différentes
+— confirmé sur toute la grille (`referentiel/articles_ai_act.py`), seule
+collision de ce type parmi les 28 articles. `EXIGENCES_SIMPLIFIEES`
+reprenait cet intitulé tel quel, créant la confusion.
+
+Corrigé : l'intitulé de l'article 12 est désambiguïsé dans
+`app/ingestion/exigences_simplifiees.py` ("Journalisation automatique
+(article 12, à ne pas confondre avec l'enregistrement dans la base de
+données UE de l'article 49)"). Vérifié sur le même document : le modèle
+ne cite plus l'article 49 pour justifier un manquement à l'article 12 —
+son raisonnement porte maintenant sur le bon sujet (absence de mention
+explicite de génération automatique des journaux). L'agrégat global
+(93,8 %/66,7 %/100 %) ne bouge pas sur cette mesure précise (le document
+ne prouve de toute façon pas explicitement ce point, pour une raison
+différente et légitime cette fois), mais le raisonnement du moteur est
+maintenant correct sur le fond — gardé pour cette raison, pas pour un
+gain chiffré immédiat.

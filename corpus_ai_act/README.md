@@ -2,8 +2,10 @@
 
 Composé (4 documents, 98 verdicts annotés) et mesuré en conditions réelles
 (Tâche F2, 3 passages/document, `mesure_ai_act.json` à la racine du dépôt) :
-exactitude 92,8 % (IC95 85,8–96,5 %), 0 exclusion abusive, après correction
-d'un verdict post-gel (voir plus bas). Composé initialement comme brouillon
+exactitude 93,8 %, précision 66,7-75,0 %, rappel 91,7-100 %, 0 exclusion
+abusive, après correction d'un verdict post-gel et d'un problème de
+précision sur les articles composés de plusieurs sous-points légaux (voir
+plus bas). Composé initialement comme brouillon
 par Claude Code à la demande explicite de l'équipe (protocole de mesure en
 plusieurs étapes avec point de contrôle), puis relu, corrigé et validé par
 l'équipe avant gel (`c3bbdc1`) — voir la tâche F2 du plan de soutenance :

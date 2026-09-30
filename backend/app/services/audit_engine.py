@@ -28,6 +28,7 @@ from app.core.config import settings
 from app.models.audit import Audit, Document, DocumentChunk, Finding
 from app.models.enums import AuditStatus, FindingStatus, Severity
 from app.models.framework import Framework, FrameworkVersion, Requirement
+from app.ingestion.exigences_simplifiees import EXIGENCES_SIMPLIFIEES
 from app.ingestion.mots_cles_recherche import MOTS_CLES
 from app.ingestion.scoping import dependency_of
 from app.services import llm, rag
@@ -496,10 +497,33 @@ def _verifier_citation(verdict: dict, requirement: Requirement, passages: list[r
     return conformity
 
 
+def _texte_exigence(requirement: Requirement, framework_code: str) -> str:
+    """Texte de l'exigence a inserer dans le prompt du modele.
+
+    Par defaut, le texte legal brut (titre + debut du corps). Pour certains
+    articles composes de plusieurs sous-points legaux (ex. AI Act art. 16 :
+    onze sous-points a) a k)), EXIGENCES_SIMPLIFIEES (voir
+    app/ingestion/exigences_simplifiees.py) fournit une formulation globale
+    a la place -- copie adaptee de l'intitule que pose le laboratoire pour
+    ses elements probants. Diagnostique le 2026-09-30 : le texte legal brut,
+    lu litteralement, pousse le modele a exiger une preuve pour CHAQUE
+    sous-point individuellement, bien plus strict que la question globale du
+    laboratoire -- sans que celle-ci soit plus permissive sur le fond (la
+    citation verifiee reste exigee), voir CHANGELOG.md.
+    """
+    numero = _article_number_of(requirement.reference)
+    if numero is not None:
+        simplifiee = EXIGENCES_SIMPLIFIEES.get(framework_code, {}).get(numero)
+        if simplifiee:
+            return simplifiee
+    return requirement.body[: settings.PROMPT_REQUIREMENT_CHARS]
+
+
 def evaluate_requirement(
     requirement: Requirement,
     passages: list[rag.Passage],
     breaker: Breaker | None = None,
+    framework_code: str = "rgpd",
 ) -> dict:
     """Evalue une exigence a partir de passages deja recuperes.
 
@@ -516,7 +540,7 @@ def evaluate_requirement(
 
     user_prompt = (
         f"EXIGENCE — {requirement.reference} : {requirement.title}\n"
-        f"{requirement.body[: settings.PROMPT_REQUIREMENT_CHARS]}\n\n"
+        f"{_texte_exigence(requirement, framework_code)}\n\n"
         f"EXTRAITS DES DOCUMENTS DU CLIENT :\n{excerpts}\n\n"
         f"Evalue la conformite du client a cette exigence."
     )
@@ -624,6 +648,7 @@ def evaluate_requirement(
 def _evaluate_all(
     retrieved: list[tuple[Requirement, list[rag.Passage]]],
     deadline: float | None = None,
+    framework_code: str = "rgpd",
 ) -> list[dict]:
     """Evalue toutes les exigences, sous disjoncteur et sous echeance.
 
@@ -632,7 +657,10 @@ def _evaluate_all(
     l'appelant puisse rien faire.
     """
     if not llm.is_available():
-        return [evaluate_requirement(req, passages) for req, passages in retrieved]
+        return [
+            evaluate_requirement(req, passages, framework_code=framework_code)
+            for req, passages in retrieved
+        ]
 
     breaker = Breaker(settings.LLM_BREAKER_THRESHOLD)
 
@@ -640,7 +668,7 @@ def _evaluate_all(
         requirement, passages = pair
         if deadline is not None and time.monotonic() > deadline:
             return _heuristic_evaluation(requirement, passages)
-        return evaluate_requirement(requirement, passages, breaker)
+        return evaluate_requirement(requirement, passages, breaker, framework_code)
 
     workers = min(settings.LLM_MAX_CONCURRENCY, max(1, len(retrieved)))
     logger.info("Evaluation de %d exigences sur %d workers.", len(retrieved), workers)
@@ -967,7 +995,9 @@ def run_audit(
         # et independants. Les paralleliser divise la duree d'un audit RGPD
         # complet par un facteur proche du nombre de workers.
         deadline = time.monotonic() + settings.AUDIT_MAX_SECONDS
-        verdicts_evalues = _evaluate_all(retrieved, deadline=deadline)
+        verdicts_evalues = _evaluate_all(
+            retrieved, deadline=deadline, framework_code=audit.framework.value,
+        )
 
         # Jetons consommes, agreges puis retires des verdicts avant toute
         # persistance : _usage ne doit jamais atterrir sur un Finding (voir

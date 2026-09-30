@@ -365,6 +365,35 @@ Non déployé, code retiré. Voir CHANGELOG.md pour le détail de la mesure et
 la piste à reprendre (séparer l'appel applicabilité des éléments, comme le
 fait réellement le laboratoire).
 
+## AI Act : précision corrigée (2026-09-30)
+
+Après la soutenance blanche, reprise du constat de précision AI Act
+(64,7 %) avec plus de temps disponible (jusqu'au 6 octobre). Diagnostic net
+en lisant le raisonnement réel du modèle (`Finding.description`) sur le
+document 01 (référence haute) : les citations trouvées étaient pertinentes
+et réelles, mais jugées insuffisantes par le modèle car les articles comme
+le 16 comportent onze sous-points légaux (a à k) — le texte légal brut,
+lu littéralement, pousse à exiger une preuve pour chacun séparément. Le
+laboratoire, lui, pose une seule question globale par élément ("l'ensemble
+des obligations de fournisseur est piloté de façon identifiable") : même
+exigence de preuve sur le fond, mais un cadrage bien moins strict.
+
+Deux correctifs écartés d'abord : réappliquer l'enrichissement mots-clés
+RGPD (même en version sûre, phrase entière) a dégradé les résultats
+(88,7 % d'exactitude, pire) — confirmé que ce n'est pas un problème de
+récupération de passages ici. Correctif retenu :
+`app/ingestion/exigences_simplifiees.py`, qui remplace le texte légal brut
+par une formulation globale (intitulé de l'article + condition
+d'applicabilité + intitulés des éléments bloquants de la grille du
+laboratoire) pour les 28 articles AI Act couverts — `audit_engine.py::
+_texte_exigence`. AI Act uniquement, RGPD/NIS2/DORA inchangés.
+
+Mesuré trois fois sur le corpus complet (4 documents, 3 passages à chaque
+fois) : **exactitude 92,8 % → 93,8 %** (identique sur les trois mesures),
+**précision 64,7 % → 66,7-75,0 %** selon le tirage, **rappel 91,7 % →
+91,7-100 %**, exclusions abusives 0 sur toutes les mesures. Gain réel et
+stable. `mesure_ai_act.json` mis à jour.
+
 ## Tâche F3 — Documentation
 
 Ce document, plus `README.md` (nombre de tests à jour, mention de
@@ -430,13 +459,21 @@ dans les points de vigilance connus).
    l'analyse en direct devant le jury.
 7. **Arbitrer le constat restant de la Tâche F2** (voir `docs/architecture.md`
    §6) : faux positifs sur les documents conformes en DORA (précision
-   77,8 %) et AI Act (précision 64,7 %) — le moteur exige un niveau de
-   détail assez fin avant d'accepter "conforme". Décider si et comment
-   `audit_engine.py` doit être retouché après la soutenance, avec une
-   nouvelle mesure de vérification avant tout gel définitif du correctif.
+   77,8 %) — le moteur exige un niveau de détail assez fin avant d'accepter
+   "conforme". Décider si `EXIGENCES_SIMPLIFIEES` (voir point 8 ci-dessous)
+   doit être étendu à DORA, avec une nouvelle mesure de vérification avant
+   tout gel définitif.
    (L'exclusion abusive AI Act art. 49, initialement dans cette liste, est
-   résolue — voir la section « AI Act art. 49 » ci-dessus : ce n'était pas
-   un bug du moteur, la référence a été corrigée à sa place.)
+   résolue — voir la section « AI Act art. 49 » ci-dessus. La précision
+   AI Act, elle aussi initialement dans cette liste, est corrigée — voir la
+   section « AI Act : precision corrigee » ci-dessous.)
+8. **Envisager d'étendre `EXIGENCES_SIMPLIFIEES` à DORA** (voir
+   `docs/architecture.md` §6, section « AI Act : précision limitée... ») :
+   la même cause (texte légal brut d'articles composés de sous-points, trop
+   strict) est probablement à l'œuvre sur la précision DORA (77,8 %), mais
+   n'a pas été testée — une tentative antérieure (version mots-clés naïve,
+   différente de ce correctif) avait dégradé NIS2/DORA. À re-tester avec
+   cette version avant d'étendre.
 
 ## Ce qui reste volontairement hors périmètre
 

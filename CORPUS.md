@@ -4,9 +4,9 @@ Ce corpus couvre le RGPD. Les dossiers `corpus_nis2/`, `corpus_dora/`,
 `corpus_ai_act/` à la racine du dépôt suivent désormais le même principe
 (4 documents chacun, gelés et mesurés — Tâche F2, voir le `README.md` de
 chacun et `mesure_nis2.json`/`mesure_dora.json`/`mesure_ai_act.json`) :
-exactitude 100 % / 91,4 % / 92,8 %, 0 exclusion abusive sur les 3 (NIS2 et
-AI Act corrigés post-gel le 2026-09-27, voir `corpus_nis2/README.md` et
-`corpus_ai_act/README.md`).
+exactitude 100 % / 91,4 % / 93,8 %, 0 exclusion abusive sur les 3 (NIS2 et
+AI Act corrigés post-gel le 2026-09-27 ; AI Act de nouveau amélioré le
+2026-09-30, voir `corpus_nis2/README.md` et `corpus_ai_act/README.md`).
 
 Le moteur de production, mesuré pour la première fois sur ce corpus RGPD
 complet le 2026-09-28, donnait initialement 66,2 % d'exactitude — nettement
