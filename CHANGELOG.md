@@ -751,3 +751,26 @@ Non déployé : `git checkout` sur `exigences_simplifiees.py`, RGPD reste
 sur `MOTS_CLES` seul (76,7 %/68,5 %/80,8 %/0 exclusion abusive, déjà en
 production). Piste à ne pas reprendre en l'état pour RGPD sans traiter
 spécifiquement le risque sur les documents contradictoires du corpus.
+
+## RGPD : requête de recherche seule, sans toucher à la question — pas mieux non plus
+
+Hypothèse de suite, pour isoler ce qui posait problème ci-dessus : étendre
+`REQUETES_RECHERCHE_SIMPLIFIEES` à RGPD (meilleure recherche de passages)
+en laissant `EXIGENCES_SIMPLIFIEES` intact (question posée au modèle
+toujours fondée sur le texte légal strict) — l'idée étant qu'un jugement
+resté strict protège contre les documents trompeurs, même avec une
+meilleure recherche en amont.
+
+Mesuré sur le corpus complet (15 documents, 3 passages) : exactitude
+76,7 % → 75,2 %, précision 68,5 % → 67,4 %, rappel 80,8 % → 76,9 % — tout
+légèrement en dessous, sans nouvelle exclusion abusive. Pas une
+amélioration, pas une dégradation grave non plus : l'hypothèse (isoler la
+recherche de la question) ne suffit pas à elle seule à dépasser l'approche
+`MOTS_CLES` déjà en place, qui reste la meilleure mesurée à ce jour pour
+RGPD. Non déployé, code revenu à l'état stable.
+
+Pour aller plus loin sur RGPD, il faudrait vraisemblablement traiter le
+risque des documents trompeurs directement (ex. une étape de vérification
+dédiée, ou une grille par élément comme le prototype du 2026-09-28 — lui
+aussi abandonné, mais pour une raison différente, voir plus haut) plutôt
+qu'un ajustement de la requête ou de la question seules.
