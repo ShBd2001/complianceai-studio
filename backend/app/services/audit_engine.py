@@ -590,6 +590,14 @@ def evaluate_requirement(
         # verification de citation qu'un premier appel, avant publication.
         # En l'absence de toute majorite absolue (ex. 3 valeurs differentes
         # sur 3 avis), le verdict est ramene a "indetermine" par prudence.
+        #
+        # Tentative RGPD testee et abandonnee (2026-10-01, voir CHANGELOG.md) :
+        # forcer ce vote sur tout "non_applicable", meme a confiance elevee,
+        # pour combler l'exclusion abusive trouvee en testant RAG_TOP_K=6.
+        # Mesure reelle sur les 15 documents : l'exclusion abusive persistait
+        # (deplacee de l'article 37 a l'article 44-49, meme document), et les
+        # trois metriques (exactitude, precision, rappel) reculaient en plus.
+        # Non garde.
         confiance = float(verdict.get("confiance") or 0.0)
         if confiance < settings.SECOND_OPINION_CONFIDENCE_THRESHOLD:
             avis = [verdict]

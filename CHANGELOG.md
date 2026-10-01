@@ -812,6 +812,50 @@ renforcé la détection du désaccord inter-tirages (DA-09 ne capte
 aujourd'hui que la confiance d'un seul appel, pas la divergence entre
 plusieurs appels indépendants sur le même article).
 
+---
+
+## RGPD : RAG_TOP_K=6 combiné à un second avis systématique — testé, aggrave les résultats
+
+Piste de reprise de l'entrée précédente : fermer précisément la faille
+identifiée (le vote DA-09 ne se déclenche que sous un seuil de confiance,
+jamais sur un désaccord entre appels indépendants) avant de réactiver
+RAG_TOP_K=6. Extension testée dans `evaluate_requirement()` :
+un verdict "non_applicable" rendu par le modèle sur une exigence RGPD
+déclenche désormais toujours un second avis (et un troisième en cas de
+désaccord, logique de vote DA-09 inchangée), même à confiance élevée —
+plus seulement les premiers verdicts peu sûrs. `_RAG_TOP_K_PAR_REFERENTIEL
+= {"rgpd": 6}` réactivé en parallèle, sur l'hypothèse que ce second avis
+systématique absorberait l'instabilité inter-tirages découverte la
+première fois.
+
+Mesuré sur le corpus complet (15 documents, 3 passages) : **exactitude
+76,7 % → 74,8 %, précision 68,5 % → 64,5 %, rappel 80,8 % → 76,9 %** — les
+trois métriques reculent, y compris sous la version actuellement déployée
+(et sous le RAG_TOP_K=6 seul de la tentative précédente). **Exclusions
+abusives toujours 1** : le vote systématique n'a pas supprimé le problème,
+il l'a déplacé — document 15, article 44-49 cette fois (au lieu de
+l'article 37 lors du premier essai). Signe supplémentaire que le problème
+n'est pas localisé à un article mais diffus : l'article "15-22" apparaît
+désormais en faux positif récurrent sur une majorité de documents, un
+schéma d'erreur absent des deux mesures précédentes.
+
+Lecture : forcer un second avis sur tout "non_applicable" ne discrimine pas
+entre une exclusion correcte (la majorité des cas) et l'instabilité
+ponctuelle qui avait motivé l'extension ; il introduit simplement une
+seconde source d'aléa sur des verdicts déjà corrects la plupart du temps,
+chaque nouveau vote pouvant lui-même faire basculer un cas qui ne posait
+pas de problème.
+
+Décision : **non déployé**. Les deux ajouts (`_RAG_TOP_K_PAR_REFERENTIEL`
+et l'extension du déclencheur de vote dans `evaluate_requirement()`)
+retirés, retour exact à la version livrée (76,7 % / 68,5 % / 80,8 % / 0).
+La piste RAG_TOP_K=6 reste documentée comme un gain réel mais non
+exploitable en l'état ; la résoudre demanderait un mécanisme qui détecte
+spécifiquement le désaccord entre plusieurs appels indépendants sur le
+même article (comparer les verdicts, pas seulement la confiance d'un seul
+appel), pas un vote déclenché uniformément sur toute une catégorie de
+verdict.
+
 ## Durcissement contre l'injection de prompt via un document déposé
 
 Lacune identifiée (pas encore exploitée en conditions réelles, mais jamais
