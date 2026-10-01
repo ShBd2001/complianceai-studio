@@ -721,3 +721,33 @@ Mesure finale sur le corpus complet (4 documents, 3 passages) :
 (articles 23/24 — obligations importateur/distributeur — classés
 "conforme" au lieu de "hors périmètre" ; n'affecte ni la précision ni le
 rappel de détection des manquements, laissé en l'état).
+
+## RGPD : la méthode AI Act testée, pas un gain net cette fois
+
+Même méthode qui a fait passer AI Act de 64,7 % à 100 % de précision
+(`EXIGENCES_SIMPLIFIEES`/`REQUETES_RECHERCHE_SIMPLIFIEES` étendus à RGPD,
+en plus de `MOTS_CLES` déjà actif), testée sur RGPD le 2026-10-01. Sur un
+sous-corpus de 4 documents : précision 66,7-75,0 % → 80,0 %, un vrai gain
+— mais rappel 84,6-92,3 % → 76,9 %, net recul, avec plusieurs faux négatifs
+nouveaux sur le document 15 (piège volontairement trompeur, "sécurité en
+façade, tout le reste absent").
+
+Mesuré sur le corpus complet (15 documents, 3 passages) pour confirmer :
+exactitude 76,7 % → 77,1 % (quasi inchangé), **précision 68,5 % → 65,3 %
+(pire)**, rappel 80,8 % → 84,6 % (mieux), mais **exclusions abusives 0 → 1**
+— la catégorie d'erreur la plus grave du projet, jamais vue sur ce corpus
+jusqu'ici. Pas un gain net : la précision, l'objectif recherché, recule.
+
+Hypothèse sur pourquoi ça marche pour AI Act mais pas RGPD : le corpus
+AI Act ne contient pas de document délibérément trompeur (ses faux
+positifs venaient de documents authentiquement conformes jugés trop
+sévèrement) ; le corpus RGPD en contient (le document 15, conçu pour
+piéger un moteur qui se laisse convaincre par une façade de sécurité sans
+vérifier le reste). Une question plus globale, moins ancrée dans le détail
+du texte de loi, aide un document honnête à être reconnu conforme — mais
+aide tout autant un document trompeur à paraître conforme.
+
+Non déployé : `git checkout` sur `exigences_simplifiees.py`, RGPD reste
+sur `MOTS_CLES` seul (76,7 %/68,5 %/80,8 %/0 exclusion abusive, déjà en
+production). Piste à ne pas reprendre en l'état pour RGPD sans traiter
+spécifiquement le risque sur les documents contradictoires du corpus.
