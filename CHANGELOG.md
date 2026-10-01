@@ -774,3 +774,40 @@ risque des documents trompeurs directement (ex. une étape de vérification
 dédiée, ou une grille par élément comme le prototype du 2026-09-28 — lui
 aussi abandonné, mais pour une raison différente, voir plus haut) plutôt
 qu'un ajustement de la requête ou de la question seules.
+
+## RGPD : RAG_TOP_K=6, gain réel sur 3 métriques mais écarté par principe
+
+Troisième hypothèse : la cause la plus récurrente des faux positifs restants
+est un passage pertinent qui existe réellement dans le document mais n'est
+pas retenu parmi seulement 3 candidats (`settings.RAG_TOP_K=3`) — constaté
+plusieurs fois cette session (RGPD, et AI Act article 12 avant son propre
+correctif de requête). Contrairement aux deux pistes précédentes, augmenter
+le nombre de candidats ne change rien à la sévérité du jugement du modèle :
+seulement les chances qu'un passage pertinent y parvienne. RGPD seul
+(`_RAG_TOP_K_PAR_REFERENTIEL`), NIS2/DORA/AI Act non touchés.
+
+Mesuré sur le corpus complet (15 documents, 3 passages) : **exactitude
+76,7 % → 79,5 %, précision 68,5 % → 71,1 %, rappel 80,8 % → 82,1 %** — la
+première piste RGPD de la session à améliorer les trois métriques à la
+fois. Mais **exclusions abusives 0 → 1** (document 15, article 37 — DPO).
+
+Diagnostic de ce cas précis (lecture des 3 passages séparément) : ce n'est
+pas un bug mécanique mais une vraie instabilité de jugement sur le document
+le plus ambigu du corpus. Passage 2 conclut correctement "manquement" avec
+un raisonnement exact ("le profilage publicitaire à grande échelle relève
+probablement du suivi régulier et systématique") ; passages 1 et 3
+concluent "hors périmètre". Chaque réponse individuelle est rendue à
+confiance élevée (0,85-0,9, au-dessus du seuil de second avis DA-09 à 0,7)
+— le mécanisme de vote ne se déclenche donc pas, bien que le modèle soit en
+réalité partagé d'un tirage à l'autre sur ce cas précis.
+
+Décision : **non déployé**, malgré le gain mesuré. "0 exclusion abusive"
+a été traité tout au long de cette session comme la seule garantie à ne
+jamais assouplir (voir `harnais.py::SeuilsCI`, qui la documente dans les
+mêmes termes) ; l'assouplir maintenant pour un gain de précision, même réel,
+serait incohérent avec les deux refus précédents sur RGPD le même jour.
+`git checkout` sur `audit_engine.py` (partie `RAG_TOP_K` uniquement),
+`_RAG_TOP_K_PAR_REFERENTIEL` retiré. Piste à reprendre après avoir
+renforcé la détection du désaccord inter-tirages (DA-09 ne capte
+aujourd'hui que la confiance d'un seul appel, pas la divergence entre
+plusieurs appels indépendants sur le même article).
