@@ -1,0 +1,3787 @@
+{
+  "documents": [
+    {
+      "document": "01_banque_regionale_conforme.txt",
+      "tenant_id": "validation",
+      "score": 87.7,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 60.5,
+        "denominateur": 69.0,
+        "articles_retenus": 22,
+        "articles_exclus": [
+          {
+            "article": "16",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "24",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "29",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "19",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.5,
+            "points": 2.5,
+            "points_max": 5
+          },
+          {
+            "article": "5",
+            "verdict": "conforme",
+            "poids": 4,
+            "credit": 1.0,
+            "points": 4.0,
+            "points_max": 4
+          },
+          {
+            "article": "6",
+            "verdict": "conforme",
+            "poids": 5,
+            "credit": 1.0,
+            "points": 5.0,
+            "points_max": 5
+          },
+          {
+            "article": "7",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "8",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "9",
+            "verdict": "conforme",
+            "poids": 4,
+            "credit": 1.0,
+            "points": 4.0,
+            "points_max": 4
+          },
+          {
+            "article": "10",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "11",
+            "verdict": "conforme",
+            "poids": 5,
+            "credit": 1.0,
+            "points": 5.0,
+            "points_max": 5
+          },
+          {
+            "article": "12",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "13",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          },
+          {
+            "article": "14",
+            "verdict": "conforme",
+            "poids": 1,
+            "credit": 1.0,
+            "points": 1.0,
+            "points_max": 1
+          },
+          {
+            "article": "17",
+            "verdict": "conforme",
+            "poids": 4,
+            "credit": 1.0,
+            "points": 4.0,
+            "points_max": 4
+          },
+          {
+            "article": "18",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "22",
+            "verdict": "conforme",
+            "poids": 1,
+            "credit": 1.0,
+            "points": 1.0,
+            "points_max": 1
+          },
+          {
+            "article": "23",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "25",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "26",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          },
+          {
+            "article": "27",
+            "verdict": "conforme",
+            "poids": 1,
+            "credit": 1.0,
+            "points": 1.0,
+            "points_max": 1
+          },
+          {
+            "article": "28",
+            "verdict": "conforme",
+            "poids": 4,
+            "credit": 1.0,
+            "points": 4.0,
+            "points_max": 4
+          },
+          {
+            "article": "30",
+            "verdict": "conforme",
+            "poids": 4,
+            "credit": 1.0,
+            "points": 4.0,
+            "points_max": 4
+          }
+        ],
+        "pertes_principales": [
+          "art. 24 : -3.0 points",
+          "art. 29 : -3.0 points",
+          "art. 19 : -2.5 points"
+        ]
+      },
+      "metadonnees": {
+        "passages": 6,
+        "sections": 2,
+        "articles_evalues": 23,
+        "tokens_document": 2256
+      },
+      "synthese": {
+        "articles_evalues": 23,
+        "conformes": 19,
+        "manquements": 3,
+        "hors_perimetre": 1,
+        "indetermines": 0,
+        "a_reviser": 1
+      },
+      "verdicts": [
+        {
+          "article": "5",
+          "intitule": "Gouvernance et organisation",
+          "criticite": 4,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "2/2 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "responsabilite_organe_direction",
+              "intitule": "L'organe de direction assume et approuve le cadre de gestion du risque lié aux TIC",
+              "citation": "Le conseil d'administration approuve annuellement le cadre de gestion du risque lie aux TIC et en assume la responsabilite finale.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "responsable_designe",
+              "intitule": "Un responsable des risques TIC ou une fonction équivalente est désigné, rattaché à la direction générale",
+              "citation": "Un Responsable des Risques TIC, rattache directement a la direction generale, anime un comite des risques TIC trimestriel associant les directions metier.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "6",
+          "intitule": "Cadre de gestion du risque lié aux TIC",
+          "criticite": 5,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "2/2 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "cadre_documente",
+              "intitule": "Un cadre de gestion du risque lié aux TIC est documenté et couvre stratégie, politiques et procédures",
+              "citation": "Le cadre documente couvre l'ensemble des exigences de l'article 6 : strategie de resilience operationnelle numerique, politiques et procedures de securite de l'information, mecanismes de detection et de reponse.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "revue_periodique",
+              "intitule": "Le cadre est revu périodiquement et après tout incident majeur",
+              "citation": "Il est revu apres tout incident majeur et fait l'objet d'un audit interne annuel.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "7",
+          "intitule": "Systèmes, protocoles et outils de TIC",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "inventaire_systemes",
+              "intitule": "Les systèmes, protocoles et outils TIC sont inventoriés et maintenus à jour",
+              "citation": "L'infrastructure repose sur des systemes a jour, avec un inventaire exhaustif des composants critiques et un plan de remplacement des technologies en fin de vie, suivi par le comite des risques TIC.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "8",
+          "intitule": "Identification",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "cartographie_actifs",
+              "intitule": "Une cartographie des actifs informationnels et des fonctions critiques ou importantes est tenue à jour",
+              "citation": "Une cartographie des actifs informationnels et des fonctions critiques ou importantes est tenue et mise a jour semestriellement, incluant les dependances vis-a-vis des prestataires tiers de services TIC.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "9",
+          "intitule": "Protection et prévention",
+          "criticite": 4,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "2/2 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "chiffrement",
+              "intitule": "Chiffrement des données au repos et en transit",
+              "citation": "Chiffrement des donnees au repos et en transit, segmentation reseau entre environnement bancaire et environnement bureautique, gestion des acces selon le principe du moindre privilege avec revue trimestrielle des habilitations, authentification multifacteurs generalisee.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "gestion_acces",
+              "intitule": "Gestion des accès selon le principe du moindre privilège, avec authentification multifacteurs",
+              "citation": "Chiffrement des donnees au repos et en transit, segmentation reseau entre environnement bancaire et environnement bureautique, gestion des acces selon le principe du moindre privilege avec revue trimestrielle des habilitations, authentification multifacteurs generalisee.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "10",
+          "intitule": "Détection",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "dispositif_detection",
+              "intitule": "Un dispositif de détection des anomalies et des incidents est en place (SOC, supervision continue)",
+              "citation": "Un centre operationnel de securite (SOC) externalise assure une surveillance continue et une detection des anomalies, avec des seuils d'alerte documentes et testes.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "11",
+          "intitule": "Réponse et rétablissement",
+          "criticite": 5,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "2/2 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "plan_reponse_incidents",
+              "intitule": "Un plan de réponse aux incidents liés aux TIC est formalisé",
+              "citation": "Un plan de reponse aux incidents et un plan de continuite d'activite couvrant\nles fonctions critiques sont formalises et testes chaque annee par un exercice\nde crise impliquant la direction generale.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "plan_continuite",
+              "intitule": "Un plan de continuité d'activité couvrant les fonctions critiques est formalisé et testé",
+              "citation": "Un plan de reponse aux incidents et un plan de continuite d'activite couvrant\nles fonctions critiques sont formalises et testes chaque annee par un exercice\nde crise impliquant la direction generale.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "12",
+          "intitule": "Politiques et procédures de sauvegarde, procédures et méthodes de restauration et de rétablissement",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "2/2 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "politique_sauvegarde",
+              "intitule": "Une politique de sauvegarde documentée est appliquée, avec sauvegardes régulières",
+              "citation": "Politique de sauvegarde documentee, sauvegardes quotidiennes chiffrees sur un site distinct, avec test de restauration complet realise chaque trimestre et compte-rendu transmis au comite des risques TIC.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "test_restauration",
+              "intitule": "Des tests de restauration sont réalisés périodiquement",
+              "citation": "Politique de sauvegarde documentee, sauvegardes quotidiennes chiffrees sur un site distinct, avec test de restauration complet realise chaque trimestre et compte-rendu transmis au comite des risques TIC.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "13",
+          "intitule": "Apprentissage et évolution",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "2/2 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "retour_experience",
+              "intitule": "Un retour d'expérience formalisé est réalisé après chaque incident significatif",
+              "citation": "Chaque incident significatif fait l'objet d'un retour d'experience formalise, integre a un registre des enseignements.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "sensibilisation",
+              "intitule": "Des sessions de sensibilisation ou de formation du personnel aux risques TIC sont organisées",
+              "citation": "Une veille sur les cybermenaces sectorielles alimente des sessions de sensibilisation trimestrielles pour l'ensemble du personnel.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "14",
+          "intitule": "Communication",
+          "criticite": 1,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "plan_communication_crise",
+              "intitule": "Un plan de communication de crise définit les messages et destinataires en cas d'incident majeur",
+              "citation": "Un plan de communication de crise definit les messages et les destinataires (clients, autorite de controle, presse) en cas d'incident majeur ou de perturbation significative de l'activite.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "16",
+          "intitule": "Cadre simplifié de gestion du risque lié aux TIC",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que la banque ne remplit pas les conditions d'éligibilité au cadre simplifié, donc la condition n'est pas remplie et l'article 16 n'est pas applicable.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "17",
+          "intitule": "Processus de gestion des incidents liés aux TIC",
+          "criticite": 4,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "processus_gestion_incidents",
+              "intitule": "Un processus de gestion des incidents TIC est documenté (détection, journalisation, qualification, escalade)",
+              "citation": "Un processus de gestion des incidents lies aux TIC est documente, avec detection, journalisation, qualification et escalade selon des criteres de gravite predefinis.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "18",
+          "intitule": "Classification des incidents liés aux TIC et des cybermenaces",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "criteres_classification",
+              "intitule": "Des critères de classification de la gravité des incidents sont documentés",
+              "citation": "Les criteres de classification (clients affectes, duree, zone geographique,\nimpact sur les donnees, criticite des services) sont documentes et alignes\nsur les criteres reglementaires des autorites europeennes de surveillance.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "19",
+          "intitule": "Déclaration des incidents majeurs liés aux TIC et notification volontaire des cybermenaces importantes",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les délais de notification (initiale, intermédiaire, finale) sont effectivement respectés en pratique",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_declaration",
+              "intitule": "Une procédure de notification des incidents majeurs à l'autorité de contrôle est formalisée",
+              "citation": "Une procedure de notification a l'autorite de controle competente est formalisee : notification initiale, rapport intermediaire et rapport final, avec des delais suivis par le Responsable des Risques TIC.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "respect_delais",
+              "intitule": "Les délais de notification (initiale, intermédiaire, finale) sont effectivement respectés en pratique",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les délais de notification (initiale, intermédiaire, finale) sont effectivement respectés en pratique"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "22",
+          "intitule": "Retour d'information en matière de surveillance",
+          "criticite": 1,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "prise_en_compte_retour",
+              "intitule": "Le retour d'information transmis par l'autorité de contrôle est examiné et donne lieu à des actions correctives",
+              "citation": "L'autorité de contrôle transmet chaque annee un retour synthetique sur les incidents declares par les etablissements du secteur ; ce retour est examine en comite des risques TIC et donne lieu, si pertinent, a des actions correctives suivies.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Incidents opérationnels ou de sécurité liés au paiement",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "regime_specifique_paiement",
+              "intitule": "Un régime de déclaration spécifique aux incidents liés au paiement est appliqué, distinct du régime général des incidents TIC",
+              "citation": "En tant qu'etablissement de credit proposant des moyens de paiement, la banque applique le regime specifique de declaration des incidents operationnels ou de securite lies au paiement, distinct du regime general des incidents TIC, avec des seuils et delais propres suivis par le service moyens de paiement.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Exigences générales applicables à la réalisation de tests de résilience opérationnelle numérique",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un programme de tests de résilience opérationnelle numérique, proportionné au profil de risque, est documenté",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "programme_tests",
+              "intitule": "Un programme de tests de résilience opérationnelle numérique, proportionné au profil de risque, est documenté",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un programme de tests de résilience opérationnelle numérique, proportionné au profil de risque, est documenté"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "25",
+          "intitule": "Test des outils et systèmes de TIC",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "tests_vulnerabilite",
+              "intitule": "Des tests de vulnérabilité réguliers sont réalisés sur les systèmes",
+              "citation": "Des tests de vulnerabilite reguliers, des analyses de la securite des reseaux, des revues de code et des tests de scenario sont realises selon un calendrier documente.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "26",
+          "intitule": "Tests avancés d'outils, de systèmes et de processus de TIC sur la base de tests de pénétration fondés sur la menace",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "tlpt_realise",
+              "intitule": "Un test de pénétration fondé sur la menace (TLPT) est réalisé périodiquement, avec des testeurs accrédités",
+              "citation": "Compte tenu de son profil de risque, de sa taille et de son importance systemique regionale, la banque realise tous les trois ans un test de penetration fonde sur la menace (TLPT) couvrant ses fonctions critiques en conditions reelles, conforme au cadre TIBER-EU, avec l'appui de testeurs accredites.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Exigences applicables aux testeurs afin de réaliser des tests de pénétration fondés sur la menace",
+          "criticite": 1,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "testeurs_accredites",
+              "intitule": "Les testeurs internes ou externes mobilisés disposent des accréditations et garanties requises",
+              "citation": "Les testeurs internes et externes mobilises pour le TLPT disposent des\naccreditations requises et d'une assurance responsabilite civile\nprofessionnelle adaptee ; le contrat avec le prestataire de test externe\nintegre ces exigences.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "28",
+          "intitule": "Principes généraux",
+          "criticite": 4,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "2/2 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "strategie_risque_tiers",
+              "intitule": "Une stratégie relative au risque lié aux prestataires tiers de TIC est formalisée",
+              "citation": "Une strategie relative au risque lie aux prestataires tiers de TIC est formalisee, incluant un registre des accords contractuels tenu a jour et transmis annuellement a l'autorite de controle.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "registre_contrats",
+              "intitule": "Un registre des accords contractuels avec les prestataires TIC est tenu à jour",
+              "citation": "Une strategie relative au risque lie aux prestataires tiers de TIC est formalisee, incluant un registre des accords contractuels tenu a jour et transmis annuellement a l'autorite de controle.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "29",
+          "intitule": "Évaluation préliminaire du risque de concentration de TIC au niveau de l'entité",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.6,
+          "revue_humaine_requise": true,
+          "motif_revue": "confiance insuffisante — validation par un DPO requise",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une évaluation du risque de concentration lié au recours à un nombre restreint de prestataires TIC critiques est réalisée",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "evaluation_concentration",
+              "intitule": "Une évaluation du risque de concentration lié au recours à un nombre restreint de prestataires TIC critiques est réalisée",
+              "citation": "Une evaluation prealable du risque de concentration lie au recours a un\\nnombre restreint de prestataires TIC critiques est realisee chaque annee et\\npresentee au comite des risques TIC, avec un plan de diversification pour les\\ndeux prestataires identifies comme les plus critiques.",
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "citation absente du document (meilleure similarité 0.82 < seuil 0.9) — preuve rejetée, élément réputé non satisfait",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une évaluation du risque de concentration lié au recours à un nombre restreint de prestataires TIC critiques est réalisée"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "30",
+          "intitule": "Principales dispositions contractuelles",
+          "criticite": 4,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "2/2 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "clauses_essentielles",
+              "intitule": "Les contrats avec les prestataires TIC comportent une description des services, des clauses d'audit et une stratégie de sortie",
+              "citation": "Les contrats avec les prestataires de services TIC comportent une description complete des services, des indicateurs de performance, des clauses d'audit et d'acces aux informations, une strategie de sortie documentee et testee, et les conditions de localisation et de protection des donnees.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "localisation_donnees",
+              "intitule": "Les conditions de localisation et de protection des données sont précisées dans les contrats",
+              "citation": "Les contrats avec les prestataires de services TIC comportent une description complete des services, des indicateurs de performance, des clauses d'audit et d'acces aux informations, une strategie de sortie documentee et testee, et les conditions de localisation et de protection des donnees.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        }
+      ]
+    },
+    {
+      "document": "02_societe_investissement_defaillante.txt",
+      "tenant_id": "validation",
+      "score": 0.0,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 0.0,
+        "denominateur": 67.0,
+        "articles_retenus": 22,
+        "articles_exclus": [
+          {
+            "article": "23",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "6",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "11",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "19",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "5",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "9",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "17",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "28",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "30",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "7",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "8",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "10",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "12",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "18",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "24",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "25",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "29",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "13",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "26",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "14",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "16",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "22",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "27",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          }
+        ],
+        "pertes_principales": [
+          "art. 6 : -5.0 points",
+          "art. 11 : -5.0 points",
+          "art. 19 : -5.0 points",
+          "art. 5 : -4.0 points",
+          "art. 9 : -4.0 points"
+        ]
+      },
+      "metadonnees": {
+        "passages": 7,
+        "sections": 7,
+        "articles_evalues": 23,
+        "tokens_document": 702
+      },
+      "synthese": {
+        "articles_evalues": 23,
+        "conformes": 0,
+        "manquements": 22,
+        "hors_perimetre": 1,
+        "indetermines": 0,
+        "a_reviser": 2
+      },
+      "verdicts": [
+        {
+          "article": "5",
+          "intitule": "Gouvernance et organisation",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : L'organe de direction assume et approuve le cadre de gestion du risque lié aux TIC ; Un responsable des risques TIC ou une fonction équivalente est désigné, rattaché à la direction générale",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "responsabilite_organe_direction",
+              "intitule": "L'organe de direction assume et approuve le cadre de gestion du risque lié aux TIC",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "responsable_designe",
+              "intitule": "Un responsable des risques TIC ou une fonction équivalente est désigné, rattaché à la direction générale",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : L'organe de direction assume et approuve le cadre de gestion du risque lié aux TIC",
+            "Documenter et rendre opposable : Un responsable des risques TIC ou une fonction équivalente est désigné, rattaché à la direction générale"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "6",
+          "intitule": "Cadre de gestion du risque lié aux TIC",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un cadre de gestion du risque lié aux TIC est documenté et couvre stratégie, politiques et procédures ; Le cadre est revu périodiquement et après tout incident majeur",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "cadre_documente",
+              "intitule": "Un cadre de gestion du risque lié aux TIC est documenté et couvre stratégie, politiques et procédures",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "revue_periodique",
+              "intitule": "Le cadre est revu périodiquement et après tout incident majeur",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un cadre de gestion du risque lié aux TIC est documenté et couvre stratégie, politiques et procédures",
+            "Documenter et rendre opposable : Le cadre est revu périodiquement et après tout incident majeur"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "7",
+          "intitule": "Systèmes, protocoles et outils de TIC",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les systèmes, protocoles et outils TIC sont inventoriés et maintenus à jour",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "inventaire_systemes",
+              "intitule": "Les systèmes, protocoles et outils TIC sont inventoriés et maintenus à jour",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les systèmes, protocoles et outils TIC sont inventoriés et maintenus à jour"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "8",
+          "intitule": "Identification",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une cartographie des actifs informationnels et des fonctions critiques ou importantes est tenue à jour",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "cartographie_actifs",
+              "intitule": "Une cartographie des actifs informationnels et des fonctions critiques ou importantes est tenue à jour",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une cartographie des actifs informationnels et des fonctions critiques ou importantes est tenue à jour"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "9",
+          "intitule": "Protection et prévention",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Chiffrement des données au repos et en transit ; Gestion des accès selon le principe du moindre privilège, avec authentification multifacteurs",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "chiffrement",
+              "intitule": "Chiffrement des données au repos et en transit",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "gestion_acces",
+              "intitule": "Gestion des accès selon le principe du moindre privilège, avec authentification multifacteurs",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Chiffrement des données au repos et en transit",
+            "Documenter et rendre opposable : Gestion des accès selon le principe du moindre privilège, avec authentification multifacteurs"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "10",
+          "intitule": "Détection",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un dispositif de détection des anomalies et des incidents est en place (SOC, supervision continue)",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "dispositif_detection",
+              "intitule": "Un dispositif de détection des anomalies et des incidents est en place (SOC, supervision continue)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un dispositif de détection des anomalies et des incidents est en place (SOC, supervision continue)"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "11",
+          "intitule": "Réponse et rétablissement",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un plan de réponse aux incidents liés aux TIC est formalisé ; Un plan de continuité d'activité couvrant les fonctions critiques est formalisé et testé",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "plan_reponse_incidents",
+              "intitule": "Un plan de réponse aux incidents liés aux TIC est formalisé",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "plan_continuite",
+              "intitule": "Un plan de continuité d'activité couvrant les fonctions critiques est formalisé et testé",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un plan de réponse aux incidents liés aux TIC est formalisé",
+            "Documenter et rendre opposable : Un plan de continuité d'activité couvrant les fonctions critiques est formalisé et testé"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "12",
+          "intitule": "Politiques et procédures de sauvegarde, procédures et méthodes de restauration et de rétablissement",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une politique de sauvegarde documentée est appliquée, avec sauvegardes régulières ; Des tests de restauration sont réalisés périodiquement",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "politique_sauvegarde",
+              "intitule": "Une politique de sauvegarde documentée est appliquée, avec sauvegardes régulières",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "test_restauration",
+              "intitule": "Des tests de restauration sont réalisés périodiquement",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une politique de sauvegarde documentée est appliquée, avec sauvegardes régulières",
+            "Documenter et rendre opposable : Des tests de restauration sont réalisés périodiquement"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "13",
+          "intitule": "Apprentissage et évolution",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un retour d'expérience formalisé est réalisé après chaque incident significatif ; Des sessions de sensibilisation ou de formation du personnel aux risques TIC sont organisées",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "retour_experience",
+              "intitule": "Un retour d'expérience formalisé est réalisé après chaque incident significatif",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "sensibilisation",
+              "intitule": "Des sessions de sensibilisation ou de formation du personnel aux risques TIC sont organisées",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un retour d'expérience formalisé est réalisé après chaque incident significatif",
+            "Documenter et rendre opposable : Des sessions de sensibilisation ou de formation du personnel aux risques TIC sont organisées"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "14",
+          "intitule": "Communication",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un plan de communication de crise définit les messages et destinataires en cas d'incident majeur",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "plan_communication_crise",
+              "intitule": "Un plan de communication de crise définit les messages et destinataires en cas d'incident majeur",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un plan de communication de crise définit les messages et destinataires en cas d'incident majeur"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "16",
+          "intitule": "Cadre simplifié de gestion du risque lié aux TIC",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le cadre simplifié applicable est documenté et appliqué en lieu et place du cadre complet",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "cadre_simplifie_applique",
+              "intitule": "Le cadre simplifié applicable est documenté et appliqué en lieu et place du cadre complet",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le cadre simplifié applicable est documenté et appliqué en lieu et place du cadre complet"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "17",
+          "intitule": "Processus de gestion des incidents liés aux TIC",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un processus de gestion des incidents TIC est documenté (détection, journalisation, qualification, escalade)",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "processus_gestion_incidents",
+              "intitule": "Un processus de gestion des incidents TIC est documenté (détection, journalisation, qualification, escalade)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un processus de gestion des incidents TIC est documenté (détection, journalisation, qualification, escalade)"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "18",
+          "intitule": "Classification des incidents liés aux TIC et des cybermenaces",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Des critères de classification de la gravité des incidents sont documentés",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "criteres_classification",
+              "intitule": "Des critères de classification de la gravité des incidents sont documentés",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Des critères de classification de la gravité des incidents sont documentés"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "19",
+          "intitule": "Déclaration des incidents majeurs liés aux TIC et notification volontaire des cybermenaces importantes",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une procédure de notification des incidents majeurs à l'autorité de contrôle est formalisée ; Les délais de notification (initiale, intermédiaire, finale) sont effectivement respectés en pratique",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_declaration",
+              "intitule": "Une procédure de notification des incidents majeurs à l'autorité de contrôle est formalisée",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "respect_delais",
+              "intitule": "Les délais de notification (initiale, intermédiaire, finale) sont effectivement respectés en pratique",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une procédure de notification des incidents majeurs à l'autorité de contrôle est formalisée",
+            "Documenter et rendre opposable : Les délais de notification (initiale, intermédiaire, finale) sont effectivement respectés en pratique"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "22",
+          "intitule": "Retour d'information en matière de surveillance",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le retour d'information transmis par l'autorité de contrôle est examiné et donne lieu à des actions correctives",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "prise_en_compte_retour",
+              "intitule": "Le retour d'information transmis par l'autorité de contrôle est examiné et donne lieu à des actions correctives",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le retour d'information transmis par l'autorité de contrôle est examiné et donne lieu à des actions correctives"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Incidents opérationnels ou de sécurité liés au paiement",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que l'entité n'est ni établissement de crédit, ni établissement de paiement, ni établissement de monnaie électronique, ni prestataire de services d'information sur les comptes, ce qui exclut toutes les branches de la condition.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Exigences générales applicables à la réalisation de tests de résilience opérationnelle numérique",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un programme de tests de résilience opérationnelle numérique, proportionné au profil de risque, est documenté",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "programme_tests",
+              "intitule": "Un programme de tests de résilience opérationnelle numérique, proportionné au profil de risque, est documenté",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un programme de tests de résilience opérationnelle numérique, proportionné au profil de risque, est documenté"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "25",
+          "intitule": "Test des outils et systèmes de TIC",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Des tests de vulnérabilité réguliers sont réalisés sur les systèmes",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "tests_vulnerabilite",
+              "intitule": "Des tests de vulnérabilité réguliers sont réalisés sur les systèmes",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Des tests de vulnérabilité réguliers sont réalisés sur les systèmes"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "26",
+          "intitule": "Tests avancés d'outils, de systèmes et de processus de TIC sur la base de tests de pénétration fondés sur la menace",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un test de pénétration fondé sur la menace (TLPT) est réalisé périodiquement, avec des testeurs accrédités",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "tlpt_realise",
+              "intitule": "Un test de pénétration fondé sur la menace (TLPT) est réalisé périodiquement, avec des testeurs accrédités",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un test de pénétration fondé sur la menace (TLPT) est réalisé périodiquement, avec des testeurs accrédités"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Exigences applicables aux testeurs afin de réaliser des tests de pénétration fondés sur la menace",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les testeurs internes ou externes mobilisés disposent des accréditations et garanties requises",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "testeurs_accredites",
+              "intitule": "Les testeurs internes ou externes mobilisés disposent des accréditations et garanties requises",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les testeurs internes ou externes mobilisés disposent des accréditations et garanties requises"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "28",
+          "intitule": "Principes généraux",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une stratégie relative au risque lié aux prestataires tiers de TIC est formalisée ; Un registre des accords contractuels avec les prestataires TIC est tenu à jour",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "strategie_risque_tiers",
+              "intitule": "Une stratégie relative au risque lié aux prestataires tiers de TIC est formalisée",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "registre_contrats",
+              "intitule": "Un registre des accords contractuels avec les prestataires TIC est tenu à jour",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une stratégie relative au risque lié aux prestataires tiers de TIC est formalisée",
+            "Documenter et rendre opposable : Un registre des accords contractuels avec les prestataires TIC est tenu à jour"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "29",
+          "intitule": "Évaluation préliminaire du risque de concentration de TIC au niveau de l'entité",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une évaluation du risque de concentration lié au recours à un nombre restreint de prestataires TIC critiques est réalisée",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "evaluation_concentration",
+              "intitule": "Une évaluation du risque de concentration lié au recours à un nombre restreint de prestataires TIC critiques est réalisée",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une évaluation du risque de concentration lié au recours à un nombre restreint de prestataires TIC critiques est réalisée"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "30",
+          "intitule": "Principales dispositions contractuelles",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les contrats avec les prestataires TIC comportent une description des services, des clauses d'audit et une stratégie de sortie ; Les conditions de localisation et de protection des données sont précisées dans les contrats",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "clauses_essentielles",
+              "intitule": "Les contrats avec les prestataires TIC comportent une description des services, des clauses d'audit et une stratégie de sortie",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "localisation_donnees",
+              "intitule": "Les conditions de localisation et de protection des données sont précisées dans les contrats",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les contrats avec les prestataires TIC comportent une description des services, des clauses d'audit et une stratégie de sortie",
+            "Documenter et rendre opposable : Les conditions de localisation et de protection des données sont précisées dans les contrats"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        }
+      ]
+    },
+    {
+      "document": "03_assurance_partielle_contradictoire.txt",
+      "tenant_id": "validation",
+      "score": 22.5,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 15.5,
+        "denominateur": 69.0,
+        "articles_retenus": 22,
+        "articles_exclus": [
+          {
+            "article": "27",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "6",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "19",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "9",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "17",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "30",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "7",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "8",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "12",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "18",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "23",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "24",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "11",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.5,
+            "points": 2.5,
+            "points_max": 5
+          },
+          {
+            "article": "5",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.5,
+            "points": 2.0,
+            "points_max": 4
+          },
+          {
+            "article": "13",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "26",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "28",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.5,
+            "points": 2.0,
+            "points_max": 4
+          },
+          {
+            "article": "14",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "16",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "22",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "10",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "25",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "29",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          }
+        ],
+        "pertes_principales": [
+          "art. 6 : -5.0 points",
+          "art. 19 : -5.0 points",
+          "art. 9 : -4.0 points",
+          "art. 17 : -4.0 points",
+          "art. 30 : -4.0 points"
+        ]
+      },
+      "metadonnees": {
+        "passages": 7,
+        "sections": 7,
+        "articles_evalues": 23,
+        "tokens_document": 855
+      },
+      "synthese": {
+        "articles_evalues": 23,
+        "conformes": 3,
+        "manquements": 19,
+        "hors_perimetre": 1,
+        "indetermines": 0,
+        "a_reviser": 2
+      },
+      "verdicts": [
+        {
+          "article": "5",
+          "intitule": "Gouvernance et organisation",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un responsable des risques TIC ou une fonction équivalente est désigné, rattaché à la direction générale",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "responsabilite_organe_direction",
+              "intitule": "L'organe de direction assume et approuve le cadre de gestion du risque lié aux TIC",
+              "citation": "Le conseil d'administration a approuve en 2023 un cadre de gestion du risque lie aux TIC. […] « la direction generale assume la responsabilite pleine et entiere du dispositif et en assure le suivi continu »",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "responsable_designe",
+              "intitule": "Un responsable des risques TIC ou une fonction équivalente est désigné, rattaché à la direction générale",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un responsable des risques TIC ou une fonction équivalente est désigné, rattaché à la direction générale"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "6",
+          "intitule": "Cadre de gestion du risque lié aux TIC",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un cadre de gestion du risque lié aux TIC est documenté et couvre stratégie, politiques et procédures ; Le cadre est revu périodiquement et après tout incident majeur",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "cadre_documente",
+              "intitule": "Un cadre de gestion du risque lié aux TIC est documenté et couvre stratégie, politiques et procédures",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "revue_periodique",
+              "intitule": "Le cadre est revu périodiquement et après tout incident majeur",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un cadre de gestion du risque lié aux TIC est documenté et couvre stratégie, politiques et procédures",
+            "Documenter et rendre opposable : Le cadre est revu périodiquement et après tout incident majeur"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "7",
+          "intitule": "Systèmes, protocoles et outils de TIC",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les systèmes, protocoles et outils TIC sont inventoriés et maintenus à jour",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "inventaire_systemes",
+              "intitule": "Les systèmes, protocoles et outils TIC sont inventoriés et maintenus à jour",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les systèmes, protocoles et outils TIC sont inventoriés et maintenus à jour"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "8",
+          "intitule": "Identification",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une cartographie des actifs informationnels et des fonctions critiques ou importantes est tenue à jour",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "cartographie_actifs",
+              "intitule": "Une cartographie des actifs informationnels et des fonctions critiques ou importantes est tenue à jour",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une cartographie des actifs informationnels et des fonctions critiques ou importantes est tenue à jour"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "9",
+          "intitule": "Protection et prévention",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Chiffrement des données au repos et en transit ; Gestion des accès selon le principe du moindre privilège, avec authentification multifacteurs",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "chiffrement",
+              "intitule": "Chiffrement des données au repos et en transit",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "gestion_acces",
+              "intitule": "Gestion des accès selon le principe du moindre privilège, avec authentification multifacteurs",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Chiffrement des données au repos et en transit",
+            "Documenter et rendre opposable : Gestion des accès selon le principe du moindre privilège, avec authentification multifacteurs"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "10",
+          "intitule": "Détection",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "dispositif_detection",
+              "intitule": "Un dispositif de détection des anomalies et des incidents est en place (SOC, supervision continue)",
+              "citation": "Un prestataire de supervision de securite surveille le reseau interne 24h/24.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "11",
+          "intitule": "Réponse et rétablissement",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un plan de continuité d'activité couvrant les fonctions critiques est formalisé et testé",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "plan_reponse_incidents",
+              "intitule": "Un plan de réponse aux incidents liés aux TIC est formalisé",
+              "citation": "Un plan de reponse aux incidents existe et a ete active a deux reprises en 2024 avec des delais de resolution documentes.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "plan_continuite",
+              "intitule": "Un plan de continuité d'activité couvrant les fonctions critiques est formalisé et testé",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un plan de continuité d'activité couvrant les fonctions critiques est formalisé et testé"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "12",
+          "intitule": "Politiques et procédures de sauvegarde, procédures et méthodes de restauration et de rétablissement",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une politique de sauvegarde documentée est appliquée, avec sauvegardes régulières ; Des tests de restauration sont réalisés périodiquement",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "politique_sauvegarde",
+              "intitule": "Une politique de sauvegarde documentée est appliquée, avec sauvegardes régulières",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "test_restauration",
+              "intitule": "Des tests de restauration sont réalisés périodiquement",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une politique de sauvegarde documentée est appliquée, avec sauvegardes régulières",
+            "Documenter et rendre opposable : Des tests de restauration sont réalisés périodiquement"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "13",
+          "intitule": "Apprentissage et évolution",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un retour d'expérience formalisé est réalisé après chaque incident significatif ; Des sessions de sensibilisation ou de formation du personnel aux risques TIC sont organisées",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "retour_experience",
+              "intitule": "Un retour d'expérience formalisé est réalisé après chaque incident significatif",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "sensibilisation",
+              "intitule": "Des sessions de sensibilisation ou de formation du personnel aux risques TIC sont organisées",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un retour d'expérience formalisé est réalisé après chaque incident significatif",
+            "Documenter et rendre opposable : Des sessions de sensibilisation ou de formation du personnel aux risques TIC sont organisées"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "14",
+          "intitule": "Communication",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un plan de communication de crise définit les messages et destinataires en cas d'incident majeur",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "plan_communication_crise",
+              "intitule": "Un plan de communication de crise définit les messages et destinataires en cas d'incident majeur",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un plan de communication de crise définit les messages et destinataires en cas d'incident majeur"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "16",
+          "intitule": "Cadre simplifié de gestion du risque lié aux TIC",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le cadre simplifié applicable est documenté et appliqué en lieu et place du cadre complet",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "cadre_simplifie_applique",
+              "intitule": "Le cadre simplifié applicable est documenté et appliqué en lieu et place du cadre complet",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le cadre simplifié applicable est documenté et appliqué en lieu et place du cadre complet"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "17",
+          "intitule": "Processus de gestion des incidents liés aux TIC",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un processus de gestion des incidents TIC est documenté (détection, journalisation, qualification, escalade)",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "processus_gestion_incidents",
+              "intitule": "Un processus de gestion des incidents TIC est documenté (détection, journalisation, qualification, escalade)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un processus de gestion des incidents TIC est documenté (détection, journalisation, qualification, escalade)"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "18",
+          "intitule": "Classification des incidents liés aux TIC et des cybermenaces",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Des critères de classification de la gravité des incidents sont documentés",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "criteres_classification",
+              "intitule": "Des critères de classification de la gravité des incidents sont documentés",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Des critères de classification de la gravité des incidents sont documentés"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "19",
+          "intitule": "Déclaration des incidents majeurs liés aux TIC et notification volontaire des cybermenaces importantes",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une procédure de notification des incidents majeurs à l'autorité de contrôle est formalisée ; Les délais de notification (initiale, intermédiaire, finale) sont effectivement respectés en pratique",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_declaration",
+              "intitule": "Une procédure de notification des incidents majeurs à l'autorité de contrôle est formalisée",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "respect_delais",
+              "intitule": "Les délais de notification (initiale, intermédiaire, finale) sont effectivement respectés en pratique",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une procédure de notification des incidents majeurs à l'autorité de contrôle est formalisée",
+            "Documenter et rendre opposable : Les délais de notification (initiale, intermédiaire, finale) sont effectivement respectés en pratique"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "22",
+          "intitule": "Retour d'information en matière de surveillance",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le retour d'information transmis par l'autorité de contrôle est examiné et donne lieu à des actions correctives",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "prise_en_compte_retour",
+              "intitule": "Le retour d'information transmis par l'autorité de contrôle est examiné et donne lieu à des actions correctives",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le retour d'information transmis par l'autorité de contrôle est examiné et donne lieu à des actions correctives"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Incidents opérationnels ou de sécurité liés au paiement",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un régime de déclaration spécifique aux incidents liés au paiement est appliqué, distinct du régime général des incidents TIC",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "regime_specifique_paiement",
+              "intitule": "Un régime de déclaration spécifique aux incidents liés au paiement est appliqué, distinct du régime général des incidents TIC",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un régime de déclaration spécifique aux incidents liés au paiement est appliqué, distinct du régime général des incidents TIC"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Exigences générales applicables à la réalisation de tests de résilience opérationnelle numérique",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un programme de tests de résilience opérationnelle numérique, proportionné au profil de risque, est documenté",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "programme_tests",
+              "intitule": "Un programme de tests de résilience opérationnelle numérique, proportionné au profil de risque, est documenté",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un programme de tests de résilience opérationnelle numérique, proportionné au profil de risque, est documenté"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "25",
+          "intitule": "Test des outils et systèmes de TIC",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "tests_vulnerabilite",
+              "intitule": "Des tests de vulnérabilité réguliers sont réalisés sur les systèmes",
+              "citation": "Des tests de vulnerabilite sont realises chaque annee sur les systemes centraux.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "26",
+          "intitule": "Tests avancés d'outils, de systèmes et de processus de TIC sur la base de tests de pénétration fondés sur la menace",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un test de pénétration fondé sur la menace (TLPT) est réalisé périodiquement, avec des testeurs accrédités",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "tlpt_realise",
+              "intitule": "Un test de pénétration fondé sur la menace (TLPT) est réalisé périodiquement, avec des testeurs accrédités",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un test de pénétration fondé sur la menace (TLPT) est réalisé périodiquement, avec des testeurs accrédités"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Exigences applicables aux testeurs afin de réaliser des tests de pénétration fondés sur la menace",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique explicitement qu'aucun test de pénétration fondé sur la menace n'a été réalisé, donc la condition d'application n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "28",
+          "intitule": "Principes généraux",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une stratégie relative au risque lié aux prestataires tiers de TIC est formalisée",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "strategie_risque_tiers",
+              "intitule": "Une stratégie relative au risque lié aux prestataires tiers de TIC est formalisée",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "registre_contrats",
+              "intitule": "Un registre des accords contractuels avec les prestataires TIC est tenu à jour",
+              "citation": "Un registre des contrats avec les prestataires TIC est tenu pour les prestataires informatiques principaux (hebergeur, editeur du logiciel de gestion des sinistres), avec clauses d'audit et de reversibilite integrees depuis 2023.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une stratégie relative au risque lié aux prestataires tiers de TIC est formalisée"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "29",
+          "intitule": "Évaluation préliminaire du risque de concentration de TIC au niveau de l'entité",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "evaluation_concentration",
+              "intitule": "Une évaluation du risque de concentration lié au recours à un nombre restreint de prestataires TIC critiques est réalisée",
+              "citation": "Le contrat avec le prestataire assurant le portail des agents commerciaux, signe en 2017, ne comporte en revanche aucune de ces clauses et n'a pas ete identifie dans l'evaluation du risque de concentration realisee en 2024, laquelle ne porte que sur les deux prestataires principaux.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "30",
+          "intitule": "Principales dispositions contractuelles",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les contrats avec les prestataires TIC comportent une description des services, des clauses d'audit et une stratégie de sortie ; Les conditions de localisation et de protection des données sont précisées dans les contrats",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "clauses_essentielles",
+              "intitule": "Les contrats avec les prestataires TIC comportent une description des services, des clauses d'audit et une stratégie de sortie",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "localisation_donnees",
+              "intitule": "Les conditions de localisation et de protection des données sont précisées dans les contrats",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les contrats avec les prestataires TIC comportent une description des services, des clauses d'audit et une stratégie de sortie",
+            "Documenter et rendre opposable : Les conditions de localisation et de protection des données sont précisées dans les contrats"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        }
+      ]
+    },
+    {
+      "document": "04_pme_industrielle_hors_perimetre.txt",
+      "tenant_id": "validation",
+      "score": 0.0,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 0.0,
+        "denominateur": 3.0,
+        "articles_retenus": 2,
+        "articles_exclus": [
+          {
+            "article": "5",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "6",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "7",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "8",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "9",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "10",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "11",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "12",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "13",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "14",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "16",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "17",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "18",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "19",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "22",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "23",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "24",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "25",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "28",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "29",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "30",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "26",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "27",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          }
+        ],
+        "pertes_principales": [
+          "art. 26 : -2.0 points",
+          "art. 27 : -1.0 points"
+        ]
+      },
+      "metadonnees": {
+        "passages": 4,
+        "sections": 4,
+        "articles_evalues": 23,
+        "tokens_document": 365
+      },
+      "synthese": {
+        "articles_evalues": 23,
+        "conformes": 0,
+        "manquements": 2,
+        "hors_perimetre": 21,
+        "indetermines": 0,
+        "a_reviser": 2
+      },
+      "verdicts": [
+        {
+          "article": "5",
+          "intitule": "Gouvernance et organisation",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "La condition exige que l'organisme soit une entité financière au sens de l'article 2 du règlement DORA. Le texte indique explicitement que l'entreprise n'appartient à aucune des catégories d'entité financière listées, donc la condition n'est pas remplie et l'article 5 n'est pas applicable.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "6",
+          "intitule": "Cadre de gestion du risque lié aux TIC",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "La phrase citée indique que l'entité n'appartient à aucune des catégories d'entité financière énumérées à l'article 2 du règlement DORA, couvrant ainsi toutes les branches de la condition d'applicabilité. Ainsi la condition n'est pas remplie et l'article 6 n'est pas applicable.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "7",
+          "intitule": "Systèmes, protocoles et outils de TIC",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA, donc la condition d'être une entité financière n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "8",
+          "intitule": "Identification",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'est ni un établissement de crédit, ni un établissement de paiement, ni une entreprise d'investissement, ni un établissement de monnaie électronique, ni une entreprise d'assurance ou de réassurance, ni un prestataire de services sur crypto‑actifs, ni aucune autre catégorie d'entité financière mentionnée à l'article 2 du règlement DORA.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "9",
+          "intitule": "Protection et prévention",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'est ni un établissement de crédit, ni un établissement de paiement, ni une entreprise d'investissement, ni un établissement de monnaie électronique, ni une entreprise d'assurance ou de réassurance, ni un prestataire de services sur crypto‑actifs, ni aucune autre catégorie d'entité financière mentionnée à l'article 2 du règlement DORA, ce qui montre qu'aucune des branches de la condition n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "10",
+          "intitule": "Détection",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA, couvrant ainsi toutes les branches de la condition d'applicabilité.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "11",
+          "intitule": "Réponse et rétablissement",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique explicitement que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA, excluant ainsi toutes les branches de la condition d'applicabilité.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "12",
+          "intitule": "Politiques et procédures de sauvegarde, procédures et méthodes de restauration et de rétablissement",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique explicitement que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA, ce qui montre que toutes les branches de la condition sont écartées.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "13",
+          "intitule": "Apprentissage et évolution",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'est aucune des entités financières listées à l'article 2 du règlement DORA, couvrant toutes les branches de la condition d'applicabilité.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "14",
+          "intitule": "Communication",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique explicitement que l'entreprise n'appartient à aucune des catégories d'entité financière prévues à l'article 2 du règlement DORA, donc la condition d'être une entité financière n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "16",
+          "intitule": "Cadre simplifié de gestion du risque lié aux TIC",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'appartient à aucune des catégories visées à l'article 2 du règlement DORA, excluant ainsi les petites entreprises d'investissement et les catégories assimilées prévues à l'article 16§1.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "17",
+          "intitule": "Processus de gestion des incidents liés aux TIC",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA, donc la condition d'être une entité financière n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "18",
+          "intitule": "Classification des incidents liés aux TIC et des cybermenaces",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "La phrase indique que l'entreprise n'appartient à aucune des catégories d'entités financières énumérées à l'article 2 du règlement DORA, donc la condition d'être une entité financière n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "19",
+          "intitule": "Déclaration des incidents majeurs liés aux TIC et notification volontaire des cybermenaces importantes",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA, excluant ainsi l'application de l'article 19.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "22",
+          "intitule": "Retour d'information en matière de surveillance",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA, donc la condition d'être une entité financière n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Incidents opérationnels ou de sécurité liés au paiement",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que l'entreprise n'est ni un établissement de crédit, ni un établissement de paiement, ni un établissement de monnaie électronique, ni un prestataire de services d'information sur les comptes, ce qui exclut toutes les branches de la condition d'applicabilité.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Exigences générales applicables à la réalisation de tests de résilience opérationnelle numérique",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA, excluant ainsi toutes les branches de la condition d'applicabilité.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "25",
+          "intitule": "Test des outils et systèmes de TIC",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique explicitement que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA, donc la condition d'être une entité financière n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "26",
+          "intitule": "Tests avancés d'outils, de systèmes et de processus de TIC sur la base de tests de pénétration fondés sur la menace",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un test de pénétration fondé sur la menace (TLPT) est réalisé périodiquement, avec des testeurs accrédités",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "tlpt_realise",
+              "intitule": "Un test de pénétration fondé sur la menace (TLPT) est réalisé périodiquement, avec des testeurs accrédités",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un test de pénétration fondé sur la menace (TLPT) est réalisé périodiquement, avec des testeurs accrédités"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Exigences applicables aux testeurs afin de réaliser des tests de pénétration fondés sur la menace",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les testeurs internes ou externes mobilisés disposent des accréditations et garanties requises",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "testeurs_accredites",
+              "intitule": "Les testeurs internes ou externes mobilisés disposent des accréditations et garanties requises",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les testeurs internes ou externes mobilisés disposent des accréditations et garanties requises"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "28",
+          "intitule": "Principes généraux",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'est aucune des entites financieres enumeratees a l'article 2 du reglement DORA (etablissement de credit, etablissement de paiement, entreprise d'investissement, etablissement de monnaie electronique, entreprise d'assurance ou de reassurance, prestataire de services sur crypto-actifs, etc.), ce qui montre que aucune branche de la condition d'applicabilite n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "29",
+          "intitule": "Évaluation préliminaire du risque de concentration de TIC au niveau de l'entité",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA, donc la condition d'être une entité financière n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "30",
+          "intitule": "Principales dispositions contractuelles",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'appartient à aucune des catégories d'entité financière listées à l'article 2 du règlement DORA (établissement de crédit, établissement de paiement, entreprise d'investissement, établissement de monnaie électronique, entreprise d'assurance ou de réassurance, prestataire de services sur crypto‑actifs, etc.), excluant ainsi l'applicabilité de l'article 30.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        }
+      ]
+    }
+  ],
+  "configuration": {
+    "repetitions": 3,
+    "vote": 1,
+    "client": "ClientGroq",
+    "modele": "openai/gpt-oss-120b",
+    "temperature": 0.0,
+    "cache_actif": false,
+    "appels_reels": 475,
+    "coups_cache": 0
+  },
+  "metriques": {
+    "exactitude": 0.7447,
+    "precision": 0.7297,
+    "rappel": 0.9643,
+    "f1": 0.8308,
+    "faux_positifs": 10,
+    "faux_negatifs": 1,
+    "exclusions_abusives": [],
+    "reproductibilite": {
+      "mesurable": true,
+      "executions": 3,
+      "ecart_type_score": 5.097,
+      "ecart_type_moyen": 1.31,
+      "articles_instables": [
+        "01_banque_regionale_conforme.txt:art.19",
+        "01_banque_regionale_conforme.txt:art.24",
+        "01_banque_regionale_conforme.txt:art.29",
+        "02_societe_investissement_defaillante.txt:art.27",
+        "03_assurance_partielle_contradictoire.txt:art.16",
+        "04_pme_industrielle_hors_perimetre.txt:art.26"
+      ],
+      "taux_stabilite": 0.9348
+    }
+  }
+}

@@ -90,15 +90,23 @@ référentiels disposent d'un corpus gelé et mesuré sur les deux moteurs :
 RGPD (`corpus/`, 15 documents, 210 verdicts) et NIS2/DORA/AI Act
 (`corpus_nis2/`, `corpus_dora/`, `corpus_ai_act/`, 4 documents chacun, 219
 verdicts au total — Tâche F2/DA-10, exactitude production 100 %/91,4 %/
-96,9 %, exactitude laboratoire 78,1 %/~88 %/90,8–92,9 % (NIS2 et AI Act
-corrigés post-gel le 2026-09-27 ; AI Act amélioré deux fois de plus les
-2026-09-30 et 2026-10-01, précision et rappel production désormais 100 %
-— voir `corpus_nis2/README.md` et `corpus_ai_act/README.md`).
+96,9 %, exactitude laboratoire 78,1 %/74,5 %/91,8 % (mesure rigoureuse à
+3 passages du 2026-10-01, `rapport_labo_{nis2,dora,ai_act}.json` — NIS2 et
+AI Act corrigés post-gel le 2026-09-27 ; AI Act amélioré deux fois de plus
+les 2026-09-30 et 2026-10-01, précision et rappel production désormais
+100 % — voir `corpus_nis2/README.md` et `corpus_ai_act/README.md`). Sur
+ces trois référentiels, la production dépasse désormais le laboratoire sur
+toutes les métriques.
 Le moteur de production sur le corpus RGPD complet, mesuré pour la première
 fois le 2026-09-28 (66,2 %, nettement sous les trois autres référentiels),
 puis corrigé le même jour (mots-clés du laboratoire, appariement par phrase
 entière) : exactitude **76,7 %**, précision 68,5 %, rappel 80,8 %,
-0 exclusion abusive (voir CHANGELOG.md et docs/architecture.md §6).
+0 exclusion abusive (voir CHANGELOG.md et docs/architecture.md §6). Seul
+RGPD voit encore le laboratoire devant (exactitude 85,7 %, précision
+72,6 %, rappel 98,7 % — `rapport_labo_rgpd.json`, même mesure du
+2026-10-01) : deux tentatives pour rapprocher la production de cette
+méthode ont été testées et n'ont pas amélioré le résultat (voir
+CHANGELOG.md, 2026-10-01).
 
 ## Tests et intégration continue
 

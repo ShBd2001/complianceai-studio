@@ -66,7 +66,13 @@ gelé, via `validation/run_validation.py --referentiel dora` (mesuré en CI,
 job `non-regression`). Écart assumé : les articles institutionnels 15, 20
 et 21 sont absents de cette grille (le laboratoire n'a pas de mécanisme
 d'exemption indépendant du contenu du document, contrairement au filtre
-d'éligibilité de production) — voir DA-10, docs/architecture.md.
+d'éligibilité de production) — voir DA-10, docs/architecture.md. **Mesure
+rigoureuse à 3 passages faite le 2026-10-01** (`rapport_labo_dora.json`) :
+exactitude 74,5 %, précision 73,0 %, rappel 96,4 %, 0 exclusion abusive —
+nettement en dessous du moteur de production sur ce référentiel
+(91,4 %/77,8 %/100 %, voir README.md racine), cohérent avec l'écart
+assumé ci-dessus (articles institutionnels absents de la grille du
+laboratoire, comptés par la production via son filtre d'éligibilité).
 
     python -m validation.run_validation --referentiel dora --corpus corpus_dora --verite corpus_dora/verite_terrain.json --hors-ligne   # verification de bout en bout
     python -m validation.run_validation --referentiel dora --corpus corpus_dora --verite corpus_dora/verite_terrain.json --ci           # mesure reelle, necessite GROQ_API_KEY

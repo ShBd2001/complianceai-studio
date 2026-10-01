@@ -101,7 +101,12 @@ d'applicabilité trouvées en cours de construction (voir DA-10,
 docs/architecture.md) : exactitude entre 90,8 % et 92,9 % selon le tirage
 (mesures ponctuelles à un seul passage — variance normale du modèle,
 DA-09), 0 exclusion abusive, rappel 100 % sur les manquements dans les deux
-mesures.
+mesures. **Mesure rigoureuse à 3 passages faite le 2026-10-01**
+(`rapport_labo_ai_act.json`) : exactitude 91,8 %, précision 60,0 %, rappel
+100 %, 0 exclusion abusive — nettement en dessous du moteur de production
+sur ce référentiel (96,9 %/100 %/100 %, voir README.md racine et le
+correctif du 2026-10-01 ci-dessus) : contrairement à RGPD, la production
+dépasse maintenant le laboratoire sur AI Act.
 
     python -m validation.run_validation --referentiel ai_act --corpus corpus_ai_act --verite corpus_ai_act/verite_terrain.json --hors-ligne   # verification de bout en bout
     python -m validation.run_validation --referentiel ai_act --corpus corpus_ai_act --verite corpus_ai_act/verite_terrain.json --ci           # mesure reelle, necessite GROQ_API_KEY

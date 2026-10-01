@@ -1,0 +1,3697 @@
+{
+  "documents": [
+    {
+      "document": "01_editeur_rh_conforme.txt",
+      "tenant_id": "validation",
+      "score": 93.4,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 57.0,
+        "denominateur": 61.0,
+        "articles_retenus": 22,
+        "articles_exclus": [
+          {
+            "article": "22",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "23",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "24",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "26",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "50",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "86",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "27",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "5",
+            "verdict": "conforme",
+            "poids": 5,
+            "credit": 1.0,
+            "points": 5.0,
+            "points_max": 5
+          },
+          {
+            "article": "8",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          },
+          {
+            "article": "9",
+            "verdict": "conforme",
+            "poids": 5,
+            "credit": 1.0,
+            "points": 5.0,
+            "points_max": 5
+          },
+          {
+            "article": "10",
+            "verdict": "conforme",
+            "poids": 4,
+            "credit": 1.0,
+            "points": 4.0,
+            "points_max": 4
+          },
+          {
+            "article": "11",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "12",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          },
+          {
+            "article": "13",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "14",
+            "verdict": "conforme",
+            "poids": 5,
+            "credit": 1.0,
+            "points": 5.0,
+            "points_max": 5
+          },
+          {
+            "article": "15",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "16",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          },
+          {
+            "article": "17",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "18",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          },
+          {
+            "article": "19",
+            "verdict": "conforme",
+            "poids": 1,
+            "credit": 1.0,
+            "points": 1.0,
+            "points_max": 1
+          },
+          {
+            "article": "20",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "21",
+            "verdict": "conforme",
+            "poids": 1,
+            "credit": 1.0,
+            "points": 1.0,
+            "points_max": 1
+          },
+          {
+            "article": "25",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          },
+          {
+            "article": "47",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          },
+          {
+            "article": "48",
+            "verdict": "conforme",
+            "poids": 1,
+            "credit": 1.0,
+            "points": 1.0,
+            "points_max": 1
+          },
+          {
+            "article": "49",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          },
+          {
+            "article": "72",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          },
+          {
+            "article": "73",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          }
+        ],
+        "pertes_principales": [
+          "art. 27 : -4.0 points"
+        ]
+      },
+      "metadonnees": {
+        "passages": 6,
+        "sections": 2,
+        "articles_evalues": 28,
+        "tokens_document": 2348
+      },
+      "synthese": {
+        "articles_evalues": 28,
+        "conformes": 21,
+        "manquements": 1,
+        "hors_perimetre": 6,
+        "indetermines": 0,
+        "a_reviser": 1
+      },
+      "verdicts": [
+        {
+          "article": "5",
+          "intitule": "Pratiques interdites en matière d'IA",
+          "criticite": 5,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "absence_pratiques_interdites",
+              "intitule": "Le document établit explicitement l'absence de pratiques interdites (notation sociale, manipulation subliminale, exploitation de vulnérabilités, catégorisation biométrique sensible, reconnaissance des émotions au travail, surveillance biométrique en temps réel non justifiée)",
+              "citation": "Une revue de conformite prealable au developpement de TalentScore Pro a verifie l'absence de toute pratique interdite : le systeme ne recourt a aucune technique subliminale ou manipulatoire, n'exploite aucune vulnerabilite liee a l'age, au handicap ou a la situation sociale ou economique, ne procede a aucune notation sociale des candidats, et n'effectue aucune categorisation biometrique visant a deduire des donnees sensibles (opinions politiques, appartenance syndicale, orientation sexuelle, origine ethnique). Le systeme n'utilise aucune reconnaissance des emotions, celle-ci etant explicitement exclue du perimetre fonctionnel dans les specifications techniques.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "8",
+          "intitule": "Respect des exigences",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "dossier_conformite",
+              "intitule": "Un dossier de conformité documente le respect systématique des exigences du chapitre III, section 2, avant mise sur le marché",
+              "citation": "Un dossier de conformite documente le respect systematique de l'ensemble des exigences du chapitre III, section 2, avant mise sur le marche de chaque version majeure.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "9",
+          "intitule": "Système de gestion des risques",
+          "criticite": 5,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "systeme_gestion_risques",
+              "intitule": "Un système de gestion des risques est mis en œuvre tout au long du cycle de vie (identification, estimation, évaluation, atténuation)",
+              "citation": "Un systeme de gestion des risques est mis en oeuvre tout au long du cycle de vie du produit : identification des risques connus et previsibles (biais de discrimination indirecte, erreurs de classement), estimation, evaluation et mesures d'attenuation, avec tests utilisateurs impliquant des recruteurs de plusieurs secteurs avant chaque mise a jour majeure.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "10",
+          "intitule": "Données et gouvernance des données",
+          "criticite": 4,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "gouvernance_donnees",
+              "intitule": "Les jeux de données d'entraînement, de validation et de test font l'objet d'un examen de pertinence, de représentativité et d'absence de biais",
+              "citation": "Les jeux de donnees d'entrainement, de validation et de test font l'objet d'un examen documente de pertinence, de representativite et d'absence de biais previsibles au regard de criteres proteges (sexe, origine, age, handicap). Un audit de biais est realise avant chaque mise en production.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "11",
+          "intitule": "Documentation technique",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "documentation_technique",
+              "intitule": "Une documentation technique complète, conforme à l'annexe IV, est établie et tenue à jour à chaque modification substantielle",
+              "citation": "Une documentation technique complete, conforme a l'annexe IV, est etablie et tenue a jour avant la mise sur le marche et a chaque modification substantielle.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "12",
+          "intitule": "Enregistrement",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "journalisation_automatique",
+              "intitule": "Le système génère automatiquement des journaux tout au long de son cycle de vie",
+              "citation": "Le systeme genere automatiquement des journaux tout au long de son cycle de vie, tracant les entrees, les scores produits et les elements ayant conduit a chaque classement.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "13",
+          "intitule": "Transparence et fourniture d'informations aux déployeurs",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "notice_utilisation",
+              "intitule": "Une notice d'utilisation précise les caractéristiques, limites et mesures de surveillance humaine attendues",
+              "citation": "Une notice d'utilisation destinee aux entreprises clientes accompagne chaque licence, precisant les caracteristiques du systeme, ses limites de performance connues, le niveau de precision mesure et les mesures de surveillance humaine attendues du deployeur.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "14",
+          "intitule": "Contrôle humain",
+          "criticite": 5,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "mesures_controle_humain",
+              "intitule": "Le système est conçu pour permettre une supervision humaine effective (validation, interruption, non-automaticité de la décision finale)",
+              "citation": "Le systeme est concu pour ne jamais rendre de decision finale d'exclusion automatique : il produit un classement indicatif que le recruteur doit valider avant toute decision, avec une fonction d'interruption permettant a tout moment de suspendre le traitement.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "15",
+          "intitule": "Exactitude, robustesse et cybersécurité",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "metriques_exactitude",
+              "intitule": "Des métriques de précision et de robustesse sont mesurées et documentées",
+              "citation": "Des metriques de precision et de robustesse sont mesurees a chaque version et publiees dans la documentation technique.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "16",
+          "intitule": "Obligations incombant aux fournisseurs de systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "pilotage_obligations",
+              "intitule": "L'ensemble des obligations de fournisseur (système qualité, documentation, enregistrement, marquage CE, coopération) est piloté de façon identifiable",
+              "citation": "L'ensemble des obligations du present chapitre (systeme qualite,\ndocumentation, enregistrement, marquage CE, cooperation avec les autorites)\nest integre au processus de mise sur le marche, pilote par la direction\nqualite.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "17",
+          "intitule": "Système de gestion de la qualité",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "systeme_qualite",
+              "intitule": "Un système de gestion de la qualité couvrant conception, développement, contrôle qualité et surveillance post-commercialisation est en place",
+              "citation": "Un systeme de gestion de la qualite certifie ISO 9001, etendu aux exigences\nspecifiques du reglement sur l'IA, couvre la conception, le developpement, le\ncontrole qualite et la surveillance post-commercialisation.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "18",
+          "intitule": "Conservation des documents",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "duree_conservation",
+              "intitule": "La documentation technique et les journaux sont conservés pendant la durée requise (dix ans après mise sur le marché)",
+              "citation": "La documentation technique et les journaux generes sont conserves dix ans apres la mise sur le marche de la version concernee.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "19",
+          "intitule": "Journaux générés automatiquement",
+          "criticite": 1,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "conservation_journaux",
+              "intitule": "Les journaux générés par le système sont conservés pendant une durée appropriée à sa finalité",
+              "citation": "Les journaux sont conserves par les entreprises clientes deployeuses pendant une duree appropriee a la finalite du systeme, conformement aux instructions transmises dans la notice d'utilisation.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "20",
+          "intitule": "Mesures correctives et devoir d'information",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_corrective",
+              "intitule": "Une procédure de retrait, désactivation ou rappel du système et d'information des autorités et déployeurs est prévue",
+              "citation": "Une procedure de gestion des non-conformites prevoit le retrait, la desactivation a distance ou le rappel du systeme, et l'information immediate des autorites competentes et des entreprises clientes en cas de risque identifie.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "21",
+          "intitule": "Coopération avec les autorités compétentes",
+          "criticite": 1,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "contact_designe",
+              "intitule": "Un contact désigné répond aux demandes des autorités de surveillance dans les délais",
+              "citation": "Un contact designe repond aux demandes des autorites de surveillance du marche dans les delais reglementaires et fournit sur demande la documentation technique dans une langue comprehensible.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "22",
+          "intitule": "Mandataires des fournisseurs de systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que le fournisseur est établi en France, donc à l'intérieur de l'Union européenne, ce qui montre que la condition d'établissement hors UE n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Obligations des importateurs",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que Talentscore Editions est le fournisseur direct et n'agit ni comme importateur, ni comme distributeur d'un système d'IA développé par un tiers établi hors de l'Union, ce qui montre que la condition d'importation ou de distribution d'un tel système n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Obligations des distributeurs",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'agit ni comme importateur, ni comme distributeur d'un système d'IA développé par un tiers hors de l'Union, ce qui montre que les deux branches de la condition (importation ou distribution) ne sont pas remplies.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "25",
+          "intitule": "Responsabilités tout au long de la chaîne de valeur de l'IA",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "clarification_responsabilites",
+              "intitule": "Les contrats précisent le transfert des obligations de fournisseur en cas de modification substantielle par un tiers",
+              "citation": "Les contrats de distribution precisent explicitement que toute modification substantielle du systeme par un distributeur ou une entreprise cliente transfere a celui-ci les obligations de fournisseur, information rappelee dans la documentation contractuelle.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "26",
+          "intitule": "Obligations incombant aux déployeurs de systèmes d'IA à haut risque",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique explicitement que Talentscore Editions n'est pas deployeuse du système d'IA à haut risque, mais uniquement fournisseur, donc la condition d'utilisation sous sa propre autorité n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Analyse d'impact des systèmes d'IA à haut risque sur les droits fondamentaux",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une analyse d'impact sur les droits fondamentaux a été réalisée avant la mise en service et renouvelée après toute modification substantielle",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "analyse_impact_realisee",
+              "intitule": "Une analyse d'impact sur les droits fondamentaux a été réalisée avant la mise en service et renouvelée après toute modification substantielle",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une analyse d'impact sur les droits fondamentaux a été réalisée avant la mise en service et renouvelée après toute modification substantielle"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "47",
+          "intitule": "Déclaration UE de conformité",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "declaration_conformite",
+              "intitule": "Une déclaration UE de conformité est établie et signée pour chaque version majeure du système",
+              "citation": "Une declaration UE de conformite est etablie et signee pour chaque version majeure du systeme, tenue a disposition des autorites pendant dix ans.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "48",
+          "intitule": "Marquage CE",
+          "criticite": 1,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "marquage_ce",
+              "intitule": "Le marquage CE est apposé conformément aux exigences applicables",
+              "citation": "Le marquage CE est appose sur la documentation commerciale et contractuelle accompagnant le produit, conformement aux exigences applicables.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "49",
+          "intitule": "Enregistrement",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "enregistrement_base_ue",
+              "intitule": "Le système, ou son utilisation par le déployeur, est enregistré dans la base de données de l'Union européenne, mis à jour à chaque modification substantielle",
+              "citation": "TalentScore Pro est enregistre dans la base de donnees de l'Union europeenne pour les systemes d'IA a haut risque prealablement a sa mise sur le marche, avec mise a jour a chaque modification substantielle.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "50",
+          "intitule": "Obligations de transparence pour les fournisseurs et les déployeurs de certains systèmes d'IA",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que le système n'est pas destiné à interagir directement avec des personnes physiques comme un agent conversationnel, ne génère pas de contenu de synthèse ni d'hypertrucage, n'effectue aucune reconnaissance des émotions et ne réalise aucune catégorisation biométrique, couvrant ainsi toutes les branches de la condition et montrant qu'aucune n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "72",
+          "intitule": "Surveillance après commercialisation par les fournisseurs et plan de surveillance après commercialisation pour les systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "plan_surveillance",
+              "intitule": "Un plan de surveillance post-commercialisation collecte et analyse les retours d'utilisation et incidents",
+              "citation": "Un plan de surveillance post-commercialisation collecte et analyse les retours d'utilisation des entreprises clientes et les incidents signales,\nalimentant le processus d'amelioration continue.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "73",
+          "intitule": "Signalement d'incidents graves",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_signalement",
+              "intitule": "Une procédure de signalement des incidents graves aux autorités compétentes, avec délais alignés sur la gravité, est formalisée",
+              "citation": "Une procedure de signalement des incidents graves aux autorites competentes\nest formalisee, avec des delais alignes sur les exigences reglementaires\nselon la gravite de l'incident.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "86",
+          "intitule": "Droit à l'explication des décisions individuelles",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Talentscore Editions n'est pas elle-meme deployeuse d'un systeme d'IA a haut risque : elle en est exclusivement le fournisseur.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        }
+      ]
+    },
+    {
+      "document": "02_organisme_credit_defaillant.txt",
+      "tenant_id": "validation",
+      "score": 0.0,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 0.0,
+        "denominateur": 27.0,
+        "articles_retenus": 7,
+        "articles_exclus": [
+          {
+            "article": "8",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "9",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "10",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "11",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "12",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "13",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "14",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "15",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "16",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "18",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "19",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "21",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "22",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "23",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "24",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "25",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "47",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "48",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "50",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "72",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "73",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "5",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "26",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "27",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "86",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "17",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "20",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "49",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          }
+        ],
+        "pertes_principales": [
+          "art. 5 : -5.0 points",
+          "art. 26 : -5.0 points",
+          "art. 27 : -4.0 points",
+          "art. 86 : -4.0 points",
+          "art. 17 : -3.0 points"
+        ]
+      },
+      "metadonnees": {
+        "passages": 7,
+        "sections": 7,
+        "articles_evalues": 28,
+        "tokens_document": 901
+      },
+      "synthese": {
+        "articles_evalues": 28,
+        "conformes": 0,
+        "manquements": 7,
+        "hors_perimetre": 21,
+        "indetermines": 0,
+        "a_reviser": 2
+      },
+      "verdicts": [
+        {
+          "article": "5",
+          "intitule": "Pratiques interdites en matière d'IA",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le document établit explicitement l'absence de pratiques interdites (notation sociale, manipulation subliminale, exploitation de vulnérabilités, catégorisation biométrique sensible, reconnaissance des émotions au travail, surveillance biométrique en temps réel non justifiée)",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "absence_pratiques_interdites",
+              "intitule": "Le document établit explicitement l'absence de pratiques interdites (notation sociale, manipulation subliminale, exploitation de vulnérabilités, catégorisation biométrique sensible, reconnaissance des émotions au travail, surveillance biométrique en temps réel non justifiée)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le document établit explicitement l'absence de pratiques interdites (notation sociale, manipulation subliminale, exploitation de vulnérabilités, catégorisation biométrique sensible, reconnaissance des émotions au travail, surveillance biométrique en temps réel non justifiée)"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "8",
+          "intitule": "Respect des exigences",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "L'organisme ne développe aucun système d'IA (branche de développement non remplie) mais le met en service pour son usage interne (branche de mise en service remplie) ; l'absence de développement empêche l'applicabilité de l'article 8.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "9",
+          "intitule": "Système de gestion des risques",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'organisme n'a pas développé le système d'IA (développement requis) bien qu'il l'utilise en interne, ce qui signifie que aucune des branches (développer + mettre sur le marché ou mettre en service) n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "10",
+          "intitule": "Données et gouvernance des données",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique clairement que l'organisme n'a pas développé de système d'IA (développement non rempli) mais l'utilise en interne (mise en service remplie). La condition d'applicabilité de l'article 10 requiert à la fois le développement du système et sa mise sur le marché ou en service ; l'absence de développement signifie que la condition n'est pas remplie, donc l'article n'est pas applicable.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "11",
+          "intitule": "Documentation technique",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'entreprise n'a pas développé de système d'IA, ce qui ne satisfait pas la condition de développement requise pour l'application de l'article 11.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "12",
+          "intitule": "Enregistrement",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique clairement que l'organisation ne développe aucun système d'IA, ce qui empêche de satisfaire la condition de développement requise par l'article 12, même si le système est mis en service en interne.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "13",
+          "intitule": "Transparence et fourniture d'informations aux déployeurs",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique clairement que l'organisme n'a pas développé le système d'IA (il ne fait qu'utiliser un système acheté auprès d'un éditeur), ce qui ne satisfait pas la condition requise pour l'application de l'article 13.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "14",
+          "intitule": "Contrôle humain",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "La citation indique clairement que Credit Express Particuliers n'a pas développé le système d'IA (\"l'entreprise n'a developpe ni ne commercialise elle-meme aucun systeme d'IA\"), ce qui signifie que la branche \"développe, sous son propre nom ou sa propre marque, un système d'IA à haut risque\" de la condition d'applicabilité n'est pas remplie. En l'absence de cette exigence, la condition globale n'est pas satisfaite et l'article 14 n'est pas applicable.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "15",
+          "intitule": "Exactitude, robustesse et cybersécurité",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que l'organisme n'a développé aucun système d'IA, ce qui signifie que la branche « développe, sous son propre nom ou sa propre marque, un système d'IA à haut risque » n'est pas remplie. Sans cette condition, l'article 15 ne s'applique pas.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "16",
+          "intitule": "Obligations incombant aux fournisseurs de systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'a pas développé le système d'IA (développement non rempli) mais l'utilise en interne (mise en service remplie). L'article 16 requiert à la fois le développement sous son propre nom et la mise sur le marché ou en service ; l'absence de développement signifie que la condition n'est pas remplie, donc l'article 16 n'est pas applicable.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "17",
+          "intitule": "Système de gestion de la qualité",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un système de gestion de la qualité couvrant conception, développement, contrôle qualité et surveillance post-commercialisation est en place",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "systeme_qualite",
+              "intitule": "Un système de gestion de la qualité couvrant conception, développement, contrôle qualité et surveillance post-commercialisation est en place",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un système de gestion de la qualité couvrant conception, développement, contrôle qualité et surveillance post-commercialisation est en place"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "18",
+          "intitule": "Conservation des documents",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique clairement que Credit Express Particuliers n'a développé aucun système d'IA, ce qui signifie que la condition de développement d'un système d'IA à haut risque n'est pas remplie, rendant l'article 18 non applicable.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "19",
+          "intitule": "Journaux générés automatiquement",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'organisation n'a pas développé de système d'IA (branche de développement non remplie) bien qu'elle le mette en service, la condition d'article 19 n'est donc pas satisfaite.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "20",
+          "intitule": "Mesures correctives et devoir d'information",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une procédure de retrait, désactivation ou rappel du système et d'information des autorités et déployeurs est prévue",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_corrective",
+              "intitule": "Une procédure de retrait, désactivation ou rappel du système et d'information des autorités et déployeurs est prévue",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une procédure de retrait, désactivation ou rappel du système et d'information des autorités et déployeurs est prévue"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "21",
+          "intitule": "Coopération avec les autorités compétentes",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique clairement que l'organisme n'a pas développé le système d'IA (et ne l'importe ni ne le distribue), ce qui signifie que la branche « développe un système d'IA à haut risque » de la condition n'est pas remplie. Sans ce développement, la condition globale (développer ET mettre sur le marché ou en service) n'est pas satisfaite, rendant l'article 21 non applicable.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "22",
+          "intitule": "Mandataires des fournisseurs de systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que le fournisseur du système d'IA est établi en France, donc il n'est pas établi en dehors de l'Union européenne, condition non remplie",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Obligations des importateurs",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'organisation n'importe ni ne distribue de système d'IA développé hors de l'Union, ce qui exclut toutes les branches de la condition (importation ou distribution).",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Obligations des distributeurs",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'organisation n'importe pas de système d'IA et ne le distribue pas, et que le système provient d'un éditeur établi en France, donc aucune des branches (importation ou distribution d'un système développé hors de l'Union) n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "25",
+          "intitule": "Responsabilités tout au long de la chaîne de valeur de l'IA",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique clairement que l'organisme n'a développé aucun système d'IA, ce qui empêche de satisfaire la branche «développe» de la condition d'applicabilité de l'article 25.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "26",
+          "intitule": "Obligations incombant aux déployeurs de systèmes d'IA à haut risque",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le déployeur assure un contrôle humain effectif et une surveillance du fonctionnement du système ; Les personnes affectées par une décision fondée sur le système sont informées de son utilisation",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "controle_humain_deployeur",
+              "intitule": "Le déployeur assure un contrôle humain effectif et une surveillance du fonctionnement du système",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "information_personnes",
+              "intitule": "Les personnes affectées par une décision fondée sur le système sont informées de son utilisation",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le déployeur assure un contrôle humain effectif et une surveillance du fonctionnement du système",
+            "Documenter et rendre opposable : Les personnes affectées par une décision fondée sur le système sont informées de son utilisation"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Analyse d'impact des systèmes d'IA à haut risque sur les droits fondamentaux",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une analyse d'impact sur les droits fondamentaux a été réalisée avant la mise en service et renouvelée après toute modification substantielle",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "analyse_impact_realisee",
+              "intitule": "Une analyse d'impact sur les droits fondamentaux a été réalisée avant la mise en service et renouvelée après toute modification substantielle",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une analyse d'impact sur les droits fondamentaux a été réalisée avant la mise en service et renouvelée après toute modification substantielle"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "47",
+          "intitule": "Déclaration UE de conformité",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que Credit Express Particuliers n'a pas développé de système d'IA à haut risque, ce qui montre que la condition de développement requise par l'article 47 n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "48",
+          "intitule": "Marquage CE",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique clairement que l'organisme n'a pas développé le système d'IA (développement non rempli) alors que l'article 48 ne s'applique que si l'organisme développe le système sous son propre nom/marque et le met sur le marché ou en service. L'absence de développement empêche la condition d'être remplie, même si le système est mis en service en interne.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "49",
+          "intitule": "Enregistrement",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le système, ou son utilisation par le déployeur, est enregistré dans la base de données de l'Union européenne, mis à jour à chaque modification substantielle",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "enregistrement_base_ue",
+              "intitule": "Le système, ou son utilisation par le déployeur, est enregistré dans la base de données de l'Union européenne, mis à jour à chaque modification substantielle",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le système, ou son utilisation par le déployeur, est enregistré dans la base de données de l'Union européenne, mis à jour à chaque modification substantielle"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "50",
+          "intitule": "Obligations de transparence pour les fournisseurs et les déployeurs de certains systèmes d'IA",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement l'absence d'interaction conversationnelle, dâ€™génération de contenu de synthèse, de reconnaissance des émotions et de catégorisation biométrique, ce qui montre que aucune des branches de la condition n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "72",
+          "intitule": "Surveillance après commercialisation par les fournisseurs et plan de surveillance après commercialisation pour les systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'entreprise n'a développé aucun système d'IA, ce qui ne satisfait pas la condition de développement requise, bien qu'elle mette le système en service pour ses propres besoins.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "73",
+          "intitule": "Signalement d'incidents graves",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique clairement que l'organisme n'a pas développé le système d'IA (il ne fait que l'utiliser), ce qui ne satisfait pas la condition de développement requise pour l'application de l'article 73.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        },
+        {
+          "article": "86",
+          "intitule": "Droit à l'explication des décisions individuelles",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une explication claire et significative des éléments ayant conduit à une décision est fournie à la personne concernée qui en fait la demande, sans retard indu",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "explication_fournie",
+              "intitule": "Une explication claire et significative des éléments ayant conduit à une décision est fournie à la personne concernée qui en fait la demande, sans retard indu",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une explication claire et significative des éléments ayant conduit à une décision est fournie à la personne concernée qui en fait la demande, sans retard indu"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007"
+          ]
+        }
+      ]
+    },
+    {
+      "document": "03_fintech_partielle_contradictoire.txt",
+      "tenant_id": "validation",
+      "score": 1.5,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 1.0,
+        "denominateur": 65.0,
+        "articles_retenus": 23,
+        "articles_exclus": [
+          {
+            "article": "22",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "23",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "24",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "26",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "50",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "5",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "9",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "14",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "10",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "27",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "86",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "11",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "13",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "15",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "17",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "20",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "49",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "73",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "8",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "12",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "16",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "18",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "25",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "47",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "72",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "21",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "48",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "19",
+            "verdict": "conforme",
+            "poids": 1,
+            "credit": 1.0,
+            "points": 1.0,
+            "points_max": 1
+          }
+        ],
+        "pertes_principales": [
+          "art. 5 : -5.0 points",
+          "art. 9 : -5.0 points",
+          "art. 14 : -5.0 points",
+          "art. 10 : -4.0 points",
+          "art. 27 : -4.0 points"
+        ]
+      },
+      "metadonnees": {
+        "passages": 4,
+        "sections": 2,
+        "articles_evalues": 28,
+        "tokens_document": 1178
+      },
+      "synthese": {
+        "articles_evalues": 28,
+        "conformes": 1,
+        "manquements": 22,
+        "hors_perimetre": 5,
+        "indetermines": 0,
+        "a_reviser": 0
+      },
+      "verdicts": [
+        {
+          "article": "5",
+          "intitule": "Pratiques interdites en matière d'IA",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le document établit explicitement l'absence de pratiques interdites (notation sociale, manipulation subliminale, exploitation de vulnérabilités, catégorisation biométrique sensible, reconnaissance des émotions au travail, surveillance biométrique en temps réel non justifiée)",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "absence_pratiques_interdites",
+              "intitule": "Le document établit explicitement l'absence de pratiques interdites (notation sociale, manipulation subliminale, exploitation de vulnérabilités, catégorisation biométrique sensible, reconnaissance des émotions au travail, surveillance biométrique en temps réel non justifiée)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le document établit explicitement l'absence de pratiques interdites (notation sociale, manipulation subliminale, exploitation de vulnérabilités, catégorisation biométrique sensible, reconnaissance des émotions au travail, surveillance biométrique en temps réel non justifiée)"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "8",
+          "intitule": "Respect des exigences",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un dossier de conformité documente le respect systématique des exigences du chapitre III, section 2, avant mise sur le marché",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "dossier_conformite",
+              "intitule": "Un dossier de conformité documente le respect systématique des exigences du chapitre III, section 2, avant mise sur le marché",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un dossier de conformité documente le respect systématique des exigences du chapitre III, section 2, avant mise sur le marché"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "9",
+          "intitule": "Système de gestion des risques",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un système de gestion des risques est mis en œuvre tout au long du cycle de vie (identification, estimation, évaluation, atténuation)",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "systeme_gestion_risques",
+              "intitule": "Un système de gestion des risques est mis en œuvre tout au long du cycle de vie (identification, estimation, évaluation, atténuation)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un système de gestion des risques est mis en œuvre tout au long du cycle de vie (identification, estimation, évaluation, atténuation)"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "10",
+          "intitule": "Données et gouvernance des données",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les jeux de données d'entraînement, de validation et de test font l'objet d'un examen de pertinence, de représentativité et d'absence de biais",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "gouvernance_donnees",
+              "intitule": "Les jeux de données d'entraînement, de validation et de test font l'objet d'un examen de pertinence, de représentativité et d'absence de biais",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les jeux de données d'entraînement, de validation et de test font l'objet d'un examen de pertinence, de représentativité et d'absence de biais"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "11",
+          "intitule": "Documentation technique",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une documentation technique complète, conforme à l'annexe IV, est établie et tenue à jour à chaque modification substantielle",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "documentation_technique",
+              "intitule": "Une documentation technique complète, conforme à l'annexe IV, est établie et tenue à jour à chaque modification substantielle",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une documentation technique complète, conforme à l'annexe IV, est établie et tenue à jour à chaque modification substantielle"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "12",
+          "intitule": "Enregistrement",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le système génère automatiquement des journaux tout au long de son cycle de vie",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "journalisation_automatique",
+              "intitule": "Le système génère automatiquement des journaux tout au long de son cycle de vie",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le système génère automatiquement des journaux tout au long de son cycle de vie"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "13",
+          "intitule": "Transparence et fourniture d'informations aux déployeurs",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une notice d'utilisation précise les caractéristiques, limites et mesures de surveillance humaine attendues",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "notice_utilisation",
+              "intitule": "Une notice d'utilisation précise les caractéristiques, limites et mesures de surveillance humaine attendues",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une notice d'utilisation précise les caractéristiques, limites et mesures de surveillance humaine attendues"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "14",
+          "intitule": "Contrôle humain",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le système est conçu pour permettre une supervision humaine effective (validation, interruption, non-automaticité de la décision finale)",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "mesures_controle_humain",
+              "intitule": "Le système est conçu pour permettre une supervision humaine effective (validation, interruption, non-automaticité de la décision finale)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le système est conçu pour permettre une supervision humaine effective (validation, interruption, non-automaticité de la décision finale)"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "15",
+          "intitule": "Exactitude, robustesse et cybersécurité",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Des métriques de précision et de robustesse sont mesurées et documentées",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "metriques_exactitude",
+              "intitule": "Des métriques de précision et de robustesse sont mesurées et documentées",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Des métriques de précision et de robustesse sont mesurées et documentées"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "16",
+          "intitule": "Obligations incombant aux fournisseurs de systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : L'ensemble des obligations de fournisseur (système qualité, documentation, enregistrement, marquage CE, coopération) est piloté de façon identifiable",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "pilotage_obligations",
+              "intitule": "L'ensemble des obligations de fournisseur (système qualité, documentation, enregistrement, marquage CE, coopération) est piloté de façon identifiable",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : L'ensemble des obligations de fournisseur (système qualité, documentation, enregistrement, marquage CE, coopération) est piloté de façon identifiable"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "17",
+          "intitule": "Système de gestion de la qualité",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un système de gestion de la qualité couvrant conception, développement, contrôle qualité et surveillance post-commercialisation est en place",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "systeme_qualite",
+              "intitule": "Un système de gestion de la qualité couvrant conception, développement, contrôle qualité et surveillance post-commercialisation est en place",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un système de gestion de la qualité couvrant conception, développement, contrôle qualité et surveillance post-commercialisation est en place"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "18",
+          "intitule": "Conservation des documents",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : La documentation technique et les journaux sont conservés pendant la durée requise (dix ans après mise sur le marché)",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "duree_conservation",
+              "intitule": "La documentation technique et les journaux sont conservés pendant la durée requise (dix ans après mise sur le marché)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : La documentation technique et les journaux sont conservés pendant la durée requise (dix ans après mise sur le marché)"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "19",
+          "intitule": "Journaux générés automatiquement",
+          "criticite": 1,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "conservation_journaux",
+              "intitule": "Les journaux générés par le système sont conservés pendant une durée appropriée à sa finalité",
+              "citation": "Le systeme genere des journaux automatiques complets, conserves conformement aux exigences.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "20",
+          "intitule": "Mesures correctives et devoir d'information",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une procédure de retrait, désactivation ou rappel du système et d'information des autorités et déployeurs est prévue",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_corrective",
+              "intitule": "Une procédure de retrait, désactivation ou rappel du système et d'information des autorités et déployeurs est prévue",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une procédure de retrait, désactivation ou rappel du système et d'information des autorités et déployeurs est prévue"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "21",
+          "intitule": "Coopération avec les autorités compétentes",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un contact désigné répond aux demandes des autorités de surveillance dans les délais",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "contact_designe",
+              "intitule": "Un contact désigné répond aux demandes des autorités de surveillance dans les délais",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un contact désigné répond aux demandes des autorités de surveillance dans les délais"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "22",
+          "intitule": "Mandataires des fournisseurs de systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Fineo Scoring est etablie en France : la designation d'un mandataire ne s'applique pas.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Obligations des importateurs",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que Fineo Scoring développe le système en interne et ne le distribue à aucun tiers, précisant que les obligations d'importateur et de distributeur ne le concernent pas, ce qui montre que aucune des branches (importation ou distribution d'un IA tierce hors UE) n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Obligations des distributeurs",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que Fineo Scoring développe le système en interne et ne le distribue à aucun tiers, précisant que les obligations d'importateur et de distributeur ne le concernent pas, ce qui montre que ni l'importation ni la distribution d'un système IA tiers ne s'appliquent.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "25",
+          "intitule": "Responsabilités tout au long de la chaîne de valeur de l'IA",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les contrats précisent le transfert des obligations de fournisseur en cas de modification substantielle par un tiers",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "clarification_responsabilites",
+              "intitule": "Les contrats précisent le transfert des obligations de fournisseur en cas de modification substantielle par un tiers",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les contrats précisent le transfert des obligations de fournisseur en cas de modification substantielle par un tiers"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "26",
+          "intitule": "Obligations incombant aux déployeurs de systèmes d'IA à haut risque",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que le système est développé en interne et n’est jamais commercialisé à des tiers, donc il n’est pas fourni par un tiers ; bien que l’organisme l’utilise sous sa propre autorité dans le cadre de son activité professionnelle, la condition de fourniture par un tiers n’est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Analyse d'impact des systèmes d'IA à haut risque sur les droits fondamentaux",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une analyse d'impact sur les droits fondamentaux a été réalisée avant la mise en service et renouvelée après toute modification substantielle",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "analyse_impact_realisee",
+              "intitule": "Une analyse d'impact sur les droits fondamentaux a été réalisée avant la mise en service et renouvelée après toute modification substantielle",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une analyse d'impact sur les droits fondamentaux a été réalisée avant la mise en service et renouvelée après toute modification substantielle"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "47",
+          "intitule": "Déclaration UE de conformité",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une déclaration UE de conformité est établie et signée pour chaque version majeure du système",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "declaration_conformite",
+              "intitule": "Une déclaration UE de conformité est établie et signée pour chaque version majeure du système",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une déclaration UE de conformité est établie et signée pour chaque version majeure du système"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "48",
+          "intitule": "Marquage CE",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le marquage CE est apposé conformément aux exigences applicables",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "marquage_ce",
+              "intitule": "Le marquage CE est apposé conformément aux exigences applicables",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le marquage CE est apposé conformément aux exigences applicables"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "49",
+          "intitule": "Enregistrement",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Le système, ou son utilisation par le déployeur, est enregistré dans la base de données de l'Union européenne, mis à jour à chaque modification substantielle",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "enregistrement_base_ue",
+              "intitule": "Le système, ou son utilisation par le déployeur, est enregistré dans la base de données de l'Union européenne, mis à jour à chaque modification substantielle",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Le système, ou son utilisation par le déployeur, est enregistré dans la base de données de l'Union européenne, mis à jour à chaque modification substantielle"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "50",
+          "intitule": "Obligations de transparence pour les fournisseurs et les déployeurs de certains systèmes d'IA",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que ScoreFineo ne comporte aucune interaction conversationnelle, aucune génération de contenu de synthèse, aucune reconnaissance des émotions et aucune catégorisation biométrique, ce qui montre que aucune des branches de la condition n’est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "72",
+          "intitule": "Surveillance après commercialisation par les fournisseurs et plan de surveillance après commercialisation pour les systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Un plan de surveillance post-commercialisation collecte et analyse les retours d'utilisation et incidents",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "plan_surveillance",
+              "intitule": "Un plan de surveillance post-commercialisation collecte et analyse les retours d'utilisation et incidents",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Un plan de surveillance post-commercialisation collecte et analyse les retours d'utilisation et incidents"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "73",
+          "intitule": "Signalement d'incidents graves",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une procédure de signalement des incidents graves aux autorités compétentes, avec délais alignés sur la gravité, est formalisée",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_signalement",
+              "intitule": "Une procédure de signalement des incidents graves aux autorités compétentes, avec délais alignés sur la gravité, est formalisée",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une procédure de signalement des incidents graves aux autorités compétentes, avec délais alignés sur la gravité, est formalisée"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "86",
+          "intitule": "Droit à l'explication des décisions individuelles",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une explication claire et significative des éléments ayant conduit à une décision est fournie à la personne concernée qui en fait la demande, sans retard indu",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "explication_fournie",
+              "intitule": "Une explication claire et significative des éléments ayant conduit à une décision est fournie à la personne concernée qui en fait la demande, sans retard indu",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une explication claire et significative des éléments ayant conduit à une décision est fournie à la personne concernée qui en fait la demande, sans retard indu"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        }
+      ]
+    },
+    {
+      "document": "04_commerce_hors_perimetre.txt",
+      "tenant_id": "validation",
+      "score": 100.0,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 8.0,
+        "denominateur": 8.0,
+        "articles_retenus": 2,
+        "articles_exclus": [
+          {
+            "article": "8",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "9",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "10",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "11",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "12",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "13",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "14",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "15",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "16",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "17",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "18",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "19",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "20",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "21",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "22",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "23",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "24",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "25",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "26",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "27",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "47",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "48",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "49",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "72",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "73",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "86",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "5",
+            "verdict": "conforme",
+            "poids": 5,
+            "credit": 1.0,
+            "points": 5.0,
+            "points_max": 5
+          },
+          {
+            "article": "50",
+            "verdict": "conforme",
+            "poids": 3,
+            "credit": 1.0,
+            "points": 3.0,
+            "points_max": 3
+          }
+        ],
+        "pertes_principales": []
+      },
+      "metadonnees": {
+        "passages": 3,
+        "sections": 3,
+        "articles_evalues": 28,
+        "tokens_document": 575
+      },
+      "synthese": {
+        "articles_evalues": 28,
+        "conformes": 2,
+        "manquements": 0,
+        "hors_perimetre": 26,
+        "indetermines": 0,
+        "a_reviser": 0
+      },
+      "verdicts": [
+        {
+          "article": "5",
+          "intitule": "Pratiques interdites en matière d'IA",
+          "criticite": 5,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "absence_pratiques_interdites",
+              "intitule": "Le document établit explicitement l'absence de pratiques interdites (notation sociale, manipulation subliminale, exploitation de vulnérabilités, catégorisation biométrique sensible, reconnaissance des émotions au travail, surveillance biométrique en temps réel non justifiée)",
+              "citation": "Aucune pratique interdite au sens de l'article 5 n'est mise en oeuvre : ni technique subliminale ou manipulatoire, ni exploitation de vulnerabilite, ni notation sociale, ni categorisation biometrique, ni reconnaissance des emotions, ni surveillance biometrique en temps reel.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "8",
+          "intitule": "Respect des exigences",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise ne développe pas de système d'IA à haut risque et ne le met ni sur le marché ni en service, ce qui signifie que la condition de l'article 8 n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "9",
+          "intitule": "Système de gestion des risques",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "La phrase indique que l'entreprise ne développe pas de système d'IA à haut risque et ne le commercialise ni ne le déploie, ce qui montre que ni la branche de développement ni les branches de mise sur le marché ou de mise en service ne sont remplies.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "10",
+          "intitule": "Données et gouvernance des données",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise ne développe, ne commercialise et ne déploie aucun système d'IA à haut risque, ce qui montre que la branche de développement d'un tel système n'est pas remplie; ainsi la condition d'applicabilité (développement d'un IA à haut risque et mise sur le marché ou en service) n'est pas satisfaite.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "11",
+          "intitule": "Documentation technique",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'entreprise ne développe aucun système d'IA à haut risque, ce qui montre que la branche de développement de la condition n'est pas remplie; aucune mention de mise sur le marché ou de mise en service d'un tel système n'est présente.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "12",
+          "intitule": "Enregistrement",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "L'organisation ne développe pas de système d'IA à haut risque et ne le déploie pas, donc la condition de l'article 12 n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "13",
+          "intitule": "Transparence et fourniture d'informations aux déployeurs",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise ne développe aucun système d'IA à haut risque, ce qui montre que la branche de développement n'est pas remplie, et il n'est fait mention d'aucune mise sur le marché ou mise en service, confirmant que la condition globale n'est pas satisfaite.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "14",
+          "intitule": "Contrôle humain",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique clairement que l'entreprise ne développe aucun système d'IA à haut risque, ce qui signifie que la condition de développement d'un tel système n'est pas remplie ; par conséquent l'article 14 ne s'applique pas.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "15",
+          "intitule": "Exactitude, robustesse et cybersécurité",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique clairement que l'entreprise ne développe pas de système d'IA à haut risque (branche de développement non remplie) et ne mentionne aucune mise sur le marché ou mise en service d'un tel système, ce qui signifie que la condition d'application de l'article 15 n'est pas satisfaite.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "16",
+          "intitule": "Obligations incombant aux fournisseurs de systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'entreprise ne développe aucun système d'IA à haut risque, donc la branche de développement n'est pas remplie et la condition d'applicabilité de l'article 16 n'est pas satisfaite.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "17",
+          "intitule": "Système de gestion de la qualité",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique clairement que l'entreprise ne développe, ne commercialise ni ne déploie de système d'IA à haut risque, ce qui montre que la condition de développement d'un tel système n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "18",
+          "intitule": "Conservation des documents",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique clairement que l'entreprise ne développe, ne commercialise ni ne déploie aucun système d'IA à haut risque, ce qui signifie que la condition d'application (développement d'un système d'IA à haut risque sous son propre nom ou marque) n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "19",
+          "intitule": "Journaux générés automatiquement",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "La phrase indique que l'entreprise ne développe aucun système d'IA à haut risque, ce qui signifie que la première branche de la condition (développement d'un système d'IA à haut risque) n'est pas remplie. Sans ce développement, l'article 19 n'est pas applicable, même si la mise en service interne n'est pas mentionnée.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "20",
+          "intitule": "Mesures correctives et devoir d'information",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'entreprise ne développe aucun système d'IA à haut risque, ce qui signifie que la condition de développer un tel système sous son propre nom ou marque n'est pas remplie; ainsi l'article 20 du AI Act n'est pas applicable.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "21",
+          "intitule": "Coopération avec les autorités compétentes",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise ne développe, ne commercialise ni ne déploie aucun système d'IA à haut risque, ce qui montre que ni la branche de développement ni celle de mise sur le marché ou en service ne sont remplies.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "22",
+          "intitule": "Mandataires des fournisseurs de systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que le prestataire du système d'IA provient d'un fournisseur établi dans l'Union européenne, ce qui montre que la condition selon laquelle le fournisseur serait établi hors de l'UE n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Obligations des importateurs",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'est pas importateur ni distributeur d'un système d'IA à haut risque et que l'assistant utilisé provient d'un prestataire établi dans l'Union européenne, ce qui montre qu'aucune des branches (importation ou distribution d'un système d'IA développé hors de l'UE) n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Obligations des distributeurs",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que le prestataire est établi dans l'Union européenne, ce qui montre que le système n'est pas importé ou distribué depuis un tiers hors Union.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "25",
+          "intitule": "Responsabilités tout au long de la chaîne de valeur de l'IA",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise ne développe aucun système d'IA à haut risque, ce qui ne remplit pas la branche de développement requise, et aucune mise sur le marché ou mise en service n'est mentionnée.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "26",
+          "intitule": "Obligations incombant aux déployeurs de systèmes d'IA à haut risque",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique clairement que l'entreprise n'utilise pas de système d'IA à haut risque fourni par un tiers, ce qui montre que la condition d'utilisation d'un tel système sous sa propre autorité n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Analyse d'impact des systèmes d'IA à haut risque sur les droits fondamentaux",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que l'entreprise n'est pas déployeur d'un système d'IA à haut risque, ce qui ne satisfait pas la condition d'application de l'article 27.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "47",
+          "intitule": "Déclaration UE de conformité",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "La condition requiert que l'organisme développe un système d'IA à haut risque et le mette sur le marché ou en service. Le texte indique clairement que l'entreprise ne développe aucun tel système, ce qui empêche le remplissage de la condition, même si le texte ne précise pas la mise sur le marché ou en service.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "48",
+          "intitule": "Marquage CE",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise ne développe, ne commercialise ni ne déploie aucun système d'IA à haut risque, ce qui montre que la condition de développer un tel système (et de le mettre sur le marché ou en service) n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "49",
+          "intitule": "Enregistrement",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'est ni fournisseur ni déployeur d'un système d'IA à haut risque, ce qui exclut les deux branches de la condition d'applicabilité de l'article 49.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "50",
+          "intitule": "Obligations de transparence pour les fournisseurs et les déployeurs de certains systèmes d'IA",
+          "criticite": 3,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "information_interaction_ia",
+              "intitule": "Les personnes sont informées qu'elles interagissent avec un système d'IA, ou qu'un contenu est généré ou manipulé artificiellement",
+              "citation": "Des l'ouverture d'une conversation, l'assistant affiche le message suivant : « Vous echangez avec un assistant automatise. Un conseiller humain peut prendre le relais a tout moment sur simple demande. » Cette information est egalement rappelee dans les conditions generales d'utilisation du site.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "72",
+          "intitule": "Surveillance après commercialisation par les fournisseurs et plan de surveillance après commercialisation pour les systèmes d'IA à haut risque",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'entreprise ne développe aucun système d'IA à haut risque, donc la condition de développement requise n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "73",
+          "intitule": "Signalement d'incidents graves",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique clairement que l'entreprise ne développe pas de système d'IA à haut risque, ce qui constitue la branche de la condition d'applicabilité de l'article 73. Cette branche n'est donc pas remplie, rendant l'article non applicable.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        },
+        {
+          "article": "86",
+          "intitule": "Droit à l'explication des décisions individuelles",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "L'entreprise ne deploie aucun IA à haut risque et n'utilise aucune IA liée au credit ou à l'évaluation de la solvabilité, ce qui montre que les deux branches de la condition ne sont pas remplies.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003"
+          ]
+        }
+      ]
+    }
+  ],
+  "configuration": {
+    "repetitions": 3,
+    "vote": 1,
+    "client": "ClientGroq",
+    "modele": "openai/gpt-oss-120b",
+    "temperature": 0.0,
+    "cache_actif": false,
+    "appels_reels": 497,
+    "coups_cache": 0
+  },
+  "metriques": {
+    "exactitude": 0.9184,
+    "precision": 0.6,
+    "rappel": 1.0,
+    "f1": 0.75,
+    "faux_positifs": 8,
+    "faux_negatifs": 0,
+    "exclusions_abusives": [],
+    "reproductibilite": {
+      "mesurable": true,
+      "executions": 3,
+      "ecart_type_score": 13.686,
+      "ecart_type_moyen": 4.721,
+      "articles_instables": [
+        "01_editeur_rh_conforme.txt:art.5",
+        "01_editeur_rh_conforme.txt:art.27",
+        "02_organisme_credit_defaillant.txt:art.9",
+        "02_organisme_credit_defaillant.txt:art.14",
+        "02_organisme_credit_defaillant.txt:art.17",
+        "02_organisme_credit_defaillant.txt:art.20",
+        "03_fintech_partielle_contradictoire.txt:art.12",
+        "04_commerce_hors_perimetre.txt:art.23",
+        "04_commerce_hors_perimetre.txt:art.24"
+      ],
+      "taux_stabilite": 0.9196
+    }
+  }
+}

@@ -1,0 +1,1610 @@
+{
+  "documents": [
+    {
+      "document": "01_reseau_hospitalier_conforme.txt",
+      "tenant_id": "validation",
+      "score": 100.0,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 18.0,
+        "denominateur": 18.0,
+        "articles_retenus": 6,
+        "articles_exclus": [
+          {
+            "article": "27",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "28",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "20",
+            "verdict": "conforme",
+            "poids": 4,
+            "credit": 1.0,
+            "points": 4.0,
+            "points_max": 4
+          },
+          {
+            "article": "21",
+            "verdict": "conforme",
+            "poids": 5,
+            "credit": 1.0,
+            "points": 5.0,
+            "points_max": 5
+          },
+          {
+            "article": "23",
+            "verdict": "conforme",
+            "poids": 5,
+            "credit": 1.0,
+            "points": 5.0,
+            "points_max": 5
+          },
+          {
+            "article": "24",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          },
+          {
+            "article": "29",
+            "verdict": "conforme",
+            "poids": 1,
+            "credit": 1.0,
+            "points": 1.0,
+            "points_max": 1
+          },
+          {
+            "article": "30",
+            "verdict": "conforme",
+            "poids": 1,
+            "credit": 1.0,
+            "points": 1.0,
+            "points_max": 1
+          }
+        ],
+        "pertes_principales": []
+      },
+      "metadonnees": {
+        "passages": 6,
+        "sections": 2,
+        "articles_evalues": 8,
+        "tokens_document": 2218
+      },
+      "synthese": {
+        "articles_evalues": 8,
+        "conformes": 6,
+        "manquements": 0,
+        "hors_perimetre": 2,
+        "indetermines": 0,
+        "a_reviser": 1
+      },
+      "verdicts": [
+        {
+          "article": "20",
+          "intitule": "Gouvernance",
+          "criticite": 4,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "3/3 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "approbation_organe_direction",
+              "intitule": "Les mesures de gestion des risques en matière de cybersécurité sont approuvées par l'organe de direction",
+              "citation": "Le conseil de direction a approuve en 2024 une politique de securite des systemes d'information et en revoit l'application chaque semestre.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "formation_dirigeants",
+              "intitule": "Les membres de l'organe de direction suivent une formation ou une sensibilisation à la cybersécurité",
+              "citation": "L'ensemble des membres du conseil de direction a suivi une formation de sensibilisation a la cybersecurite dispensee par l'ANSSI en 2024, et une piqure de rappel annuelle est prevue au plan de formation.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "responsable_designe",
+              "intitule": "Un responsable de la sécurité des systèmes d'information est désigné et rattaché à la direction",
+              "citation": "Un Directeur des Systemes d'Information et de la Securite (DSIS), membre du comite de direction, est responsable de la mise en oeuvre des mesures de gestion des risques.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "21",
+          "intitule": "Mesures de gestion des risques en matière de cybersécurité",
+          "criticite": 5,
+          "verdict": "conforme",
+          "confiance": 0.75,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "5/5 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "analyse_risques",
+              "intitule": "Politique d'analyse des risques et de sécurité des systèmes d'information, documentée et mise à jour",
+              "citation": "Une analyse de risques formalisee couvre l'ensemble du systeme d'information, mise a jour annuellement et apres tout changement majeur. […] - politique d'analyse des risques et de securite des systemes d'information ;",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "gestion_incidents",
+              "intitule": "Procédure de gestion des incidents (détection, qualification, escalade)",
+              "citation": "- procedure de gestion des incidents, avec astreinte technique 24h/24 ;",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "continuite_reprise",
+              "intitule": "Plan de continuité d'activité et plan de reprise après sinistre, testés",
+              "citation": "- plan de continuite d'activite et plan de reprise apres sinistre, testes chaque annee par un exercice de crise impliquant les services cliniques ;",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "chaine_approvisionnement",
+              "intitule": "Politique de sécurité de la chaîne d'approvisionnement (clauses de sécurité dans les contrats fournisseurs)",
+              "citation": "- politique de securite de la chaine d'approvisionnement, incluant une clause de securite type dans les contrats avec les editeurs de logiciels medicaux et les hebergeurs de donnees de sante ;",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "hygiene_authentification",
+              "intitule": "Pratiques d'hygiène informatique de base et authentification multifacteurs sur les accès sensibles",
+              "citation": "- pratiques d'hygiene informatique de base (gestion des correctifs, postes de travail standardises, sensibilisation du personnel soignant et administratif aux risques d'hameconnage, deux campagnes par an) ; […] - authentification multifacteurs pour tous les acces distants et pour les comptes a privileges, communications chiffrees et systeme de communication d'urgence redondant en cas d'indisponibilite du reseau principal.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "evaluation_efficacite",
+              "intitule": "Évaluation périodique de l'efficacité des mesures de gestion des risques (audit interne ou externe)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": false
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Obligations d'information",
+          "criticite": 5,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "3/3 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_notification",
+              "intitule": "Procédure formalisée de notification des incidents importants au CSIRT national ou à l'autorité compétente",
+              "citation": "Une procedure de notification des incidents importants est formalisee et diffusee aux equipes techniques et cliniques : alerte precoce au CSIRT national sous 24 heures apres la detection d'un incident important, notification detaillee sous 72 heures precisant l'evaluation initiale de gravite et d'impact, puis rapport final sous un mois incluant une description detaillee de l'incident, sa gravite, sa cause probable et les mesures d'attenuation mises en oeuvre.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "delai_alerte_precoce",
+              "intitule": "L'alerte précoce est prévue sous 24 heures après la détection d'un incident important",
+              "citation": "Une procedure de notification des incidents importants est formalisee et diffusee aux equipes techniques et cliniques : alerte precoce au CSIRT national sous 24 heures apres la detection d'un incident important, notification detaillee sous 72 heures precisant l'evaluation initiale de gravite et d'impact, puis rapport final sous un mois incluant une description detaillee de l'incident, sa gravite, sa cause probable et les mesures d'attenuation mises en oeuvre.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "delai_rapport_final",
+              "intitule": "Un rapport final est prévu, au plus tard un mois après l'incident",
+              "citation": "Une procedure de notification des incidents importants est formalisee et diffusee aux equipes techniques et cliniques : alerte precoce au CSIRT national sous 24 heures apres la detection d'un incident important, notification detaillee sous 72 heures precisant l'evaluation initiale de gravite et d'impact, puis rapport final sous un mois incluant une description detaillee de l'incident, sa gravite, sa cause probable et les mesures d'attenuation mises en oeuvre.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Recours aux schémas européens de certification de cybersécurité",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "exigence_certification",
+              "intitule": "Les achats ou le développement de produits, services ou processus TIC tiennent compte de schémas européens de certification de cybersécurité lorsqu'ils existent",
+              "citation": "Les equipements biomedicaux connectes acquis depuis 2023 font l'objet d'une exigence contractuelle de conformite a un schema europeen de certification de cybersecurite lorsqu'un tel schema existe pour la categorie de produit concernee. Le service achats tient un tableau de suivi des certifications disponibles par categorie d'equipement.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Registre des entités",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique clairement que l'organisme n'est ni registre de noms de domaine de premier niveau, ni bureau d'enregistrement, ni fournisseur de services DNS pour des tiers, excluant ainsi toutes les branches de la condition.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "28",
+          "intitule": "Base des données d'enregistrement des noms de domaine",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique explicitement que l'organisme n'est ni registre de noms de domaine de premier niveau, ni bureau d'enregistrement, ni fournisseur de services DNS pour des tiers, ce qui montre que aucune des branches de la condition d'applicabilité n'est remplie; ainsi l'article 28 ne s'applique pas.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "29",
+          "intitule": "Accords de partage d'informations en matière de cybersécurité",
+          "criticite": 1,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "participation_partage",
+              "intitule": "Participation active et documentée à un dispositif de partage d'informations sur les cybermenaces (secteur, ISAC, autorité)",
+              "citation": "Le DSIS participe au dispositif sectoriel de partage d'informations sur les cybermenaces anime par l'agence regionale de sante, au titre d'un accord de partage volontaire signe en 2023. […] Les indicateurs de compromission recus sont integres aux outils de detection dans un delai de 48 heures.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        },
+        {
+          "article": "30",
+          "intitule": "Notification volontaire d'informations pertinentes",
+          "criticite": 1,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "notifications_volontaires",
+              "intitule": "Des notifications volontaires (incidents mineurs, cybermenaces, quasi-incidents) ont été transmises au CSIRT national",
+              "citation": "Au-dela des incidents a notification obligatoire, le Reseau notifie\nvolontairement au CSIRT national les tentatives d'intrusion detectees et\ncontenues sans impact avere, ainsi que les cybermenaces significatives\nidentifiees par sa veille, dans un objectif de contribution collective a la\ndetection precoce. Trois notifications volontaires ont ete transmises en 2024.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006"
+          ]
+        }
+      ]
+    },
+    {
+      "document": "02_transporteur_defaillant.txt",
+      "tenant_id": "validation",
+      "score": 0.0,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 0.0,
+        "denominateur": 18.0,
+        "articles_retenus": 6,
+        "articles_exclus": [
+          {
+            "article": "27",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "28",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "21",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "23",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 5
+          },
+          {
+            "article": "20",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 4
+          },
+          {
+            "article": "24",
+            "verdict": "manquement",
+            "poids": 2,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 2
+          },
+          {
+            "article": "29",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "30",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          }
+        ],
+        "pertes_principales": [
+          "art. 21 : -5.0 points",
+          "art. 23 : -5.0 points",
+          "art. 20 : -4.0 points",
+          "art. 24 : -2.0 points",
+          "art. 29 : -1.0 points"
+        ]
+      },
+      "metadonnees": {
+        "passages": 8,
+        "sections": 8,
+        "articles_evalues": 8,
+        "tokens_document": 644
+      },
+      "synthese": {
+        "articles_evalues": 8,
+        "conformes": 0,
+        "manquements": 6,
+        "hors_perimetre": 2,
+        "indetermines": 0,
+        "a_reviser": 0
+      },
+      "verdicts": [
+        {
+          "article": "20",
+          "intitule": "Gouvernance",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les mesures de gestion des risques en matière de cybersécurité sont approuvées par l'organe de direction ; Les membres de l'organe de direction suivent une formation ou une sensibilisation à la cybersécurité ; Un responsable de la sécurité des systèmes d'information est désigné et rattaché à la direction",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "approbation_organe_direction",
+              "intitule": "Les mesures de gestion des risques en matière de cybersécurité sont approuvées par l'organe de direction",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "formation_dirigeants",
+              "intitule": "Les membres de l'organe de direction suivent une formation ou une sensibilisation à la cybersécurité",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "responsable_designe",
+              "intitule": "Un responsable de la sécurité des systèmes d'information est désigné et rattaché à la direction",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les mesures de gestion des risques en matière de cybersécurité sont approuvées par l'organe de direction",
+            "Documenter et rendre opposable : Les membres de l'organe de direction suivent une formation ou une sensibilisation à la cybersécurité",
+            "Documenter et rendre opposable : Un responsable de la sécurité des systèmes d'information est désigné et rattaché à la direction"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008"
+          ]
+        },
+        {
+          "article": "21",
+          "intitule": "Mesures de gestion des risques en matière de cybersécurité",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Politique d'analyse des risques et de sécurité des systèmes d'information, documentée et mise à jour ; Procédure de gestion des incidents (détection, qualification, escalade) ; Plan de continuité d'activité et plan de reprise après sinistre, testés ; Politique de sécurité de la chaîne d'approvisionnement (clauses de sécurité dans les contrats fournisseurs)…",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "analyse_risques",
+              "intitule": "Politique d'analyse des risques et de sécurité des systèmes d'information, documentée et mise à jour",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "gestion_incidents",
+              "intitule": "Procédure de gestion des incidents (détection, qualification, escalade)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "continuite_reprise",
+              "intitule": "Plan de continuité d'activité et plan de reprise après sinistre, testés",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "chaine_approvisionnement",
+              "intitule": "Politique de sécurité de la chaîne d'approvisionnement (clauses de sécurité dans les contrats fournisseurs)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "hygiene_authentification",
+              "intitule": "Pratiques d'hygiène informatique de base et authentification multifacteurs sur les accès sensibles",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "evaluation_efficacite",
+              "intitule": "Évaluation périodique de l'efficacité des mesures de gestion des risques (audit interne ou externe)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": false
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Politique d'analyse des risques et de sécurité des systèmes d'information, documentée et mise à jour",
+            "Documenter et rendre opposable : Procédure de gestion des incidents (détection, qualification, escalade)",
+            "Documenter et rendre opposable : Plan de continuité d'activité et plan de reprise après sinistre, testés",
+            "Documenter et rendre opposable : Politique de sécurité de la chaîne d'approvisionnement (clauses de sécurité dans les contrats fournisseurs)",
+            "Documenter et rendre opposable : Pratiques d'hygiène informatique de base et authentification multifacteurs sur les accès sensibles"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Obligations d'information",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Procédure formalisée de notification des incidents importants au CSIRT national ou à l'autorité compétente ; L'alerte précoce est prévue sous 24 heures après la détection d'un incident important ; Un rapport final est prévu, au plus tard un mois après l'incident",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_notification",
+              "intitule": "Procédure formalisée de notification des incidents importants au CSIRT national ou à l'autorité compétente",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "delai_alerte_precoce",
+              "intitule": "L'alerte précoce est prévue sous 24 heures après la détection d'un incident important",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "delai_rapport_final",
+              "intitule": "Un rapport final est prévu, au plus tard un mois après l'incident",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Procédure formalisée de notification des incidents importants au CSIRT national ou à l'autorité compétente",
+            "Documenter et rendre opposable : L'alerte précoce est prévue sous 24 heures après la détection d'un incident important",
+            "Documenter et rendre opposable : Un rapport final est prévu, au plus tard un mois après l'incident"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Recours aux schémas européens de certification de cybersécurité",
+          "criticite": 2,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les achats ou le développement de produits, services ou processus TIC tiennent compte de schémas européens de certification de cybersécurité lorsqu'ils existent",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "exigence_certification",
+              "intitule": "Les achats ou le développement de produits, services ou processus TIC tiennent compte de schémas européens de certification de cybersécurité lorsqu'ils existent",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les achats ou le développement de produits, services ou processus TIC tiennent compte de schémas européens de certification de cybersécurité lorsqu'ils existent"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Registre des entités",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'exploite pas de service DNS ni de registre de noms de domaine pour des tiers (p007) et, ailleurs, qu'elle n'exploite pas de bureau d'enregistrement de noms de domaine (p002). Aucun des trois services requis par l'article 27 n'est exploité, donc la condition n'est pas remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008"
+          ]
+        },
+        {
+          "article": "28",
+          "intitule": "Base des données d'enregistrement des noms de domaine",
+          "criticite": 3,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'exploite pas de service DNS, ni de registre de noms de domaine pour des tiers, ni de bureau d'enregistrement de noms de domaine, ce qui montre que aucune des trois branches de la condition n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008"
+          ]
+        },
+        {
+          "article": "29",
+          "intitule": "Accords de partage d'informations en matière de cybersécurité",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Participation active et documentée à un dispositif de partage d'informations sur les cybermenaces (secteur, ISAC, autorité)",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "participation_partage",
+              "intitule": "Participation active et documentée à un dispositif de partage d'informations sur les cybermenaces (secteur, ISAC, autorité)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Participation active et documentée à un dispositif de partage d'informations sur les cybermenaces (secteur, ISAC, autorité)"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008"
+          ]
+        },
+        {
+          "article": "30",
+          "intitule": "Notification volontaire d'informations pertinentes",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Des notifications volontaires (incidents mineurs, cybermenaces, quasi-incidents) ont été transmises au CSIRT national",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "notifications_volontaires",
+              "intitule": "Des notifications volontaires (incidents mineurs, cybermenaces, quasi-incidents) ont été transmises au CSIRT national",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Des notifications volontaires (incidents mineurs, cybermenaces, quasi-incidents) ont été transmises au CSIRT national"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008"
+          ]
+        }
+      ]
+    },
+    {
+      "document": "03_energie_partielle_contradictoire.txt",
+      "tenant_id": "validation",
+      "score": 47.9,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 11.5,
+        "denominateur": 24.0,
+        "articles_retenus": 8,
+        "articles_exclus": [],
+        "lignes": [
+          {
+            "article": "27",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "28",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "21",
+            "verdict": "manquement",
+            "poids": 5,
+            "credit": 0.5,
+            "points": 2.5,
+            "points_max": 5
+          },
+          {
+            "article": "20",
+            "verdict": "manquement",
+            "poids": 4,
+            "credit": 0.5,
+            "points": 2.0,
+            "points_max": 4
+          },
+          {
+            "article": "29",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "30",
+            "verdict": "manquement",
+            "poids": 1,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 1
+          },
+          {
+            "article": "23",
+            "verdict": "conforme",
+            "poids": 5,
+            "credit": 1.0,
+            "points": 5.0,
+            "points_max": 5
+          },
+          {
+            "article": "24",
+            "verdict": "conforme",
+            "poids": 2,
+            "credit": 1.0,
+            "points": 2.0,
+            "points_max": 2
+          }
+        ],
+        "pertes_principales": [
+          "art. 27 : -3.0 points",
+          "art. 28 : -3.0 points",
+          "art. 21 : -2.5 points",
+          "art. 20 : -2.0 points",
+          "art. 29 : -1.0 points"
+        ]
+      },
+      "metadonnees": {
+        "passages": 9,
+        "sections": 9,
+        "articles_evalues": 8,
+        "tokens_document": 853
+      },
+      "synthese": {
+        "articles_evalues": 8,
+        "conformes": 2,
+        "manquements": 6,
+        "hors_perimetre": 0,
+        "indetermines": 0,
+        "a_reviser": 2
+      },
+      "verdicts": [
+        {
+          "article": "20",
+          "intitule": "Gouvernance",
+          "criticite": 4,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Les mesures de gestion des risques en matière de cybersécurité sont approuvées par l'organe de direction",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "approbation_organe_direction",
+              "intitule": "Les mesures de gestion des risques en matière de cybersécurité sont approuvées par l'organe de direction",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "formation_dirigeants",
+              "intitule": "Les membres de l'organe de direction suivent une formation ou une sensibilisation à la cybersécurité",
+              "citation": "l'ensemble des membres du comite de direction est forme aux enjeux de cybersecurite",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "responsable_designe",
+              "intitule": "Un responsable de la sécurité des systèmes d'information est désigné et rattaché à la direction",
+              "citation": "Un responsable de la securite des systemes d'information a ete designe en 2023, rattache a la direction technique.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Les mesures de gestion des risques en matière de cybersécurité sont approuvées par l'organe de direction"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008",
+            "p009"
+          ]
+        },
+        {
+          "article": "21",
+          "intitule": "Mesures de gestion des risques en matière de cybersécurité",
+          "criticite": 5,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Politique d'analyse des risques et de sécurité des systèmes d'information, documentée et mise à jour ; Plan de continuité d'activité et plan de reprise après sinistre, testés",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "analyse_risques",
+              "intitule": "Politique d'analyse des risques et de sécurité des systèmes d'information, documentée et mise à jour",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "gestion_incidents",
+              "intitule": "Procédure de gestion des incidents (détection, qualification, escalade)",
+              "citation": "Une procedure de gestion des incidents existe et decrit les etapes de qualification et d'escalade.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "continuite_reprise",
+              "intitule": "Plan de continuité d'activité et plan de reprise après sinistre, testés",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "chaine_approvisionnement",
+              "intitule": "Politique de sécurité de la chaîne d'approvisionnement (clauses de sécurité dans les contrats fournisseurs)",
+              "citation": "Les contrats avec l'integrateur du systeme SCADA et avec l'hebergeur du systeme de facturation comportent une clause de securite, mais le contrat avec l'editeur du logiciel de gestion de la relation clientele, signe en 2019 et jamais renegocie, n'en comporte aucune.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "hygiene_authentification",
+              "intitule": "Pratiques d'hygiène informatique de base et authentification multifacteurs sur les accès sensibles",
+              "citation": "Les acces distants au reseau de supervision sont proteges par authentification multifacteurs depuis 2024.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "evaluation_efficacite",
+              "intitule": "Évaluation périodique de l'efficacité des mesures de gestion des risques (audit interne ou externe)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": false
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Politique d'analyse des risques et de sécurité des systèmes d'information, documentée et mise à jour",
+            "Documenter et rendre opposable : Plan de continuité d'activité et plan de reprise après sinistre, testés"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008",
+            "p009"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Obligations d'information",
+          "criticite": 5,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "3/3 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "procedure_notification",
+              "intitule": "Procédure formalisée de notification des incidents importants au CSIRT national ou à l'autorité compétente",
+              "citation": "La procedure de notification prevoit une alerte precoce au CSIRT national sous 24 heures et un rapport final sous un mois. […] Lors d'un incident survenu en janvier 2025 (compromission d'un poste administratif), l'alerte precoce a ete transmise sous 22 heures, mais aucun rapport final n'a ete etabli dans le delai d'un mois : il a ete produit six semaines apres l'incident, apres relance de l'autorite competente.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "delai_alerte_precoce",
+              "intitule": "L'alerte précoce est prévue sous 24 heures après la détection d'un incident important",
+              "citation": "La procedure de notification prevoit une alerte precoce au CSIRT national sous 24 heures et un rapport final sous un mois. […] Lors d'un incident survenu en janvier 2025 (compromission d'un poste administratif), l'alerte precoce a ete transmise sous 22 heures, mais aucun rapport final n'a ete etabli dans le delai d'un mois : il a ete produit six semaines apres l'incident, apres relance de l'autorite competente.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "delai_rapport_final",
+              "intitule": "Un rapport final est prévu, au plus tard un mois après l'incident",
+              "citation": "La procedure de notification prevoit une alerte precoce au CSIRT national sous 24 heures et un rapport final sous un mois. […] Lors d'un incident survenu en janvier 2025 (compromission d'un poste administratif), l'alerte precoce a ete transmise sous 22 heures, mais aucun rapport final n'a ete etabli dans le delai d'un mois : il a ete produit six semaines apres l'incident, apres relance de l'autorite competente.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008",
+            "p009"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Recours aux schémas européens de certification de cybersécurité",
+          "criticite": 2,
+          "verdict": "conforme",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "1/1 éléments probants établis par citation vérifiée.",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "exigence_certification",
+              "intitule": "Les achats ou le développement de produits, services ou processus TIC tiennent compte de schémas européens de certification de cybersécurité lorsqu'ils existent",
+              "citation": "Les nouveaux automates de supervision acquis en 2024 ont ete selectionnes parmi des references disposant d'une certification de cybersecurite reconnue au niveau europeen lorsque celle-ci existait pour la categorie de produit.",
+              "retenue": true,
+              "verifiee": true,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008",
+            "p009"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Registre des entités",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : L'organisme est enregistré auprès de l'autorité compétente ou de l'ENISA en tant que registre de noms de domaine de premier niveau",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "enregistrement_registre",
+              "intitule": "L'organisme est enregistré auprès de l'autorité compétente ou de l'ENISA en tant que registre de noms de domaine de premier niveau",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : L'organisme est enregistré auprès de l'autorité compétente ou de l'ENISA en tant que registre de noms de domaine de premier niveau"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008",
+            "p009"
+          ]
+        },
+        {
+          "article": "28",
+          "intitule": "Base des données d'enregistrement des noms de domaine",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une base de données précise et complète des données d'enregistrement de noms de domaine est tenue ; Une procédure de vérification des données d'enregistrement est décrite",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "donnees_enregistrement_exactes",
+              "intitule": "Une base de données précise et complète des données d'enregistrement de noms de domaine est tenue",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "procedure_verification",
+              "intitule": "Une procédure de vérification des données d'enregistrement est décrite",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une base de données précise et complète des données d'enregistrement de noms de domaine est tenue",
+            "Documenter et rendre opposable : Une procédure de vérification des données d'enregistrement est décrite"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008",
+            "p009"
+          ]
+        },
+        {
+          "article": "29",
+          "intitule": "Accords de partage d'informations en matière de cybersécurité",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Participation active et documentée à un dispositif de partage d'informations sur les cybermenaces (secteur, ISAC, autorité)",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "participation_partage",
+              "intitule": "Participation active et documentée à un dispositif de partage d'informations sur les cybermenaces (secteur, ISAC, autorité)",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Participation active et documentée à un dispositif de partage d'informations sur les cybermenaces (secteur, ISAC, autorité)"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008",
+            "p009"
+          ]
+        },
+        {
+          "article": "30",
+          "intitule": "Notification volontaire d'informations pertinentes",
+          "criticite": 1,
+          "verdict": "manquement",
+          "confiance": 0.9,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Aucune preuve textuelle vérifiée pour : Des notifications volontaires (incidents mineurs, cybermenaces, quasi-incidents) ont été transmises au CSIRT national",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "notifications_volontaires",
+              "intitule": "Des notifications volontaires (incidents mineurs, cybermenaces, quasi-incidents) ont été transmises au CSIRT national",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Des notifications volontaires (incidents mineurs, cybermenaces, quasi-incidents) ont été transmises au CSIRT national"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004",
+            "p005",
+            "p006",
+            "p007",
+            "p008",
+            "p009"
+          ]
+        }
+      ]
+    },
+    {
+      "document": "04_artisan_hors_perimetre.txt",
+      "tenant_id": "validation",
+      "score": 0.0,
+      "detail_score": {
+        "formule": "100 × Σ(poids × crédit) / Σ(poids)",
+        "numerateur": 0.0,
+        "denominateur": 6.0,
+        "articles_retenus": 2,
+        "articles_exclus": [
+          {
+            "article": "20",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "21",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "23",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "24",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "29",
+            "motif": "hors_perimetre"
+          },
+          {
+            "article": "30",
+            "motif": "hors_perimetre"
+          }
+        ],
+        "lignes": [
+          {
+            "article": "27",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          },
+          {
+            "article": "28",
+            "verdict": "manquement",
+            "poids": 3,
+            "credit": 0.0,
+            "points": 0.0,
+            "points_max": 3
+          }
+        ],
+        "pertes_principales": [
+          "art. 27 : -3.0 points",
+          "art. 28 : -3.0 points"
+        ]
+      },
+      "metadonnees": {
+        "passages": 4,
+        "sections": 4,
+        "articles_evalues": 8,
+        "tokens_document": 423
+      },
+      "synthese": {
+        "articles_evalues": 8,
+        "conformes": 0,
+        "manquements": 2,
+        "hors_perimetre": 6,
+        "indetermines": 0,
+        "a_reviser": 2
+      },
+      "verdicts": [
+        {
+          "article": "20",
+          "intitule": "Gouvernance",
+          "criticite": 4,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'entreprise n'exerce aucun des secteurs visés aux annexes I ou II, ne dépasse aucun seuil d'effectif ou de chiffre d'affaires, et n'a reçu aucune désignation d'entité essentielle ou importante, ce qui montre que aucune branche de la condition d'applicabilité n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "21",
+          "intitule": "Mesures de gestion des risques en matière de cybersécurité",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte précise que l'entreprise n'exerce aucun des secteurs visés aux annexes I ou II, ne dépasse aucun seuil d'effectif ou de chiffre d'affaires, et n'a reçu aucune notification la désignant comme entité essentielle ou importante, donc aucune des branches de la condition n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "23",
+          "intitule": "Obligations d'information",
+          "criticite": 5,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'entreprise n'exerce dans aucun des secteurs des annexes I ou II, ne dépasse aucun seuil d'effectif ou de chiffre d'affaires, et n'a reçu aucune désignation d'entité essentielle ou importante, donc aucune branche de la condition n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "24",
+          "intitule": "Recours aux schémas européens de certification de cybersécurité",
+          "criticite": 2,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'entreprise n'exerce aucun des secteurs visés aux annexes I ou II, ne dépasse aucun des seuils d'effectif ou de chiffre d'affaires, et n'a jamais été désignée comme entité essentielle ou importante, ce qui montre que toutes les branches de la condition d'applicabilité sont négatives.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "27",
+          "intitule": "Registre des entités",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : L'organisme est enregistré auprès de l'autorité compétente ou de l'ENISA en tant que registre de noms de domaine de premier niveau",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "enregistrement_registre",
+              "intitule": "L'organisme est enregistré auprès de l'autorité compétente ou de l'ENISA en tant que registre de noms de domaine de premier niveau",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : L'organisme est enregistré auprès de l'autorité compétente ou de l'ENISA en tant que registre de noms de domaine de premier niveau"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "28",
+          "intitule": "Base des données d'enregistrement des noms de domaine",
+          "criticite": 3,
+          "verdict": "manquement",
+          "confiance": 0.8,
+          "revue_humaine_requise": true,
+          "motif_revue": "anomalies détectées pendant l'extraction",
+          "justification": "Aucune preuve textuelle vérifiée pour : Une base de données précise et complète des données d'enregistrement de noms de domaine est tenue ; Une procédure de vérification des données d'enregistrement est décrite",
+          "derogation": null,
+          "preuves": [
+            {
+              "element": "donnees_enregistrement_exactes",
+              "intitule": "Une base de données précise et complète des données d'enregistrement de noms de domaine est tenue",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            },
+            {
+              "element": "procedure_verification",
+              "intitule": "Une procédure de vérification des données d'enregistrement est décrite",
+              "citation": null,
+              "retenue": false,
+              "verifiee": false,
+              "motif_rejet": "",
+              "bloquant": true
+            }
+          ],
+          "recommandations": [
+            "Documenter et rendre opposable : Une base de données précise et complète des données d'enregistrement de noms de domaine est tenue",
+            "Documenter et rendre opposable : Une procédure de vérification des données d'enregistrement est décrite"
+          ],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "29",
+          "intitule": "Accords de partage d'informations en matière de cybersécurité",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le document indique que l'entreprise n'appartient à aucun secteur visé aux annexes I ou II, ne dépasse aucun seuil d'effectif ou de chiffre d'affaires, et n'a jamais été désignée comme entité essentielle ou importante. Ainsi aucune des branches de la condition d'applicabilité n'est remplie.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        },
+        {
+          "article": "30",
+          "intitule": "Notification volontaire d'informations pertinentes",
+          "criticite": 1,
+          "verdict": "hors_perimetre",
+          "confiance": 0.85,
+          "revue_humaine_requise": false,
+          "motif_revue": "",
+          "justification": "Le texte indique que l'entreprise n'exerce aucun des secteurs des annexes I ou II, ne dépasse aucun seuil d'effectif ou de chiffre d'affaires, et n'a reçu aucune notification la désignant comme entité essentielle ou importante.",
+          "derogation": null,
+          "preuves": [],
+          "recommandations": [],
+          "passages_consultes": [
+            "p001",
+            "p002",
+            "p003",
+            "p004"
+          ]
+        }
+      ]
+    }
+  ],
+  "configuration": {
+    "repetitions": 3,
+    "vote": 1,
+    "client": "ClientGroq",
+    "modele": "openai/gpt-oss-120b",
+    "temperature": 0.0,
+    "cache_actif": false,
+    "appels_reels": 164,
+    "coups_cache": 0
+  },
+  "metriques": {
+    "exactitude": 0.7812,
+    "precision": 0.5714,
+    "rappel": 0.8889,
+    "f1": 0.6957,
+    "faux_positifs": 6,
+    "faux_negatifs": 1,
+    "exclusions_abusives": [],
+    "reproductibilite": {
+      "mesurable": true,
+      "executions": 3,
+      "ecart_type_score": 5.71,
+      "ecart_type_moyen": 2.55,
+      "articles_instables": [
+        "01_reseau_hospitalier_conforme.txt:art.21",
+        "01_reseau_hospitalier_conforme.txt:art.30",
+        "04_artisan_hors_perimetre.txt:art.20",
+        "04_artisan_hors_perimetre.txt:art.29"
+      ],
+      "taux_stabilite": 0.875
+    }
+  }
+}

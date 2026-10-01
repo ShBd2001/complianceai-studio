@@ -67,11 +67,14 @@ Le laboratoire (`evaluation/`, moteur séparé — DA-07) dispose de sa propre
 grille d'éléments probants (`referentiel/articles_nis2.py`) et réutilise
 ce même corpus déjà gelé (y compris la correction post-gel ci-dessus), via
 `validation/run_validation.py --referentiel nis2` (mesuré en CI, job
-`non-regression`). Exactitude observée sur des mesures ponctuelles à un
-seul passage : 90,6 % puis 78,1 % — écart attribué à la variance normale
-du modèle sur un seul tirage (DA-09), pas à la correction ci-dessus ; les
-seuils bloquants de ce référentiel restent volontairement larges tant
-qu'une mesure `--repetitions 3` n'a pas été faite (DA-10) :
+`non-regression`). Mesures ponctuelles à un seul passage d'abord : 90,6 %
+puis 78,1 % — écart attribué à la variance normale du modèle sur un seul
+tirage (DA-09), pas à la correction ci-dessus. **Mesure rigoureuse à
+3 passages faite le 2026-10-01** (`rapport_labo_nis2.json`) : exactitude
+78,1 %, précision 57,1 %, rappel 88,9 %, 0 exclusion abusive — en dessous
+du moteur de production sur ce référentiel (100 %/100 %/100 %, voir
+README.md racine). Les seuils bloquants de ce référentiel restent
+volontairement larges (DA-10) :
 
     python -m validation.run_validation --referentiel nis2 --corpus corpus_nis2 --verite corpus_nis2/verite_terrain.json --hors-ligne   # verification de bout en bout
     python -m validation.run_validation --referentiel nis2 --corpus corpus_nis2 --verite corpus_nis2/verite_terrain.json --ci           # mesure reelle, necessite GROQ_API_KEY
