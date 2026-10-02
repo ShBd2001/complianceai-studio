@@ -18,9 +18,16 @@ et `CHANGELOG.md`) : corrigée le même jour en réutilisant les mots-clés du
 laboratoire, avec un appariement par phrase entière pour éviter les
 exclusions abusives qu'un premier essai avait introduites. Mesure finale
 (`mesure_rgpd.json`) : **exactitude 76,7 %, précision 68,5 %, rappel
-80,8 %, 0 exclusion abusive**. Reste sous le laboratoire (84-87 % sur ce
-même corpus) ; un prototype rapprochant les deux méthodes (preuve par
-élément, décision par le code) est en cours d'évaluation.
+80,8 %, 0 exclusion abusive**. Reste sous le laboratoire (exactitude
+85,7 %, précision 72,6 %, rappel 98,7 % — `rapport_labo_rgpd.json`,
+mesure rigoureuse à 3 passages du 2026-10-01) ; quatre tentatives pour
+combler cet écart ont été testées et abandonnées (voir CHANGELOG.md) :
+un prototype rapprochant les deux méthodes (preuve par élément, décision
+par le code), deux reformulations de la question/requête de recherche
+sans gain net, et une augmentation du nombre de passages récupérés
+(`RAG_TOP_K=6`) qui améliorait les trois métriques mais introduisait une
+exclusion abusive — y compris combinée à un second avis censé la
+corriger, qui l'a déplacée plutôt que supprimée.
 
 ## Ce que le corpus couvre
 

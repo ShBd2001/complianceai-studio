@@ -104,9 +104,14 @@ entière) : exactitude **76,7 %**, précision 68,5 %, rappel 80,8 %,
 0 exclusion abusive (voir CHANGELOG.md et docs/architecture.md §6). Seul
 RGPD voit encore le laboratoire devant (exactitude 85,7 %, précision
 72,6 %, rappel 98,7 % — `rapport_labo_rgpd.json`, même mesure du
-2026-10-01) : deux tentatives pour rapprocher la production de cette
-méthode ont été testées et n'ont pas amélioré le résultat (voir
-CHANGELOG.md, 2026-10-01).
+2026-10-01) : quatre tentatives pour rapprocher la production de cette
+méthode ont été testées le 2026-10-01 — deux sans gain net (reformulation
+façon AI Act, requête de recherche seule), une avec un gain réel sur les
+trois métriques mais écartée pour une exclusion abusive nouvelle
+(`RAG_TOP_K=6`), et une dernière combinant ce même `RAG_TOP_K=6` à un
+second avis systématique censé corriger cette exclusion, qui a au
+contraire aggravé les trois métriques sans la supprimer. Aucune déployée
+(voir CHANGELOG.md).
 
 ## Tests et intégration continue
 

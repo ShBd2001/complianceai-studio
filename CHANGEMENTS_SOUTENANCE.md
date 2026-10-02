@@ -352,16 +352,31 @@ reconsidérer une fois ce chiffre confirmé stable sur d'autres mesures.
 Documenté dans `CHANGELOG.md`, `docs/architecture.md` §6, `CORPUS.md` et
 `README.md`.
 
-Reste sous le laboratoire (84-87 % sur ce même corpus). Différence
-structurelle : le laboratoire extrait une preuve par élément de la grille
-et laisse le CODE décider du verdict ; la production demande un verdict
-holistique directement au modèle. Prototype tenté pour rapprocher les deux
+Reste sous le laboratoire (exactitude 85,7 %, précision 72,6 %, rappel
+98,7 % sur ce même corpus, mesure rigoureuse à 3 passages du 2026-10-01,
+`rapport_labo_rgpd.json`). Différence structurelle : le laboratoire
+extrait une preuve par élément de la grille et laisse le CODE décider du
+verdict ; la production demande un verdict holistique directement au
+modèle. Prototype tenté pour rapprocher les deux
 (`app/ingestion/grille_rgpd.py`, `audit_engine.py::_evaluer_par_elements`,
 RGPD uniquement) puis abandonné le même jour : mesuré à 67,2 % sur le même
 sous-corpus, moins bon que l'approche mots-clés déjà déployée
 (75,9-81,0 %) — exiger une citation exacte par élément s'est révélé trop
 strict (le document de référence 01 s'effondre à 38,8 au lieu de 88-100).
-Non déployé, code retiré. Voir CHANGELOG.md pour le détail de la mesure et
+Non déployé, code retiré.
+
+Trois autres tentatives le 2026-10-01/02, toutes non déployées : reprendre
+la méthode AI Act (`EXIGENCES_SIMPLIFIEES`) sur RGPD, dans son intégralité
+puis sur la seule requête de recherche — régression dans les deux cas, le
+corpus RGPD contenant des documents délibérément trompeurs qu'une question
+plus holistique aide à contourner, contrairement au corpus AI Act ;
+`RAG_TOP_K=6` (passages récupérés 3→6, RGPD seul) — améliore les trois
+métriques (79,5 %/71,1 %/82,1 %) mais introduit une exclusion abusive due
+à une vraie instabilité de jugement du modèle entre tirages indépendants,
+chacun à confiance élevée ; combiné le lendemain à un second avis
+systématique censé fermer cette faille — aggrave au contraire les trois
+métriques et déplace l'exclusion abusive sans la supprimer. Voir
+CHANGELOG.md pour le détail de la mesure et
 la piste à reprendre (séparer l'appel applicabilité des éléments, comme le
 fait réellement le laboratoire).
 
@@ -465,12 +480,19 @@ dans les points de vigilance connus).
    2026-09-28 (`mesure_rgpd.json`) : exactitude 66,2 % initialement,
    corrigée le même jour à **76,7 %** (mots-clés du laboratoire). Voir la
    section « Tâche F2 (suite) — RGPD » ci-dessus pour le diagnostic complet.
-   Un prototype "preuve par élément" (rapprochement avec le laboratoire,
-   84-87 % sur ce corpus) a été tenté et mesuré à 67,2 % sur un sous-corpus
-   — moins bon, non déployé. **Reste à faire par l'équipe** : reprendre
-   cette piste en séparant l'appel applicabilité des éléments comme le fait
-   réellement le laboratoire (le prototype abandonné faisait les deux en un
-   seul appel).
+   Reste sous le laboratoire (85,7 %/72,6 %/98,7 %, `rapport_labo_rgpd.json`).
+   Quatre tentatives pour combler cet écart ont été testées et abandonnées
+   (2026-10-01/02, détail CHANGELOG.md) : "preuve par élément" (67,2 % sur
+   un sous-corpus, moins bon) ; méthode AI Act reprise sur RGPD, intégrale
+   puis sur la requête de recherche seule (régression dans les deux cas) ;
+   `RAG_TOP_K=6` (gain réel sur les trois métriques mais une exclusion
+   abusive nouvelle) ; `RAG_TOP_K=6` combiné à un second avis systématique
+   censé corriger cette exclusion (aggrave encore, exclusion déplacée, pas
+   supprimée). **Reste à faire par l'équipe** : soit séparer l'appel
+   applicabilité des éléments comme le fait réellement le laboratoire
+   (piste 1), soit détecter spécifiquement le désaccord entre plusieurs
+   appels indépendants sur un même article plutôt qu'un vote déclenché
+   uniformément sur toute une catégorie de verdict (piste `RAG_TOP_K=6`).
 4. **Lancer `backend/scripts/cout_analyses.py`** sur la base de production,
    après quelques analyses réelles :
    ```
