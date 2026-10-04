@@ -893,3 +893,82 @@ manquements réels. Vérifié aussi sans rapport avec cette faille (4
 documents conformes légitimes, 56 constats, 0 exclusion abusive) :
 comportement normal inchangé sur du contenu non adversarial. RGPD/NIS2/
 DORA/AI Act concernés (prompt partagé par tous les référentiels).
+
+---
+
+## RGPD : portage complet de la méthode du laboratoire (grille d'éléments probants) — testé, abandonné
+
+Reprise de la piste documentée dans `docs/architecture.md` §6 : porter en
+production la différence structurelle qui explique l'écart restant avec le
+laboratoire (85,7 % d'exactitude contre 76,7 %) — le laboratoire sépare
+l'applicabilité et l'extraction d'éléments probants en appels distincts, le
+code calculant seul le verdict à partir des citations vérifiées ; la
+production pose une question holistique unique au modèle. Le prototype
+testé le 2026-09-28 (un seul appel au lieu de deux) avait déjà échoué
+(67,2 % sur sous-corpus) ; cette tentative portait la méthode fidèlement,
+avec les deux appels séparés du laboratoire.
+
+### Implémentation
+
+- `app/ingestion/grille_rgpd.py` : copie native de la grille RGPD du
+  laboratoire (29 articles, `referentiel/articles.py`) — nécessaire et non
+  un simple import, la production n'embarque aucun package racine du dépôt
+  (`render.yaml::rootDir=backend`, voir DA-07).
+- `app/services/prompts_grille_rgpd.py` : copie des prompts d'applicabilité
+  et d'extraction du laboratoire (`evaluation/prompts.py`), avec la même
+  règle anti-injection que le `SYSTEM_PROMPT` principal.
+- `audit_engine.py::_evaluer_grille` : nouvelle fonction à 2-3 appels
+  (applicabilité, puis extraction élément par élément, puis dérogation si
+  des éléments bloquants manquent), appelée à la place du chemin holistique
+  pour les 29 articles couverts par la grille, retournant le même format de
+  verdict que `evaluate_requirement` pour s'insérer sans changement dans
+  `run_audit`.
+
+### Mesure et diagnostic
+
+Premier essai (corpus de vérification rapide, 4 documents, `RAG_TOP_K`
+inchangé à 3) : effondrement — exactitude 76,7 % → 56,9 %, le document de
+référence 01 (610 salariés, dossier mature et documenté, attendu 88-100)
+tombe à 27,7 avec 12/15 articles faussement en manquement.
+
+Diagnostic (lecture directe de la réponse du modèle, pas d'hypothèse) :
+appeler la même extraction sur le **document entier** (sans passer par la
+recherche de passages) produit des citations exactes et correctement
+vérifiées pour chaque élément — y compris celui qui échouait en production.
+Le modèle sait extraire l'information quand elle lui est donnée : la cause
+est la **recherche de passages**, pas le raisonnement du modèle. Le
+laboratoire élargit le nombre de passages récupérés en fonction du nombre
+d'éléments de la grille (`evaluateur.py::evaluer_article`, jusqu'à 12) ;
+la production restait à `RAG_TOP_K=3`, insuffisant pour qu'une recherche
+unique par article couvre plusieurs éléments distincts à la fois.
+
+Deux correctifs successifs de la limite de récupération, chacun mesuré
+réellement :
+- `3 + nb_éléments` (plafond 12, formule du laboratoire) : exactitude
+  56,9 % → 69,0 % sur le sous-corpus de 4 documents — amélioration nette,
+  mais toujours sous la base actuelle (76,7 %) et le document 01 reste à
+  42,4 (8/15 articles faux).
+- `5 + 2×nb_éléments` (plafond 20) : document 01 seul, exactitude 53,1
+  (11/15 corrects, contre 3/15 au premier essai) — amélioration continue
+  mais avec des rendements décroissants, 4 articles encore faux malgré un
+  budget de recherche déjà doublé par rapport au laboratoire.
+
+### Décision
+
+**Non déployé.** Le mur rencontré n'est pas un bug corrigible par un
+réglage : une recherche unique par article, même élargie, ne garantit pas
+qu'une passe de récupération couvre plusieurs éléments probants distincts
+à la fois sur un document long et bien structuré — alors que c'est
+précisément ce qu'exige la méthode du laboratoire pour chaque article à
+plusieurs éléments. Fermer cet écart demanderait de repenser la recherche
+elle-même (une requête par élément plutôt qu'une requête par article, ou un
+découpage différent des documents), pas seulement d'augmenter un nombre de
+passages — un chantier qui dépasse le temps disponible avant la
+soutenance. Code entièrement retiré (`git checkout` sur `audit_engine.py`
+et les tests touchés, `grille_rgpd.py` et `prompts_grille_rgpd.py`
+supprimés), retour exact à la version livrée (76,7 %/68,5 %/80,8 %/0).
+
+Piste à reprendre : une requête de recherche par élément probant (pas par
+article), ce qui rapprocherait la recherche production du comportement
+réel du laboratoire sur les documents où plusieurs éléments distincts sont
+décrits à des endroits différents du document.
