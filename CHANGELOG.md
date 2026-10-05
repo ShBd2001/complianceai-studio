@@ -972,3 +972,47 @@ Piste à reprendre : une requête de recherche par élément probant (pas par
 article), ce qui rapprocherait la recherche production du comportement
 réel du laboratoire sur les documents où plusieurs éléments distincts sont
 décrits à des endroits différents du document.
+
+---
+
+## RGPD : relever le seuil de second avis pour améliorer la stabilité — testé, sans effet mesurable
+
+Constat de départ : la reproductibilité mesurée en production sur le RGPD
+(`mesure_rgpd.json`, 3 passages) est nettement plus basse que les 3 autres
+référentiels — **69,4 %** de verdicts stables contre 96,9 % (NIS2), 89,3 %
+(DORA), 89,4 % (AI Act). `LLM_TEMPERATURE` est déjà à 0 : aucune marge sur
+ce levier. Le vote de second avis (DA-09) ne se déclenche que sous
+`SECOND_OPINION_CONFIDENCE_THRESHOLD=0,7` — or le cas d'instabilité
+diagnostiqué la semaine précédente (article 37, document 15, voir plus
+haut) donnait une confiance de 0,85-0,9 à chacun des 3 tirages malgré un
+désaccord réel entre eux : au-dessus du seuil, jamais revérifié.
+
+Hypothèse testée : relever ce seuil à 0,9 pour le RGPD seul
+(`_SEUIL_SECOND_AVIS_PAR_REFERENTIEL`, `audit_engine.py`), afin que ces cas
+confiants-mais-instables déclenchent eux aussi un second avis.
+
+Mesuré sur le même sous-corpus (4 documents, 3 passages, comparaison
+stricte seuil 0,7 vs 0,9) :
+
+| | Seuil 0,7 (base) | Seuil 0,9 |
+|---|---|---|
+| Stabilité (verdicts constants) | 71,5 % | 71,1 % |
+| Exactitude | 72,4 % | 75,9 % |
+| Précision | 66,7 % | 66,7 % |
+| Rappel | 84,6 % | 92,3 % |
+| Exclusions abusives | 0 | 0 |
+
+L'objectif visé — la stabilité — **n'a pas bougé** (71,5 % → 71,1 %, dans
+le bruit de mesure). Les écarts sur exactitude/rappel ne sont pas
+conclants non plus : les intervalles de confiance à 95 % des deux mesures
+se chevauchent largement sur un échantillon de 58 articles. Plus d'avis
+supplémentaires déclenchés, pour un résultat statistiquement indiscernable
+du seuil actuel.
+
+Décision : **non déployé**. `git stash drop` après comparaison, retour à
+la version livrée. Confirme le constat du diagnostic initial : l'instabilité
+RGPD en production reflète la difficulté réelle du corpus (documents
+volontairement ambigus ou contradictoires), pas un réglage de seuil
+insuffisant — revoir le seuil de confiance ne force les avis
+supplémentaires que sur des cas qui restent, par nature, difficiles à
+trancher même à plusieurs tirages.
